@@ -424,7 +424,26 @@
   .vj-nota .mini{ color:#8fb0a6; }
   @media (max-width:980px){ .vj-nota{ display:none; } }
   @media (max-width:760px){ .app{ grid-template-columns:1fr; } aside{ position:static; height:auto; }
-    main{ padding:18px 16px 50px; } }
+    /* min-width:0 — sin esto «main» es un elemento de rejilla que NO puede encogerse por
+       debajo de su contenido: las tablas anchas (equipo, liquidación, canales) estiraban
+       la columna a 694 px y el overflow-x:hidden de la página las recortaba. */
+    main{ padding:18px 16px 50px; min-width:0; }
+    /* Lo que no quepa scrollea DENTRO de su tarjeta, en vez de cortarse contra el borde.
+       Las sombras laterales aparecen SOLO en el lado que tiene más contenido (técnica de
+       scroll-shadow con background-attachment local/scroll): sin ellas, en táctil no hay
+       barra visible y parecería que faltan columnas. */
+    .card{ overflow-x:auto;
+      background-image:
+        linear-gradient(to right, var(--paper), rgba(255,255,255,0)),
+        linear-gradient(to left,  var(--paper), rgba(255,255,255,0)),
+        linear-gradient(to right, rgba(20,40,32,.13), rgba(20,40,32,0)),
+        linear-gradient(to left,  rgba(20,40,32,.13), rgba(20,40,32,0));
+      background-position:0 0, 100% 0, 0 0, 100% 0;
+      background-repeat:no-repeat;
+      background-size:22px 100%, 22px 100%, 11px 100%, 11px 100%;
+      background-attachment:local, local, scroll, scroll; }
+    .cab{ min-width:0; } .cab h1{ overflow-wrap:anywhere; }
+  }
 
   /* ---------- revisión de interfaz: accesibilidad, legibilidad y microinteracciones ---------- */
   /* ---------- adornos de ruta: trazo punteado + pin en cabeceras de sección ---------- */
