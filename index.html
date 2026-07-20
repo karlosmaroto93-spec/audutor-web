@@ -1,0 +1,973 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fritiner — el sistema operativo de tu empresa de tours</title>
+<meta name="description" content="La capa operativa para empresas de tours y free tours: reservas multicanal, guías, no-shows, grupos, propinas y un asistente IA que no inventa. Modulable según tu tarifa y tu intensidad.">
+<style>
+  :root{
+    --ink:#1f2a25; --ink2:#4a5d54; --muted:#74857d; --bg:#faf6ec; --paper:#fffdf7;
+    --acc:#128a6b; --acc2:#0b6b52; --deep:#123f33; --acc-soft:#e4f2ea;
+    --coral:#f4653a; --coral2:#d94e24; --coral-soft:#ffece3;
+    --teal:#2bb3a3; --teal-ink:#1e8f82; --teal-soft:#e3f4f1;
+    --gold:#c98a2d; --gold-soft:#faf0da; --amber:#a36a10;
+    --line:#e6dcc8;
+    --sans:Seravek,"Avenir Next",Avenir,system-ui,-apple-system,"Segoe UI",sans-serif;
+    --serif:"Iowan Old Style",Palatino,"Palatino Linotype",Georgia,serif;
+    --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
+  }
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{ margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans);
+        font-size:16.5px; line-height:1.6; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
+  h1,h2,h3{ font-family:var(--serif); line-height:1.16; text-wrap:balance; margin:0; }
+  a{ color:var(--acc); }
+
+  /* ================= animaciones (solo con JS: sin JS todo es visible) ===== */
+  .anim .reveal{ opacity:0; transform:translateY(30px); }
+  .anim .reveal.in{ opacity:1; transform:none;
+    transition:opacity .65s ease, transform .8s cubic-bezier(.16,.7,.22,1.05);
+    transition-delay:var(--d,0ms); }
+  .anim [data-split] .ch{ display:inline-block; opacity:0;
+    transform:translateY(.7em) rotate(3deg); }
+  .anim [data-split].in .ch{ opacity:1; transform:none;
+    transition:transform .6s cubic-bezier(.18,.7,.28,1.12), opacity .45s ease;
+    transition-delay:calc(var(--i) * 16ms); }
+  [data-split] .w{ display:inline-block; white-space:pre; }
+  @media (prefers-reduced-motion: reduce){
+    .anim .reveal, .anim [data-split] .ch{ opacity:1 !important; transform:none !important; transition:none !important; }
+    .mock-pop, .mock, .guia{ animation:none !important; }
+    .precio .imp, .fact-toggle button, .barra-fill{ transition:none !important; }
+  }
+  #progreso{ position:fixed; top:0; left:0; height:3px; background:var(--coral);
+    width:0; z-index:99; transition:width .1s linear; }
+
+  /* ================= adornos SVG (rutas, pins, contornos, brújula) ========= */
+  .adorno{ position:absolute; pointer-events:none; }
+  .topo{ color:var(--acc); opacity:.10; }
+  .topo.hero-topo{ top:-24px; right:-70px; width:340px; }
+  .topo.planes-topo{ left:-86px; bottom:-56px; width:300px; color:var(--gold); opacity:.12; }
+  .ruta-linea{ width:100%; height:64px; left:0; right:0; }
+  .ruta-linea path{ fill:none; stroke:var(--gold); stroke-width:2.4; stroke-linecap:round;
+    stroke-dasharray:.1 10; vector-effect:non-scaling-stroke; }
+  .ruta-linea.hero-ruta{ bottom:-8px; opacity:.55; }
+  .ruta-linea.final-ruta{ top:-4px; opacity:.5; }
+  .pin-acento{ width:24px; }
+  .pin-acento.hero-pin{ right:7%; bottom:36px; transform:rotate(8deg); }
+  .pin-acento.final-pin{ left:6%; top:22px; transform:rotate(-8deg); }
+  .brujula{ top:60px; right:6px; width:58px; transform:rotate(10deg); opacity:.95; }
+  @media (max-width:720px){ .brujula{ display:none; } .topo.hero-topo{ right:-130px; } }
+
+  /* ================= mascota GuIA ================= */
+  .guia{ width:142px; height:auto; flex:none; animation:flota 8s ease-in-out infinite; }
+  .bocadillo{ position:relative; background:var(--paper); border:1.5px solid var(--line);
+    border-radius:16px; padding:13px 18px; font-size:14.5px; line-height:1.5;
+    color:var(--ink2); box-shadow:0 10px 26px rgba(28,38,34,.10); max-width:300px; margin:0; }
+  .bocadillo b{ color:var(--ink); }
+  .bocadillo::before{ content:""; position:absolute; left:-8px; top:50%; margin-top:-8px;
+    width:13px; height:13px; background:var(--paper); border-left:1.5px solid var(--line);
+    border-bottom:1.5px solid var(--line); transform:rotate(45deg); border-radius:0 0 0 3px; }
+  /* el bocadillo se alinea arriba: con la mascota grande, el texto sube a su altura */
+  .guia-saludo{ display:flex; align-items:flex-start; gap:18px; margin-top:28px; }
+  .guia-saludo .bocadillo{ margin-top:10px; }
+  /* La mascota va a la esquina de su tarjeta: así puede ser grande sin empujar el texto
+     hacia abajo — el título arranca a la misma altura que el de las tarjetas vecinas. */
+  .celda-guia .ico-svg{ float:right; width:104px; height:auto; margin:-4px -6px 4px 14px; }
+  .celda-guia h3{ margin-top:6px; }
+  .celda-guia .mini{ clear:both; }
+  @media (max-width:900px){ .celda-guia .ico-svg{ width:80px; } }
+  .guia-web{ display:flex; align-items:center; gap:12px; margin-top:16px; }
+  .guia-web .guia{ width:58px; animation-duration:9s; }
+  .guia-web .bocadillo{ max-width:none; font-size:13px; padding:9px 14px; }
+  .guia-final{ display:flex; align-items:center; justify-content:center; gap:18px;
+    margin-bottom:30px; }
+  .guia-final .guia{ width:92px; }
+  @media (max-width:640px){
+    .guia-saludo, .guia-final{ align-items:flex-start; }
+    .guia{ width:84px; }
+  }
+
+  /* ================= nav ================= */
+  nav{ position:sticky; top:0; z-index:50; background:rgba(250,246,236,.92);
+       backdrop-filter:blur(8px); border-bottom:1px solid var(--line); }
+  nav .wrap{ display:flex; align-items:center; gap:26px; padding:14px 24px; }
+  .logo{ font-family:var(--serif); font-weight:700; font-size:21px; color:var(--ink);
+         text-decoration:none; line-height:1.05; }
+  /* wordmark Fritiner: la tilde de la «i» es un pin de ubicación (SVG inline),
+     con una ruta punteada ámbar bajo la palabra */
+  .logo .wm{ position:relative; display:inline-block; }
+  .logo .i{ position:relative; display:inline-block; }
+  .logo .pin{ position:absolute; left:50%; bottom:.6em; width:.5em; height:auto;
+              transform:translateX(-50%); }
+  .logo .pin .cuerpo{ fill:var(--acc); }
+  .logo .pin .hueco{ fill:var(--bg); }
+  .logo .ruta{ position:absolute; left:1%; bottom:-.34em; width:98%; height:.34em; }
+  .logo .ruta path{ fill:none; stroke:var(--gold); stroke-width:2.2; stroke-linecap:round;
+                    stroke-dasharray:.1 6.5; }
+  .logo.pie{ font-size:16px; color:var(--ink2); }
+  nav .links{ margin-left:auto; display:flex; gap:20px; align-items:center; }
+  nav .links a{ text-decoration:none; color:var(--ink2); font-size:14.5px; font-weight:600; }
+  nav .links a:hover{ color:var(--acc); }
+  .btn{ display:inline-block; background:var(--coral); color:#fff !important; text-decoration:none;
+        padding:12px 24px; border-radius:10px; font-weight:700; font-size:15px; border:0;
+        cursor:pointer; transition:transform .15s ease, box-shadow .15s ease; }
+  .btn:hover{ background:var(--coral2); transform:translateY(-1px); box-shadow:0 8px 22px rgba(244,101,58,.30); }
+  .btn.sec{ background:transparent; color:var(--acc) !important; border:1.5px solid var(--acc); }
+  .btn.sec:hover{ background:var(--acc-soft); box-shadow:none; }
+  @media (max-width:720px){ nav .links a:not(.btn){ display:none; } }
+
+  /* ================= hero ================= */
+  header{ padding:76px 0 64px; position:relative; overflow:hidden; }
+  header::before{ content:""; position:absolute; inset:0; pointer-events:none;
+    background:
+      radial-gradient(560px 340px at 85% 10%, rgba(43,179,163,.14), transparent 65%),
+      radial-gradient(460px 320px at 8% 90%, rgba(244,101,58,.10), transparent 60%),
+      radial-gradient(420px 280px at 55% 42%, rgba(201,138,45,.09), transparent 65%); }
+  .hero-grid{ display:grid; grid-template-columns:1.05fr .95fr; gap:44px; align-items:center; position:relative; }
+  @media (max-width:900px){ .hero-grid{ grid-template-columns:1fr; } }
+  .kicker{ font-size:12.5px; letter-spacing:.14em; text-transform:uppercase; font-weight:800;
+           color:var(--acc); margin-bottom:14px; }
+  h1{ font-size:clamp(33px,4.6vw,50px); font-weight:600; max-width:20ch; }
+  .lede{ font-size:19px; color:var(--ink2); max-width:54ch; margin:20px 0 28px; }
+  .lede b{ color:var(--ink); }
+  .hero-ctas{ display:flex; gap:14px; flex-wrap:wrap; align-items:center; }
+  .hero-nota{ font-size:13px; color:var(--muted); margin-top:14px; }
+
+  /* ---- mockup del producto (CSS puro) ---- */
+  .mock{ position:relative; min-height:430px; }
+  .mock-card{ background:var(--paper); border:1px solid var(--line); border-radius:16px;
+    box-shadow:0 18px 50px rgba(31,42,37,.12); padding:18px 20px; font-size:13.5px;
+    animation:flota 7s ease-in-out infinite; }
+  .mock-card.principal{ max-width:380px; margin-left:auto; }
+  .mock-head{ display:flex; justify-content:space-between; align-items:center; gap:8px;
+    font-weight:800; font-size:14.5px; margin-bottom:6px; }
+  .chipv{ font-size:10.5px; font-weight:800; letter-spacing:.05em; text-transform:uppercase;
+    background:var(--teal-soft); color:var(--teal-ink); padding:3px 9px; border-radius:99px; white-space:nowrap; }
+  .mock-sem{ font-size:12px; color:var(--ink2); border-bottom:1px solid var(--line); padding-bottom:9px;
+    margin-bottom:4px; }
+  .mock-sem b{ color:var(--amber); }
+  .mock-row{ display:flex; justify-content:space-between; gap:10px; padding:8px 8px; border-radius:8px;
+    color:var(--ink2); }
+  .mock-row span{ font-size:11.5px; color:var(--muted); white-space:nowrap; }
+  .mock-row.ok{ background:#ecf7ef; color:#14532d; }
+  .mock-row.ok span{ color:#16a34a; font-weight:700; }
+  .mock-card button{ width:100%; margin-top:10px; border:1.5px solid var(--acc); background:var(--acc-soft);
+    color:var(--acc); font-weight:800; font-size:12.5px; border-radius:9px; padding:9px; cursor:default; }
+  .mock-pop{ position:absolute; z-index:2; background:var(--paper); border:1px solid var(--line);
+    border-left:4px solid var(--gold); border-radius:12px; padding:11px 14px; font-size:12.5px;
+    color:var(--ink2); box-shadow:0 14px 34px rgba(31,42,37,.14); max-width:270px; }
+  .mock-pop b{ color:var(--ink); }
+  .pop1{ left:0; top:12px; animation:flota 8s ease-in-out infinite reverse; }
+  .pop2{ left:14px; bottom:6px; border-left-color:var(--coral); animation:flota 9s ease-in-out 1s infinite; }
+  @keyframes flota{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-9px); } }
+  @media (max-width:900px){ .mock{ min-height:0; display:grid; gap:12px; }
+    .mock-pop{ position:static; max-width:none; } .mock-card.principal{ margin:0; max-width:none; } }
+
+  .cifras{ display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:14px; margin:58px 0 0; }
+  .cifra{ background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:18px 20px; }
+  .cifra .v{ font-family:var(--serif); font-size:30px; font-weight:600; color:var(--acc); display:block; }
+  .cifra:nth-child(1) .v{ color:var(--coral2); }
+  .cifra:nth-child(3) .v{ color:var(--teal-ink); }
+  .cifra:nth-child(4) .v{ color:var(--amber); }
+  .cifra .l{ font-size:13px; color:var(--muted); line-height:1.4; display:block; margin-top:4px; }
+
+  /* ================= secciones ================= */
+  section{ padding:72px 0; position:relative; }
+  section.alt{ background:var(--paper); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+  .sec-head{ max-width:64ch; margin-bottom:38px; position:relative; }
+  .sec-head h2{ font-size:clamp(26px,3.6vw,36px); }
+  .sec-head p{ color:var(--ink2); font-size:17.5px; margin:12px 0 0; }
+
+  .grid3{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px; }
+  .celda{ background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:22px 24px;
+    transition:transform .2s ease, box-shadow .2s ease; }
+  .celda:hover{ transform:translateY(-3px); box-shadow:0 12px 30px rgba(31,42,37,.08); }
+  section.alt .celda{ background:var(--bg); }
+  .celda.star{ border-color:var(--acc); box-shadow:0 6px 22px rgba(18,138,107,.12); }
+  .celda .ico{ font-size:24px; }
+  .celda h3{ font-size:18.5px; margin:10px 0 6px; font-family:var(--sans); font-weight:750; }
+  .celda p{ font-size:14.8px; color:var(--ink2); margin:0; }
+  .celda .mini{ font-size:12.5px; color:var(--muted); display:block; margin-top:10px; font-family:var(--mono); }
+
+  /* ---- un día con Fritiner ---- */
+  .dia{ position:relative; margin-top:8px; }
+  .dia::before{ content:""; position:absolute; left:86px; top:8px; bottom:8px; width:0;
+    border-left:2.5px dashed #b3d6c6; }
+  .hito{ display:grid; grid-template-columns:70px 34px 1fr; gap:0 14px; padding:14px 0; align-items:start; }
+  .hito .hora{ font-family:var(--mono); font-size:13px; color:var(--muted); text-align:right; padding-top:6px; }
+  .hito .punto{ width:13px; height:13px; border-radius:50%; background:var(--paper);
+    border:3px solid var(--acc); margin:8px auto 0; position:relative; z-index:1; }
+  .hito:nth-child(even) .punto{ border-color:var(--coral); }
+  .hito .que{ background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:13px 17px;
+    font-size:14.8px; color:var(--ink2); }
+  .hito .que b{ color:var(--ink); }
+  section.alt .hito .que{ background:var(--bg); }
+  @media (max-width:640px){ .dia::before{ left:64px; } .hito{ grid-template-columns:48px 34px 1fr; } }
+
+  /* ================= pricing ================= */
+  .planes{ display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:18px; align-items:stretch; }
+  .plan{ background:var(--paper); border:1.5px solid var(--line); border-radius:16px; padding:26px;
+    display:flex; flex-direction:column; }
+  .plan.destacado{ border-color:var(--acc); box-shadow:0 10px 34px rgba(18,138,107,.13); position:relative; }
+  .plan.destacado::before{ content:"El de la mayoría"; position:absolute; top:-12px; left:22px;
+      background:var(--acc); color:#fff; font-size:11.5px; font-weight:800; letter-spacing:.06em;
+      padding:3px 12px; border-radius:99px; text-transform:uppercase; }
+  /* Premium: la tarjeta estrella — crema cálida, elegante, con acento dorado */
+  .plan.premium{ position:relative; z-index:2; color:var(--ink); border:1.5px solid var(--gold);
+    background:linear-gradient(165deg,#fff9ea 0%,#fbeecb 100%);
+    box-shadow:0 24px 52px rgba(163,106,16,.18); transform:translateY(-12px); }
+  .plan.premium::before{ content:"★ El más completo"; position:absolute; top:-13px; left:50%;
+    transform:translateX(-50%); background:linear-gradient(90deg,var(--gold),#e2ab48); color:#231400;
+    font-size:11.5px; font-weight:800; letter-spacing:.05em; padding:4px 16px; border-radius:99px;
+    text-transform:uppercase; white-space:nowrap; box-shadow:0 6px 16px rgba(201,138,45,.45); }
+  .plan.premium::after{ content:""; position:absolute; inset:0; border-radius:16px; pointer-events:none;
+    background:radial-gradient(420px 200px at 80% -10%, rgba(201,138,45,.14), transparent 70%); }
+  .plan.premium > *{ position:relative; z-index:1; }
+  .plan.premium h3{ color:var(--deep); }
+  .plan.premium .precio{ color:var(--ink); }
+  .plan.premium .precio small{ color:#8a744a; }
+  .plan.premium .para{ color:#8a744a; }
+  .plan.premium ul{ color:#544e3d; }
+  .plan.premium li{ border-top-color:rgba(163,106,16,.18); }
+  .plan.premium li::before{ content:"✦"; color:var(--gold); }
+  .plan.premium .btn{ background:linear-gradient(90deg,var(--gold),#dda640); color:#231400 !important;
+    border:0; box-shadow:0 8px 22px rgba(201,138,45,.4); }
+  .plan.premium .btn:hover{ background:#e6ad46; box-shadow:0 12px 28px rgba(201,138,45,.5); transform:translateY(-1px); }
+  @media (max-width:900px){ .plan.premium{ transform:none; } }
+  .plan h3{ font-size:20px; font-family:var(--sans); font-weight:800; }
+  .plan .precio{ font-family:var(--serif); font-size:38px; font-weight:600; margin:10px 0 2px; }
+  .plan .precio small{ font-size:15px; color:var(--muted); font-family:var(--sans); font-weight:600; }
+  .plan .para{ color:var(--muted); font-size:13.5px; margin-bottom:14px; }
+  .plan ul{ margin:0 0 20px; padding:0; list-style:none; font-size:14.5px; color:var(--ink2); flex:1; }
+  .plan li{ padding:6px 0 6px 26px; position:relative; border-top:1px dashed var(--line); }
+  .plan li:first-child{ border-top:0; }
+  .plan li::before{ content:"✓"; position:absolute; left:2px; color:var(--acc); font-weight:800; }
+  /* ---- facturación mensual / anual ---- */
+  .fact-toggle-wrap{ text-align:center; margin:-8px 0 32px; }
+  .fact-toggle{ display:inline-flex; background:var(--paper); border:1.5px solid var(--line);
+    border-radius:99px; padding:4px; gap:2px; }
+  .fact-toggle button{ border:0; background:transparent; font:inherit; font-weight:700;
+    font-size:14.5px; color:var(--ink2); padding:9px 20px; border-radius:99px; cursor:pointer;
+    display:inline-flex; align-items:center; gap:8px;
+    transition:background .18s ease, color .18s ease; }
+  .fact-toggle button[aria-checked="true"]{ background:var(--acc); color:#fff; }
+  .fact-toggle .dto{ font-size:11px; font-weight:800; background:var(--gold-soft); color:var(--amber);
+    border-radius:99px; padding:2px 8px; letter-spacing:.02em; }
+  .fact-toggle button[aria-checked="true"] .dto{ background:rgba(255,255,255,.22); color:#fff; }
+  .fact-toggle button:focus-visible{ outline:2.5px solid var(--acc); outline-offset:3px; }
+  .pausa{ max-width:62ch; margin:12px auto 0; font-size:13.5px; color:var(--muted); }
+  .precio .imp{ display:inline-block; transition:opacity .18s ease, transform .18s ease; }
+  .precio .imp.cambia{ opacity:0; transform:translateY(6px); }
+  .fact-nota{ font-size:12.5px; color:var(--acc); font-weight:700; margin:2px 0 0; }
+  .fact-nota[hidden]{ display:none; }
+  .plan.premium .fact-nota{ color:var(--amber); }
+
+  /* ---- calculadora de coste total ---- */
+  .calc{ display:grid; grid-template-columns:minmax(280px,380px) 1fr; gap:34px; align-items:start; }
+  @media (max-width:900px){ .calc{ grid-template-columns:1fr; } }
+  .calc-panel{ background:var(--paper); border:1px solid var(--line); border-radius:16px; padding:24px 26px; }
+  .calc-campo{ margin-bottom:24px; }
+  .calc-campo:last-child{ margin-bottom:0; }
+  .calc-campo label{ display:block; font-weight:750; font-size:14.5px; margin-bottom:2px; }
+  .calc-campo output{ display:block; font-family:var(--serif); font-size:25px; font-weight:600;
+    color:var(--acc); font-variant-numeric:tabular-nums; margin-bottom:4px; }
+  .calc-campo input[type="range"]{ width:100%; accent-color:var(--acc); height:30px; cursor:pointer; }
+  .calc-escala{ display:flex; justify-content:space-between; font-size:11.5px; color:var(--muted); }
+  .barras{ display:flex; flex-direction:column; gap:10px; }
+  .barra-fila{ display:grid; grid-template-columns:140px 1fr 96px; gap:12px; align-items:center; }
+  .barra-nombre{ font-size:14px; font-weight:700; color:var(--ink2); }
+  .barra-fila.marca .barra-nombre{ color:var(--acc); }
+  .barra-pista{ background:var(--bg); border:1px solid var(--line); border-radius:99px;
+    height:22px; overflow:hidden; }
+  .barra-fill{ display:block; height:100%; width:0; background:#b3c2ba; border-radius:99px;
+    transition:width .5s cubic-bezier(.16,.7,.22,1); }
+  .barra-fila.marca .barra-fill{ background:var(--acc); }
+  .barra-imp{ font-family:var(--serif); font-size:17.5px; font-weight:600; text-align:right;
+    font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .barra-imp small{ font-family:var(--sans); font-size:11.5px; color:var(--muted); font-weight:600; }
+  .calc-ahorro{ margin-top:20px; background:var(--acc-soft); border:1.5px solid var(--acc);
+    border-radius:14px; padding:15px 20px; font-size:15.5px; }
+  .calc-ahorro b{ color:var(--acc2); }
+  .calc-ahorro .matiz{ display:block; font-size:12.5px; color:var(--ink2); margin-top:6px; }
+  .calc-fuente{ font-size:11.5px; color:var(--muted); margin-top:14px; line-height:1.55; }
+  @media (max-width:640px){
+    .barra-fila{ grid-template-columns:98px 1fr 82px; gap:8px; }
+    .barra-nombre{ font-size:12.5px; }
+    .barra-imp{ font-size:14.5px; }
+  }
+
+  .addon{ margin-top:22px; background:linear-gradient(100deg,var(--acc-soft),var(--gold-soft));
+    border:1.5px solid var(--acc); border-radius:16px; padding:22px 26px; display:flex; gap:18px;
+    align-items:center; flex-wrap:wrap; }
+  .addon .t{ flex:1; min-width:260px; }
+  .addon h3{ font-family:var(--sans); font-weight:800; font-size:18px; }
+  .addon p{ margin:6px 0 0; font-size:14.5px; color:var(--ink2); }
+  .addon .tramos{ display:flex; gap:10px; flex-wrap:wrap; align-content:flex-start; max-width:340px; }
+  .addon .tramo{ background:var(--paper); border:1px solid var(--line); border-radius:12px;
+    padding:9px 16px; text-align:center; }
+  .addon .tramo .p{ font-family:var(--serif); font-size:25px; font-weight:600; color:var(--acc);
+    display:block; line-height:1.15; }
+  .addon .tramo .n{ font-size:10.5px; font-weight:800; letter-spacing:.07em; text-transform:uppercase;
+    color:var(--muted); }
+  .addon .nota{ flex-basis:100%; font-size:12.5px; color:var(--muted); }
+
+  /* ---- complemento: web generada con IA ---- */
+  .webcard{ background:linear-gradient(160deg,#fffdf4 0%,#fbf1da 100%); color:var(--ink);
+    border:1.5px solid var(--gold); border-radius:20px; padding:38px 40px;
+    display:grid; grid-template-columns:1.05fr .95fr; gap:40px; align-items:center;
+    box-shadow:0 20px 46px rgba(163,106,16,.16); position:relative; overflow:hidden; }
+  .webcard::before{ content:""; position:absolute; inset:0; pointer-events:none;
+    background:radial-gradient(480px 240px at 88% -12%, rgba(201,138,45,.16), transparent 70%); }
+  .webcard > *{ position:relative; }
+  @media (max-width:900px){ .webcard{ grid-template-columns:1fr; padding:28px 24px; } }
+  .web-chip{ display:inline-block; font-size:11.5px; font-weight:800; letter-spacing:.08em;
+    text-transform:uppercase; color:#231400; background:linear-gradient(90deg,var(--gold),#e2ab48);
+    padding:4px 13px; border-radius:99px; margin-bottom:14px; }
+  .webcard h2{ color:var(--deep); font-size:clamp(24px,3.2vw,32px); }
+  .webcard .lead{ color:var(--ink2); font-size:16.5px; margin:14px 0 18px; }
+  .webcard .lead b{ color:var(--ink); }
+  .webcard ul{ margin:0 0 20px; padding:0; list-style:none; font-size:15px; color:var(--ink2); }
+  .webcard li{ padding:7px 0 7px 28px; position:relative; border-top:1px dashed rgba(163,106,16,.22); }
+  .webcard li:first-child{ border-top:0; }
+  .webcard li::before{ content:"✦"; position:absolute; left:2px; color:var(--gold); }
+  .webcard li b{ color:var(--ink); }
+  .web-precio{ display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin:4px 0 12px; }
+  .web-precio .wp{ font-family:var(--serif); font-size:32px; font-weight:600; color:var(--ink); }
+  .web-precio .wp small{ font-family:var(--sans); font-size:14px; color:var(--muted); font-weight:600; }
+  .web-precio .wn{ font-size:13.5px; color:var(--ink2); }
+  .web-precio .wn b{ color:var(--amber); }
+  .web-comp{ font-size:13.5px; color:var(--muted); border-top:1px solid rgba(163,106,16,.22);
+    padding-top:12px; margin:0; }
+  .web-comp b{ color:var(--ink); }
+  /* mockup del navegador (CSS puro, empresa ficticia Luna Tours) */
+  .webmock{ background:var(--paper); color:var(--ink); border-radius:14px; overflow:hidden;
+    box-shadow:0 18px 40px rgba(84,62,20,.20); font-size:13px; }
+  .wbar{ display:flex; align-items:center; gap:5px; background:var(--bg);
+    border-bottom:1px solid var(--line); padding:9px 12px; }
+  .wdot{ width:9px; height:9px; border-radius:50%; background:#cfd8d3; }
+  .wurl{ margin-left:8px; font-family:var(--mono); font-size:11px; color:var(--acc);
+    background:var(--paper); border:1px solid var(--line); border-radius:99px; padding:3px 12px; }
+  .whero{ padding:18px 20px 14px; border-bottom:1px dashed var(--line); }
+  .whero b{ font-family:var(--serif); font-size:19px; display:block; }
+  .whero span{ display:block; color:var(--ink2); font-size:12.5px; margin:3px 0 10px; }
+  .whero .wbtn{ display:inline-block; background:var(--coral); color:#fff; font-weight:800;
+    font-size:12px; border-radius:8px; padding:7px 16px; }
+  .wrow{ display:flex; justify-content:space-between; align-items:center; gap:10px;
+    padding:9px 20px; border-top:1px solid var(--line); color:var(--ink2); }
+  .wrow:first-of-type{ border-top:0; }
+  .wrow b{ color:var(--amber); font-size:12px; white-space:nowrap; }
+  .wrow.ok{ background:#ecf7ef; color:#14532d; }
+  .wwa{ background:var(--acc-soft); color:var(--acc); font-weight:800; font-size:11px;
+    border-radius:99px; padding:3px 10px; white-space:nowrap; }
+
+  /* ---- roadmap ---- */
+  .ruta{ display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:14px; }
+  .paso{ background:var(--paper); border:1px dashed var(--line); border-radius:14px; padding:18px 20px; }
+  section.alt .paso{ background:var(--bg); }
+  .paso h3{ font-family:var(--sans); font-weight:750; font-size:16px; margin:0 0 4px; }
+  .paso p{ font-size:13.8px; color:var(--ink2); margin:0; }
+  .fase{ display:inline-block; font-family:var(--mono); font-size:10.5px; font-weight:700;
+    letter-spacing:.06em; padding:2px 9px; border-radius:99px; margin-bottom:9px;
+    background:var(--teal-soft); color:var(--teal-ink); }
+  .fase.f3{ background:var(--gold-soft); color:var(--amber); }
+
+  /* ================= comparativa ================= */
+  .vs{ background:var(--paper); border:1px solid var(--line); border-radius:16px; overflow:hidden; }
+  .vs-row{ display:grid; grid-template-columns:1fr 1fr; }
+  .vs-row > div{ padding:16px 22px; font-size:14.8px; border-top:1px solid var(--line); }
+  .vs-row:first-child > div{ border-top:0; background:var(--bg); font-weight:800; font-size:13px;
+      letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
+  .vs-row .malo{ color:var(--ink2); }
+  .vs-row .malo::before{ content:"✕ "; color:#b3453a; font-weight:800; }
+  .vs-row .bueno{ background:#edf6f2; }
+  .vs-row .bueno::before{ content:"✓ "; color:var(--acc); font-weight:800; }
+  @media (max-width:640px){ .vs-row{ grid-template-columns:1fr; } .vs-row .malo{ opacity:.8; } }
+
+  /* ================= CTA / footer ================= */
+  .final{ text-align:center; padding:84px 0; position:relative; }
+  .final h2{ font-size:clamp(28px,4vw,40px); max-width:24ch; margin:0 auto; }
+  .final p{ color:var(--ink2); max-width:52ch; margin:16px auto 28px; }
+  footer{ border-top:1px solid var(--line); padding:28px 0 46px; color:var(--muted); font-size:13px; }
+  footer .wrap{ display:flex; gap:18px; flex-wrap:wrap; justify-content:space-between; }
+
+  /* ---------- revisión de interfaz: accesibilidad y legibilidad ---------- */
+  section[id], div[id="planes"]{ scroll-margin-top:72px; }
+  a:focus-visible, .btn:focus-visible{ outline:2.5px solid var(--acc); outline-offset:3px;
+    border-radius:6px; }
+  .cifra .v, .plan .precio, .addon .tramo .p{ font-variant-numeric:tabular-nums; }
+  .celda:focus-within{ border-color:var(--acc); }
+</style>
+</head>
+<body>
+<!-- Mascota GuIA y pin de acento: se definen una vez y se reutilizan con <use> -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="guia" viewBox="0 0 150 158">
+      <ellipse cx="72" cy="150" rx="42" ry="6" fill="#1f2a25" opacity=".08"/>
+      <!-- paraguas: EL icono de los free tours -->
+      <path d="M104 20 L104 92" stroke="#8a5a12" stroke-width="4" stroke-linecap="round"/>
+      <path d="M104 92 q0 9 -9 9" fill="none" stroke="#8a5a12" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="104" cy="16" r="3.4" fill="#8a5a12"/>
+      <clipPath id="capota"><path d="M64 46 Q104 6 144 46 Q131 37 118 46 Q104 37 91 46 Q78 37 64 46 Z"/></clipPath>
+      <g clip-path="url(#capota)">
+        <rect x="60" y="4" width="88" height="46" fill="#f4653a"/>
+        <path d="M104 27 L89 48 L119 48 Z" fill="#ffe3c0"/>
+      </g>
+      <path d="M64 46 Q104 6 144 46" fill="none" stroke="#d94e24" stroke-width="2" stroke-linecap="round" opacity=".55"/>
+      <!-- pin de mapa sonriente -->
+      <path d="M52 30 C31 30 15 46 15 66 C15 93 52 128 52 128 S89 93 89 66 C89 46 73 30 52 30 Z" fill="#128a6b"/>
+      <circle cx="52" cy="66" r="20.5" fill="#fdf6e8"/>
+      <circle cx="44.5" cy="62" r="2.8" fill="#1f2a25"/>
+      <circle cx="59.5" cy="62" r="2.8" fill="#1f2a25"/>
+      <path d="M44 71 Q52 78 60 71" fill="none" stroke="#1f2a25" stroke-width="2.8" stroke-linecap="round"/>
+      <circle cx="37.5" cy="68" r="3.2" fill="#ff7a59" opacity=".55"/>
+      <circle cx="66.5" cy="68" r="3.2" fill="#ff7a59" opacity=".55"/>
+      <!-- bracito que sujeta el paraguas -->
+      <path d="M87 78 Q97 74 103 82" fill="none" stroke="#128a6b" stroke-width="7" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="pin-acento" viewBox="0 0 24 28">
+      <path d="M12 .8C6.8.8 2.6 5 2.6 10.2 2.6 17 12 27.2 12 27.2s9.4-10.2 9.4-17C21.4 5 17.2.8 12 .8z" fill="#f4653a"/>
+      <circle cx="12" cy="10" r="3.6" fill="#fff6ec"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div id="progreso"></div>
+
+<nav><div class="wrap">
+  <a class="logo" href="#" aria-label="Fritiner, inicio"><span class="wm">Fr<span class="i">ı<svg class="pin" viewBox="0 0 24 28" aria-hidden="true" focusable="false"><path class="cuerpo" d="M12 .8C6.8.8 2.6 5 2.6 10.2 2.6 17 12 27.2 12 27.2s9.4-10.2 9.4-17C21.4 5 17.2.8 12 .8z"/><circle class="hueco" cx="12" cy="10" r="3.6"/></svg></span>tiner<svg class="ruta" viewBox="0 0 100 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M1 5.5 Q 26 1 50 4.5 T 99 3"/></svg></span></a>
+  <div class="links">
+    <a href="#producto">Producto</a>
+    <a href="#dia">Un día</a>
+    <a href="#planes">Planes</a>
+    <a href="#web">Tu web</a>
+    <a href="#ruta">Lo que viene</a>
+    <a class="btn" href="../demo/" data-demo>Probar la demo</a>
+  </div>
+</div></nav>
+
+<header>
+  <svg class="adorno topo hero-topo" viewBox="0 0 320 220" aria-hidden="true" focusable="false">
+    <g fill="none" stroke="currentColor" stroke-width="1.6">
+      <path d="M160 26c42 0 92 26 92 76s-50 88-96 88-88-41-88-83 50-81 92-81z"/>
+      <path d="M160 52c33 0 70 21 70 59s-40 68-74 68-67-32-67-63 39-64 71-64z"/>
+      <path d="M160 78c24 0 48 14 48 41s-29 47-52 47-46-22-46-44 28-44 50-44z"/>
+      <path d="M160 104c14 0 27 8 27 22s-16 27-29 27-25-12-25-24 15-25 27-25z"/>
+    </g>
+  </svg>
+  <svg class="adorno ruta-linea hero-ruta" viewBox="0 0 1000 60" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <path d="M-10 48 C 220 12, 380 58, 540 30 S 840 48, 1010 18"/>
+  </svg>
+  <svg class="adorno pin-acento hero-pin" viewBox="0 0 24 28" aria-hidden="true" focusable="false"><use href="#pin-acento"/></svg>
+  <div class="wrap">
+  <div class="hero-grid">
+    <div>
+      <div class="kicker reveal" style="--d:80ms">Software de operaciones para empresas de free tours
+      y tours a pie con equipo de guías</div>
+      <h1 data-split>Tu software de reservas se olvida de lo que pasa después de la reserva.</h1>
+      <p class="lede reveal" style="--d:120ms">Fritiner es <b>la capa operativa de tu empresa de tours</b>:
+      junta las reservas de todos tus canales, avisa a tus clientes por WhatsApp, coordina a tu
+      equipo de guías, detecta los grupos grandes, rescata a quien se pierde y liquida cada tour al
+      céntimo. <b>Modulable</b>: empiezas con dos módulos y creces cuando quieras.</p>
+      <div class="hero-ctas reveal" style="--d:220ms">
+        <a class="btn" href="../demo/" data-demo>🖱️ Probar la demo interactiva</a>
+        <a class="btn sec" href="#contacto">Pedir una demo guiada</a>
+      </div>
+      <p class="hero-nota reveal" style="--d:300ms">Funciona cada día en una operación real de free
+      tours en Madrid — no nació en una sala de reuniones.</p>
+      <div class="guia-saludo reveal" style="--d:380ms">
+        <svg class="guia" aria-hidden="true" focusable="false"><use href="#guia"/></svg>
+        <p class="bocadillo"><b>¡Hola! Soy GuIA.</b> Atiendo a tus clientes por WhatsApp mientras
+        tú guías — confirmo, recuerdo y rescato al que se pierde. Solo te aviso si de verdad me
+        necesitas.</p>
+      </div>
+    </div>
+
+    <div class="mock reveal" style="--d:260ms" aria-hidden="true">
+      <div class="mock-pop pop1">👥 <b>Grupo grande detectado</b> — 2 reservas con el mismo teléfono
+        = 11 personas. Política de adelanto avisada en su confirmación.</div>
+      <div class="mock-card principal">
+        <div class="mock-head">🕒 10:00 · Free tour centro <span class="chipv">en marcha</span></div>
+        <div class="mock-sem">📨 12/14 avisadas · ✓ 9 confirmadas · <b>⏰ 1 llega tarde (3p)</b> · 2 sin responder</div>
+        <div class="mock-row ok"><span>Ana García · 4p</span><span>✓ en el punto</span></div>
+        <div class="mock-row"><span>Marco Bianchi · 2p</span><span>pendiente</span></div>
+        <div class="mock-row ok"><span>Familia Dupont · 5p</span><span>✓ en el punto</span></div>
+        <button>📍 Compartir dónde está el grupo</button>
+      </div>
+      <div class="mock-pop pop2">⛑️ <b>«Me he perdido»</b> → GuIA le pasó el mapa del grupo
+        (ubicación del guía, hace 2 min). Sin dar su teléfono.</div>
+    </div>
+  </div>
+
+  <div class="cifras">
+    <div class="cifra reveal"><span class="v">30–50 %</span><span class="l">de no-shows sufre un free tour. Los recordatorios bien hechos recuperan gran parte.</span></div>
+    <div class="cifra reveal" style="--d:90ms"><span class="v">5 sistemas</span><span class="l">desconectados usa el operador medio (extranets, Excel, WhatsApp…). Aquí es uno.</span></div>
+    <div class="cifra reveal" style="--d:180ms"><span class="v">⅓</span><span class="l">de los operadores no sabe si gana dinero por tour. Aquí lo ves tour a tour.</span></div>
+    <div class="cifra reveal" style="--d:270ms"><span class="v">0 %</span><span class="l">de comisión por tus reservas. No somos una OTA ni pertenecemos a ninguna.</span></div>
+  </div>
+</div></header>
+
+<section class="alt" id="producto"><div class="wrap">
+  <div class="sec-head">
+    <h2 data-split>Todo lo que pasa entre la reserva y la propina</h2>
+    <p class="reveal">Cada módulo se activa o se apaga según tu plan. Empiezas por lo que te duele
+    hoy y creces sin cambiar de sistema.</p>
+  </div>
+  <div class="grid3">
+    <div class="celda star reveal"><span class="ico">🧭</span><h3>Rescate de rezagados</h3>
+      <p>¿Alguien se pierde a mitad de ruta o llega tarde a la parada? El guía comparte su ubicación
+      con un botón y el asistente le pasa el mapa al turista al momento — sin exponer nunca el
+      teléfono del guía.</p><span class="mini">módulo: rescate · solo en Fritiner</span></div>
+    <div class="celda star reveal" style="--d:70ms"><span class="ico">👥</span><h3>Grupos grandes, detectados</h3>
+      <p>Las plataformas limitan 6 por reserva y los grupos se parten en 2-3 reservas. Fritiner los
+      junta (teléfono, email, apellido, hora) y aplica tu política — aviso en su confirmación y al
+      guía: «puedes pedir adelanto».</p><span class="mini">módulo: grupos · solo en Fritiner</span></div>
+    <div class="celda reveal" style="--d:140ms"><span class="ico">📥</span><h3>Reservas multicanal, solas</h3>
+      <p>Las reservas de GuruWalk, Civitatis, Freetour y tu web entran y se actualizan solas —
+      altas, cambios de día y cancelaciones. Sin API, sin copiar a mano: leemos los emails de las
+      plataformas por ti.</p><span class="mini">módulo: canales</span></div>
+    <div class="celda reveal"><span class="ico">📲</span><h3>Recordatorios que evitan no-shows</h3>
+      <p>Confirmación y recordatorios por WhatsApp con respuesta procesable: el «sí voy / llego
+      tarde» del cliente aparece en el manifiesto del guía al instante, como un semáforo. La
+      cadencia inteligente según riesgo va en el plan Pro.</p>
+      <span class="mini">módulo: comunicación</span></div>
+    <div class="celda reveal" style="--d:70ms"><span class="ico">🧑‍🤝‍🧑</span><h3>Tus guías, sin cuentas ni líos</h3>
+      <p>Cada guía tiene su enlace: su tour de hoy, check-in con un toque, walk-ins, disponibilidad
+      y su analítica. Permisos que decides tú — quién ve qué, quién marca qué.</p>
+      <span class="mini">módulo: equipo</span></div>
+    <div class="celda reveal" style="--d:140ms"><span class="ico">💶</span><h3>Liquidaciones al céntimo</h3>
+      <p>Propina o precio, comisiones por canal, reparto guía-empresa configurable — tour a tour,
+      con exportación para la gestoría. El guía nunca paga: es una regla del sistema.</p>
+      <span class="mini">módulo: dinero</span></div>
+    <div class="celda celda-guia reveal"><svg class="ico-svg" aria-hidden="true" focusable="false"><use href="#guia"/></svg><h3>Un asistente que no inventa</h3>
+      <p>GuIA responde 24/7, cancela, cambia de día o avisa al guía de un retraso — solo con el
+      código de reserva y solo con datos reales de tu negocio. Lo que no sabe, te lo pasa a ti.</p>
+      <span class="mini">módulo: asistente IA</span></div>
+    <div class="celda reveal" style="--d:70ms"><span class="ico">📊</span><h3>Operaciones por excepciones</h3>
+      <p>Un parte diario con lo que necesita tu atención — tours sin guía, sobreaforo, lista de
+      espera con hueco, reseñas negativas — y nada más. Si no hay nada, te lo dice y a otra cosa.</p>
+      <span class="mini">módulo: operaciones</span></div>
+  </div>
+</div></section>
+
+<section id="dia">
+  <svg class="adorno brujula" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+    <circle cx="32" cy="32" r="28.5" fill="#fffdf7" stroke="#c98a2d" stroke-width="2.2"/>
+    <circle cx="32" cy="32" r="22.5" fill="none" stroke="#e6dcc8" stroke-width="1.4"/>
+    <path d="M32 5.5v6M32 52.5v6M5.5 32h6M52.5 32h6" stroke="#c98a2d" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M32 13 L37.5 32 L26.5 32 Z" fill="#f4653a"/>
+    <path d="M32 51 L37.5 32 L26.5 32 Z" fill="#123f33"/>
+    <circle cx="32" cy="32" r="3.2" fill="#fffdf7" stroke="#c98a2d" stroke-width="1.8"/>
+  </svg>
+  <div class="wrap">
+  <div class="sec-head">
+    <h2 data-split>Un día cualquiera con Fritiner</h2>
+    <p class="reveal">Sin abrir Excel, sin copiar reservas, sin «¿alguien sabe dónde está el guía?».</p>
+  </div>
+  <div class="dia">
+    <div class="hito reveal"><span class="hora">08:41</span><span class="punto"></span>
+      <div class="que"><b>Entran 3 reservas de GuruWalk y 1 de Civitatis.</b> Solas. Dos son el mismo
+      apellido con 4 minutos de diferencia: Fritiner las junta — 9 personas — y les avisa de la
+      política de grupos en su confirmación.</div></div>
+    <div class="hito reveal"><span class="hora">09:15</span><span class="punto"></span>
+      <div class="que"><b>Recordatorios de mañana enviados por WhatsApp.</b> Una clienta responde
+      «al final somos 5»: su reserva se actualiza sola y el guía lo ve en su manifiesto.</div></div>
+    <div class="hito reveal"><span class="hora">10:58</span><span class="punto"></span>
+      <div class="que"><b>«Me he perdido, no encuentro al grupo».</b> GuIA verifica su código, le
+      manda el mapa con la ubicación que el guía compartió en la parada, y deja nota en el tour.
+      Nadie llamó a nadie.</div></div>
+    <div class="hito reveal"><span class="hora">13:45</span><span class="punto"></span>
+      <div class="que"><b>Fin del tour: QR de propina.</b> El cliente paga con tarjeta y deja la
+      reseña en el mismo gesto. El semáforo marca 2 no-shows — mañana el recordatorio les llegará
+      antes.</div></div>
+    <div class="hito reveal"><span class="hora">23:00</span><span class="punto"></span>
+      <div class="que"><b>El día se liquida solo.</b> Recaudación, comisiones por canal, parte del
+      guía y de la empresa — tour a tour, listo para la gestoría. Y el parte de mañana: «2 cosas
+      que revisar».</div></div>
+  </div>
+</div></section>
+
+<section class="alt" id="planes">
+  <svg class="adorno topo planes-topo" viewBox="0 0 320 220" aria-hidden="true" focusable="false">
+    <g fill="none" stroke="currentColor" stroke-width="1.6">
+      <path d="M160 26c42 0 92 26 92 76s-50 88-96 88-88-41-88-83 50-81 92-81z"/>
+      <path d="M160 52c33 0 70 21 70 59s-40 68-74 68-67-32-67-63 39-64 71-64z"/>
+      <path d="M160 78c24 0 48 14 48 41s-29 47-52 47-46-22-46-44 28-44 50-44z"/>
+      <path d="M160 104c14 0 27 8 27 22s-16 27-29 27-25-12-25-24 15-25 27-25z"/>
+    </g>
+  </svg>
+  <div class="wrap">
+  <div class="sec-head">
+    <h2 data-split>Pagas por lo que operas, no por tu equipo</h2>
+    <p class="reveal"><b>Guías siempre ilimitados</b> y <b>sin comisión por reserva</b>. El precio sube
+    solo si creces en <b>tours</b> — no te penalizamos por tener más gente en el equipo (al revés que el
+    software que cobra por usuario). Sin permanencia.</p>
+  </div>
+  <div class="fact-toggle-wrap reveal">
+    <div class="fact-toggle" role="radiogroup" aria-label="Periodo de facturación" id="factToggle">
+      <button type="button" role="radio" aria-checked="true" data-modo="mensual">Mensual</button>
+      <button type="button" role="radio" aria-checked="false" data-modo="anual">Anual <span class="dto">−17 %</span></button>
+    </div>
+    <p class="pausa">El plan anual convierte 12 decisiones en 1 — y en temporada baja puedes pausar
+    tu suscripción hasta 3 meses conservando todos tus datos.</p>
+  </div>
+  <div class="planes">
+    <div class="plan reveal">
+      <h3>Esencial</h3><div class="precio">0 €</div>
+      <div class="para">La base, para empezar a operar · <b>1 tour</b></div>
+      <ul>
+        <li>Parte del día y manifiesto móvil del guía (check-in, walk-ins)</li>
+        <li>Reservas multicanal: buzón de email + tu web propia</li>
+        <li>Recordatorio de confirmación anti-no-show por WhatsApp — 1 toque, el día antes <small>(hasta 100 mensajes/mes)</small></li>
+        <li>Detección de grupos grandes y rescate de rezagados</li>
+        <li><b>Guías ilimitados</b> · equipo y disponibilidad</li>
+        <li>Propina digital: <b>2,5 %</b></li>
+      </ul>
+      <a class="btn sec" href="#contacto">Empezar gratis</a>
+    </div>
+    <div class="plan destacado reveal" style="--d:110ms">
+      <h3>Pro</h3><div class="precio"><span class="imp" data-mensual="59" data-anual="49">59</span> €<small>/mes</small></div>
+      <div class="fact-nota" data-nota hidden>facturado anualmente · 590 €/año (2 meses gratis)</div>
+      <div class="para">Para la empresa de free tours con equipo · <b>2 tours incluidos</b></div>
+      <ul>
+        <li>Todo lo de Esencial · <b>guías ilimitados</b> · <b>+15 €/tour</b> adicional</li>
+        <li><b>Cadencia anti-no-show inteligente completa</b>: se adapta al riesgo de cada
+          reserva — la que recupera personas (y euros) cada mes</li>
+        <li>Mensajes WhatsApp <b>sin tope</b></li>
+        <li><b>Conciliación con plataformas</b>: recupera las comisiones de los no-shows —
+          € recuperados este mes, en negro sobre blanco</li>
+        <li><b>GuIA</b>: el asistente que atiende tu chat y no inventa</li>
+        <li><b>Liquidación a guías</b>: reparto configurable, cuenta cuadrada</li>
+        <li><b>Carrito abandonado y combos</b>: la segunda venta, sola</li>
+        <li>Propina digital: <b>1,9 %</b></li>
+      </ul>
+      <a class="btn" href="#contacto">Pedir una demo</a>
+    </div>
+    <div class="plan premium reveal" style="--d:220ms">
+      <h3>Premium</h3><div class="precio"><span class="imp" data-mensual="129" data-anual="107">129</span> €<small>/mes</small></div>
+      <div class="fact-nota" data-nota hidden>facturado anualmente · 1.284 €/año (2 meses gratis)</div>
+      <div class="para">Todo Fritiner · <b>tours y guías ilimitados</b> — para operadores que escalan</div>
+      <ul>
+        <li>Todo lo del plan Pro · <b>tours ilimitados</b> (sin coste por tour)</li>
+        <li><b>Cuadro de mando</b>: analítica por tour, guía, canal y franja</li>
+        <li><b>Propina digital al 1,5 %</b> — la tarifa más baja cuando mueves volumen</li>
+        <li>Soporte prioritario y onboarding dedicado</li>
+        <li>Próximamente: cobro online, facturación y channel manager de pago</li>
+      </ul>
+      <a class="btn" href="#contacto">Quiero Premium</a>
+    </div>
+  </div>
+  <p class="reveal" style="text-align:center; color:var(--muted); font-size:14px; margin:16px 0 0;">
+    Ejemplo: 4 tours diarios con el equipo que necesites → <b>Pro 89 €/mes</b> (59 € + 2 tours extra).
+    Un software que cobra por usuario te costaría el triple con 5 guías.</p>
+  <div class="addon reveal">
+    <div class="t">
+      <h3>💳 Propina digital — ingreso y escaparate a la vez</h3>
+      <p>Un QR al final del tour: el cliente deja la propina con tarjeta o Bizum y la reseña en el
+      mismo gesto. Es doble palanca: <b>ingreso por cliente</b> (una agencia media mueve 3–6 k€/mes
+      en propinas) y <b>canal de adquisición</b> — cada turista que paga ve el producto por dentro.
+      Disponible en todos los planes; solo cobramos cuando tú cobras.</p>
+    </div>
+    <div class="tramos">
+      <div class="tramo"><span class="p">2,5 %</span><span class="n">Esencial</span></div>
+      <div class="tramo"><span class="p">1,9 %</span><span class="n">Pro</span></div>
+      <div class="tramo"><span class="p">1,5 %</span><span class="n">Premium</span></div>
+      <span class="nota">+ coste de pasarela · a más plan, menos % — la propina financia el descuento del plan</span>
+    </div>
+  </div>
+</div></section>
+
+<section id="web"><div class="wrap">
+  <div class="webcard reveal">
+    <div>
+      <span class="web-chip">✨ Complemento · tu web incluida</span>
+      <h2>Tu web, ya hecha. Tú ya tenías los datos.</h2>
+      <p class="lead">Fritiner genera con IA la web de tu empresa <b>desde el cerebro de tu
+      asistente</b>: tours, punto de encuentro con su señal, horarios, idiomas, políticas y
+      reseñas. Publicada en minutos en <b>tunombre.tudominio</b> — o en tu dominio propio, si
+      prefieres. Cambias un horario o añades un tour y la web se actualiza sola.</p>
+      <ul>
+        <li><b>Reserva real integrada</b>: disponibilidad por idioma y horario con confirmación
+          inmediata — sin plugins, sin iframes, sin fee por reserva</li>
+        <li><b>GuIA en un botón de WhatsApp</b>: las dudas de antes de reservar las atiende tu
+          asistente, no tu bolsillo</li>
+        <li><b>Multilingüe y RGPD de serie</b>: avisos legales conformes y datos en la UE sin
+          tocar nada</li>
+      </ul>
+      <div class="web-precio">
+        <span class="wp">12 €<small>/mes</small></span>
+        <span class="wn">add-on en <b>Esencial</b> y <b>Pro</b> · <b>incluida en Premium</b></span>
+      </div>
+      <p class="web-comp"><b>Web + reservas + asistente por menos que Wix.</b> Los constructores
+      te cobran más y te dejan el trabajo a ti; FareHarbor cobra 499 $/mes por su web. Aquí nace
+      hecha, porque tus datos ya estaban dentro.</p>
+    </div>
+    <div>
+      <div class="webmock" aria-hidden="true">
+        <div class="wbar"><span class="wdot"></span><span class="wdot"></span><span class="wdot"></span><span class="wurl">lunatours.tudominio</span></div>
+        <div class="whero"><b>Luna Tours · Roma</b><span>Free tours que se reservan en un minuto</span><span class="wbtn">Reservar plaza</span></div>
+        <div class="wrow"><span>🕒 Coliseo y Foro · 10:30</span><b>quedan 4 plazas</b></div>
+        <div class="wrow"><span>🕒 Trastevere al atardecer · 18:00</span><b>ES · EN · IT</b></div>
+        <div class="wrow ok"><span>★ 4,9 · 312 reseñas verificadas</span><span class="wwa">💬 WhatsApp</span></div>
+      </div>
+      <div class="guia-web" aria-hidden="true">
+        <svg class="guia" focusable="false"><use href="#guia"/></svg>
+        <p class="bocadillo">Ese botón de WhatsApp soy yo: respondo al momento, con los datos
+        reales de tu negocio.</p>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<section id="calculadora"><div class="wrap">
+  <div class="sec-head">
+    <h2 data-split>¿Cuánto te cuesta de verdad?</h2>
+    <p class="reveal">La cuota mensual es solo una parte: la mayoría del software de reservas cobra
+    además un porcentaje de cada reserva. Mueve los controles a tus números y compara el coste
+    total al mes.</p>
+  </div>
+  <div class="calc reveal">
+    <div class="calc-panel">
+      <div class="calc-campo">
+        <label for="inReservas">Facturación mensual en reservas online</label>
+        <output id="outReservas" for="inReservas">6.000 €</output>
+        <input type="range" id="inReservas" min="0" max="10000" step="100" value="6000">
+        <div class="calc-escala" aria-hidden="true"><span>0 €</span><span>10.000 €</span></div>
+      </div>
+      <div class="calc-campo">
+        <label for="inPropinas">Propinas digitales al mes</label>
+        <output id="outPropinas" for="inPropinas">2.000 €</output>
+        <input type="range" id="inPropinas" min="0" max="8000" step="100" value="2000">
+        <div class="calc-escala" aria-hidden="true"><span>0 €</span><span>8.000 €</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="barras" id="barras"></div>
+      <div class="calc-ahorro" id="calcAhorro" aria-live="polite"></div>
+      <p class="calc-fuente">Precios públicos de las páginas de tarifas de cada producto a julio de
+      2026 (turitop.com, trekksoft.com, bokun.io, fareharbor.com). Los competidores pueden aplicar
+      cargos adicionales (por ticket, usuario o procesamiento) no incluidos. Cálculo orientativo
+      para una empresa de free tours.</p>
+    </div>
+  </div>
+</div></section>
+
+<section id="ruta"><div class="wrap">
+  <div class="sec-head">
+    <h2 data-split>Lo que viene: cada mes, más completo</h2>
+    <p class="reveal">Un plan de producto claro y priorizado: primero lo que un operador de free
+    tour usa cada día, después la distribución y la parte fiscal. Cada función entra cuando aporta
+    valor real — sin relleno ni «200 integraciones» de escaparate.</p>
+  </div>
+  <div class="ruta">
+    <div class="paso reveal"><span class="fase">Pronto</span><h3>🪄 Importador con IA</h3>
+      <p>Pega la URL de tu listado de GuruWalk o de tu web y tu tour queda montado: título,
+      horarios, punto de encuentro, fotos. De cero a operativo en 15 minutos.</p></div>
+    <div class="paso reveal" style="--d:60ms"><span class="fase">Pronto</span><h3>🛒 Carrito abandonado y combos</h3>
+      <p>Recupera al que se quedó a medias y ofrece el tour de tapas a quien hizo el free tour —
+      la venta cruzada la misma semana, sola.</p></div>
+    <div class="paso reveal"><span class="fase f3">Después</span><h3>🏨 Red de resellers locales</h3>
+      <p>Hostels, hoteles y oficinas de turismo venden tus tours con su QR y su comisión —
+      distribución que no controla ninguna OTA.</p></div>
+    <div class="paso reveal" style="--d:60ms"><span class="fase f3">Después</span><h3>🔗 Channel manager de pago</h3>
+      <p>Viator, GetYourGuide, Civitatis y Google Things to Do con sincronización fiable — las 4
+      que concentran el valor, no «200 conexiones» de escaparate.</p></div>
+    <div class="paso reveal" style="--d:120ms"><span class="fase f3">Después</span><h3>🧾 Facturación certificada</h3>
+      <p>VeriFactu (2027) y factura B2B integradas: tu free tour, en regla, sin salir del
+      sistema.</p></div>
+    <div class="paso reveal"><span class="fase f3">Después</span><h3>🧗 Recursos y waivers</h3>
+      <p>Kayaks, furgonetas, material compartido entre tours — y exención de responsabilidad
+      firmada en el checkout para actividades.</p></div>
+    <div class="paso reveal" style="--d:60ms"><span class="fase f3">Después</span><h3>🔌 API pública + OCTO</h3>
+      <p>API y webhooks desde el plan barato, con estándares del sector — tus datos son tuyos,
+      también para irte.</p></div>
+  </div>
+</div></section>
+
+<section class="alt" id="porque"><div class="wrap">
+  <div class="sec-head">
+    <h2 data-split>Por qué Fritiner y no el software de siempre</h2>
+    <p class="reveal">El software de reservas clásico se hizo para vender tickets. El día a día de
+    una empresa de tours a pie — guías, propinas, no-shows, grupos partidos, cinco plataformas —
+    se quedó fuera. <b>Nosotros lo hicimos al revés: pensado para el guía en el punto de encuentro a
+    las 10:15, no para una oficina.</b> Por eso tu equipo lo usa de verdad.</p>
+  </div>
+  <div class="vs reveal">
+    <div class="vs-row"><div>El software de siempre</div><div>Fritiner</div></div>
+    <div class="vs-row"><div class="malo">Gestiona la <b>reserva</b>: entra en un panel y ahí acaba su trabajo</div>
+      <div class="bueno">Gestiona la <b>operación</b>: lo que pasa entre que entra la reserva y termina el tour</div></div>
+    <div class="vs-row"><div class="malo">Cobra un 3–6 % de cada reserva (o se lo cobra a tu cliente en el checkout)</div>
+      <div class="bueno">Suscripción plana. Con free tours, cobrar % de 0 € no tiene sentido — y lo sabemos</div></div>
+    <div class="vs-row"><div class="malo">Pertenece a una OTA que compite contigo por tu propio cliente</div>
+      <div class="bueno">Neutral: ni somos una OTA ni le contamos tus datos a ninguna</div></div>
+    <div class="vs-row"><div class="malo">La reserva entra… y ahí se acaba: guías, propinas y asistencia real, en Excel</div>
+      <div class="bueno">Check-in real, walk-ins, grupos, reparto y liquidación por tour — el después es el producto</div></div>
+    <div class="vs-row"><div class="malo">Chatbot que se inventa el punto de encuentro</div>
+      <div class="bueno">GuIA solo afirma datos reales de tu negocio; lo dudoso te lo deriva. Siempre</div></div>
+    <div class="vs-row"><div class="malo">Soporte en inglés, en horario de otra costa</div>
+      <div class="bueno">En español, por gente que ha estado en el punto de encuentro un sábado a las 12</div></div>
+  </div>
+</div></section>
+
+<div class="final wrap">
+  <svg class="adorno ruta-linea final-ruta" viewBox="0 0 1000 60" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <path d="M-10 14 C 200 52, 420 8, 620 42 S 870 16, 1010 38"/>
+  </svg>
+  <svg class="adorno pin-acento final-pin" viewBox="0 0 24 28" aria-hidden="true" focusable="false"><use href="#pin-acento"/></svg>
+  <div class="guia-final reveal">
+    <svg class="guia" aria-hidden="true" focusable="false"><use href="#guia"/></svg>
+    <p class="bocadillo"><b>¿Empezamos?</b> Yo estaré dentro, atendiendo a tus clientes.</p>
+  </div>
+  <h2 data-split>Lo estamos abriendo a las primeras empresas</h2>
+  <p class="reveal">Fritiner funciona ya cada día en una operación real de free tours en Madrid.
+  Buscamos un grupo pequeño de empresas fundadoras para probarlo con ventajas de por vida:
+  cuéntanos cómo trabajas y te lo enseñamos con tus propios tours.</p>
+  <a class="btn reveal" style="--d:120ms" href="#contacto">Quiero ser empresa fundadora</a>
+</div>
+
+<footer><div class="wrap">
+  <span class="logo pie" aria-label="Fritiner"><span class="wm">Fr<span class="i">ı<svg class="pin" viewBox="0 0 24 28" aria-hidden="true" focusable="false"><path class="cuerpo" d="M12 .8C6.8.8 2.6 5 2.6 10.2 2.6 17 12 27.2 12 27.2s9.4-10.2 9.4-17C21.4 5 17.2.8 12 .8z"/><circle class="hueco" cx="12" cy="10" r="3.6"/></svg></span>tiner<svg class="ruta" viewBox="0 0 100 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M1 5.5 Q 26 1 50 4.5 T 99 3"/></svg></span></span>
+  <span id="contacto">© 2026 Fritiner · <b>dominio y email de contacto en trámite</b> · Hecho en Madrid</span>
+  <span>Reservas · Canales · Guías · Grupos · Rescate · Propinas · GuIA</span>
+</div></footer>
+
+<script>
+(function () {
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.documentElement.classList.add('anim');
+
+  // Los titulares se "construyen": cada letra aparece y se coloca con un pelín
+  // de rebote. Palabras envueltas para que nunca se parta una a mitad de línea.
+  document.querySelectorAll('[data-split]').forEach(function (h) {
+    var texto = h.textContent, i = 0;
+    h.textContent = '';
+    texto.split(/(\s+)/).forEach(function (tok) {
+      if (!tok) return;
+      if (/^\s+$/.test(tok)) { h.appendChild(document.createTextNode(' ')); return; }
+      var w = document.createElement('span'); w.className = 'w';
+      tok.split('').forEach(function (ch) {
+        var s = document.createElement('span'); s.className = 'ch';
+        s.style.setProperty('--i', i++); s.textContent = ch; w.appendChild(s);
+      });
+      h.appendChild(w);
+    });
+  });
+
+  // Al bajar, cada pieza se revela cuando entra en el viewport (una sola vez).
+  if ('IntersectionObserver' in window && !reduce) {
+    var io = new IntersectionObserver(function (entradas) {
+      entradas.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -50px' });
+    document.querySelectorAll('.reveal, [data-split]').forEach(function (el) { io.observe(el); });
+  } else {
+    document.querySelectorAll('.reveal, [data-split]').forEach(function (el) { el.classList.add('in'); });
+  }
+
+  // Toggle de facturación mensual / anual. Los precios mensuales (0/59/129) son
+  // los valores por defecto en el HTML; el anual solo los cruza vía data-*.
+  var toggle = document.getElementById('factToggle');
+  if (toggle) {
+    var botones = Array.prototype.slice.call(toggle.querySelectorAll('button'));
+    var aplicaModo = function (modo) {
+      botones.forEach(function (b) {
+        b.setAttribute('aria-checked', b.dataset.modo === modo ? 'true' : 'false');
+      });
+      document.querySelectorAll('.precio .imp[data-mensual]').forEach(function (imp) {
+        var destino = modo === 'anual' ? imp.dataset.anual : imp.dataset.mensual;
+        if (imp.textContent === destino) return;
+        if (reduce) { imp.textContent = destino; return; }
+        imp.classList.add('cambia');
+        setTimeout(function () { imp.textContent = destino; imp.classList.remove('cambia'); }, 180);
+      });
+      document.querySelectorAll('[data-nota]').forEach(function (n) {
+        n.hidden = modo !== 'anual';
+      });
+    };
+    botones.forEach(function (b, i) {
+      b.addEventListener('click', function () { aplicaModo(b.dataset.modo); });
+      b.addEventListener('keydown', function (e) {
+        if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+        e.preventDefault();
+        var otro = botones[(i + 1) % botones.length];
+        otro.focus();
+        aplicaModo(otro.dataset.modo);
+      });
+    });
+  }
+
+  // Calculadora de coste total: cuota + % sobre reservas (o sobre propinas, en Fritiner).
+  var inR = document.getElementById('inReservas'), inP = document.getElementById('inPropinas');
+  if (inR && inP) {
+    var outR = document.getElementById('outReservas'),
+        outP = document.getElementById('outPropinas'),
+        cajaBarras = document.getElementById('barras'),
+        cajaAhorro = document.getElementById('calcAhorro');
+    var fmt = function (n) {
+      // Formato es-ES manual: no depende de la ICU del navegador.
+      return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    };
+    var opciones = [
+      { id: 'hito',       nombre: 'Fritiner Pro',          calcula: function (r, p) { return 59 + 0.019 * p; } },
+      { id: 'turitop',    nombre: 'TuriTop Starter',   calcula: function (r, p) { return 29 + 0.02 * r; } },
+      { id: 'trekksoft',  nombre: 'TrekkSoft Starter', calcula: function (r, p) { return 49 + 0.03 * r; } },
+      { id: 'bokun',      nombre: 'Bókun Start',       calcula: function (r, p) { return 49 + 0.015 * r; } },
+      { id: 'fareharbor', nombre: 'FareHarbor',        calcula: function (r, p) { return 0.06 * r; } }
+    ];
+    opciones.forEach(function (o) {
+      var fila = document.createElement('div');
+      fila.className = 'barra-fila' + (o.id === 'hito' ? ' marca' : '');
+      fila.innerHTML = '<span class="barra-nombre">' + o.nombre + '</span>' +
+        '<span class="barra-pista"><span class="barra-fill"></span></span>' +
+        '<span class="barra-imp"><span class="v">0</span> <small>€/mes</small></span>';
+      cajaBarras.appendChild(fila);
+      o.fila = fila;
+      o.fill = fila.querySelector('.barra-fill');
+      o.imp = fila.querySelector('.v');
+    });
+    var recalcula = function () {
+      var r = +inR.value, p = +inP.value;
+      outR.textContent = fmt(r) + ' €';
+      outP.textContent = fmt(p) + ' €';
+      opciones.forEach(function (o) { o.coste = o.calcula(r, p); });
+      var max = Math.max.apply(null, opciones.map(function (o) { return o.coste; }).concat([1]));
+      opciones.slice().sort(function (a, b) { return a.coste - b.coste; }).forEach(function (o) {
+        cajaBarras.appendChild(o.fila); // reordena de menor a mayor coste
+        o.imp.textContent = fmt(o.coste);
+        o.fill.style.width = (o.coste / max * 100).toFixed(1) + '%';
+      });
+      var hito = opciones[0];
+      var barata = opciones.slice(1).reduce(function (a, b) { return b.coste < a.coste ? b : a; });
+      var dif = Math.round(barata.coste - hito.coste);
+      var matiz = '<span class="matiz">TuriTop y Bókun cobran también por usuario al crecer el ' +
+        'equipo; Fritiner incluye guías ilimitados.</span>';
+      if (dif > 0) {
+        cajaAhorro.innerHTML = 'Con Fritiner te ahorras <b>' + fmt(dif) + ' €/mes — ' +
+          fmt(dif * 12) + ' €/año</b> frente a ' + barata.nombre + '.' + matiz;
+      } else if (dif < 0) {
+        cajaAhorro.innerHTML = barata.nombre + ' sale <b>' + fmt(-dif) +
+          ' €/mes más barata</b> con estos números — sobre el papel.' + matiz;
+      } else {
+        cajaAhorro.innerHTML = 'Empate con ' + barata.nombre +
+          ' en precio — <b>la diferencia está en lo que pasa después de la reserva</b>.' + matiz;
+      }
+    };
+    inR.addEventListener('input', recalcula);
+    inP.addEventListener('input', recalcula);
+    recalcula();
+  }
+
+  // Barra de progreso de lectura.
+  var barra = document.getElementById('progreso');
+  addEventListener('scroll', function () {
+    var h = document.documentElement;
+    var p = h.scrollTop / (h.scrollHeight - h.clientHeight || 1);
+    barra.style.width = (p * 100).toFixed(2) + '%';
+  }, { passive: true });
+})();
+</script>
+</body>
+</html>
