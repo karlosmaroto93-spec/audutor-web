@@ -2777,7 +2777,7 @@ function pintaCerebro(){
       }
       var pd=document.createElement('p'); pd.className='mini muted'; pd.style.margin='0 0 6px';
       pd.innerHTML= borradores.length
-        ? '<b>'+llenos+' confirmados.</b> Los otros <b>'+borradores.length+'</b> ya tienen un <b style="color:var(--gold);">borrador</b> de GuIA: cambia lo que no encaje o pulsa ✓ para aceptarlo. Mientras no lo confirmes, GuIA lo deriva a una persona (nunca suelta un borrador sin tu OK). <b style="color:var(--acc);">★ En color, los importantes.</b>'
+        ? '<b>'+llenos+' confirmados.</b> Los otros <b>'+borradores.length+'</b> ya tienen un <b style="color:var(--gold);">borrador</b> de GuIA: cambia lo que no encaje o pulsa ✓ para aceptarlo. Mientras no lo confirmes, GuIA te lo pasa a ti (nunca suelta un borrador sin tu OK). <b style="color:var(--acc);">★ En color, los importantes.</b>'
         : '¡Formulario completo! Todo confirmado — ninguna pregunta habitual llegará al encargado.';
       f.appendChild(pd);
       if (borradores.length){
