@@ -168,8 +168,9 @@
   .cal{ display:grid; grid-template-columns:158px repeat(7,minmax(52px,1fr)); gap:6px; min-width:660px; }
   .cal-h{ text-align:center; font-size:11px; font-weight:800; letter-spacing:.04em; color:var(--muted);
     padding:4px 0 6px; }
+  /* «Hoy» se marca solo con el color del acento: misma letra, mismo tamaño y misma
+     caja que el resto de días — antes llevaba una píldora rellena que rompía la fila. */
   .cal-h.hoy{ color:var(--acc); }
-  .cal-h.hoy span{ display:inline-block; background:var(--acc); color:#fff; border-radius:6px; padding:1px 6px; }
   .cal-slot{ display:flex; flex-direction:column; justify-content:center; padding:8px 12px;
     background:linear-gradient(180deg,#fbfaf7,#f6f4ef); border:1px solid var(--line); border-radius:11px; }
   .cal-slot .h{ font-family:var(--mono); font-weight:800; font-size:15px; color:var(--ink); }
@@ -523,7 +524,7 @@
       </div>
     </div>
   </nav>
-  <div class="pie-demo">
+  <div class="pie-demo"><a href="../" style="display:block; margin:0 0 10px; padding:7px 10px; border-radius:8px; background:#eae1c9; color:#3d5a4e; text-decoration:none; font-size:12px; font-weight:700;">← Volver a la web</a>
     <div class="leyenda-planes">
       <b>Tu plan (demo):</b> cámbialo y mira cómo se desbloquean los módulos. La <b>base</b> (sin 🔒:
       operaciones, equipo, canales y el recordatorio anti no-show básico) va en todos, con <b>guías
