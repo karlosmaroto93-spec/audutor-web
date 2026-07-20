@@ -350,7 +350,7 @@
     font-size:12.5px; font-weight:700; cursor:pointer; color:var(--muted); font-family:inherit; }
   .canal-sw button.on{ background:var(--acc); color:#fff; }
 
-  /* chat: bandeja de derivadas a una persona, arriba del todo */
+  /* chat: bandeja de preguntas derivadas a ti, arriba del todo */
   .der-chat{ background:var(--gold-soft); border:1px solid var(--gold); border-radius:14px;
     padding:13px 16px; margin:0 0 14px; max-width:640px; }
   .der-item{ display:flex; justify-content:space-between; gap:10px; align-items:center;
@@ -744,7 +744,7 @@
       <button onclick="chatRapido('¿Es accesible en silla de ruedas?')">«¿Accesible?» ♿</button>
     </div>
     <p class="mini muted" style="margin-top:10px;">GuIA solo afirma datos reales del negocio y solo
-      actúa con el código de reserva. Lo que no sabe, lo deriva a una persona — jamás improvisa.</p>
+      actúa con el código de reserva. Lo que no sabe, te lo pasa a ti — jamás improvisa.</p>
   </div>
 
   <div class="chat" id="chat-web-wrap" style="display:none; max-width:640px;">
@@ -783,7 +783,7 @@
       de serie <b>más de 50 reglas de conversación integradas</b> para entender cancelaciones, cambios,
       retrasos, grupos, idiomas y mucho más, y cada pregunta frecuente ya viene con su borrador escrito.
       Esas reglas deciden cómo entender la pregunta y qué hecho usar — pero GuIA <b>solo afirma lo que
-      tú has confirmado</b>: lo que no sabe, lo deriva a una persona.</p>
+      tú has confirmado</b>: lo que no sabe, te lo pasa a ti.</p>
     <div id="resp-lista" style="display:none; margin-top:10px; max-height:430px; overflow:auto;"></div>
   </div>
 
@@ -793,7 +793,7 @@
       web del tour y confirma sola los datos que encuentre. Y cada pregunta ya viene con un
       <b style="color:var(--gold);">borrador</b> escrito — solo cambias palabras o rellenas los
       [huecos], no escribes la frase entera. GuIA <b>solo</b> afirma lo que <b>confirmas</b> (un
-      borrador sin confirmar se deriva a una persona: nunca lo suelta, jamás lo coge de otro tour).
+      borrador sin confirmar te llega a ti: nunca lo suelta, jamás lo coge de otro tour).
       <b style="color:var(--acc);">★ En color, los importantes.</b> Pulsa <b>💾 Guardar</b> y el
       formulario se pliega a su barra de progreso. El bloque <b>🏢 La empresa</b> se responde una
       sola vez y vale para todos los tours. <b>Ojo con los [corchetes]</b>: marcan el hueco donde va
@@ -2271,11 +2271,11 @@ function registraDerivada(q){
     canal: S.chatCanal==='web' ? '🌐 web' : 'WhatsApp', hace:'ahora mismo' }); pintaCerebro(); }
 }
 /* Cortafuegos «deriva siempre»: facturas, reembolsos, quejas, prensa, alergias…
-   van a una persona SÍ O SÍ — GuIA no los improvisa nunca. */
+   van a ti SÍ O SÍ — GuIA no los improvisa nunca. */
 function derivaSiempre(t){
   registraDerivada(t);
   return 'Esto prefiero no responderlo yo para no equivocarme: se lo paso al encargado y te contesta enseguida 🙂\n\n'+
-    '<i>— Cortafuegos: facturas, reembolsos, quejas, prensa, alergias y similares van SIEMPRE a una persona. GuIA nunca los improvisa.</i>';
+    '<i>— Cortafuegos: facturas, reembolsos, quejas, prensa, alergias y similares van SIEMPRE a ti. GuIA nunca los improvisa.</i>';
 }
 /* GuIA no solo contesta: lo que gestiona queda escrito en el tour en curso —
    se ve después en el 📋 Manifiesto (observaciones) y alimenta Operaciones. */
