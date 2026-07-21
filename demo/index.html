@@ -34,6 +34,12 @@
          height:100vh; overflow:auto; border-right:1px solid #e6dcc2; }
   .marca{ font-family:var(--serif); font-size:20px; font-weight:700; color:#0d4d3d;
           display:flex; gap:8px; align-items:center; padding:12px 10px 14px; }
+  /* El wordmark es el enlace a la web (logo → inicio). No cambia de aspecto; solo cursor
+     y una pista sutil al pasar por encima. */
+  .marca-link{ text-decoration:none; color:inherit; display:inline-flex; align-items:flex-end;
+    border-radius:8px; transition:opacity .15s ease; }
+  .marca-link:hover{ opacity:.72; }
+  .marca-link:focus-visible{ outline:2px solid var(--acc); outline-offset:3px; }
   /* Wordmark Audutor: bajo la palabra corre la ruta punteada y termina en el pin
      de ubicación — toda ruta acaba en un punto de encuentro. */
   .marca .wm{ display:inline-flex; flex-direction:column; }
@@ -533,9 +539,8 @@
 </svg>
 <div class="app">
 <aside>
-  <a href="../" style="display:flex; align-items:center; gap:7px; margin:0 0 12px; padding:9px 11px; border-radius:9px; background:var(--acc); color:#fff; text-decoration:none; font-size:13px; font-weight:800;">← Volver a la web de Audutor</a>
-  <div class="marca"><span class="wm"><span class="wm-palabra">Audutor</span><svg class="wm-ruta" viewBox="0 0 96 14" preserveAspectRatio="none" aria-hidden="true"><path d="M2 10 C 20 4, 36 12, 52 7 S 78 5, 84 8" fill="none" stroke="#8fb0a6" stroke-width="1.7" stroke-dasharray="0.1 5.2" stroke-linecap="round"/><path d="M90 1.4c-2.4 0-4.4 2-4.4 4.4 0 3.2 4.4 7 4.4 7s4.4-3.8 4.4-7c0-2.4-2-4.4-4.4-4.4z" fill="#12805f"/><circle cx="90" cy="5.9" r="1.7" fill="#f3ecdb"/></svg></span> <span class="demo-chip">DEMO</span></div>
-  <div class="tenant"><b>Luna Tours · Roma</b>empresa ficticia — datos inventados</div>
+  <div class="marca"><a class="marca-link" href="../" title="Ir a la web de Audutor"><span class="wm"><span class="wm-palabra">Audutor</span><svg class="wm-ruta" viewBox="0 0 96 14" preserveAspectRatio="none" aria-hidden="true"><path d="M2 10 C 20 4, 36 12, 52 7 S 78 5, 84 8" fill="none" stroke="#8fb0a6" stroke-width="1.7" stroke-dasharray="0.1 5.2" stroke-linecap="round"/><path d="M90 1.4c-2.4 0-4.4 2-4.4 4.4 0 3.2 4.4 7 4.4 7s4.4-3.8 4.4-7c0-2.4-2-4.4-4.4-4.4z" fill="#12805f"/><circle cx="90" cy="5.9" r="1.7" fill="#f3ecdb"/></svg></span></a> <span class="demo-chip">DEMO</span></div>
+  <div class="tenant"><b>Bella Vita · Roma</b>empresa ficticia — datos inventados</div>
   <nav>
     <a href="#operaciones" data-v="operaciones" class="act destacada">🗞️ Operaciones <span class="n" id="n-exc">6</span></a>
     <div class="nav-g" id="ng-dia">
@@ -610,7 +615,7 @@
         <div class="mini" style="opacity:.9;">menos no-shows<br>que antes del sistema</div>
       </div>
     </div>
-    <div style="font-size:11px; opacity:.8; margin-top:12px;">Estimación calculada con datos de ejemplo — Luna Tours es una empresa ficticia, no una promesa de resultados.</div>
+    <div style="font-size:11px; opacity:.8; margin-top:12px;">Estimación calculada con datos de ejemplo — Bella Vita es una empresa ficticia, no una promesa de resultados.</div>
   </div>
 
   <div class="card">
@@ -774,7 +779,7 @@
     <div class="sugerencias">
       <button onclick="chatRapido('Me he perdido, no encuentro al grupo')">«Me he perdido» ⛑️</button>
       <button onclick="chatRapido('Somos un grupo de 12, ¿podemos ir?')">«Somos 12» 👥</button>
-      <button onclick="chatRapido('Cancela mi reserva LUN-a8k2Xw')">«Cancela mi reserva» 🎫</button>
+      <button onclick="chatRapido('Cancela mi reserva BLV-a8k2Xw')">«Cancela mi reserva» 🎫</button>
       <button onclick="chatRapido('Llegamos 10 minutos tarde')">«Llegamos tarde» ⏰</button>
       <button onclick="chatRapido('¿Cuánto cuesta el tour?')">«¿Cuánto cuesta?» 💶</button>
       <button onclick="chatRapido('¿Dónde quedamos?')">«¿Dónde quedamos?» 📍</button>
@@ -1097,7 +1102,7 @@ Plazas de vuestro grupo guardadas 48 h 👉 luna.tours/combo/x3f9
         <b>📧 Email de reservas</b> <span class="chip" style="background:var(--acc-soft); color:var(--acc);">conectado</span>
         <p class="mini muted" style="margin:6px 0 8px;">El buzón que lee el sistema: tu correo de
           empresa o el alias que te damos. Cámbialo cuando quieras.</p>
-        <input id="cn-email" value="reservas@luna-tours.roma"
+        <input id="cn-email" value="reservas@bella-vita.roma"
           style="width:100%; border:1.5px solid var(--line); border-radius:8px; padding:8px 10px; font-size:13px; font-family:var(--mono);"
           onchange="S.canales.email=this.value; toast('📧 Buzón actualizado — reenvía aquí las confirmaciones de tus plataformas');">
       </div>
@@ -1295,7 +1300,7 @@ Plazas de vuestro grupo guardadas 48 h 👉 luna.tours/combo/x3f9
 
   <div class="card">
     <p class="mini muted" style="margin:0 0 14px;">Cuánto gana <b>cada guía</b> y la <b>empresa</b>
-      al mes, con tus números. Empieza con los datos de Luna Tours — en una reunión se ponen los del
+      al mes, con tus números. Empieza con los datos de Bella Vita — en una reunión se ponen los del
       prospecto y su plan de negocio se hace solo, delante de él. Mismos modos de reparto y de coste
       que la Liquidación: lo que proyectas aquí es lo que liquidas después.</p>
     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(230px,1fr)); gap:10px 26px;">
@@ -1611,8 +1616,8 @@ var S = {
   filtrosGuia:{ desconocidos:true, estricto:false, listaNegra:false },  // a quién responde GuIA (Canales)
   // Mensaje post-tour (ámbito EMPRESA): resena/privados empiezan sin responder
   // a propósito — la demo enseña el flujo "responde → se despliega el mensaje".
-  post:{ resena:null, resenaUrl:'g.page/luna-tours-roma/review', privados:null, desc:'10 %',
-         oferta:'tour', web:'lunatours.roma', hora:'2 h después del tour' },
+  post:{ resena:null, resenaUrl:'g.page/bella-vita-roma/review', privados:null, desc:'10 %',
+         oferta:'tour', web:'bellavita.roma', hora:'2 h después del tour' },
 };
 S.tours.push(tourNuevo('Free tour centro histórico', 'semilla', {
   titulo:'Free tour del centro histórico',
@@ -1691,12 +1696,12 @@ S.tours.push(tourNuevo('Nocturno de leyendas', 'semilla', {
   propina:'entre 10 y 15 € por persona',
 }));
 S.kbEmpresa = {
-  quienes:'Somos Luna Tours, empresa local de guías titulados en Roma, con más de 2.000 reseñas verificadas. Y sí, el free tour es de verdad: reservas gratis y al final aportas lo que consideres.',
+  quienes:'Somos Bella Vita, empresa local de guías titulados en Roma, con más de 2.000 reseñas verificadas. Y sí, el free tour es de verdad: reservas gratis y al final aportas lo que consideres.',
   privados:'¡Sí! Hacemos tours privados a medida, desde 180 € por grupo. Dímelo y el encargado te prepara una propuesta sin compromiso.',
   catalogo:'',      // vacíos a propósito: se ven huecos "de empresa"
   seguridad:'',
   ciudades:'De momento solo Roma 🙂 Si te encaja, reserva tu plaza en nuestra web.',
-  resena:'g.page/lunatours-roma/review',
+  resena:'g.page/bellavita-roma/review',
 };
 /* Derivadas de semilla: dos preguntas reales que GuIA no pudo responder (la primera
    casa con el cortafuegos «descuento» → deriva siempre; la segunda no casa con
@@ -2128,7 +2133,7 @@ function pintaManifiesto(){
       prop.querySelector('.pr-qr').onclick=function(){
         var c=prop.querySelector('.pr-qr-caja');
         var abre = c.style.display==='none';
-        if (abre && !c.querySelector('svg')) c.querySelector('.pr-qr-svg').innerHTML=qrSvg('propina/LUN-'+t.hora.replace(':','')+'-'+ti);
+        if (abre && !c.querySelector('svg')) c.querySelector('.pr-qr-svg').innerHTML=qrSvg('propina/BLV-'+t.hora.replace(':','')+'-'+ti);
         c.style.display = abre ? 'block' : 'none';
       };
       prop.querySelector('.pr-ver').onclick=function(e){ e.preventDefault(); abrirViajero(); };
@@ -2261,8 +2266,8 @@ function fraseGuia(k, o){
     case 'senal':   return 'Muy fácil: busca el '+v+(punto?' en '+punto:'')+'. El guía llega unos minutos antes de la salida 🙂';
     case 'espera':  return '¡Tranquilo! El guía espera por el punto de encuentro unos '+v+', así que unos minutos no son problema 🙂';
     case 'llegar':  return v+' 🚇';
-    case 'cancelar':return v+' 🙂 Si me dices tu código (LUN-…) te la cancelo yo ahora mismo.';
-    case 'cambios': return v+' Si me dices tu código (LUN-…) te lo gestiono ahora mismo.';
+    case 'cancelar':return v+' 🙂 Si me dices tu código (BLV-…) te la cancelo yo ahora mismo.';
+    case 'cambios': return v+' Si me dices tu código (BLV-…) te lo gestiono ahora mismo.';
     case 'lluvia':  return v+' ☔ Si hubiera que cancelar, te avisamos por aquí con antelación.';
     default:        return v;
   }
@@ -2357,9 +2362,9 @@ function respuestaGuia(t){
     return '¡A ti! Cualquier otra cosa, por aquí estamos 🙂';
   }
   // 4) TELÉFONO SUELTO (RGPD): nunca localizamos reservas por teléfono. Y un
-  //    código LUN-… jamás se confunde con un número, aunque parezca uno.
-  if (!/lun-[a-z0-9]+/i.test(t) && /^\+?[0-9][0-9 .\-()]{5,}[0-9]$/.test(t.trim()))
-    return 'Por privacidad no localizo reservas por teléfono: dime tu código (LUN-…), lo tienes en tu email de confirmación 🙂';
+  //    código BLV-… jamás se confunde con un número, aunque parezca uno.
+  if (!/blv-[a-z0-9]+/i.test(t) && /^\+?[0-9][0-9 .\-()]{5,}[0-9]$/.test(t.trim()))
+    return 'Por privacidad no localizo reservas por teléfono: dime tu código (BLV-…), lo tienes en tu email de confirmación 🙂';
   // 5) DEMASIADO CORTO para clasificar (y no es cortesía ni código): pedir un
   //    poco más de contexto — sin derivar.
   if (m.replace(/[^a-z0-9]/g,'').length<4 && !/lun-/.test(m))
@@ -2377,7 +2382,7 @@ function respuestaGuia(t){
   if (/me perdi (el tour|la salida)|perdi el tour|no pude (llegar|venir|ir)|llegue tarde|llegamos tarde|ya se habian ido|se habian ido/.test(m)){
     var hN=kb('horas');
     return '¡No pasa nada! Puedes unirte a la próxima salida'+(hN?' ('+hN+')':'')+
-      ' con tu misma reserva. Si prefieres cancelar, dime tu código (LUN-…) y la libero al instante.';
+      ' con tu misma reserva. Si prefieres cancelar, dime tu código (BLV-…) y la libero al instante.';
   }
   // Confirmación de asistencia — nunca si lleva «?»: una pregunta no confirma.
   // Faltan datos → se omite esa parte, no se deriva.
@@ -2412,7 +2417,7 @@ function respuestaGuia(t){
     var salida=(S.agenda[S.agDia].tours||[]).filter(function(x){
       var titN=normaliza(x.tit);
       return nomT.indexOf(titN)!==-1 || titN.indexOf(nomT)!==-1; })[0];
-    if (!salida) return 'Hoy no hay salida de este tour — dime tu código (LUN-…) y te digo la próxima al momento 🙂';
+    if (!salida) return 'Hoy no hay salida de este tour — dime tu código (BLV-…) y te digo la próxima al momento 🙂';
     var paxOk=0; (salida.res||[]).forEach(function(r){ if (r.ok) paxOk+=r.p; });
     if (paxOk<afN) return 'Hoy vais '+paxOk+' de un máximo de '+afN+' — quedan plazas 🙂';
     return 'Esa salida está completa, pero te apunto a la lista de espera y te aviso al momento si se libera una plaza — se revisa sola.';
@@ -2462,7 +2467,7 @@ function respuestaGuia(t){
     return 'Los grupos son de un máximo de '+af+' por salida, y podéis ir todos juntos 🙂 Eso sí, la política clara: en grupos de más de 6 (aunque lo repartáis en varias reservas), el guía os pedirá un adelanto de '+gm+' por persona COMO MÍNIMO al empezar — nunca menos. Se descuenta de vuestra aportación final, así que no pagáis de más.\n\n<i>— El mínimo sale del formulario del Cerebro: cada empresa pone el suyo.</i>';
   }
   if (/cancel|anul|no puedo ir|no podre|no vamos a poder/.test(m)){
-    var cod=(t.match(/lun-[a-z0-9]+/i)||[])[0];
+    var cod=(t.match(/blv-[a-z0-9]+/i)||[])[0];
     if (cod){
       anotaGuia('Reserva «'+cod+'» cancelada por el chat — plaza liberada; la lista de espera se revisa sola');
       return '¡Hecho! Cancelo tu reserva ✅ Gracias por avisar con tiempo: tu plaza queda libre al instante.\n\n<i>— Al liberarse, la lista de espera se revisa sola: si alguien cabía, ya está avisado (míralo en Operaciones). Nada de gestionarlo a mano. Y queda apuntado en las observaciones del tour de hoy.</i>';
@@ -2470,17 +2475,17 @@ function respuestaGuia(t){
     if (/guruwalk|civitatis|getyourguide|plataforma/i.test(m))
       return 'Esa reserva la hiciste en la plataforma, así que cancélala desde su email de confirmación — así te aplican <b>su</b> política de devolución 🙂 En cuanto lo hagas, tu plaza se libera sola en nuestra lista: no hace falta que nos avises — así no te cuenta como no presentado.';
     var pc=kb('cancelar'); if(!pc) return derivaPorHueco('cancelar', t);
-    return pc+'\n\nDos formas, la que te venga mejor: (1) si reservaste en <b>nuestra web</b>, abre tu <b>enlace de gestión</b> (el del email de confirmación) y la cancelas en un clic, o dime tu código (LUN-…) y te la cancelo yo aquí; (2) si fue por una <b>plataforma</b>, cancélala allí y yo actualizo la lista sola.';
+    return pc+'\n\nDos formas, la que te venga mejor: (1) si reservaste en <b>nuestra web</b>, abre tu <b>enlace de gestión</b> (el del email de confirmación) y la cancelas en un clic, o dime tu código (BLV-…) y te la cancelo yo aquí; (2) si fue por una <b>plataforma</b>, cancélala allí y yo actualizo la lista sola.';
   }
   if (/cambiar|cambio de (dia|fecha|hora)|otra fecha|otro dia|persona mas|personas mas|somos (una|dos|uno) menos|menos personas|anadir (una|otra) persona/.test(m)){
     var cbio=kb('cambios'); if(!cbio) return derivaPorHueco('cambios', t);
-    return cbio+'\n\nDesde tu <b>enlace de gestión</b> cambias fecha o nº de personas en un clic (si reservaste en nuestra web), o dime tu código (LUN-…) y te lo hago yo. Si fue por plataforma y solo cambia el <b>número de personas</b>, dímelo y lo ajusto en el manifiesto del guía para que os espere bien — la reserva en la plataforma la cambias tú allí.';
+    return cbio+'\n\nDesde tu <b>enlace de gestión</b> cambias fecha o nº de personas en un clic (si reservaste en nuestra web), o dime tu código (BLV-…) y te lo hago yo. Si fue por plataforma y solo cambia el <b>número de personas</b>, dímelo y lo ajusto en el manifiesto del guía para que os espere bien — la reserva en la plataforma la cambias tú allí.';
   }
   if (/tarde|retraso/.test(m)){
     var es=kb('espera'); if(!es) return derivaPorHueco('espera', t);
-    var codT=(t.match(/lun-[a-z0-9]+/i)||[])[0];
+    var codT=(t.match(/blv-[a-z0-9]+/i)||[])[0];
     if (codT) anotaGuia('«'+codT+'» avisa por el chat de que llega tarde — marcado ⏰ para el guía');
-    return '¡Tranquilo! El guía espera por el punto de encuentro unos '+es+', así que unos minutos no son problema 🙂 Si me dices tu código (LUN-…), le aviso ahora mismo — y aparecerás en su manifiesto como «⏰ llega tarde».'+
+    return '¡Tranquilo! El guía espera por el punto de encuentro unos '+es+', así que unos minutos no son problema 🙂 Si me dices tu código (BLV-…), le aviso ahora mismo — y aparecerás en su manifiesto como «⏰ llega tarde».'+
       (codT ? '\n\n<i>— Aviso registrado: escrito en las observaciones del tour de hoy (míralo en el 📋 Manifiesto).</i>' : '');
   }
   if (/donde (quedamos|es|empieza|salis)|punto de encuentro|meeting point|donde os (veo|encuentro)/.test(m)){
@@ -2655,7 +2660,7 @@ function pintaCanalChat(){
   if(wWeb) wWeb.style.display = wa?'none':'';
   if(!wa) pintaChatWeb();
 }
-/* Conversaciones de ejemplo del widget de chat de la web de Luna Tours, con las
+/* Conversaciones de ejemplo del widget de chat de la web de Bella Vita, con las
    respuestas que dio GuIA — construidas desde el cerebro REAL del primer tour
    (punto, lluvia, propina, accesibilidad), así se mantienen coherentes si se edita. */
 function pintaChatWeb(){
@@ -2665,7 +2670,7 @@ function pintaChatWeb(){
   function convo(titulo, msgs){
     return '<div class="card" style="margin:10px 0; padding:14px 16px;">'+
       '<div class="fila" style="justify-content:space-between; flex-wrap:wrap; gap:6px; margin-bottom:8px;">'+
-        '<b class="mini">'+titulo+'</b><span class="chip gris">widget web · lunatours.roma</span></div>'+
+        '<b class="mini">'+titulo+'</b><span class="chip gris">widget web · bellavita.roma</span></div>'+
       '<div style="display:flex; flex-direction:column; gap:8px;">'+msgs+'</div></div>';
   }
   c.innerHTML=
@@ -3077,16 +3082,16 @@ function vjPagar(){
 function pintaViajero(paso){
   var pant=document.getElementById('viajero-pantalla');
   var cab='<div class="vj-estado"><span>12:47</span><span>📶&nbsp;&nbsp;🔋</span></div>'+
-    '<div class="vj-cab"><span class="dot"></span><b>Luna Tours · Roma</b>'+
+    '<div class="vj-cab"><span class="dot"></span><b>Bella Vita · Roma</b>'+
     '<span class="vj-seguro">🔒 pago seguro</span></div>';
   if (paso==='gracias'){
-    var url=(S.post && S.post.resenaUrl) ? S.post.resenaUrl : 'g.page/luna-tours-roma/review';
+    var url=(S.post && S.post.resenaUrl) ? S.post.resenaUrl : 'g.page/bella-vita-roma/review';
     pant.innerHTML=cab+
       '<div class="vj-cuerpo vj-gracias">'+
       '<div class="vj-check">🧡</div>'+
       '<h3>¡Gracias, '+VJ.nombre+'!</h3>'+
       '<p class="vj-total">'+vjTotal()+' €</p>'+
-      '<p class="mini muted">recibidos con '+vjMetodoNombre()+' — llegan íntegros al equipo de Luna Tours.</p>'+
+      '<p class="mini muted">recibidos con '+vjMetodoNombre()+' — llegan íntegros al equipo de Bella Vita.</p>'+
       '<div class="vj-resena">'+
       '<p><b>¿Nos ayudas con una reseña en Google?</b><br>'+
       '<span class="mini muted">Es voluntaria e independiente de tu propina — se tarda un minuto.</span></p>'+
@@ -3452,7 +3457,7 @@ function csvLiq(){
 }
 
 /* ============ canales y sincronización ============ */
-S.canales={ email:'reservas@luna-tours.roma', wa:'+39 331 204 7792',
+S.canales={ email:'reservas@bella-vita.roma', wa:'+39 331 204 7792',
   remitentes:['noreply@guruwalk.com','reservas@civitatis.com','confirm@freetour.com','asunto contiene «nueva reserva»'],
   // Regla por plataforma (modulable). Cifras de partida según investigación jul-2026:
   // GuruWalk cobra por asistente reservado; no-show reportable hasta 72 h post-tour.
@@ -3526,7 +3531,7 @@ function calcDirecto(){
   document.getElementById('cd-ahorro').textContent =
     anual.toLocaleString('es-ES',{maximumFractionDigits:0})+' €';
   document.getElementById('cd-nota').innerHTML =
-    'Con el volumen de Luna Tours (54 p/mes en plataformas con fee por persona). Una agencia de '+
+    'Con el volumen de Bella Vita (54 p/mes en plataformas con fee por persona). Una agencia de '+
     '4 tours/día (~1.100 p/mes de plataforma) ahorraría <b>~'+
     Math.round(1100*2.5*12*pct/100).toLocaleString('es-ES')+' €/año</b> con el mismo desplazamiento — '+
     'más que el coste anual de Audutor. La comisión usada sale de la conciliación de abajo (configurable).';
