@@ -76,6 +76,36 @@
   .pie-demo button{ background:none; border:1px solid #cbbd97; color:#7a7156; border-radius:7px;
     padding:4px 10px; font-size:11px; cursor:pointer; margin-top:6px; }
 
+  /* ===== Modo guía: el guía abre su enlace personal y ve SOLO su día ===== */
+  #guia-cab, #guia-dispo{ display:none; }
+  body.modo-guia aside{ display:none; }
+  body.modo-guia .app{ display:block; background:#eef1ee; }
+  body.modo-guia main{ max-width:560px; margin:0 auto; padding:0 0 50px; background:none; }
+  body.modo-guia #guia-cab, body.modo-guia #guia-dispo{ display:block; }
+  /* dentro del móvil del guía: fuera la cabecera de oficina y los KPIs de empresa */
+  body.modo-guia #v-manifiesto > .cab,
+  body.modo-guia #v-manifiesto > .kpi-fila{ display:none; }
+  body.modo-guia #v-manifiesto{ padding:0 14px; }
+  body.modo-guia #ag-tours > .movil{ flex:none; width:auto; max-width:none; margin-bottom:14px; }
+  body.modo-guia #ag-tours{ display:block; overflow:visible; }
+  body.modo-guia .ag-hint, body.modo-guia .ag-wrap::before, body.modo-guia .ag-wrap::after{ display:none; }
+  .g-cab{ background:linear-gradient(160deg,#12805f,#0a5847); color:#eaf5f0; padding:20px 18px 16px;
+    border-radius:0 0 20px 20px; margin-bottom:14px; box-shadow:0 8px 22px rgba(10,60,45,.18); }
+  .g-cab .g-emp{ font-size:12px; letter-spacing:.06em; text-transform:uppercase; opacity:.8; font-weight:800; }
+  .g-cab .g-nom{ font-family:var(--serif); font-size:24px; font-weight:700; color:#fff; margin:2px 0 3px; }
+  .g-cab .g-sub{ font-size:12.5px; opacity:.85; }
+  .g-cab .g-pill{ display:inline-flex; gap:6px; align-items:center; background:rgba(255,255,255,.16);
+    border-radius:99px; padding:4px 11px; font-size:11.5px; font-weight:700; margin-top:10px; }
+  .g-volver{ display:block; text-align:center; font-size:11.5px; color:var(--muted); text-decoration:none;
+    padding:14px; margin-top:6px; }
+  .g-volver b{ color:var(--acc); }
+  .g-dispo{ background:var(--paper); border:1px solid var(--line); border-radius:14px; margin:4px 14px 0;
+    padding:16px 16px 14px; }
+  .g-dispo h2{ font-size:16px; margin:0 0 4px; }
+  .g-dispo table{ width:100%; border-collapse:collapse; margin-top:10px; }
+  .g-dispo th{ font-size:11px; color:var(--muted); font-weight:800; padding:2px; text-align:center; }
+  .g-dispo td{ padding:3px 2px; font-size:12.5px; }
+  .g-dispo .g-tb{ border:0; width:30px; height:28px; border-radius:8px; font-weight:800; cursor:pointer; }
   main{ padding:26px 30px 60px; max-width:1060px; position:relative;
         /* curvas de nivel muy suaves de fondo — evocan rutas y territorio sin recargar */
         background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280' viewBox='0 0 280 280'%3E%3Cg fill='none' stroke='%23e9dfca' stroke-width='1.3'%3E%3Cpath d='M-20 70 Q 60 20 140 55 T 300 60'/%3E%3Cpath d='M-20 105 Q 65 55 145 88 T 300 95'/%3E%3Cpath d='M-20 145 Q 70 95 150 125 T 300 132'/%3E%3Cpath d='M-20 190 Q 65 140 145 168 T 300 175'/%3E%3Cpath d='M-20 235 Q 70 185 150 212 T 300 218'/%3E%3C/g%3E%3C/svg%3E"); }
@@ -596,6 +626,10 @@
 </aside>
 
 <main>
+
+<!-- ===== Modo guía: lo que ve el guía en su móvil con su enlace personal.
+     Solo visible con body.modo-guia (hash #guia). Reutiliza el manifiesto. ===== -->
+<div id="guia-cab"></div>
 
 <div id="gate-overlay"><div class="gate-card" id="gate-body"></div></div>
 
@@ -1479,6 +1513,7 @@ Plazas de vuestro grupo guardadas 48 h 👉 luna.tours/combo/x3f9
     </div>
     <p class="mini muted" style="margin:6px 0 0;">El nuevo guía recibe su <b>enlace personal</b> (sin cuenta ni
       contraseña) para marcar su disponibilidad. Teléfono y email se muestran <b>enmascarados</b> (RGPD).</p>
+    <button class="btn mini" style="margin-top:10px;" onclick="entrarModoGuia('Elena')">📱 Ver el móvil de Elena (su enlace)</button>
   </div>
 
   <div class="card" style="overflow-x:auto;">
@@ -1497,6 +1532,7 @@ Plazas de vuestro grupo guardadas 48 h 👉 luna.tours/combo/x3f9
   </div>
 </section>
 
+<div id="guia-dispo"></div>
 </main>
 </div>
 <!-- ============ vista previa del viajero: propina + reseña en una pantalla ============ -->
@@ -1593,6 +1629,8 @@ function tourNuevo(nombre, fuente, valores){
 
 var S = {
   ubi:false, ubiHace:null, excs:6,
+  guiaVista:null,   // en modo guía (#guia): nombre del guía cuyo móvil se está viendo
+
   /* Propina digital — configurable por la empresa (Cerebro → Mensaje post-tour):
      importes fijos anclados, cuál sale preseleccionado y si se permite cantidad libre. */
   propCfg:{ imp:[10,15,20], pre:15, libre:true },
@@ -1915,8 +1953,73 @@ document.querySelectorAll('aside nav a').forEach(function(a){
   a.addEventListener('click', function(ev){ ev.preventDefault(); ir(a.dataset.v); });
 });
 pintaCandados(); pintaPlanSel(); pintaEsPlus();
+
+/* ===== Modo guía: el enlace personal del guía — SOLO su manifiesto y su
+   disponibilidad, sin nada de la consola de la oficina. hash #guia. ===== */
+function entrarModoGuia(nombre){
+  S.guiaVista = nombre || 'Elena';
+  document.body.classList.add('modo-guia');
+  pintaGuiaCab(S.guiaVista);
+  ir('manifiesto');                 // reutiliza el manifiesto, ya filtrado por S.guiaVista
+  pintaGuiaDispo(S.guiaVista);
+  history.replaceState(null,'','#guia');
+  window.scrollTo(0,0);
+}
+function salirModoGuia(){
+  document.body.classList.remove('modo-guia');
+  S.guiaVista = null;
+  ir('operaciones');
+}
+function pintaGuiaCab(nombre){
+  var g = S.equipo.guias.filter(function(x){ return x.n===nombre; })[0] || {};
+  document.getElementById('guia-cab').innerHTML =
+    '<div class="g-cab">'+
+      '<div class="g-emp">Bella Vita · Roma</div>'+
+      '<div class="g-nom">Hola, '+nombre+' 👋</div>'+
+      '<div class="g-sub">'+(g.tours||'')+' · valoración '+(g.nota||'—')+' ⭐</div>'+
+      '<span class="g-pill">🔗 tu enlace personal · sin cuenta ni contraseña</span>'+
+    '</div>';
+}
+/* Disponibilidad del guía: los tours a los que se ofrece, día a día. Reutiliza las
+   franjas y su propio dispo; toggle propio para no arrastrar la vista de oficina. */
+function toggleDispoGuia(fkey, d){
+  var g = S.equipo.guias.filter(function(x){ return x.n===S.guiaVista; })[0]; if(!g) return;
+  var slot = fkey+'|'+d;
+  if (estaAsignado(S.equipo.guias.indexOf(g), slot)) { toast('Ese tour ya te lo han asignado 🙂'); return; }
+  g.dispo[slot] = !g.dispo[slot];
+  pintaGuiaDispo(S.guiaVista);
+  toast(g.dispo[slot] ? 'Te ofreces para ese día ✓' : 'Quitado de tu disponibilidad');
+}
+function pintaGuiaDispo(nombre){
+  var g = S.equipo.guias.filter(function(x){ return x.n===nombre; })[0];
+  var box = document.getElementById('guia-dispo'); if(!g||!box){ if(box) box.innerHTML=''; return; }
+  var gi = S.equipo.guias.indexOf(g);
+  var fr = franjasEmpresa();
+  var h = '<div class="g-dispo"><h2>🗓 Mi disponibilidad</h2>'+
+    '<p class="mini muted" style="margin:0;">Marca los días que puedes hacer cada tour. El encargado lo ve al instante. '+
+    '<span style="color:'+g.color+'; font-weight:700;">🔒 = ya te lo han asignado</span>.</p>'+
+    '<table><tr><th></th>'+DIAS_SEM.map(function(x){return '<th>'+x+'</th>';}).join('')+'</tr>';
+  fr.forEach(function(f){
+    h += '<tr><td><b class="num">'+f.hora+'</b> · '+f.tour+'</td>'+
+      DIAS_SEM.map(function(dn,d){
+        if (f.dias.indexOf(d)<0) return '<td style="text-align:center; color:var(--line);">·</td>';
+        var slot=f.key+'|'+d, asig=estaAsignado(gi,slot), sel=!!g.dispo[slot];
+        var est = asig ? 'background:'+g.color+'; color:#fff;'
+                : sel ? 'background:var(--acc-soft); color:var(--acc); border:1.5px solid var(--acc);'
+                      : 'background:#eef3f0; color:var(--muted);';
+        return '<td style="text-align:center;"><button class="g-tb" style="'+est+'" '+
+          'onclick="toggleDispoGuia(\''+f.key+'\','+d+')">'+(asig?'🔒':(sel?'✓':'+'))+'</button></td>';
+      }).join('')+'</tr>';
+  });
+  h += '</table></div>'+
+    '<a class="g-volver" href="#operaciones" onclick="salirModoGuia();return false;">'+
+    'Vista de demostración — <b>ver la consola del encargado →</b></a>';
+  box.innerHTML = h;
+}
+
 if (location.hash) { var v=location.hash.slice(1);
-  if (document.getElementById('v-'+v)) ir(v); }
+  if (v==='guia') entrarModoGuia('Elena');
+  else if (document.getElementById('v-'+v)) ir(v); }
 
 /* ============ operaciones ============ */
 function resolver(id, msj){
@@ -1997,19 +2100,22 @@ function pintaManifiesto(){
   document.getElementById('ag-mes-pax').textContent=tt.mesPax;
   document.getElementById('ag-mes-rec').textContent=euros(tt.mesRec);
   var dia=S.agenda[S.agDia];
+  // En modo guía solo se ven los tours que guía esa persona (su móvil, no la oficina).
+  var tours = S.guiaVista ? dia.tours.filter(function(t){ return t.guia===S.guiaVista; }) : dia.tours;
   document.getElementById('ag-fecha').innerHTML=
     (S.agDia===0?'':'')+ '📅 '+dia.fecha + (dia.hoy?'':'') ;
-  var diaPax=0, diaRec=0; dia.tours.forEach(function(t){ diaPax+=paxDe(t.res); diaRec+=(t.rec||0); });
-  document.getElementById('ag-resumen-dia').textContent= dia.tours.length
-    ? dia.tours.length+' tour'+(dia.tours.length>1?'s':'')+' · '+diaPax+' personas'+(diaRec?' · '+euros(diaRec)+' recaudado':'')
+  var diaPax=0, diaRec=0; tours.forEach(function(t){ diaPax+=paxDe(t.res); diaRec+=(t.rec||0); });
+  document.getElementById('ag-resumen-dia').textContent= tours.length
+    ? tours.length+' tour'+(tours.length>1?'s':'')+' · '+diaPax+' personas'+(diaRec?' · '+euros(diaRec)+' recaudado':'')
     : 'Sin tours programados este día';
   var cont=document.getElementById('ag-tours'); cont.innerHTML='';
-  if (!dia.tours.length){
-    cont.innerHTML='<div class="movil" style="text-align:center; color:var(--muted);">Día libre 🌤️</div>';
+  if (!tours.length){
+    cont.innerHTML='<div class="movil" style="text-align:center; color:var(--muted);">'+
+      (S.guiaVista?'No tienes tours este día 🌤️':'Día libre 🌤️')+'</div>';
     actualizaFadesAgenda();
     return;
   }
-  dia.tours.forEach(function(t, ti){
+  tours.forEach(function(t, ti){
     var mov=document.createElement('div'); mov.className='movil';
     var pax=paxDe(t.res), pres=t.res.filter(function(r){return r.ok}).reduce(function(s,r){return s+r.p},0);
     var tarde=t.res.filter(function(r){return r.tarde&&!r.ok});
