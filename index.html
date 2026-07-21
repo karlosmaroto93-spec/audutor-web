@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Fritiner — el sistema operativo de tu empresa de tours</title>
+<title>Audutor — el sistema operativo de tu empresa de tours</title>
 <meta name="description" content="La capa operativa para empresas de tours y free tours: reservas multicanal, guías, no-shows, grupos, propinas y un asistente IA que no inventa. Modulable según tu tarifa y tu intensidad.">
 <style>
   :root{
@@ -95,17 +95,14 @@
   nav .wrap{ display:flex; align-items:center; gap:26px; padding:14px 24px; }
   .logo{ font-family:var(--serif); font-weight:700; font-size:21px; color:var(--ink);
          text-decoration:none; line-height:1.05; }
-  /* wordmark Fritiner: la tilde de la «i» es un pin de ubicación (SVG inline),
-     con una ruta punteada ámbar bajo la palabra */
   .logo .wm{ position:relative; display:inline-block; }
-  .logo .i{ position:relative; display:inline-block; }
-  .logo .pin{ position:absolute; left:50%; bottom:.6em; width:.5em; height:auto;
-              transform:translateX(-50%); }
-  .logo .pin .cuerpo{ fill:var(--acc); }
-  .logo .pin .hueco{ fill:var(--bg); }
-  .logo .ruta{ position:absolute; left:1%; bottom:-.34em; width:98%; height:.34em; }
-  .logo .ruta path{ fill:none; stroke:var(--gold); stroke-width:2.2; stroke-linecap:round;
+  /* Wordmark Audutor: bajo la palabra corre la ruta punteada y TERMINA en el pin
+     de ubicación — toda ruta acaba en un punto de encuentro. */
+  .logo .ruta{ position:absolute; left:1%; bottom:-.42em; width:98%; height:.6em; overflow:visible; }
+  .logo .ruta path:first-child{ fill:none; stroke:var(--gold); stroke-width:2.2; stroke-linecap:round;
                     stroke-dasharray:.1 6.5; }
+  .logo .ruta .rpin{ fill:var(--acc); stroke:none; }
+  .logo .ruta .rhueco{ fill:var(--bg); }
   .logo.pie{ font-size:16px; color:var(--ink2); }
   nav .links{ margin-left:auto; display:flex; gap:20px; align-items:center; }
   nav .links a{ text-decoration:none; color:var(--ink2); font-size:14.5px; font-weight:600; }
@@ -191,7 +188,7 @@
   .celda p{ font-size:14.8px; color:var(--ink2); margin:0; }
   .celda .mini{ font-size:12.5px; color:var(--muted); display:block; margin-top:10px; font-family:var(--mono); }
 
-  /* ---- un día con Fritiner ---- */
+  /* ---- un día con Audutor ---- */
   .dia{ position:relative; margin-top:8px; }
   .dia::before{ content:""; position:absolute; left:86px; top:8px; bottom:8px; width:0;
     border-left:2.5px dashed #b3d6c6; }
@@ -405,27 +402,51 @@
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <defs>
     <symbol id="guia" viewBox="0 0 150 158">
-      <ellipse cx="72" cy="150" rx="42" ry="6" fill="#1f2a25" opacity=".08"/>
+      <!-- sombra en el suelo, con desvanecido -->
+      <radialGradient id="g-sombra" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#1f2a25" stop-opacity=".14"/>
+        <stop offset="100%" stop-color="#1f2a25" stop-opacity="0"/>
+      </radialGradient>
+      <ellipse cx="72" cy="150" rx="46" ry="7" fill="url(#g-sombra)"/>
       <!-- paraguas: EL icono de los free tours -->
-      <path d="M104 20 L104 92" stroke="#8a5a12" stroke-width="4" stroke-linecap="round"/>
-      <path d="M104 92 q0 9 -9 9" fill="none" stroke="#8a5a12" stroke-width="4" stroke-linecap="round"/>
-      <circle cx="104" cy="16" r="3.4" fill="#8a5a12"/>
-      <clipPath id="capota"><path d="M64 46 Q104 6 144 46 Q131 37 118 46 Q104 37 91 46 Q78 37 64 46 Z"/></clipPath>
+      <path d="M104 20 L104 92" stroke="#8a5a12" stroke-width="4.2" stroke-linecap="round"/>
+      <path d="M104 92 q0 10 -10 10" fill="none" stroke="#8a5a12" stroke-width="4.2" stroke-linecap="round"/>
+      <circle cx="104" cy="15" r="3.6" fill="#c98a2d"/>
+      <clipPath id="capota"><path d="M62 47 Q104 4 146 47 Q133 38 119 47 Q104 38 90 47 Q76 38 62 47 Z"/></clipPath>
       <g clip-path="url(#capota)">
-        <rect x="60" y="4" width="88" height="46" fill="#f4653a"/>
-        <path d="M104 27 L89 48 L119 48 Z" fill="#ffe3c0"/>
+        <rect x="58" y="2" width="92" height="48" fill="#f4653a"/>
+        <!-- gajos alternos: profundidad sin recargar -->
+        <path d="M104 4 L84 50 L104 50 Z" fill="#ff8a5f"/>
+        <path d="M104 4 L124 50 L104 50 Z" fill="#e2532b"/>
+        <path d="M104 4 L96 50 L112 50 Z" fill="#ffe3c0"/>
       </g>
-      <path d="M64 46 Q104 6 144 46" fill="none" stroke="#d94e24" stroke-width="2" stroke-linecap="round" opacity=".55"/>
-      <!-- pin de mapa sonriente -->
-      <path d="M52 30 C31 30 15 46 15 66 C15 93 52 128 52 128 S89 93 89 66 C89 46 73 30 52 30 Z" fill="#128a6b"/>
-      <circle cx="52" cy="66" r="20.5" fill="#fdf6e8"/>
-      <circle cx="44.5" cy="62" r="2.8" fill="#1f2a25"/>
-      <circle cx="59.5" cy="62" r="2.8" fill="#1f2a25"/>
-      <path d="M44 71 Q52 78 60 71" fill="none" stroke="#1f2a25" stroke-width="2.8" stroke-linecap="round"/>
-      <circle cx="37.5" cy="68" r="3.2" fill="#ff7a59" opacity=".55"/>
-      <circle cx="66.5" cy="68" r="3.2" fill="#ff7a59" opacity=".55"/>
+      <!-- varillas y borde de la capota -->
+      <path d="M62 47 Q104 4 146 47" fill="none" stroke="#c43f1a" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M104 6 L90 47 M104 6 L119 47" stroke="#c43f1a" stroke-width="1.2" opacity=".5"/>
+      <!-- pin de mapa sonriente, con volumen -->
+      <linearGradient id="g-pin" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#17a37f"/>
+        <stop offset="100%" stop-color="#0c6b56"/>
+      </linearGradient>
+      <path d="M52 30 C31 30 15 46 15 66 C15 93 52 128 52 128 S89 93 89 66 C89 46 73 30 52 30 Z" fill="url(#g-pin)"/>
+      <!-- brillo lateral del pin -->
+      <path d="M28 46 Q24 56 26 66" fill="none" stroke="#fdf6e8" stroke-width="3" stroke-linecap="round" opacity=".35"/>
+      <circle cx="52" cy="66" r="21" fill="#fdf6e8"/>
+      <!-- ojos con brillo -->
+      <circle cx="44.5" cy="62" r="3" fill="#1f2a25"/>
+      <circle cx="59.5" cy="62" r="3" fill="#1f2a25"/>
+      <circle cx="45.6" cy="60.8" r="1" fill="#fff"/>
+      <circle cx="60.6" cy="60.8" r="1" fill="#fff"/>
+      <!-- cejitas amables -->
+      <path d="M41 55.5 Q44.5 53.5 48 55.2" fill="none" stroke="#1f2a25" stroke-width="1.6" stroke-linecap="round" opacity=".7"/>
+      <path d="M56 55.2 Q59.5 53.5 63 55.5" fill="none" stroke="#1f2a25" stroke-width="1.6" stroke-linecap="round" opacity=".7"/>
+      <!-- sonrisa abierta -->
+      <path d="M43.5 70 Q52 79 60.5 70 Q52 74.5 43.5 70 Z" fill="#1f2a25"/>
+      <circle cx="37" cy="68.5" r="3.4" fill="#ff8a5f" opacity=".6"/>
+      <circle cx="67" cy="68.5" r="3.4" fill="#ff8a5f" opacity=".6"/>
       <!-- bracito que sujeta el paraguas -->
-      <path d="M87 78 Q97 74 103 82" fill="none" stroke="#128a6b" stroke-width="7" stroke-linecap="round"/>
+      <path d="M86 78 Q97 73 103 82" fill="none" stroke="#0c6b56" stroke-width="7" stroke-linecap="round"/>
+      <circle cx="103" cy="83" r="4.6" fill="#0c6b56"/>
     </symbol>
     <symbol id="pin-acento" viewBox="0 0 24 28">
       <path d="M12 .8C6.8.8 2.6 5 2.6 10.2 2.6 17 12 27.2 12 27.2s9.4-10.2 9.4-17C21.4 5 17.2.8 12 .8z" fill="#f4653a"/>
@@ -437,7 +458,7 @@
 <div id="progreso"></div>
 
 <nav><div class="wrap">
-  <a class="logo" href="#" aria-label="Fritiner, inicio"><span class="wm">Fr<span class="i">ı<svg class="pin" viewBox="0 0 24 28" aria-hidden="true" focusable="false"><path class="cuerpo" d="M12 .8C6.8.8 2.6 5 2.6 10.2 2.6 17 12 27.2 12 27.2s9.4-10.2 9.4-17C21.4 5 17.2.8 12 .8z"/><circle class="hueco" cx="12" cy="10" r="3.6"/></svg></span>tiner<svg class="ruta" viewBox="0 0 100 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M1 5.5 Q 26 1 50 4.5 T 99 3"/></svg></span></a>
+  <a class="logo" href="#" aria-label="Audutor, inicio"><span class="wm">Audutor<svg class="ruta" viewBox="0 0 100 14" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M1 10.5 Q 24 5 46 9 T 86 8"/><path class="rpin" d="M93 1.2c-2.6 0-4.7 2.1-4.7 4.7 0 3.4 4.7 7.5 4.7 7.5s4.7-4.1 4.7-7.5c0-2.6-2.1-4.7-4.7-4.7z"/><circle class="rhueco" cx="93" cy="6" r="1.8"/></svg></span></a>
   <div class="links">
     <a href="#producto">Producto</a>
     <a href="#dia">Un día</a>
@@ -467,7 +488,7 @@
       <div class="kicker reveal" style="--d:80ms">Software de operaciones para empresas de free tours
       y tours a pie con equipo de guías</div>
       <h1 data-split>Tu software de reservas se olvida de lo que pasa después de la reserva.</h1>
-      <p class="lede reveal" style="--d:120ms">Fritiner es <b>la capa operativa de tu empresa de tours</b>:
+      <p class="lede reveal" style="--d:120ms">Audutor es <b>la capa operativa de tu empresa de tours</b>:
       junta las reservas de todos tus canales, avisa a tus clientes por WhatsApp, coordina a tu
       equipo de guías, detecta los grupos grandes, rescata a quien se pierde y liquida cada tour al
       céntimo. <b>Modulable</b>: empiezas con dos módulos y creces cuando quieras.</p>
@@ -519,11 +540,11 @@
     <div class="celda star reveal"><span class="ico">🧭</span><h3>Rescate de rezagados</h3>
       <p>¿Alguien se pierde a mitad de ruta o llega tarde a la parada? El guía comparte su ubicación
       con un botón y el asistente le pasa el mapa al turista al momento — sin exponer nunca el
-      teléfono del guía.</p><span class="mini">módulo: rescate · solo en Fritiner</span></div>
+      teléfono del guía.</p><span class="mini">módulo: rescate · solo en Audutor</span></div>
     <div class="celda star reveal" style="--d:70ms"><span class="ico">👥</span><h3>Grupos grandes, detectados</h3>
-      <p>Las plataformas limitan 6 por reserva y los grupos se parten en 2-3 reservas. Fritiner los
+      <p>Las plataformas limitan 6 por reserva y los grupos se parten en 2-3 reservas. Audutor los
       junta (teléfono, email, apellido, hora) y aplica tu política — aviso en su confirmación y al
-      guía: «puedes pedir adelanto».</p><span class="mini">módulo: grupos · solo en Fritiner</span></div>
+      guía: «puedes pedir adelanto».</p><span class="mini">módulo: grupos · solo en Audutor</span></div>
     <div class="celda reveal" style="--d:140ms"><span class="ico">📥</span><h3>Reservas multicanal, solas</h3>
       <p>Las reservas de GuruWalk, Civitatis, Freetour y tu web entran y se actualizan solas —
       altas, cambios de día y cancelaciones. Sin API, sin copiar a mano: leemos los emails de las
@@ -563,13 +584,13 @@
   </svg>
   <div class="wrap">
   <div class="sec-head">
-    <h2 data-split>Un día cualquiera con Fritiner</h2>
+    <h2 data-split>Un día cualquiera con Audutor</h2>
     <p class="reveal">Sin abrir Excel, sin copiar reservas, sin «¿alguien sabe dónde está el guía?».</p>
   </div>
   <div class="dia">
     <div class="hito reveal"><span class="hora">08:41</span><span class="punto"></span>
       <div class="que"><b>Entran 3 reservas de GuruWalk y 1 de Civitatis.</b> Solas. Dos son el mismo
-      apellido con 4 minutos de diferencia: Fritiner las junta — 9 personas — y les avisa de la
+      apellido con 4 minutos de diferencia: Audutor las junta — 9 personas — y les avisa de la
       política de grupos en su confirmación.</div></div>
     <div class="hito reveal"><span class="hora">09:15</span><span class="punto"></span>
       <div class="que"><b>Recordatorios de mañana enviados por WhatsApp.</b> Una clienta responde
@@ -648,7 +669,7 @@
     <div class="plan premium reveal" style="--d:220ms">
       <h3>Premium</h3><div class="precio"><span class="imp" data-mensual="129" data-anual="107">129</span> €<small>/mes</small></div>
       <div class="fact-nota" data-nota hidden>facturado anualmente · 1.284 €/año (2 meses gratis)</div>
-      <div class="para">Todo Fritiner · <b>tours y guías ilimitados</b> — para operadores que escalan</div>
+      <div class="para">Todo Audutor · <b>tours y guías ilimitados</b> — para operadores que escalan</div>
       <ul>
         <li>Todo lo del plan Pro · <b>tours ilimitados</b> (sin coste por tour)</li>
         <li><b>Cuadro de mando</b>: analítica por tour, guía, canal y franja</li>
@@ -684,7 +705,7 @@
     <div>
       <span class="web-chip">✨ Complemento · tu web incluida</span>
       <h2>Tu web, ya hecha. Tú ya tenías los datos.</h2>
-      <p class="lead">Fritiner genera con IA la web de tu empresa <b>desde el cerebro de tu
+      <p class="lead">Audutor genera con IA la web de tu empresa <b>desde el cerebro de tu
       asistente</b>: tours, punto de encuentro con su señal, horarios, idiomas, políticas y
       reseñas. Publicada en minutos en <b>tunombre.tudominio</b> — o en tu dominio propio, si
       prefieres. Cambias un horario o añades un tour y la web se actualiza sola.</p>
@@ -788,14 +809,14 @@
 
 <section class="alt" id="porque"><div class="wrap">
   <div class="sec-head">
-    <h2 data-split>Por qué Fritiner y no el software de siempre</h2>
+    <h2 data-split>Por qué Audutor y no el software de siempre</h2>
     <p class="reveal">El software de reservas clásico se hizo para vender tickets. El día a día de
     una empresa de tours a pie — guías, propinas, no-shows, grupos partidos, cinco plataformas —
     se quedó fuera. <b>Nosotros lo hicimos al revés: pensado para el guía en el punto de encuentro a
     las 10:15, no para una oficina.</b> Por eso tu equipo lo usa de verdad.</p>
   </div>
   <div class="vs reveal">
-    <div class="vs-row"><div>El software de siempre</div><div>Fritiner</div></div>
+    <div class="vs-row"><div>El software de siempre</div><div>Audutor</div></div>
     <div class="vs-row"><div class="malo">Gestiona la <b>reserva</b>: entra en un panel y ahí acaba su trabajo</div>
       <div class="bueno">Gestiona la <b>operación</b>: lo que pasa entre que entra la reserva y termina el tour</div></div>
     <div class="vs-row"><div class="malo">Cobra un 3–6 % de cada reserva (o se lo cobra a tu cliente en el checkout)</div>
@@ -821,15 +842,15 @@
     <p class="bocadillo"><b>¿Empezamos?</b> Yo estaré dentro, atendiendo a tus clientes.</p>
   </div>
   <h2 data-split>Lo estamos abriendo a las primeras empresas</h2>
-  <p class="reveal">Fritiner funciona ya cada día en una operación real de free tours en Madrid.
+  <p class="reveal">Audutor funciona ya cada día en una operación real de free tours en Madrid.
   Buscamos un grupo pequeño de empresas fundadoras para probarlo con ventajas de por vida:
   cuéntanos cómo trabajas y te lo enseñamos con tus propios tours.</p>
   <a class="btn reveal" style="--d:120ms" href="#contacto">Quiero ser empresa fundadora</a>
 </div>
 
 <footer><div class="wrap">
-  <span class="logo pie" aria-label="Fritiner"><span class="wm">Fr<span class="i">ı<svg class="pin" viewBox="0 0 24 28" aria-hidden="true" focusable="false"><path class="cuerpo" d="M12 .8C6.8.8 2.6 5 2.6 10.2 2.6 17 12 27.2 12 27.2s9.4-10.2 9.4-17C21.4 5 17.2.8 12 .8z"/><circle class="hueco" cx="12" cy="10" r="3.6"/></svg></span>tiner<svg class="ruta" viewBox="0 0 100 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M1 5.5 Q 26 1 50 4.5 T 99 3"/></svg></span></span>
-  <span id="contacto">© 2026 Fritiner · <b>dominio y email de contacto en trámite</b> · Hecho en Madrid</span>
+  <span class="logo pie" aria-label="Audutor"><span class="wm">Audutor<svg class="ruta" viewBox="0 0 100 14" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M1 10.5 Q 24 5 46 9 T 86 8"/><path class="rpin" d="M93 1.2c-2.6 0-4.7 2.1-4.7 4.7 0 3.4 4.7 7.5 4.7 7.5s4.7-4.1 4.7-7.5c0-2.6-2.1-4.7-4.7-4.7z"/><circle class="rhueco" cx="93" cy="6" r="1.8"/></svg></span></span>
+  <span id="contacto">© 2026 Audutor · <b>dominio y email de contacto en trámite</b> · Hecho en Madrid</span>
   <span>Reservas · Canales · Guías · Grupos · Rescate · Propinas · GuIA</span>
 </div></footer>
 
@@ -899,7 +920,7 @@
     });
   }
 
-  // Calculadora de coste total: cuota + % sobre reservas (o sobre propinas, en Fritiner).
+  // Calculadora de coste total: cuota + % sobre reservas (o sobre propinas, en Audutor).
   var inR = document.getElementById('inReservas'), inP = document.getElementById('inPropinas');
   if (inR && inP) {
     var outR = document.getElementById('outReservas'),
@@ -911,7 +932,7 @@
       return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     };
     var opciones = [
-      { id: 'hito',       nombre: 'Fritiner Pro',          calcula: function (r, p) { return 59 + 0.019 * p; } },
+      { id: 'hito',       nombre: 'Audutor Pro',          calcula: function (r, p) { return 59 + 0.019 * p; } },
       { id: 'turitop',    nombre: 'TuriTop Starter',   calcula: function (r, p) { return 29 + 0.02 * r; } },
       { id: 'trekksoft',  nombre: 'TrekkSoft Starter', calcula: function (r, p) { return 49 + 0.03 * r; } },
       { id: 'bokun',      nombre: 'Bókun Start',       calcula: function (r, p) { return 49 + 0.015 * r; } },
@@ -943,9 +964,9 @@
       var barata = opciones.slice(1).reduce(function (a, b) { return b.coste < a.coste ? b : a; });
       var dif = Math.round(barata.coste - hito.coste);
       var matiz = '<span class="matiz">TuriTop y Bókun cobran también por usuario al crecer el ' +
-        'equipo; Fritiner incluye guías ilimitados.</span>';
+        'equipo; Audutor incluye guías ilimitados.</span>';
       if (dif > 0) {
-        cajaAhorro.innerHTML = 'Con Fritiner te ahorras <b>' + fmt(dif) + ' €/mes — ' +
+        cajaAhorro.innerHTML = 'Con Audutor te ahorras <b>' + fmt(dif) + ' €/mes — ' +
           fmt(dif * 12) + ' €/año</b> frente a ' + barata.nombre + '.' + matiz;
       } else if (dif < 0) {
         cajaAhorro.innerHTML = barata.nombre + ' sale <b>' + fmt(-dif) +
