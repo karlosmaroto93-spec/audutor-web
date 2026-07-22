@@ -1340,19 +1340,19 @@ Plazas de vuestro grupo guardadas 48 h 👉 luna.tours/combo/x3f9
       que la Liquidación: lo que proyectas aquí es lo que liquidas después.</p>
     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(230px,1fr)); gap:10px 26px;">
       <label class="mini">Personas por grupo <b><span id="py-grupo-v">20</span></b><br>
-        <input type="range" id="py-grupo" min="5" max="30" step="1" value="20" oninput="calcProy()" style="width:100%;"></label>
+        <input type="range" id="py-grupo" min="5" max="40" step="1" value="20" oninput="calcProy()" style="width:100%;"></label>
       <label class="mini">Tours al día <b><span id="py-tours-v">3</span></b><br>
-        <input type="range" id="py-tours" min="1" max="8" step="1" value="3" oninput="calcProy()" style="width:100%;"></label>
+        <input type="range" id="py-tours" min="1" max="20" step="1" value="3" oninput="calcProy()" style="width:100%;"></label>
       <label class="mini">Propina media por persona <b><span id="py-prop-v">11,50</span> €</b><br>
         <input type="range" id="py-prop" min="4" max="16" step="0.5" value="11.5" oninput="calcProy()" style="width:100%;"></label>
       <label class="mini">Nº de guías <b><span id="py-ng-v">3</span></b><br>
-        <input type="range" id="py-ng" min="1" max="15" step="1" value="3" oninput="calcProy()" style="width:100%;"></label>
+        <input type="range" id="py-ng" min="1" max="40" step="1" value="3" oninput="calcProy()" style="width:100%;"></label>
       <label class="mini">Reservas de tu web (sin comisión) <b><span id="py-dir-v">40</span> %</b><br>
         <input type="range" id="py-dir" min="0" max="100" step="5" value="40" oninput="calcProy()" style="width:100%;"></label>
       <label class="mini">Comisión por reserva de plataforma <b><span id="py-com-v">2,50</span> €</b><br>
-        <input type="range" id="py-com" min="0" max="4" step="0.5" value="2.5" oninput="calcProy()" style="width:100%;"></label>
+        <input type="range" id="py-com" min="0" max="5" step="0.25" value="2.5" oninput="calcProy()" style="width:100%;"></label>
       <label class="mini">Gastos fijos de la empresa al mes <b><span id="py-ovh-v">250</span> €</b><br>
-        <input type="range" id="py-ovh" min="0" max="800" step="50" value="250" oninput="calcProy()" style="width:100%;"></label>
+        <input type="range" id="py-ovh" min="0" max="8000" step="100" value="250" oninput="calcProy()" style="width:100%;"></label>
     </div>
     <div class="fila" style="margin-top:14px; gap:8px;">
       <b class="mini">Modo de reparto:</b>
@@ -4008,7 +4008,7 @@ function calcProy(){
   document.getElementById('py-ng-v').textContent=ng;
   document.getElementById('py-dir-v').textContent=Math.round(dir*100);
   document.getElementById('py-com-v').textContent=com.toLocaleString('es-ES',d2);
-  document.getElementById('py-ovh-v').textContent=ovh;
+  document.getElementById('py-ovh-v').textContent=ovh.toLocaleString('es-ES');
   document.getElementById('py-rep-v').textContent=Math.round(rep*100);
   document.getElementById('py-fijo-v').textContent=fijo.toLocaleString('es-ES',d2);
   var paxDia=grupo*tours, paxMes=paxDia*30, brutoMes=paxDia*prop*30;
@@ -4016,6 +4016,7 @@ function calcProy(){
   var base = brutoMes - (proyCosteV==='ingreso' ? comMes : 0);
   var bote = proyModoV==='pct' ? base*rep : base - fijo*paxMes;
   var guiaMes = ng ? bote/ng : 0;
+  var tpg = ng ? tours/ng : 0;          // tours por guía y día — realismo de plantilla
   var empMes = brutoMes - bote - comMes - ovh;
   var margen = paxMes ? empMes/paxMes : 0;
   document.getElementById('py-kpis').innerHTML=
@@ -4033,7 +4034,14 @@ function calcProy(){
       ? 'Las comisiones de plataforma ('+eur0(comMes)+'/mes) <b>las asume la empresa</b> de su parte — el reparto es sobre la propina bruta. '
       : 'Las comisiones ('+eur0(comMes)+'/mes) se descuentan del total <b>antes</b> del reparto — las comparten guía y empresa. ')+
     'Sube «Reservas de tu web» y mira caer la comisión: cada reserva que el sistema trae a tu web es margen que no se va a la plataforma.'+
-    (guiaMes<0 ? ' <b style="color:var(--rojo);">⚠️ Con este fijo el guía saldría en pérdidas: baja el fijo o sube la propina media.</b>' : '');
+    (guiaMes<0 ? ' <b style="color:var(--rojo);">⚠️ Con este fijo el guía saldría en pérdidas: baja el fijo o sube la propina media.</b>' : '')+
+    /* Realismo de plantilla: al crecer, el cuello de botella deja de ser la demanda
+       y pasa a ser el equipo. Un guía sostiene ~2-3 salidas al día como mucho. */
+    (tpg>3 ? ' <b style="color:var(--rojo);">⚠️ '+tpg.toLocaleString('es-ES',{maximumFractionDigits:1})+
+             ' tours por guía y día: no cuadra. Con '+tours+' salidas necesitas al menos '+
+             Math.ceil(tours/3)+' guías (y con margen de descansos y libranzas, más).</b>'
+           : (tpg>2 ? ' <span class="mini" style="color:var(--amber);">Plantilla al límite: '+
+               tpg.toLocaleString('es-ES',{maximumFractionDigits:1})+' tours por guía y día.</span>' : ''));
 }
 
 // registro inicial del panel de respuestas: lo confirmado de fábrica (sin chip «nuevo»)
