@@ -709,7 +709,8 @@
     <div><b>🎟️ Cupo casi lleno — cierra el tour en las plataformas</b>
       <p class="mini muted" style="margin:4px 0 8px;">Trastevere · hoy 18:30 · <b>22/25</b> — quedan 3 plazas.
         Cierra primero la plataforma que más cobra por persona; tu web, la última (cuesta 0 € y te da el
-        contacto). Marca cada una al cerrarla — mañana lo hará GuIA solo.</p>
+        contacto). El cierre se hace en el panel de cada plataforma; marca aquí cada una al cerrarla
+        para no perder la cuenta.</p>
       <div class="fila" id="cupo-plataformas" style="gap:6px; flex-wrap:wrap;"></div>
     </div>
   </div>
@@ -2073,7 +2074,7 @@ function pintaCupo(){
     b.className='btn mini'+(x.cerrado?' sec':'');
     b.textContent=(x.cerrado?'✓ '+x.p+' cerrada':'Cerrar '+x.p);
     b.onclick=function(){ if(x.cerrado) return; x.cerrado=true; pintaCupo();
-      toast(x.p+' cerrada para ese tour (simulado) — GuIA lo hará solo cuando aprenda tu criterio'); };
+      toast(x.p+' marcada como cerrada (simulado) — recuerda cerrarla también en su panel'); };
     c.appendChild(b);
   });
 }
