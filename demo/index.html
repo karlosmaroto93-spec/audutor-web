@@ -1353,6 +1353,8 @@ Plazas de vuestro grupo guardadas 48 h 👉 luna.tours/combo/x3f9
         <input type="range" id="py-com" min="0" max="5" step="0.25" value="2.5" oninput="calcProy()" style="width:100%;"></label>
       <label class="mini">Gastos fijos de la empresa al mes <b><span id="py-ovh-v">250</span> €</b><br>
         <input type="range" id="py-ovh" min="0" max="8000" step="100" value="250" oninput="calcProy()" style="width:100%;"></label>
+      <label class="mini">Días de operación al mes <b><span id="py-dias-v">26</span></b><br>
+        <input type="range" id="py-dias" min="12" max="31" step="1" value="26" oninput="calcProy()" style="width:100%;"></label>
     </div>
     <div class="fila" style="margin-top:14px; gap:8px;">
       <b class="mini">Modo de reparto:</b>
@@ -3999,7 +4001,7 @@ function eur0(v){ return Math.round(v).toLocaleString('es-ES')+' €'; }
 function calcProy(){
   function V(id){ return +document.getElementById(id).value; }
   var grupo=V('py-grupo'), tours=V('py-tours'), prop=V('py-prop'), ng=V('py-ng'),
-      dir=V('py-dir')/100, com=V('py-com'), ovh=V('py-ovh'),
+      dir=V('py-dir')/100, com=V('py-com'), ovh=V('py-ovh'), dias=V('py-dias'),
       rep=V('py-rep')/100, fijo=V('py-fijo');
   var d2={minimumFractionDigits:2, maximumFractionDigits:2};
   document.getElementById('py-grupo-v').textContent=grupo;
@@ -4009,9 +4011,10 @@ function calcProy(){
   document.getElementById('py-dir-v').textContent=Math.round(dir*100);
   document.getElementById('py-com-v').textContent=com.toLocaleString('es-ES',d2);
   document.getElementById('py-ovh-v').textContent=ovh.toLocaleString('es-ES');
+  document.getElementById('py-dias-v').textContent=dias;
   document.getElementById('py-rep-v').textContent=Math.round(rep*100);
   document.getElementById('py-fijo-v').textContent=fijo.toLocaleString('es-ES',d2);
-  var paxDia=grupo*tours, paxMes=paxDia*30, brutoMes=paxDia*prop*30;
+  var paxDia=grupo*tours, paxMes=paxDia*dias, brutoMes=paxDia*prop*dias;
   var comMes=com*paxMes*(1-dir);
   var base = brutoMes - (proyCosteV==='ingreso' ? comMes : 0);
   var bote = proyModoV==='pct' ? base*rep : base - fijo*paxMes;
@@ -4020,7 +4023,7 @@ function calcProy(){
   var empMes = brutoMes - bote - comMes - ovh;
   var margen = paxMes ? empMes/paxMes : 0;
   document.getElementById('py-kpis').innerHTML=
-    '<div class="kpi'+(guiaMes<0?' malo':'')+'"><span class="v"'+(guiaMes<0?'':' style="color:var(--acc);"')+'>'+eur0(guiaMes)+'</span><span class="l">cada guía / mes</span></div>'+
+    '<div class="kpi'+(guiaMes<0?' malo':'')+'"><span class="v"'+(guiaMes<0?'':' style="color:var(--acc);"')+'>'+eur0(guiaMes)+'</span><span class="l">cada guía / mes <b>('+dias+' días de operación)</b></span></div>'+
     '<div class="kpi'+(empMes<0?' malo':'')+'"><span class="v">'+eur0(empMes)+'</span><span class="l">empresa neto / mes (tras '+eur0(ovh)+' de gastos fijos)</span></div>'+
     '<div class="kpi"><span class="v">'+paxDia+'</span><span class="l">personas / día</span></div>'+
     '<div class="kpi"><span class="v">'+eur0(brutoMes)+'</span><span class="l">propina bruta / mes</span></div>'+
