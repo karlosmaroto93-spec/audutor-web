@@ -630,7 +630,7 @@
         300 mensajes WhatsApp/mes. Sin fee por reserva.
         <button onclick="ofertaEsencialPlus()">Activar Esencial+</button>
       </div>
-      <div style="font-size:10.5px; margin-top:8px; opacity:.85; line-height:1.5;">💳 Propina: <b>0 %</b> si cobras en mano (tu SumUp, datáfono o Apple Pay). Solo el <b>enlace o QR</b> lleva <b>1,5 % + 0,30 £</b>.</div>
+      <div style="font-size:10.5px; margin-top:8px; opacity:.85; line-height:1.5;">💳 Propina: <b>0 %</b> si cobras en mano (tu SumUp, datáfono o Apple Pay). Solo el <b>enlace o QR</b> lleva <b>1,9 % + £0.30</b>.</div>
     </div>
     Todo lo que ves es interactivo y simulado en tu navegador.
     Nada se guarda ni se envía.<br><button onclick="location.reload()">↺ Reset demo</button></div>
@@ -1923,7 +1923,7 @@ function pintaWaTope(){
 /* Propina: el cobro PRESENCIAL (SumUp o TPV del guía) no lleva comisión de Audutor.
    Solo el DIFERIDO (enlace de WhatsApp o QR de Audutor) tiene tarifa, igual en todos
    los planes — y más barata por Apple Pay, que es donde el procesador nos cuesta menos. */
-var PROPINA_PLAN={ esencial:'1,5 %', pro:'1,5 %', premium:'1,5 %' };
+var PROPINA_PLAN={ esencial:'1,9 %', pro:'1,9 %', premium:'1,9 %' };
 var PROPINA_BIZUM='0,9 %';
 function pctPropinaPlan(){ return PROPINA_PLAN[S.plan]; }
 /* QR de demo: patrón determinista con aspecto de QR (buscadores + módulos por hash).
@@ -2048,7 +2048,7 @@ function pintaGuiaDispo(nombre){
   h += '</table></div>'+
     '<div class="g-dispo"><h2>💳 Mi propina digital</h2>'+
     (g2 && g2.propinaOk
-      ? '<p class="mini muted" style="margin:0 0 8px;">✅ <b>Activa.</b> Cada propina llega a TU cuenta (payout semanal). Cobrando en mano, <b>sin comisión nuestra</b>; solo el enlace o el QR llevan 1,5 % + 0,30 £.</p>'+
+      ? '<p class="mini muted" style="margin:0 0 8px;">✅ <b>Activa.</b> Cada propina llega a TU cuenta (payout semanal). Cobrando en mano, <b>sin comisión nuestra</b>; solo el enlace o el QR llevan 1,9 % + £0.30.</p>'+
         '<div class="fila" style="gap:6px; flex-wrap:wrap;">'+
         '<button class="btn mini" onclick="toast(\'📲 (Simulado) Acerca la tarjeta del cliente al móvil: cobro cerrado en el momento, sin depender de que escanee nada.\')">📲 Cobrar ahora</button>'+
         '<button class="btn mini sec" onclick="toast(\'💳 (Simulado) Se abre tu SumUp con el importe puesto y Audutor anota el cobro solo.\')">💳 Con mi SumUp</button>'+

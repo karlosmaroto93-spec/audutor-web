@@ -359,6 +359,13 @@
   .wa-barra{ height:7px; background:var(--line); border-radius:5px; overflow:hidden; margin:8px 0 6px; }
   .wa-barra i{ display:block; height:100%; }
   /* selector de plan (demo) en el sidebar */
+  .mk-sel{ background:#f3ecdb; border:1px solid #e0d3b4; border-radius:10px; padding:9px 11px;
+    margin-bottom:10px; font-size:11.5px; color:#5d6b62; line-height:1.5; }
+  .mk-sel b{ color:#33514a; }
+  .mk-sel button{ border:1px solid #d9cba6; background:#fffdf5; border-radius:8px; padding:4px 7px;
+    font-size:15px; cursor:pointer; line-height:1; font-family:inherit; }
+  .mk-sel button.on{ background:var(--acc); border-color:var(--acc); box-shadow:0 0 0 2px rgba(18,138,107,.2); }
+  .mk-sel #mk-nota{ color:#7a6f55; font-style:italic; }
   .plan-sel{ display:flex; gap:4px; margin-top:8px; flex-wrap:wrap; }
   /* Tres botones en ~187 px: el nombre del plan debe caber sin desbordar la caja.
      «Esencial» a 12 px no cabía en los ~56 px útiles de cada botón. */
@@ -619,6 +626,11 @@
       operaciones, equipo, canales y el recordatorio anti no-show básico) va en todos. En Esencial:
       <b>1 tour, 1 guía y 2 canales</b>; guías y canales <b>ilimitados desde Pro</b>.
       Los <span class="sup-chip">supl.</span> se activan según la tarifa.
+      <div class="mk-sel">
+        <b>Mercado (demo):</b> el mismo producto, configurado para otro país y modelo de negocio.
+        <div class="fila" id="mk-btns" style="gap:4px; margin-top:6px; flex-wrap:wrap;"></div>
+        <p class="mini" id="mk-nota" style="margin:6px 0 0; font-size:10.5px; line-height:1.45;"></p>
+      </div>
       <div class="plan-sel" id="plan-sel">
         <button data-plan="esencial" onclick="cambiarPlan('esencial')"><b>Esencial</b>0 €</button>
         <button data-plan="pro" onclick="cambiarPlan('pro')"><b>Pro</b>59 €</button>
@@ -629,7 +641,7 @@
         300 mensajes WhatsApp/mes. Sin fee por reserva.
         <button onclick="ofertaEsencialPlus()">Activar Esencial+</button>
       </div>
-      <div style="font-size:10.5px; margin-top:8px; opacity:.85; line-height:1.5;">💳 Propina: <b>0 %</b> si cobras en mano (tu SumUp, datáfono o Bizum). Solo el <b>enlace o QR</b> lleva <b>1,5 % + 0,30 €</b>.</div>
+      <div style="font-size:10.5px; margin-top:8px; opacity:.85; line-height:1.5;">💳 Propina: <b>0 %</b> si cobras en mano (tu SumUp, datáfono o Bizum). Solo el <b>enlace o QR</b> lleva <b>1,9 % + 0,30 €</b>.</div>
     </div>
     Todo lo que ves es interactivo y simulado en tu navegador.
     Nada se guarda ni se envía.<br><button onclick="location.reload()">↺ Reiniciar demo</button></div>
@@ -1588,6 +1600,64 @@ Plazas de vuestro grupo guardadas 48 h 👉 luna.tours/combo/x3f9
 <div id="toast"></div>
 
 <script>
+/* ================= MOTOR MODULABLE DE MERCADO =================
+   Audutor no es «software para free tours españoles»: es la capa operativa, y el
+   mercado es configuración. Un preset define país, idioma, moneda, MODELO DE
+   NEGOCIO (free con propina · de pago con precio · mixto), canales de venta y
+   canal de aviso. Todo lo que depende del mercado lee de aquí, no de constantes
+   sueltas — así añadir Buenos Aires o Dublín es un objeto, no un fork del código. */
+var MERCADOS = {
+  'es-free': {
+    nombre:'España · free tour', bandera:'🇪🇸',
+    empresa:'Bella Vita · Roma', pais:'ES', idioma:'es',
+    moneda:{ cod:'EUR', sim:'€', pre:false, loc:'es-ES', dec:2 },
+    modelo:'free',                       // el viajero no paga por reservar; hay propina
+    canales:['GuruWalk','Civitatis','Freetour','Web propia'],
+    aviso:['whatsapp'],                  // ~90 % de penetración
+    propinaPax:11.6, pagoP2P:true,       // Bizum existe → fuga de propina en mano
+    nota:'El clásico: reserva a 0 €, propina al final, plataformas cobran por persona reservada.'
+  },
+  'ar-free': {
+    nombre:'Argentina · free tour', bandera:'🇦🇷',
+    empresa:'Buenos Aires a Pie', pais:'AR', idioma:'es',
+    moneda:{ cod:'ARS', sim:'$', pre:true, loc:'es-AR', dec:0 },
+    modelo:'free',
+    canales:['GuruWalk','Freetour','Web propia'],
+    aviso:['whatsapp'],                  // penetración altísima en LATAM
+    propinaPax:9000, pagoP2P:true,       // transferencias/Mercado Pago instantáneas
+    nota:'Mismo modelo que España pero con moneda inestable: la propina se fija en el día y muchos turistas pagan en divisa.'
+  },
+  'uk-mixto': {
+    nombre:'Reino Unido · mixto', bandera:'🇬🇧',
+    empresa:'Old Town Walks · Edinburgh', pais:'GB', idioma:'en',
+    moneda:{ cod:'GBP', sim:'£', pre:true, loc:'en-GB', dec:2 },
+    modelo:'mixto',                      // free tours + tours de pago en el mismo catálogo
+    canales:['GuruWalk','FreeTour.com','Viator','GetYourGuide','Own site'],
+    aviso:['sms','email','whatsapp'],    // WhatsApp NO es el canal por defecto
+    propinaPax:14, pagoP2P:false,        // sin Bizum → el enlace de Audutor tiene más sentido
+    nota:'Catálogo mixto: el free tour capta y el tour de pago monetiza. Aviso por SMS/email, no WhatsApp.'
+  },
+  'ie-pago': {
+    nombre:'Irlanda · tour de pago', bandera:'🇮🇪',
+    empresa:'Dublin Story Walks', pais:'IE', idioma:'en',
+    moneda:{ cod:'EUR', sim:'€', pre:true, loc:'en-IE', dec:2 },
+    modelo:'pago',                       // ticket con precio; la propina es extra opcional
+    canales:['Viator','GetYourGuide','TripAdvisor','Own site'],
+    aviso:['email','sms'],
+    propinaPax:6, precioTicket:25, pagoP2P:false,
+    nota:'Ticket de pago por adelantado: cambia todo — hay cobro previo, política de reembolso y el no-show cuesta la plaza, no la comisión.'
+  }
+};
+var MK = MERCADOS['es-free'];            // mercado activo
+function dinero(v, dec){
+  var d = dec===undefined ? MK.moneda.dec : dec;
+  var n = v.toLocaleString(MK.moneda.loc, {minimumFractionDigits:d, maximumFractionDigits:d});
+  return MK.moneda.pre ? MK.moneda.sim+n : n+' '+MK.moneda.sim;
+}
+function esFree(){ return MK.modelo==='free' || MK.modelo==='mixto'; }
+function esPago(){ return MK.modelo==='pago' || MK.modelo==='mixto'; }
+function canalAviso(){ return MK.aviso[0]==='whatsapp' ? 'WhatsApp' : (MK.aviso[0]==='sms' ? 'SMS' : 'email'); }
+
 /* ============ estado compartido de la demo ============ */
 /* El FORMULARIO GENÉRICO de GuIA: los 19 hechos que responden las preguntas
    habituales de cualquier tour. Cada tour tiene SU copia — sin cruces. */
@@ -1872,6 +1942,34 @@ function pintaCandados(){
     c.style.display = bloqueado(a.dataset.v) ? '' : 'none';
   });
 }
+
+function pintaMkSel(){
+  var c=document.getElementById('mk-btns'); if(!c) return;
+  c.innerHTML=Object.keys(MERCADOS).map(function(k){
+    var m=MERCADOS[k];
+    return '<button class="'+(MK===m?'on':'')+'" title="'+m.nombre+'" onclick="cambiaMercado(\''+k+'\')">'+m.bandera+'</button>';
+  }).join('');
+  document.getElementById('mk-nota').textContent=MK.nombre+' — '+MK.nota;
+}
+/* Cambiar de mercado reconfigura el producto: empresa, moneda, canales, canal de
+   aviso y modelo de negocio. No re-siembra los datos operativos (sería otra demo):
+   demuestra que la MISMA operación se expresa en otra moneda y otro modelo. */
+function cambiaMercado(k){
+  MK = MERCADOS[k];
+  document.querySelector('.tenant b').textContent = MK.empresa;
+  pintaMkSel();
+  // repintar todo lo que muestra dinero o canales
+  ['operaciones','manifiesto','equipo','canales','liquidacion','cuadro','ahorro'].forEach(function(v){
+    try{ var f={operaciones:pintaOperaciones,manifiesto:pintaManifiesto,equipo:pintaEquipo,
+                canales:pintaCanales,liquidacion:pintaLiquidacion,cuadro:pintaCuadro,
+                ahorro:pintaCanales}[v]; if(f) f(); }catch(e){}
+  });
+  try{ calcProy(); }catch(e){}
+  toast(MK.bandera+' '+MK.nombre+' — '+(MK.modelo==='pago'?'tour de pago: hay cobro por adelantado y el no-show cuesta la plaza'
+        : MK.modelo==='mixto'?'catálogo mixto: free tour para captar, tour de pago para monetizar'
+        : 'free tour: reserva a 0 € y propina al final')+'. Avisos por '+canalAviso()+'.');
+}
+
 function pintaPlanSel(){
   document.querySelectorAll('#plan-sel button').forEach(function(b){
     b.classList.toggle('on', b.dataset.plan===S.plan); });
@@ -1922,7 +2020,7 @@ function pintaWaTope(){
 /* Propina: el cobro PRESENCIAL (SumUp o TPV del guía) no lleva comisión de Audutor.
    Solo el DIFERIDO (enlace de WhatsApp o QR de Audutor) tiene tarifa, igual en todos
    los planes — y más barata por Bizum, que es donde el procesador nos cuesta menos. */
-var PROPINA_PLAN={ esencial:'1,5 %', pro:'1,5 %', premium:'1,5 %' };
+var PROPINA_PLAN={ esencial:'1,9 %', pro:'1,9 %', premium:'1,9 %' };
 var PROPINA_BIZUM='0,9 %';
 function pctPropinaPlan(){ return PROPINA_PLAN[S.plan]; }
 /* QR de demo: patrón determinista con aspecto de QR (buscadores + módulos por hash).
@@ -1984,7 +2082,7 @@ function ir(v){
 document.querySelectorAll('aside nav a').forEach(function(a){
   a.addEventListener('click', function(ev){ ev.preventDefault(); ir(a.dataset.v); });
 });
-pintaCandados(); pintaPlanSel(); pintaEsPlus();
+pintaCandados(); pintaPlanSel(); pintaEsPlus(); pintaMkSel();
 
 /* ===== Modo guía: el enlace personal del guía — SOLO su manifiesto y su
    disponibilidad, sin nada de la consola de la oficina. hash #guia. ===== */
@@ -2047,7 +2145,7 @@ function pintaGuiaDispo(nombre){
   h += '</table></div>'+
     '<div class="g-dispo"><h2>💳 Mi propina digital</h2>'+
     (g2 && g2.propinaOk
-      ? '<p class="mini muted" style="margin:0 0 8px;">✅ <b>Activa.</b> Cada propina llega a TU cuenta (payout semanal). Cobrando en mano, <b>sin comisión nuestra</b>; solo el enlace o el QR llevan 1,5 % + 0,30 €.</p>'+
+      ? '<p class="mini muted" style="margin:0 0 8px;">✅ <b>Activa.</b> Cada propina llega a TU cuenta (payout semanal). Cobrando en mano, <b>sin comisión nuestra</b>; solo el enlace o el QR llevan 1,9 % + 0,30 €.</p>'+
         '<div class="fila" style="gap:6px; flex-wrap:wrap;">'+
         '<button class="btn mini" onclick="toast(\'📲 (Simulado) Acerca la tarjeta del cliente al móvil: cobro cerrado en el momento, sin depender de que escanee nada.\')">📲 Cobrar ahora</button>'+
         '<button class="btn mini sec" onclick="toast(\'💳 (Simulado) Se abre tu SumUp con el importe puesto y Audutor anota el cobro solo.\')">💳 Con mi SumUp</button>'+
@@ -2128,7 +2226,9 @@ function pintaCupo(){
 function pintaOperaciones(){ pintaEstadoBanner(); pintaSeguimiento(); pintaCupo(); }
 
 /* ============ manifiesto ============ */
-function euros(v){ return v.toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'; }
+
+
+function euros(v){ return dinero(v, 2); }
 function paxDe(res){ return res.reduce(function(s,r){return s+r.p},0); }
 function agTotales(){
   var sPax=0, sRec=0;
@@ -4279,7 +4379,7 @@ function proyCoste(m){ proyCosteV=m;
   document.getElementById('py-tab-cemp').className='btn mini'+(m==='empresa'?'':' sec');
   document.getElementById('py-tab-cing').className='btn mini'+(m==='ingreso'?'':' sec');
   calcProy(); }
-function eur0(v){ return Math.round(v).toLocaleString('es-ES')+' €'; }
+function eur0(v){ return dinero(Math.round(v), 0); }
 function calcProy(){
   function V(id){ return +document.getElementById(id).value; }
   var grupo=V('py-grupo'), tours=V('py-tours'), prop=V('py-prop'), ng=V('py-ng'),
