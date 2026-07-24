@@ -629,7 +629,7 @@
         300 mensajes WhatsApp/mes. Sin fee por reserva.
         <button onclick="ofertaEsencialPlus()">Activar Esencial+</button>
       </div>
-      <div style="font-size:10.5px; margin-top:8px; opacity:.85; line-height:1.5;">💳 Propina digital: <b>2,5 %</b> Esencial · <b>1,9 %</b> Pro · <b>1,5 %</b> Premium, + 0,30 €/cobro — solo cuando tú cobras.</div>
+      <div style="font-size:10.5px; margin-top:8px; opacity:.85; line-height:1.5;">💳 Propina: <b>0 %</b> si cobras con tu SumUp o datáfono. Por enlace o QR: <b>1,5 %</b> (o <b>0,9 %</b> con Bizum) + 0,30 €.</div>
     </div>
     Todo lo que ves es interactivo y simulado en tu navegador.
     Nada se guarda ni se envía.<br><button onclick="location.reload()">↺ Reiniciar demo</button></div>
@@ -1919,7 +1919,11 @@ function pintaWaTope(){
   }
 }
 /* % de comisión de la propina digital según el plan activo (se cobra solo cuando la empresa cobra). */
-var PROPINA_PLAN={ esencial:'2,5 %', pro:'1,9 %', premium:'1,5 %' };
+/* Propina: el cobro PRESENCIAL (SumUp o TPV del guía) no lleva comisión de Audutor.
+   Solo el DIFERIDO (enlace de WhatsApp o QR de Audutor) tiene tarifa, igual en todos
+   los planes — y más barata por Bizum, que es donde el procesador nos cuesta menos. */
+var PROPINA_PLAN={ esencial:'1,5 %', pro:'1,5 %', premium:'1,5 %' };
+var PROPINA_BIZUM='0,9 %';
 function pctPropinaPlan(){ return PROPINA_PLAN[S.plan]; }
 /* QR de demo: patrón determinista con aspecto de QR (buscadores + módulos por hash).
    No codifica de verdad — en producción sería un QR real al enlace de propina del tour. */
@@ -2043,7 +2047,7 @@ function pintaGuiaDispo(nombre){
   h += '</table></div>'+
     '<div class="g-dispo"><h2>💳 Mi propina digital</h2>'+
     (g2 && g2.propinaOk
-      ? '<p class="mini muted" style="margin:0 0 8px;">✅ <b>Activa.</b> Cada propina llega a TU cuenta (payout semanal). Comisión: la de tu plan + 0,30 €/cobro.</p>'+
+      ? '<p class="mini muted" style="margin:0 0 8px;">✅ <b>Activa.</b> Cada propina llega a TU cuenta (payout semanal). Con tu SumUp, <b>sin comisión nuestra</b>; por enlace o QR, 1,5 % (0,9 % con Bizum) + 0,30 €.</p>'+
         '<div class="fila" style="gap:6px; flex-wrap:wrap;">'+
         '<button class="btn mini" onclick="toast(\'📲 (Simulado) Acerca la tarjeta del cliente al móvil: cobro cerrado en el momento, sin depender de que escanee nada.\')">📲 Cobrar ahora</button>'+
         '<button class="btn mini sec" onclick="toast(\'💳 (Simulado) Se abre tu SumUp con el importe puesto y Audutor anota el cobro solo.\')">💳 Con mi SumUp</button>'+
@@ -2268,9 +2272,10 @@ function pintaManifiesto(){
       var prop=document.createElement('div'); prop.className='caja-propina';
       var ops=t.res.map(function(a,ai){
         return '<option value="'+ai+'">'+a.n+' ('+a.p+'p · '+a.canal+')</option>'; }).join('');
-      prop.innerHTML='<strong>💳 Cobrar la propina <span class="chip turq" style="margin-left:4px;">'+pctPropinaPlan()+' + 0,30 € · va a tu cuenta</span></strong>'+
-        '<p class="mini muted" style="margin:6px 0 8px;">Lo primero, <b>cobrar en el momento</b>: el cliente acerca su tarjeta a tu móvil y listo. '+
-        'El QR queda de respaldo para quien prefiera pagarlo por su cuenta.</p>'+
+      prop.innerHTML='<strong>💳 Cobrar la propina <span class="chip turq" style="margin-left:4px;">va a tu cuenta</span></strong>'+
+        '<p class="mini muted" style="margin:6px 0 8px;">Lo primero, <b>cobrar en el momento</b> con tu SumUp o datáfono: '+
+        '<b>sin comisión de Audutor</b>, y queda anotado igual. El enlace y el QR son para quien se va sin pagar '+
+        'o para grupos — ahí sí: '+pctPropinaPlan()+' (o '+PROPINA_BIZUM+' con Bizum) + 0,30 €.</p>'+
         '<div class="fila" style="gap:8px; margin-top:8px; align-items:center; flex-wrap:wrap;">'+
           '<button class="btn mini pr-tap">📲 Cobrar ahora (acercar tarjeta)</button>'+
           '<button class="btn mini sec pr-sumup">💳 Cobrar con SumUp</button>'+
@@ -2287,12 +2292,12 @@ function pintaManifiesto(){
           '<a href="#" class="pr-ver" style="color:var(--acc); font-weight:700;">así la ve el viajero →</a></p>'+
         '</div>';
       prop.querySelector('.pr-tap').onclick=function(){
-        toast('📲 (Simulado) El cliente acerca su tarjeta o el móvil y el cobro se cierra ahí mismo — '+
-              'sin esperar a ver si escanea. Requiere la app del guía: iPhone XS+ o Android 9+ con NFC.');
+        toast('📲 (Simulado) El cliente acerca su tarjeta y el cobro se cierra ahí mismo, sin esperar a que escanee nada. '+
+              'Con tu SumUp no llevas comisión de Audutor. Requiere móvil con NFC (iPhone XS+ / Android 9+).');
       };
       prop.querySelector('.pr-sumup').onclick=function(){
-        toast('💳 (Simulado) ¿Ya usas SumUp? Audutor abre tu app con el importe puesto y anota el cobro solo — '+
-              'sigues con lo tuyo y la liquidación cuadra igual.');
+        toast('💳 (Simulado) Audutor abre tu SumUp con el importe puesto y anota el cobro solo. '+
+              'Sin comisión nuestra: cobras a tu tarifa de siempre y la liquidación cuadra igual.');
       };
       prop.querySelector('.pr-qr').onclick=function(){
         var c=prop.querySelector('.pr-qr-caja');
