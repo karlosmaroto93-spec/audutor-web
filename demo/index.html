@@ -663,15 +663,15 @@
     <div class="fila" style="justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
       <div>
         <div style="font-size:12px; letter-spacing:.06em; text-transform:uppercase; opacity:.85; font-weight:800;">Lo que Audutor te ha devuelto este mes</div>
-        <div style="font-family:var(--serif); font-size:38px; font-weight:700; line-height:1.1; margin-top:2px;">+1.640 €</div>
-        <div class="mini" style="opacity:.9;">≈ 142 personas rescatadas de no-shows (del 38 % al 17 %) · propina media 11,6 €</div>
+        <div style="font-family:var(--serif); font-size:38px; font-weight:700; line-height:1.1; margin-top:2px;"><span data-dinero="1640" data-dec="0">+1.640 €</span></div>
+        <div class="mini" style="opacity:.9;">≈ 142 personas rescatadas de no-shows (del 38 % al 17 %) · propina media <span data-dinero="11.6" data-dec="1">11,6 €</span></div>
       </div>
       <div style="text-align:right;">
         <div style="font-size:26px; font-weight:800;">21 %</div>
         <div class="mini" style="opacity:.9;">menos no-shows<br>que antes del sistema</div>
       </div>
     </div>
-    <div style="font-size:11px; opacity:.8; margin-top:12px;">Estimación calculada con datos de ejemplo — Bella Vita es una empresa ficticia, no una promesa de resultados.</div>
+    <div style="font-size:11px; opacity:.8; margin-top:12px;">Estimación calculada con datos de ejemplo — <span data-empresa>Bella Vita</span> es una empresa ficticia, no una promesa de resultados.</div>
   </div>
 
   <div class="card">
@@ -680,10 +680,10 @@
       <div class="kpi"><span class="v">4</span><span class="l">tours hoy (1 en marcha)</span></div>
       <div class="kpi"><span class="v">36</span><span class="l">personas reservadas · 9 canales→1 sistema</span></div>
       <div class="kpi"><span class="v" style="color:var(--turq-deep);">91 %</span><span class="l">confirmadas tras recordatorio WhatsApp</span></div>
-      <div class="kpi"><span class="v" id="kpi-propina" style="color:var(--coral-deep);">318 €</span><span class="l">propina digital cobrada esta semana</span>
+      <div class="kpi"><span class="v" id="kpi-propina" style="color:var(--coral-deep);" data-dinero="318" data-dec="0">318 €</span><span class="l">propina digital cobrada esta semana</span>
         <span class="l" id="kpi-propina-plan" style="display:block; margin-top:3px; font-weight:800; color:var(--acc);">tu plan: 2,5 %</span>
         <button class="btn mini sec" style="margin-top:7px;" onclick="abrirViajero()">📱 vista del viajero</button></div>
-      <div class="kpi"><span class="v">70 €</span><span class="l">comisiones de no-show recuperadas este mes (conciliación)</span></div>
+      <div class="kpi"><span class="v" data-dinero="70" data-dec="0">70 €</span><span class="l">comisiones de no-show recuperadas este mes (conciliación)</span></div>
       <div class="kpi"><span class="v">2</span><span class="l">no-shows marcados solos al cerrar el tour de ayer (10:00) — sin escribir al cliente</span></div>
     </div>
   </div>
@@ -1943,6 +1943,21 @@ function pintaCandados(){
   });
 }
 
+
+/* Reformatea los importes escritos en el HTML (banner, KPIs) a la moneda del
+   mercado activo, y actualiza el nombre de la empresa donde aparezca en texto. */
+function pintaDineroEstatico(){
+  document.querySelectorAll('[data-dinero]').forEach(function(el){
+    var v=parseFloat(el.getAttribute('data-dinero'));
+    var d=parseInt(el.getAttribute('data-dec')||'0',10);
+    var signo = /^\+/.test(el.textContent) ? '+' : '';
+    el.textContent = signo + dinero(v, d);
+  });
+  document.querySelectorAll('[data-empresa]').forEach(function(el){
+    el.textContent = MK.empresa.split(' · ')[0];
+  });
+}
+
 function pintaMkSel(){
   var c=document.getElementById('mk-btns'); if(!c) return;
   c.innerHTML=Object.keys(MERCADOS).map(function(k){
@@ -1957,7 +1972,7 @@ function pintaMkSel(){
 function cambiaMercado(k){
   MK = MERCADOS[k];
   document.querySelector('.tenant b').textContent = MK.empresa;
-  pintaMkSel();
+  pintaMkSel(); pintaDineroEstatico();
   // repintar todo lo que muestra dinero o canales
   ['operaciones','manifiesto','equipo','canales','liquidacion','cuadro','ahorro'].forEach(function(v){
     try{ var f={operaciones:pintaOperaciones,manifiesto:pintaManifiesto,equipo:pintaEquipo,
@@ -2082,7 +2097,7 @@ function ir(v){
 document.querySelectorAll('aside nav a').forEach(function(a){
   a.addEventListener('click', function(ev){ ev.preventDefault(); ir(a.dataset.v); });
 });
-pintaCandados(); pintaPlanSel(); pintaEsPlus(); pintaMkSel();
+pintaCandados(); pintaPlanSel(); pintaEsPlus(); pintaMkSel(); pintaDineroEstatico();
 
 /* ===== Modo guía: el enlace personal del guía — SOLO su manifiesto y su
    disponibilidad, sin nada de la consola de la oficina. hash #guia. ===== */
