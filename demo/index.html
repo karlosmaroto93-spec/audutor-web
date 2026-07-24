@@ -634,14 +634,14 @@
       <div class="plan-sel" id="plan-sel">
         <button data-plan="esencial" onclick="cambiarPlan('esencial')"><b>Esencial</b>0 €</button>
         <button data-plan="pro" onclick="cambiarPlan('pro')"><b>Pro</b>59 €</button>
-        <button data-plan="premium" onclick="cambiarPlan('premium')"><b>Premium</b>179 €</button>
+        <button data-plan="premium" onclick="cambiarPlan('premium')"><b>Premium</b>149 €</button>
       </div>
       <div class="es-plus" id="es-plus">
         ¿Te quedas corto? <b>Esencial+ · 29 €/mes</b> — hasta 3 tours, 3 guías y
         300 mensajes WhatsApp/mes. Sin fee por reserva.
         <button onclick="ofertaEsencialPlus()">Activar Esencial+</button>
       </div>
-      <div style="font-size:10.5px; margin-top:8px; opacity:.85; line-height:1.5;">💳 Propina: <b>0 %</b> si cobras en mano (tu SumUp, datáfono o Bizum). Solo el <b>enlace o QR</b> lleva <b>1,9 % + 0,30 €</b>.</div>
+      <div style="font-size:10.5px; margin-top:8px; opacity:.85; line-height:1.5;">💳 Propina: <b>0 %</b> si cobras en mano. Solo el <b>enlace o QR</b> lleva <b>1,9 % + 0,30 € — todo incluido</b> (la pasarela va dentro, no se suma aparte).</div>
     </div>
     Todo lo que ves es interactivo y simulado en tu navegador.
     Nada se guarda ni se envía.<br><button onclick="location.reload()">↺ Reiniciar demo</button></div>
@@ -1931,7 +1931,7 @@ var SUPLEMENTOS={
 /* Planes de la demo (precios congruentes con la landing) y qué desbloquea cada uno. */
 var PLANES={ esencial:{orden:0, n:'Esencial', precio:'0 €'},
              pro:     {orden:1, n:'Pro',      precio:'59 €'},
-             premium: {orden:2, n:'Premium',  precio:'179 €'} };
+             premium: {orden:2, n:'Premium',  precio:'149 €'} };
 function reqOrden(v){ return SUPLEMENTOS[v].plan==='Premium' ? 2 : 1; }   // plan mínimo que lo incluye
 function disponible(v){ if(!SUPLEMENTOS[v]) return true;
   return PLANES[S.plan].orden >= reqOrden(v) || S.desbloqueado[v]; }

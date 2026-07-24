@@ -645,13 +645,13 @@
   <div class="planes">
     <div class="plan reveal">
       <h3>Esencial</h3><div class="precio">0 €</div>
-      <div class="para">Para probar operando · <b>1 tour · 1 guía</b></div>
+      <div class="para">Para probar operando · <b>1 tour · 2 guías · 150 personas/mes</b></div>
       <ul>
         <li>Parte del día y manifiesto móvil del guía (check-in, walk-ins)</li>
         <li>Buzón de reservas: <b>hasta 2 canales</b> (p. ej. GuruWalk + tu web)</li>
         <li>Recordatorio de confirmación anti-no-show por WhatsApp — 1 toque, el día antes <small>(hasta 100 mensajes/mes)</small></li>
         <li>Detección de grupos grandes y rescate de rezagados</li>
-        <li>1 guía · historial de <b>30 días</b></li>
+        <li>2 guías · <b>150 personas/mes</b> · historial de 30 días</li>
         <li>Página del guía y propina con marca «con Audutor»</li>
         <li>Propina digital: <b>2,5 %</b></li>
       </ul>
@@ -660,9 +660,9 @@
     <div class="plan destacado reveal" style="--d:110ms">
       <h3>Pro</h3><div class="precio"><span class="imp" data-mensual="59" data-anual="49">59</span> €<small>/mes</small></div>
       <div class="fact-nota" data-nota hidden>facturado anualmente · 590 €/año (2 meses gratis)</div>
-      <div class="para">Para la empresa de free tours con equipo · <b>2 tours incluidos</b></div>
+      <div class="para">Para la empresa de free tours con equipo · <b>6 tours diarios incluidos</b></div>
       <ul>
-        <li>Todo lo de Esencial · <b>guías y canales ilimitados</b> · historial completo · <b>+15 €/tour</b> adicional</li>
+        <li>Todo lo de Esencial · <b>guías y canales ilimitados</b> —sin bandas ni saltos de precio al crecer el equipo— · historial completo · <b>+15 €/tour</b> a partir del séptimo</li>
         <li>Sin marca «Audutor» — tu marca en la propina y la página del guía</li>
         <li><b>Cadencia anti-no-show inteligente completa</b>: se adapta al riesgo de cada
           reserva — la que recupera personas (y euros) cada mes</li>
@@ -677,13 +677,13 @@
       <a class="btn" href="#contacto">Pedir una demo</a>
     </div>
     <div class="plan premium reveal" style="--d:220ms">
-      <h3>Premium</h3><div class="precio"><span class="imp" data-mensual="179" data-anual="149">179</span> €<small>/mes</small></div>
-      <div class="fact-nota" data-nota hidden>facturado anualmente · 1.790 €/año (2 meses gratis)</div>
+      <h3>Premium</h3><div class="precio"><span class="imp" data-mensual="149" data-anual="124">149</span> €<small>/mes</small></div>
+      <div class="fact-nota" data-nota hidden>facturado anualmente · 1.490 €/año (2 meses gratis)</div>
       <div class="para">Todo Audutor · <b>tours y guías ilimitados</b> — para operadores que escalan</div>
       <ul>
         <li>Todo lo del plan Pro · <b>tours ilimitados</b> (sin coste por tour)</li>
         <li><b>Cuadro de mando</b>: analítica por tour, guía, canal y franja</li>
-        <li><b>Propina digital</b> — 0 % si el guía cobra en mano; 1,9 % + 0,30 € solo si el cobro lo hacemos nosotros</li>
+        <li><b>Propina digital</b> — 0 % si el guía cobra en mano; 1,9 % + 0,30 € <b>todo incluido</b> si el cobro lo hacemos nosotros</li>
         <li>Soporte prioritario y onboarding dedicado</li>
         <li>Próximamente: cobro online, facturación y channel manager de pago</li>
       </ul>
@@ -706,7 +706,7 @@
     <div class="tramos">
       <div class="tramo"><span class="p">0 %</span><span class="n">cobrando en mano</span></div>
       <div class="tramo"><span class="p">1,9 %</span><span class="n">+ 0,30 € por enlace o QR</span></div>
-      <span class="nota">Cobra como quieras —SumUp, datáfono, Bizum— y no te cobramos nada. Solo hay comisión cuando el cobro lo hacemos nosotros: el enlace al que ya se fue.</span>
+      <span class="nota"><b>Todo incluido: la pasarela va dentro del 1,9 %, no se suma aparte.</b> Y cobrando en mano —SumUp, datáfono, Bizum— no te cobramos nada: solo hay comisión cuando el cobro lo hacemos nosotros.</span>
     </div>
   </div>
 </div></section>
@@ -867,7 +867,7 @@
     document.querySelectorAll('.reveal, [data-split]').forEach(function (el) { el.classList.add('in'); });
   }
 
-  // Toggle de facturación mensual / anual. Los precios mensuales (0/59/179) son
+  // Toggle de facturación mensual / anual. Los precios mensuales (0/59/149) son
   // los valores por defecto en el HTML; el anual solo los cruza vía data-*.
   var toggle = document.getElementById('factToggle');
   if (toggle) {
@@ -912,6 +912,8 @@
     };
     var opciones = [
       { id: 'hito',       nombre: 'Audutor Pro',          calcula: function (r, p) { return 59 + 0.019 * p; } },
+      { id: 'tourdash',   nombre: 'TourDash (4-9 guías)', calcula: function (r, p) { return 59; } },
+      { id: 'tourdash2',  nombre: 'TourDash (10-25 guías)', calcula: function (r, p) { return 175; } },
       { id: 'turitop',    nombre: 'TuriTop Starter',   calcula: function (r, p) { return 29 + 0.02 * r; } },
       { id: 'trekksoft',  nombre: 'TrekkSoft Starter', calcula: function (r, p) { return 49 + 0.03 * r; } },
       { id: 'bokun',      nombre: 'Bókun Start',       calcula: function (r, p) { return 49 + 0.015 * r; } },

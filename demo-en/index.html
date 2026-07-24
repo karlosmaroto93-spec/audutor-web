@@ -622,9 +622,9 @@
       <b>1 tour, 1 guía y 2 canales</b>; guías y canales <b>ilimitados desde Pro</b>.
       Los <span class="sup-chip">add-on</span> se activan según la tarifa.
       <div class="plan-sel" id="plan-sel">
-        <button data-plan="esencial" onclick="cambiarPlan('esencial')"><b>Esencial</b>0 £</button>
-        <button data-plan="pro" onclick="cambiarPlan('pro')"><b>Pro</b>59 £</button>
-        <button data-plan="premium" onclick="cambiarPlan('premium')"><b>Premium</b>179 £</button>
+        <button data-plan="esencial" onclick="cambiarPlan('esencial')"><b>Essential</b>£0</button>
+        <button data-plan="pro" onclick="cambiarPlan('pro')"><b>Pro</b>£59</button>
+        <button data-plan="premium" onclick="cambiarPlan('premium')"><b>Premium</b>£149</button>
       </div>
       <div class="es-plus" id="es-plus">
         ¿Te quedas corto? <b>Esencial+ · 29 £/mes</b> — hasta 3 tours, 3 guías y
@@ -1861,9 +1861,9 @@ var SUPLEMENTOS={
   conciliacion:{ n:'Conciliación con plataformas', plan:'Pro', d:'La lista de no-shows a reportar dentro del plazo de cada plataforma, montada sola con los ajustes del guía, para recuperar las comisiones.' },
 };
 /* Planes de la demo (precios congruentes con la landing) y qué desbloquea cada uno. */
-var PLANES={ esencial:{orden:0, n:'Esencial', precio:'0 £'},
-             pro:     {orden:1, n:'Pro',      precio:'59 £'},
-             premium: {orden:2, n:'Premium',  precio:'179 £'} };
+var PLANES={ esencial:{orden:0, n:'Essential', precio:'£0'},
+             pro:     {orden:1, n:'Pro',      precio:'£59'},
+             premium: {orden:2, n:'Premium',  precio:'£149'} };
 function reqOrden(v){ return SUPLEMENTOS[v].plan==='Premium' ? 2 : 1; }   // plan mínimo que lo incluye
 function disponible(v){ if(!SUPLEMENTOS[v]) return true;
   return PLANES[S.plan].orden >= reqOrden(v) || S.desbloqueado[v]; }
