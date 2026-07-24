@@ -616,16 +616,17 @@
   <div class="pie-demo">
     <div class="leyenda-planes">
       <b>Tu plan (demo):</b> cámbialo y mira cómo se desbloquean los módulos. La <b>base</b> (sin 🔒:
-      operaciones, equipo, canales y el recordatorio anti no-show básico) va en todos, con <b>guías
-      ilimitados</b>. Los <span class="sup-chip">supl.</span> se activan según la tarifa.
+      operaciones, equipo, canales y el recordatorio anti no-show básico) va en todos. En Esencial:
+      <b>1 tour, 1 guía y 2 canales</b>; guías y canales <b>ilimitados desde Pro</b>.
+      Los <span class="sup-chip">supl.</span> se activan según la tarifa.
       <div class="plan-sel" id="plan-sel">
         <button data-plan="esencial" onclick="cambiarPlan('esencial')"><b>Esencial</b>0 €</button>
         <button data-plan="pro" onclick="cambiarPlan('pro')"><b>Pro</b>59 €</button>
-        <button data-plan="premium" onclick="cambiarPlan('premium')"><b>Premium</b>129 €</button>
+        <button data-plan="premium" onclick="cambiarPlan('premium')"><b>Premium</b>179 €</button>
       </div>
       <div class="es-plus" id="es-plus">
-        ¿Te quedas corto con 1 tour? <b>Esencial+ · 29 €/mes</b> — hasta 3 tours activos y
-        300 mensajes WhatsApp/mes. Sin cambiar de filosofía: guías ilimitados, sin fee por reserva.
+        ¿Te quedas corto? <b>Esencial+ · 29 €/mes</b> — hasta 3 tours, 3 guías y
+        300 mensajes WhatsApp/mes. Sin fee por reserva.
         <button onclick="ofertaEsencialPlus()">Activar Esencial+</button>
       </div>
       <div style="font-size:10.5px; margin-top:8px; opacity:.85; line-height:1.5;">💳 Propina digital: <b>2,5 %</b> Esencial · <b>1,9 %</b> Pro · <b>1,5 %</b> Premium — solo cuando tú cobras.</div>
@@ -1860,7 +1861,7 @@ var SUPLEMENTOS={
 /* Planes de la demo (precios congruentes con la landing) y qué desbloquea cada uno. */
 var PLANES={ esencial:{orden:0, n:'Esencial', precio:'0 €'},
              pro:     {orden:1, n:'Pro',      precio:'59 €'},
-             premium: {orden:2, n:'Premium',  precio:'129 €'} };
+             premium: {orden:2, n:'Premium',  precio:'179 €'} };
 function reqOrden(v){ return SUPLEMENTOS[v].plan==='Premium' ? 2 : 1; }   // plan mínimo que lo incluye
 function disponible(v){ if(!SUPLEMENTOS[v]) return true;
   return PLANES[S.plan].orden >= reqOrden(v) || S.desbloqueado[v]; }
@@ -1882,7 +1883,7 @@ function pintaGate(v){
     '<h2 style="margin:6px 0 2px;">'+i.n+'</h2>'+
     '<p class="chip" style="background:rgba(201,138,45,.25); color:var(--amber); margin:6px 0; display:inline-block;">Incluido en el plan '+P.n+' · '+P.precio+'/mes</p>'+
     '<p style="color:var(--ink2); max-width:40ch; margin:6px auto 0;">'+i.d+'</p>'+
-    '<p class="mini muted" style="max-width:42ch; margin:12px auto;">La <b>base</b> (operaciones, agenda, equipo, canales y el recordatorio anti no-show básico) va en todos los planes, con <b>guías ilimitados</b>. Los suplementos se activan según tu tarifa.</p>'+
+    '<p class="mini muted" style="max-width:42ch; margin:12px auto;">La <b>base</b> va en todos los planes — en Esencial con <b>1 tour, 1 guía y 2 canales</b>; guías y canales ilimitados desde Pro. Los suplementos se activan según tu tarifa.</p>'+
     '<div class="fila" style="gap:8px; justify-content:center; flex-wrap:wrap;">'+
       '<button class="btn" onclick="cambiarPlan(\''+reqPlan+'\')">Cambiar a '+P.n+' ('+P.precio+')</button>'+
       '<button class="btn sec" onclick="desbloquear(\''+v+'\')">🔓 Solo probarlo (demo)</button>'+
