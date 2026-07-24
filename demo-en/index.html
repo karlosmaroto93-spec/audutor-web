@@ -578,6 +578,7 @@
 <div class="app">
 <aside>
   <div style="background:#fff4d6; border:1px solid #e6c86a; border-radius:9px; padding:9px 11px; margin:0 0 10px; font-size:11.5px; color:#6b5518; line-height:1.45;">🇬🇧 <b>English demo — work in progress.</b> Data, currency (£), platforms and channels are localised for the UK/IE market. Interface strings are still being translated.</div>
+  <div style="background:#e7f0fb; border:1px solid #9dbfe0; border-radius:9px; padding:9px 11px; margin:0 0 10px; font-size:11px; color:#24506e; line-height:1.45;">⚖️ <b>UK advertising rules built in.</b> No suggested tip amounts and no “pay what you want” wording — the CAP/ASA guidance on free walking tours forbids both. If the company takes a cut of the tip, that must be disclosed to the customer.</div>
   <div class="marca"><a class="marca-link" href="../" title="Ir a la web de Audutor"><span class="wm"><span class="wm-palabra">Audutor</span><svg class="wm-ruta" viewBox="0 0 96 14" preserveAspectRatio="none" aria-hidden="true"><path d="M2 10 C 20 4, 36 12, 52 7 S 78 5, 84 8" fill="none" stroke="#8fb0a6" stroke-width="1.7" stroke-dasharray="0.1 5.2" stroke-linecap="round"/><path d="M90 1.4c-2.4 0-4.4 2-4.4 4.4 0 3.2 4.4 7 4.4 7s4.4-3.8 4.4-7c0-2.4-2-4.4-4.4-4.4z" fill="#12805f"/><circle cx="90" cy="5.9" r="1.7" fill="#f3ecdb"/></svg></span></a> <span class="demo-chip">DEMO</span></div>
   <div class="tenant"><b>Old Town Walks · Edinburgh</b>fictional company — made-up data</div>
   <nav>
@@ -1661,7 +1662,7 @@ var S = {
 
   /* Propina digital — configurable por la empresa (Cerebro → Mensaje post-tour):
      importes fijos anclados, cuál sale preseleccionado y si se permite cantidad libre. */
-  propCfg:{ imp:[10,15,20], pre:15, libre:true },
+  propCfg:{ imp:[], pre:0, libre:true, ukCompliance:true }   /* UK: la guía CAP/ASA prohíbe sugerir importe */,
   att:[
     { n:"Sofía Romano",  p:6, canal:"GuruWalk",  ok:false, grupo:true, conf:true },
     { n:"Marco Romano",  p:5, canal:"GuruWalk",  ok:false, grupo:true, conf:true },
@@ -3516,6 +3517,7 @@ function pintaViajero(paso){
     'Hola, '+VJ.nombre+' 👋 Gracias por venir con Sofía y los peques al <b>'+VJ.tour+'</b> de hoy con '+
     '<b>'+VJ.guia+'</b>. Si te ha gustado, aquí puedes agradecérselo 🧡'+
     '<span class="vj-hora">12:47 ✓✓</span></div>'+
+    '<div class="vj-transp" style="margin-bottom:10px;">🇬🇧 <b>Tips only, no set amount.</b> Your guide works on a tips-only basis — give whatever you feel it was worth, or nothing at all.</div>'+
     '<p class="vj-tit">¿Cuánto quieres dejar? <span class="mini muted" style="font-weight:400;">· reserva de '+VJ.pax+' personas</span></p>'+
     '<div class="vj-importes'+(libre?' con-libre':'')+'">'+importes+libre+'</div>'+libreInput+
     '<p class="vj-tit">¿Cómo prefieres pagar?</p>'+
