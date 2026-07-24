@@ -2418,6 +2418,10 @@ function fraseGuia(k, o){
     default:        return v;
   }
 }
+function respuestaGuia(t){
+  if (idiomaDe(t)==='en') return respuestaEN(t);
+  return respuestaGuiaES(t);
+}
 function pintaSelectorChat(){
   var sel=document.getElementById('chat-tour'); sel.innerHTML='';
   S.tours.forEach(function(t,i){ var o=document.createElement('option');
@@ -2473,7 +2477,161 @@ function anotaGuia(txt){
   t.obs=(t.obs||[]); t.obs.unshift({ a:'GuIA', rec:false, t:txt });
   var v=document.getElementById('v-manifiesto'); if (v && v.classList.contains('act')) pintaManifiesto();
 }
-function respuestaGuia(t){
+
+/* ================= FASE A · GuIA bilingüe (ES/EN) =================
+   Casi toda empresa de free tour opera también en inglés: el viajero del tour EN
+   escribe en inglés y debe recibirlo todo en inglés. Diseño:
+   1) idiomaDe() detecta EN por marcadores léxicos (no por el navegador: el mismo
+      chat recibe los dos idiomas).
+   2) EN_ES traduce el vocabulario clave ANTES de las regex, así las ~50 reglas ya
+      escritas funcionan igual en inglés sin duplicarlas.
+   3) respuestaEN() responde con los MISMOS hechos del Cerebro, en plantilla inglesa.
+   4) Si no hay plantilla EN para esa pregunta, DERIVA en inglés — nunca traduce a
+      medias ni improvisa (mismo guardarraíl que en español). */
+var EN_ES={
+  'meeting':'punto','meet':'quedamos','point':'punto','where':'donde','when':'cuando','what':'que',
+  'time':'hora','hour':'hora','hours':'horas','start':'empieza','starts':'empieza','begin':'empieza',
+  'long':'dura','duration':'duracion','last':'dura','lasts':'dura','how':'como','much':'cuanto','many':'cuantos',
+  'price':'precio','cost':'cuesta','costs':'cuesta','free':'gratis','pay':'pagar','tip':'propina','tips':'propina',
+  'book':'reservar','booking':'reserva','reservation':'reserva','cancel':'cancelar','cancellation':'cancelacion',
+  'change':'cambiar','reschedule':'cambiar','refund':'reembolso','invoice':'factura',
+  'late':'tarde','delay':'retraso','wait':'espera','waits':'espera','miss':'perdido','missed':'perdido','lost':'perdido',
+  'rain':'lluvia','raining':'lluvia','rains':'lluvia','weather':'tiempo','hot':'calor','snow':'nieva',
+  'kids':'ninos','kid':'nino','children':'ninos','child':'nino','baby':'bebe','stroller':'carrito',
+  'dog':'perro','dogs':'perro','pet':'mascota','pets':'mascotas',
+  'wheelchair':'silla','accessible':'accesible','accessibility':'accesibilidad','walk':'camina','walking':'camina',
+  'language':'idioma','languages':'idiomas','english':'ingles','spanish':'espanol',
+  'group':'grupo','groups':'grupos','people':'personas','person':'persona','pax':'personas',
+  'guide':'guia','umbrella':'paraguas','flag':'bandera','vest':'chaleco',
+  'toilet':'bano','toilets':'banos','bathroom':'bano','restroom':'bano','water':'agua','food':'comida',
+  'ticket':'entrada','tickets':'entradas','museum':'museo','inside':'dentro',
+  'end':'termina','ends':'termina','finish':'termina','recommend':'recomienda','review':'resena',
+  'confirm':'confirmar','confirmation':'confirmacion','available':'disponible','availability':'disponibilidad',
+  'spots':'plazas','places':'plazas','alone':'solo','solo':'solo','safe':'seguro','stairs':'escaleras',
+  'sunday':'domingo','monday':'lunes','tomorrow':'manana','today':'hoy'
+};
+function idiomaDe(t){
+  var x=' '+t.toLowerCase().replace(/[^a-záéíóúñü\s]/g,' ')+' ';
+  var EN=[' the ',' is ',' are ',' do ',' does ',' can ',' i ',' we ',' you ',' my ',' your ',' what ',
+          ' where ',' when ',' how ',' hi ',' hello ',' thanks ',' thank ',' please ',' and ',' with ',' for '];
+  var ES=[' el ',' la ',' los ',' las ',' que ',' donde ',' cuando ',' como ',' hola ',' gracias ',' por ',
+          ' para ',' con ',' una ',' un ',' es ',' está ',' esta ',' cuánto ',' cuanto ',' puedo ',' hay '];
+  var e=EN.filter(function(w){return x.indexOf(w)!==-1}).length;
+  var s=ES.filter(function(w){return x.indexOf(w)!==-1}).length;
+  return e>s ? 'en' : 'es';
+}
+function normalizaEN(t){
+  return normaliza(t).split(/\b/).map(function(tok){ return EN_ES[tok]||tok; }).join('');
+}
+
+/* Los hechos del Cerebro los escribe el operador en SU idioma. En producción GuIA
+   los traduce al vuelo al idioma del viajero; aquí se demuestra con el diccionario
+   de los hechos semilla. Si un hecho no tiene traducción, GuIA NO lo suelta a medias:
+   deriva a una persona (mismo guardarraíl de siempre). */
+var HECHOS_EN={
+  'El tour sale también con lluvia; solo se cancela por aviso meteorológico serio, avisando antes':
+    'The tour runs in the rain too — we only cancel for a serious weather warning, and we\'d tell you in advance',
+  'Tu perro es bienvenido con correa — más de un tour ha acabado con él de mascota oficial 🐾':
+    'Your dog is welcome on a lead — more than one tour has ended with a new official mascot 🐾',
+  'El recorrido es accesible para silla de ruedas y carrito de bebé — si necesitas adaptar algo, dímelo y lo dejo preparado':
+    'The route is wheelchair and stroller friendly — tell me if you need anything adapted and I\'ll arrange it',
+  'Puedes cancelar sin coste hasta la hora de salida; agradecemos que avises cuanto antes':
+    'You can cancel free of charge right up to departure — we just appreciate as much notice as possible',
+  'Puedes cambiar de día o de hora sin coste, según disponibilidad':
+    'You can move to another day or time free of charge, subject to availability',
+  'Los niños son bienvenidos y no pagan; el ritmo es tranquilo y hay paradas':
+    'Kids are very welcome and don\'t pay — the pace is easy and we stop often',
+  'Es un free tour: reservas sin pagar nada y al final aportas lo que consideres':
+    'It\'s a free tour: you book without paying anything and give what you think it was worth at the end',
+  'Gratis y en un clic desde tu enlace de reserva, hasta la hora de salida':
+    'Free and in one tap from your booking link, right up to departure time',
+  'Sí, puedes cambiar la fecha o el número de personas sin coste, hasta la hora de salida':
+    'Yes — you can change the date or the number of people free of charge, up to departure time',
+  'Free tour (propina) — reserva a 0 €':
+    'it\'s a free tour: you book for 0 € and tip what you feel it was worth at the end',
+  'No hace falta pagar nada: todo se ve por fuera':
+    'No entrance fees needed — everything is seen from the outside',
+  'Las degustaciones no están incluidas: cada uno paga lo que pida en cada parada (2-4 €)':
+    'Tastings aren\'t included: everyone pays for what they order at each stop (2-4 €)',
+  'Los niños vienen gratis y disfrutan mucho; el ritmo es tranquilo':
+    'Kids come free and usually love it — the pace is nice and easy',
+  'Sí, es un plan perfecto para ir por libre: mucha gente viene sola':
+    'Yes, it\'s a great plan on your own — plenty of people come solo',
+};
+function trEN(txt){ return HECHOS_EN[(txt||'').trim()] || null; }
+
+/* Respuestas en inglés con los MISMOS hechos confirmados del Cerebro. */
+function respuestaEN(t){
+  var m=normalizaEN(t), o=tourChat().kb, E=S.empresa;
+  function v(k){ return (o[k]||'').trim(); }
+  function falta(){ registraDerivada(t);
+    return 'Let me check that with a colleague so I don\'t give you the wrong info — they\'ll reply here shortly 🙂'; }
+  // cortesías
+  if (/^\s*(hola|hi|hello|hey|good (morning|afternoon|evening))[\s!.,]*$/i.test(t))
+    return 'Hi there! 👋 I\'m GuIA. Ask me anything about the tour 🙂';
+  if (/^\s*(thanks|thank you|ok|okay|great|perfect|cheers)[\s!.,]*$/i.test(t))
+    return 'Anytime! I\'m here if you need anything else 🙂';
+  if (/^\s*(bye|goodbye|see you|ciao)[\s!.,]*$/i.test(t))
+    return 'See you soon! Enjoy the city 🙂';
+  // cortafuegos: lo delicado va a una persona, también en inglés
+  if (/factura|reembols|devoluc|descuento|cupon|queja|reclamacion|prensa|colabora|alergi|celiaco|intoleran/.test(m))
+    return falta();
+  // FAQ con hechos del Cerebro
+  if (/punto|donde|quedamos/.test(m) && !/termina/.test(m))
+    return v('punto') ? 'We meet at '+v('punto')+' 📍'+(v('horas')?' We start '+v('horas')+'.':'')+
+      (v('senal')?' Look for the '+v('senal')+' — the guide arrives a few minutes early.':'') : falta();
+  if (/hora|empieza|cuando/.test(m))
+    return v('horas') ? 'We run '+v('horas')+(v('punto')?' from '+v('punto'):'')+' 🙂 Want me to save you a spot?' : falta();
+  if (/dura|duracion/.test(m))
+    return v('dur') ? 'The tour lasts '+v('dur')+' — relaxed pace, with stops for the stories (and photos 📸).' : falta();
+  if (/precio|cuesta|gratis|propina|pagar/.test(m))
+    return v('modelo') ? 'It works like this — '+(trEN(v('modelo'))||'you book for free and give what you feel it was worth at the end')+' 💛'
+      +(v('propina')?' Most people leave around '+v('propina')+'.':'') : falta();
+  if (/termina|fin\b/.test(m))
+    return v('fin') ? 'The tour ends at '+v('fin')+' — a great spot to carry on exploring on your own 🙂' : falta();
+  if (/lluvia|tiempo|calor|nieva/.test(m))
+    return trEN(v('lluvia')) ? trEN(v('lluvia'))+' ☔' : falta();
+  if (/cancelar|cancelacion/.test(m))
+    return trEN(v('cancelar')) ? trEN(v('cancelar'))+' 🙂 Just send me your booking code (BLV-…) and I\'ll cancel it right now.' : falta();
+  if (/cambiar/.test(m))
+    return trEN(v('cambios')) ? trEN(v('cambios'))+' Send me your code (BLV-…) and I\'ll sort it out.' : falta();
+  if (/tarde|retraso/.test(m))
+    return v('espera') ? 'Don\'t worry! The guide waits around '+v('espera')+' at the meeting point, so a few minutes are fine 🙂'
+      +' If you\'re running later, send me your code (BLV-…) and I\'ll let the guide know.' : falta();
+  if (/idioma|ingles/.test(m))
+    return v('idiomas') ? 'The tour runs in '+v('idiomas')+'. If you need another language, tell me and I\'ll check with the team.' : falta();
+  if (/guia|paraguas|bandera|chaleco|reconoc/.test(m))
+    return v('senal') ? 'Easy: look for the '+v('senal')+(v('punto')?' at '+v('punto'):'')+'. The guide gets there a few minutes before we start 🙂' : falta();
+  if (/nino|bebe|carrito|familia/.test(m))
+    return trEN(v('ninos')) || falta();
+  if (/perro|mascota/.test(m))
+    return trEN(v('mascotas')) || falta();
+  if (/silla|accesib|escaleras/.test(m))
+    return trEN(v('acces')) || falta();
+  if (/grupo/.test(m))
+    return v('grupomin') ? 'For groups over 6 (even if you split it across bookings), the guide will ask for a deposit of '
+      +v('grupomin')+' per person 🙂' : falta();
+  if (/aforo|plazas|disponib|sitio/.test(m))
+    return v('aforo') ? 'Each departure takes up to '+v('aforo')+' people — a manageable group where you can actually hear the guide 🙂' : falta();
+  if (/visita|ver\b|veremos/.test(m))
+    return v('visita') ? 'We\'ll see '+v('visita')+' — no rush, and with the best stories 🙂' : falta();
+  if (/camina|distancia/.test(m))
+    return v('distancia') ? 'We cover about '+v('distancia')+' at an easy pace, with plenty of stops.' : falta();
+  if (/entrada|museo|dentro/.test(m))
+    return trEN(v('entradas')) || falta();
+  if (/bano/.test(m)) return falta();
+  if (/reserva|reservar|confirmar/.test(m))
+    return 'You can book on our website in a minute — no card needed. If you already booked, send me your code (BLV-…) and I\'ll check it for you 🙂';
+  if (/resena/.test(m))
+    return 'That would mean a lot 💛 After the tour I\'ll send you a link so you can leave one in a couple of taps.';
+  if (/perdido/.test(m))
+    return 'No problem — send me your booking code (BLV-…) and I\'ll share the guide\'s live location so you can catch up 🙂';
+  if (/solo|seguro/.test(m))
+    return 'Absolutely — lots of people come on their own and it\'s a great way to meet others 🙂';
+  return falta();
+}
+
+function respuestaGuiaES(t){
   var m=normaliza(t);
   // 1) Lo ENSEÑADO manda — de la empresa entera o de ESTE tour (nunca de otro).
   for (var i=0;i<S.aprendidas.length;i++){
