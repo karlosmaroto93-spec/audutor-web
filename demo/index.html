@@ -627,14 +627,14 @@
       <b>1 tour, 1 guía y 2 canales</b>; guías y canales <b>ilimitados desde Pro</b>.
       Los <span class="sup-chip">supl.</span> se activan según la tarifa.
       <div class="mk-sel">
-        <b>Mercado (demo):</b> el mismo producto, configurado para otro país y modelo de negocio.
+        <b>Mercado (demo):</b> el mismo producto, en el mismo idioma, adaptado a la moneda, el modelo de negocio y las costumbres de cada país.
         <div class="fila" id="mk-btns" style="gap:4px; margin-top:6px; flex-wrap:wrap;"></div>
         <p class="mini" id="mk-nota" style="margin:6px 0 0; font-size:10.5px; line-height:1.45;"></p>
       </div>
       <div class="plan-sel" id="plan-sel">
         <button data-plan="esencial" onclick="cambiarPlan('esencial')"><b>Esencial</b>0 €</button>
         <button data-plan="pro" onclick="cambiarPlan('pro')"><b>Pro</b>59 €</button>
-        <button data-plan="premium" onclick="cambiarPlan('premium')"><b>Premium</b>149 €</button>
+        <button data-plan="premium" onclick="cambiarPlan('premium')"><b>Premium</b>179 €</button>
       </div>
       <div class="es-plus" id="es-plus">
         ¿Te quedas corto? <b>Esencial+ · 29 €/mes</b> — hasta 3 tours, 3 guías y
@@ -1606,10 +1606,15 @@ Plazas de vuestro grupo guardadas 48 h 👉 luna.tours/combo/x3f9
    NEGOCIO (free con propina · de pago con precio · mixto), canales de venta y
    canal de aviso. Todo lo que depende del mercado lee de aquí, no de constantes
    sueltas — así añadir Buenos Aires o Dublín es un objeto, no un fork del código. */
+/* IDIOMA ≠ MERCADO. Solo hay DOS idiomas de producto (es · en) y viven en la demo
+   correspondiente. El mercado es otra cosa: moneda, modelo de negocio, canales de
+   venta, canal de aviso y costumbres locales — y se elige aquí dentro. Un operador
+   argentino y uno español comparten idioma pero no mercado; uno irlandés y uno
+   británico comparten idioma pero no moneda ni modelo. */
 var MERCADOS = {
   'es-free': {
     nombre:'España · free tour', bandera:'🇪🇸',
-    empresa:'Bella Vita · Roma', pais:'ES', idioma:'es',
+    empresa:'Bella Vita · Roma', pais:'ES',
     moneda:{ cod:'EUR', sim:'€', pre:false, loc:'es-ES', dec:2 },
     modelo:'free',                       // el viajero no paga por reservar; hay propina
     canales:['GuruWalk','Civitatis','Freetour','Web propia'],
@@ -1619,7 +1624,7 @@ var MERCADOS = {
   },
   'ar-free': {
     nombre:'Argentina · free tour', bandera:'🇦🇷',
-    empresa:'Buenos Aires a Pie', pais:'AR', idioma:'es',
+    empresa:'Buenos Aires a Pie', pais:'AR',
     moneda:{ cod:'ARS', sim:'$', pre:true, loc:'es-AR', dec:0 },
     modelo:'free',
     canales:['GuruWalk','Freetour','Web propia'],
@@ -1629,7 +1634,7 @@ var MERCADOS = {
   },
   'uk-mixto': {
     nombre:'Reino Unido · mixto', bandera:'🇬🇧',
-    empresa:'Old Town Walks · Edinburgh', pais:'GB', idioma:'en',
+    empresa:'Old Town Walks · Edinburgh', pais:'GB',
     moneda:{ cod:'GBP', sim:'£', pre:true, loc:'en-GB', dec:2 },
     modelo:'mixto',                      // free tours + tours de pago en el mismo catálogo
     canales:['GuruWalk','FreeTour.com','Viator','GetYourGuide','Own site'],
@@ -1639,7 +1644,7 @@ var MERCADOS = {
   },
   'ie-pago': {
     nombre:'Irlanda · tour de pago', bandera:'🇮🇪',
-    empresa:'Dublin Story Walks', pais:'IE', idioma:'en',
+    empresa:'Dublin Story Walks', pais:'IE',
     moneda:{ cod:'EUR', sim:'€', pre:true, loc:'en-IE', dec:2 },
     modelo:'pago',                       // ticket con precio; la propina es extra opcional
     canales:['Viator','GetYourGuide','TripAdvisor','Own site'],
@@ -1931,7 +1936,7 @@ var SUPLEMENTOS={
 /* Planes de la demo (precios congruentes con la landing) y qué desbloquea cada uno. */
 var PLANES={ esencial:{orden:0, n:'Esencial', precio:'0 €'},
              pro:     {orden:1, n:'Pro',      precio:'59 €'},
-             premium: {orden:2, n:'Premium',  precio:'149 €'} };
+             premium: {orden:2, n:'Premium',  precio:'179 €'} };
 function reqOrden(v){ return SUPLEMENTOS[v].plan==='Premium' ? 2 : 1; }   // plan mínimo que lo incluye
 function disponible(v){ if(!SUPLEMENTOS[v]) return true;
   return PLANES[S.plan].orden >= reqOrden(v) || S.desbloqueado[v]; }

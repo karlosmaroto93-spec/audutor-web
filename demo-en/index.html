@@ -359,6 +359,13 @@
   .wa-barra{ height:7px; background:var(--line); border-radius:5px; overflow:hidden; margin:8px 0 6px; }
   .wa-barra i{ display:block; height:100%; }
   /* selector de plan (demo) en el sidebar */
+  .mk-sel{ background:#f3ecdb; border:1px solid #e0d3b4; border-radius:10px; padding:9px 11px;
+    margin-bottom:10px; font-size:11.5px; color:#5d6b62; line-height:1.5; }
+  .mk-sel b{ color:#33514a; }
+  .mk-sel button{ border:1px solid #d9cba6; background:#fffdf5; border-radius:8px; padding:4px 7px;
+    font-size:15px; cursor:pointer; line-height:1; font-family:inherit; }
+  .mk-sel button.on{ background:var(--acc); border-color:var(--acc); box-shadow:0 0 0 2px rgba(18,138,107,.2); }
+  .mk-sel #mk-nota{ color:#7a6f55; font-style:italic; }
   .plan-sel{ display:flex; gap:4px; margin-top:8px; flex-wrap:wrap; }
   /* Tres botones en ~187 px: el nombre del plan debe caber sin desbordar la caja.
      «Esencial» a 12 px no cabía en los ~56 px útiles de cada botón. */
@@ -621,10 +628,15 @@
       operaciones, equipo, canales y el recordatorio anti no-show básico) va en todos. En Esencial:
       <b>1 tour, 1 guía y 2 canales</b>; guías y canales <b>ilimitados desde Pro</b>.
       Los <span class="sup-chip">add-on</span> se activan según la tarifa.
+      <div class="mk-sel">
+        <b>Market (demo):</b> same product, same language — adapted to each country’s currency, business model and habits.
+        <div class="fila" id="mk-btns" style="gap:4px; margin-top:6px; flex-wrap:wrap;"></div>
+        <p class="mini" id="mk-nota" style="margin:6px 0 0; font-size:10.5px; line-height:1.45;"></p>
+      </div>
       <div class="plan-sel" id="plan-sel">
         <button data-plan="esencial" onclick="cambiarPlan('esencial')"><b>Essential</b>£0</button>
         <button data-plan="pro" onclick="cambiarPlan('pro')"><b>Pro</b>£59</button>
-        <button data-plan="premium" onclick="cambiarPlan('premium')"><b>Premium</b>£149</button>
+        <button data-plan="premium" onclick="cambiarPlan('premium')"><b>Premium</b>£179</button>
       </div>
       <div class="es-plus" id="es-plus">
         ¿Te quedas corto? <b>Esencial+ · 29 £/mes</b> — hasta 3 tours, 3 guías y
@@ -653,7 +665,7 @@
     <div class="fila" style="justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
       <div>
         <div style="font-size:12px; letter-spacing:.06em; text-transform:uppercase; opacity:.85; font-weight:800;">Lo que Audutor te ha devuelto este mes</div>
-        <div style="font-family:var(--serif); font-size:38px; font-weight:700; line-height:1.1; margin-top:2px;">+1.640 £</div>
+        <div style="font-family:var(--serif); font-size:38px; font-weight:700; line-height:1.1; margin-top:2px;"><span data-dinero="1640" data-dec="0">+£1,640</span></div>
         <div class="mini" style="opacity:.9;">≈ 142 people saved from no-shows (38 % → 17 %) · average tip £11.60</div>
       </div>
       <div style="text-align:right;">
@@ -1590,6 +1602,61 @@ Plazas de vuestro grupo guardadas 48 h 👉 luna.tours/combo/x3f9
 <div id="toast"></div>
 
 <script>
+/* LANGUAGE ≠ MARKET. There are only TWO product languages (en · es), each with its
+   own demo. The market is a different axis: currency, business model, sales
+   channels, notification channel and local habits — picked right here. */
+var MERCADOS = {
+  'uk-mixed': {
+    nombre:'United Kingdom · mixed', bandera:'🇬🇧',
+    empresa:'Old Town Walks · Edinburgh', pais:'GB',
+    moneda:{ cod:'GBP', sim:'£', pre:true, loc:'en-GB', dec:2 },
+    modelo:'mixto',
+    canales:['GuruWalk','FreeTour.com','Viator','GetYourGuide','Own site'],
+    aviso:['sms','email','whatsapp'],
+    propinaPax:15, pagoP2P:false,
+    nota:'Free tours to fill the funnel, ticketed themed tours (ghosts, food) to monetise. £15 is the standard tip. ⚖️ CAP/ASA rules apply: never suggest an amount.'
+  },
+  'ie-paid': {
+    nombre:'Ireland · ticketed', bandera:'🇮🇪',
+    empresa:'Dublin Story Walks', pais:'IE',
+    moneda:{ cod:'EUR', sim:'€', pre:true, loc:'en-IE', dec:2 },
+    modelo:'pago',
+    canales:['Viator','GetYourGuide','TripAdvisor','Own site'],
+    aviso:['email','sms'],
+    propinaPax:6, precioTicket:25, pagoP2P:false,
+    nota:'Paid upfront: refund policy matters and a no-show costs you the seat, not just the platform fee.'
+  },
+  'us-mixed': {
+    nombre:'United States · mixed', bandera:'🇺🇸',
+    empresa:'Old City Walks · Boston', pais:'US',
+    moneda:{ cod:'USD', sim:'$', pre:true, loc:'en-US', dec:2 },
+    modelo:'mixto',
+    canales:['Viator','GetYourGuide','Airbnb Experiences','Own site'],
+    aviso:['sms','email'],
+    propinaPax:20, pagoP2P:false,
+    nota:'Tipping is highest here, but WhatsApp barely exists — SMS and email carry the reminders.'
+  },
+  'au-paid': {
+    nombre:'Australia · ticketed', bandera:'🇦🇺',
+    empresa:'Harbour Walks · Sydney', pais:'AU',
+    moneda:{ cod:'AUD', sim:'$', pre:true, loc:'en-AU', dec:2 },
+    modelo:'pago',
+    canales:['Viator','GetYourGuide','Klook','Own site'],
+    aviso:['sms','email'],
+    propinaPax:5, precioTicket:39, pagoP2P:false,
+    nota:'Tipping is not customary: the ticket is the revenue, so occupancy and no-shows are what move the needle.'
+  }
+};
+var MK = MERCADOS['uk-mixed'];
+function dinero(v, dec){
+  var d = dec===undefined ? MK.moneda.dec : dec;
+  var n = v.toLocaleString(MK.moneda.loc, {minimumFractionDigits:d, maximumFractionDigits:d});
+  return MK.moneda.pre ? MK.moneda.sim+n : n+' '+MK.moneda.sim;
+}
+function esFree(){ return MK.modelo==='free' || MK.modelo==='mixto'; }
+function esPago(){ return MK.modelo==='pago' || MK.modelo==='mixto'; }
+function canalAviso(){ return MK.aviso[0]==='whatsapp' ? 'WhatsApp' : (MK.aviso[0]==='sms' ? 'SMS' : 'email'); }
+
 /* ============ estado compartido de la demo ============ */
 /* El FORMULARIO GENÉRICO de GuIA: los 19 hechos que responden las preguntas
    habituales de cualquier tour. Cada tour tiene SU copia — sin cruces. */
@@ -1863,7 +1930,7 @@ var SUPLEMENTOS={
 /* Planes de la demo (precios congruentes con la landing) y qué desbloquea cada uno. */
 var PLANES={ esencial:{orden:0, n:'Essential', precio:'£0'},
              pro:     {orden:1, n:'Pro',      precio:'£59'},
-             premium: {orden:2, n:'Premium',  precio:'£149'} };
+             premium: {orden:2, n:'Premium',  precio:'£179'} };
 function reqOrden(v){ return SUPLEMENTOS[v].plan==='Premium' ? 2 : 1; }   // plan mínimo que lo incluye
 function disponible(v){ if(!SUPLEMENTOS[v]) return true;
   return PLANES[S.plan].orden >= reqOrden(v) || S.desbloqueado[v]; }
@@ -1874,6 +1941,38 @@ function pintaCandados(){
     c.style.display = bloqueado(a.dataset.v) ? '' : 'none';
   });
 }
+
+function pintaMkSel(){
+  var c=document.getElementById('mk-btns'); if(!c) return;
+  c.innerHTML=Object.keys(MERCADOS).map(function(k){
+    var m=MERCADOS[k];
+    return '<button class="'+(MK===m?'on':'')+'" title="'+m.nombre+'" onclick="cambiaMercado(\''+k+'\')">'+m.bandera+'</button>';
+  }).join('');
+  document.getElementById('mk-nota').textContent=MK.nombre+' — '+MK.nota;
+}
+function pintaDineroEstatico(){
+  document.querySelectorAll('[data-dinero]').forEach(function(el){
+    var v=parseFloat(el.getAttribute('data-dinero'));
+    var d=parseInt(el.getAttribute('data-dec')||'0',10);
+    var signo = /^\+/.test(el.textContent) ? '+' : '';
+    el.textContent = signo + dinero(v, d);
+  });
+  document.querySelectorAll('[data-empresa]').forEach(function(el){ el.textContent = MK.empresa.split(' · ')[0]; });
+}
+function cambiaMercado(k){
+  MK = MERCADOS[k];
+  document.querySelector('.tenant b').textContent = MK.empresa;
+  pintaMkSel(); pintaDineroEstatico();
+  ['operaciones','manifiesto','equipo','canales','liquidacion','cuadro','ahorro'].forEach(function(v){
+    try{ var f={operaciones:pintaOperaciones,manifiesto:pintaManifiesto,equipo:pintaEquipo,
+                canales:pintaCanales,liquidacion:pintaLiquidacion,cuadro:pintaCuadro,ahorro:pintaCanales}[v]; if(f) f(); }catch(e){}
+  });
+  try{ calcProy(); }catch(e){}
+  toast(MK.bandera+' '+MK.nombre+' — '+(MK.modelo==='pago'?'ticketed: paid upfront, a no-show costs you the seat'
+        : MK.modelo==='mixto'?'mixed catalogue: free tours fill the funnel, ticketed tours monetise'
+        : 'free tour: book for nothing, tip at the end')+'. Reminders via '+canalAviso()+'.');
+}
+
 function pintaPlanSel(){
   document.querySelectorAll('#plan-sel button').forEach(function(b){
     b.classList.toggle('on', b.dataset.plan===S.plan); });
@@ -1986,7 +2085,7 @@ function ir(v){
 document.querySelectorAll('aside nav a').forEach(function(a){
   a.addEventListener('click', function(ev){ ev.preventDefault(); ir(a.dataset.v); });
 });
-pintaCandados(); pintaPlanSel(); pintaEsPlus();
+pintaCandados(); pintaPlanSel(); pintaEsPlus(); pintaMkSel(); pintaDineroEstatico();
 
 /* ===== Modo guía: el enlace personal del guía — SOLO su manifiesto y su
    disponibilidad, sin nada de la consola de la oficina. hash #guia. ===== */
@@ -2130,7 +2229,7 @@ function pintaCupo(){
 function pintaOperaciones(){ pintaEstadoBanner(); pintaSeguimiento(); pintaCupo(); }
 
 /* ============ manifiesto ============ */
-function euros(v){ return v.toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2})+' £'; }
+function euros(v){ return dinero(v, 2); }
 function paxDe(res){ return res.reduce(function(s,r){return s+r.p},0); }
 function agTotales(){
   var sPax=0, sRec=0;
@@ -4282,7 +4381,7 @@ function proyCoste(m){ proyCosteV=m;
   document.getElementById('py-tab-cemp').className='btn mini'+(m==='empresa'?'':' sec');
   document.getElementById('py-tab-cing').className='btn mini'+(m==='ingreso'?'':' sec');
   calcProy(); }
-function eur0(v){ return Math.round(v).toLocaleString('es-ES')+' £'; }
+function eur0(v){ return dinero(Math.round(v), 0); }
 function calcProy(){
   function V(id){ return +document.getElementById(id).value; }
   var grupo=V('py-grupo'), tours=V('py-tours'), prop=V('py-prop'), ng=V('py-ng'),
