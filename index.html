@@ -104,6 +104,13 @@
   .logo .ruta .rpin{ fill:var(--acc); stroke:none; }
   .logo .ruta .rhueco{ fill:var(--bg); }
   .logo.pie{ font-size:16px; color:var(--ink2); }
+  /* selector de idioma: bandera del idioma AL QUE se cambia */
+  .lang-sw{ display:inline-flex; align-items:center; gap:6px; background:var(--paper);
+    border:1.5px solid var(--line); border-radius:99px; padding:6px 12px; cursor:pointer;
+    font-family:inherit; font-size:13px; font-weight:800; color:var(--ink2); transition:all .2s; }
+  .lang-sw:hover{ border-color:var(--acc); color:var(--acc); }
+  .lang-sw .bandera{ font-size:15px; line-height:1; }
+  @media (max-width:640px){ .lang-sw .lbl{ display:none; } }
   nav .links{ margin-left:auto; display:flex; gap:20px; align-items:center; }
   nav .links a{ text-decoration:none; color:var(--ink2); font-size:14.5px; font-weight:600; }
   nav .links a:hover{ color:var(--acc); }
@@ -460,11 +467,13 @@
 <nav><div class="wrap">
   <a class="logo" href="#" aria-label="Audutor, inicio"><span class="wm">Audutor<svg class="ruta" viewBox="0 0 100 14" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M1 10.5 Q 24 5 46 9 T 86 8"/><path class="rpin" d="M93 1.2c-2.6 0-4.7 2.1-4.7 4.7 0 3.4 4.7 7.5 4.7 7.5s4.7-4.1 4.7-7.5c0-2.6-2.1-4.7-4.7-4.7z"/><circle class="rhueco" cx="93" cy="6" r="1.8"/></svg></span></a>
   <div class="links">
-    <a href="#producto">Producto</a>
-    <a href="#dia">Un día</a>
-    <a href="#planes">Planes</a>
-    <a href="#web">Tu web</a>
-    <a class="btn" href="demo/" data-demo>Probar la demo</a>
+    <a href="#producto" data-i18n="nav.producto">Producto</a>
+    <a href="#dia" data-i18n="nav.dia">Un día</a>
+    <a href="#planes" data-i18n="nav.planes">Planes</a>
+    <a href="#web" data-i18n="nav.web">Tu web</a>
+    <a class="btn" href="demo/" data-demo data-i18n="nav.demo">Probar la demo</a>
+    <button id="lang-sw" class="lang-sw" onclick="cambiaIdioma()" aria-label="Change language / Cambiar idioma">
+      <span class="bandera">🇬🇧</span><span class="lbl">EN</span></button>
   </div>
 </div></nav>
 
@@ -484,9 +493,8 @@
   <div class="wrap">
   <div class="hero-grid">
     <div>
-      <div class="kicker reveal" style="--d:80ms">Software de operaciones para empresas de free tours
-      y tours a pie con equipo de guías</div>
-      <h1 data-split>Tu software de reservas se olvida de lo que pasa después de la reserva.</h1>
+      <div class="kicker reveal" style="--d:80ms" data-i18n="hero.kicker">Software de operaciones para empresas de free tours y tours a pie con equipo de guías</div>
+      <h1 data-split data-i18n="hero.h1">Tu software de reservas se olvida de lo que pasa después de la reserva.</h1>
       <p class="lede reveal" style="--d:120ms">Audutor es <b>la capa operativa de tu empresa de tours</b>:
       avisa a tus clientes por WhatsApp para que no te fallen, rescata a quien se pierde, detecta
       los grupos grandes, liquida cada tour al céntimo y junta las reservas de todos tus canales
@@ -696,10 +704,9 @@
       en el mismo gesto, y tu parte se cuadra sola en la <b>liquidación</b>.</p>
     </div>
     <div class="tramos">
-      <div class="tramo"><span class="p">0 %</span><span class="n">con tu SumUp o datáfono</span></div>
-      <div class="tramo"><span class="p">0,9 %</span><span class="n">por enlace, con Bizum</span></div>
-      <div class="tramo"><span class="p">1,5 %</span><span class="n">por enlace, con tarjeta</span></div>
-      <span class="nota">+ 0,30 € por cobro en los enlaces · igual en todos los planes · cobrar en mano nunca lleva comisión nuestra</span>
+      <div class="tramo"><span class="p">0 %</span><span class="n">cobrando en mano</span></div>
+      <div class="tramo"><span class="p">1,5 %</span><span class="n">+ 0,30 € por enlace o QR</span></div>
+      <span class="nota">Cobra como quieras —SumUp, datáfono, Bizum— y no te cobramos nada. Solo hay comisión cuando el cobro lo hacemos nosotros: el enlace al que ya se fue.</span>
     </div>
   </div>
 </div></section>
@@ -961,6 +968,39 @@
     barra.style.width = (p * 100).toFixed(2) + '%';
   }, { passive: true });
 })();
+
+/* ============ Selector de idioma (ES ⇄ EN) ============
+   La bandera muestra el idioma AL QUE se cambia. Traduce los textos marcados con
+   data-i18n y apunta los enlaces de demo a la demo del idioma correspondiente
+   (demo ES = Bella Vita · Roma; demo EN = Old Town Walks · Edinburgh, con sus
+   propias plataformas, moneda y canal de aviso — no es la misma traducida). */
+var I18N={
+  en:{
+    'nav.producto':'Product', 'nav.dia':'A day', 'nav.planes':'Pricing', 'nav.web':'Your site',
+    'nav.demo':'Try the demo',
+    'hero.kicker':'Operations software for free walking tour companies with a team of guides',
+    'hero.h1':'Your booking system forgets everything that happens after the booking.'
+  }
+};
+var LANG='es', TXT0={};
+function cambiaIdioma(){
+  LANG = LANG==='es' ? 'en' : 'es';
+  var d=I18N.en;
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var k=el.getAttribute('data-i18n');
+    if (TXT0[k]===undefined) TXT0[k]=el.textContent;
+    el.textContent = LANG==='en' ? (d[k]||TXT0[k]) : TXT0[k];
+    if (el.hasAttribute('data-split')) el.removeAttribute('data-split');
+  });
+  // la demo del idioma correspondiente
+  document.querySelectorAll('a[data-demo]').forEach(function(a){
+    a.setAttribute('href', LANG==='en' ? '../demo-en/' : '../demo/');
+  });
+  document.documentElement.lang = LANG;
+  var sw=document.getElementById('lang-sw');
+  sw.querySelector('.bandera').textContent = LANG==='en' ? '🇪🇸' : '🇬🇧';
+  sw.querySelector('.lbl').textContent     = LANG==='en' ? 'ES' : 'EN';
+}
 </script>
 </body>
 </html>
