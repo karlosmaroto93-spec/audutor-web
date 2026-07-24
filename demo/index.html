@@ -1497,7 +1497,7 @@ Plazas de vuestro grupo guardadas 48 h 👉 luna.tours/combo/x3f9
   <div class="card" style="overflow-x:auto;">
     <h2>👥 Equipo · <span id="eq-activos"></span></h2>
     <table id="eq-tabla">
-      <tr><th>Guía</th><th>Idiomas</th><th>Tours que guía</th><th>Valoración</th><th>Check-in por el guía</th><th>Estado</th></tr>
+      <tr><th>Guía</th><th>Idiomas</th><th>Tours que guía</th><th>Valoración</th><th>Check-in por el guía</th><th>💳 Propina</th><th>Estado</th></tr>
     </table>
     <p class="mini muted" style="margin:10px 0 0;">«Check-in por el guía»: permiso por persona — si lo
       activas, ese guía puede marcar llegadas desde su manifiesto; si no, solo el encargado. Los guías
@@ -1576,7 +1576,7 @@ Plazas de vuestro grupo guardadas 48 h 👉 luna.tours/combo/x3f9
         formal del tour, no spam.</li>
       <li>⚓ <b>Importes anclados 10 / 15 / 20 € por persona</b>, con 15 € preseleccionado y ajustados al tamaño
         de la reserva (aquí, 5 personas: el total se calcula solo).</li>
-      <li>✨ <b>«El 100 % de tu propina va al equipo»</b> — la comisión se descuenta del lado de la empresa.
+      <li>✨ <b>La propina va directa a la cuenta del guía</b> — la comisión (%+0,30 €) se descuenta de su lado.
         Sin «cubro la comisión»: el surcharge al viajero está prohibido (PSD2).</li>
       <li>⭐ La <b>reseña en Google</b> se ofrece después de pagar, <b>sin condicionar</b> (política de Google).</li>
     </ul>
@@ -1784,8 +1784,8 @@ S.equipo = {
   cobertura:{},     // asignaciones del calendario: { 'tour|hora|dia':[idxGuía...] } (orden = jerarquía)
   pick:null,        // celda del calendario seleccionada (picker abierto)
   guias:[
-    { n:'Elena', color:'#0c6b56', idiomas:'ES · EN', tours:'Centro · Trastevere', nota:'4,9', checkin:true,  activo:true, dispo:{} },
-    { n:'Paolo', color:'#3b5bdb', idiomas:'ES · IT', tours:'Centro · Nocturno',   nota:'4,8', checkin:false, activo:true, dispo:{} },
+    { n:'Elena', color:'#0c6b56', idiomas:'ES · EN', tours:'Centro · Trastevere', nota:'4,9', checkin:true,  activo:true, propinaOk:true,  dispo:{} },
+    { n:'Paolo', color:'#3b5bdb', idiomas:'ES · IT', tours:'Centro · Nocturno',   nota:'4,8', checkin:false, activo:true, propinaOk:false, dispo:{} },
     { n:'Marco', color:'#9c4dcc', idiomas:'ES',      tours:'—',                   nota:'4,7', checkin:false, activo:false, dispo:{} },
   ],
   sinGuia:[ { tourNombre:'Nocturno de leyendas', hora:'21:00', dia:6, cuando:'domingo · 21:00', asignada:null } ],
@@ -1975,6 +1975,7 @@ function ir(v){
   else { ov.style.display='none'; }
   pintaGatesInline();   // gates inline de la vista (noshow / conciliación), según el plan activo
   if (v==='operaciones') pintaOperaciones();   // refresca el seguimiento con lo marcado en el manifiesto
+  if (v==='equipo') pintaEquipo();             // refresca estados (p. ej. propina activada desde el móvil del guía)
 }
 document.querySelectorAll('aside nav a').forEach(function(a){
   a.addEventListener('click', function(ev){ ev.preventDefault(); ir(a.dataset.v); });
@@ -2019,6 +2020,7 @@ function toggleDispoGuia(fkey, d){
 }
 function pintaGuiaDispo(nombre){
   var g = S.equipo.guias.filter(function(x){ return x.n===nombre; })[0];
+  var g2 = g;
   var box = document.getElementById('guia-dispo'); if(!g||!box){ if(box) box.innerHTML=''; return; }
   var gi = S.equipo.guias.indexOf(g);
   var fr = franjasEmpresa();
@@ -2039,6 +2041,12 @@ function pintaGuiaDispo(nombre){
       }).join('')+'</tr>';
   });
   h += '</table></div>'+
+    '<div class="g-dispo"><h2>💳 Mi propina digital</h2>'+
+    (g2 && g2.propinaOk
+      ? '<p class="mini muted" style="margin:0;">✅ <b>Activa.</b> Cada propina llega a TU cuenta (payout semanal). Comisión: la de tu plan + 0,30 €/cobro — sin sorpresas.</p>'
+      : '<p class="mini muted" style="margin:0 0 8px;">El dinero de la propina va <b>a tu cuenta, no a la de la empresa</b>. Actívala una vez: identidad + IBAN, ~10 minutos.</p>'+
+        '<button class="btn mini" onclick="activarPropinaGuia()">Activar mi propina (10 min)</button>')+
+    '</div>'+
     '<div class="g-dispo"><h2>🔗 Mi página</h2>'+
     '<p class="mini muted" style="margin:0 0 8px;">Enséñala al acabar el tour: quien escanea reserva '+
     'directo contigo — y puede dejarte propina.</p>'+
@@ -2256,7 +2264,7 @@ function pintaManifiesto(){
       var prop=document.createElement('div'); prop.className='caja-propina';
       var ops=t.res.map(function(a,ai){
         return '<option value="'+ai+'">'+a.n+' ('+a.p+'p · '+a.canal+')</option>'; }).join('');
-      prop.innerHTML='<strong>💳 Propina digital <span class="chip turq" style="margin-left:4px;">'+pctPropinaPlan()+' · tu plan</span></strong>'+
+      prop.innerHTML='<strong>💳 Propina digital <span class="chip turq" style="margin-left:4px;">'+pctPropinaPlan()+' + 0,30 € · va a tu cuenta</span></strong>'+
         '<div class="fila" style="gap:8px; margin-top:8px; align-items:center; flex-wrap:wrap;">'+
           '<button class="btn mini sec pr-qr">📷 QR para el grupo</button>'+
           '<span class="mini muted">o por WhatsApp:</span>'+
@@ -3192,6 +3200,11 @@ function vjMetodoNombre(){
   return '';
 }
 
+function activarPropinaGuia(){
+  var g=S.equipo.guias.filter(function(x){return x.n===S.guiaVista})[0]; if(!g) return;
+  g.propinaOk=true; pintaGuiaDispo(S.guiaVista);
+  toast('💳 (Simulado) En producción esto abre el alta verificada de pagos: identidad + IBAN, ~10 min, y tus propinas llegan solas cada semana.');
+}
 /* ===== Página del guía (reserva directa): QR por guía + vista previa en el móvil ===== */
 function gpSlug(n){ return n.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
 function pintaGpLista(){
@@ -3325,7 +3338,7 @@ function pintaViajero(paso){
     '<div class="vj-importes'+(libre?' con-libre':'')+'">'+importes+libre+'</div>'+libreInput+
     '<p class="vj-tit">¿Cómo prefieres pagar?</p>'+
     '<div class="vj-metodos">'+metodos+'</div>'+
-    '<div class="vj-transp">✨ <b>El 100 % de tu propina va al equipo</b> — el servicio de pago lo financia la empresa.</div>'+
+    '<div class="vj-transp">✨ <b>Tu propina llega directa a '+VJ.guia+'</b> — sin recargos para ti.</div>'+
     '<button class="vj-cta" id="vj-cta-btn" onclick="vjPagar()">Dejar propina · '+vjTotal()+' €</button>'+
     '<p class="vj-legal">Pago procesado de forma segura. Usamos tus datos solo para gestionar esta propina (RGPD).<br>'+
     'Demo con datos ficticios — no se realiza ningún cobro.</p>'+
@@ -3965,6 +3978,9 @@ function pintaEquipo(){
       '<td class="num">'+(x.nota==='—'?'—':x.nota+' ⭐')+'</td>'+
       '<td><label class="mini" style="cursor:pointer;"><input type="checkbox" '+(x.checkin?'checked':'')+
       (x.activo?'':' disabled')+' onchange="toggleCheckin('+gi+')"> puede marcar llegadas</label></td>'+
+      '<td>'+(x.propinaOk
+        ? '<span class="chip" style="background:var(--turq-soft); color:var(--turq-deep);">activa · IBAN ✓</span>'
+        : '<span class="chip ambar" style="cursor:pointer;" title="El guía activa su cuenta desde su enlace personal (10 min)" onclick="toast(\'💳 '+x.n+' tiene pendiente activar su propina: se hace desde SU enlace personal (identidad + IBAN, ~10 min). El dinero de la propina va SIEMPRE al guía.\')">pendiente de activar</span>')+'</td>'+
       '<td>'+(x.activo?'<span class="chip" style="background:var(--acc-soft); color:var(--acc);">en activo</span>'
                       :'<span class="chip gris">de baja temporal</span>')+'</td>';
     tb.appendChild(tr);
