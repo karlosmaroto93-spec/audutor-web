@@ -2425,7 +2425,7 @@ function pintaManifiesto(){
         if (abre && !c.querySelector('svg')) c.querySelector('.pr-qr-svg').innerHTML=qrSvg('propina/BLV-'+t.hora.replace(':','')+'-'+ti);
         c.style.display = abre ? 'block' : 'none';
       };
-      prop.querySelector('.pr-ver').onclick=function(e){ e.preventDefault(); abrirViajero(); };
+      prop.querySelector('.pr-ver').onclick=function(e){ e.preventDefault(); abrirViajero(t); };
       prop.querySelector('.pr-send').onclick=function(){
         var ai=+prop.querySelector('.pr-sel').value;
         if (ai<0){ toast('Elige primero a quién enviárselo 🙂'); return; }
@@ -3493,7 +3493,12 @@ function postSet(k,v){
    (15 preseleccionado) ajustadas al tamaño de la reserva; tarjeta/Apple Pay/Google
    Pay/Bizum; «el 100 % de tu propina va al equipo» (sin surcharge — PSD2); gracias +
    reseña en Google SIN gating. Escenario ficticio: Marco (5 pax) con Elena. */
-var VJ={ pp:15, pax:5, metodo:'tarjeta', nombre:'Marco', guia:'Elena', tour:'free tour del centro histórico' };
+/* El QR de propina codifica la SALIDA (tour + hora + guía), no al guía en abstracto:
+   así el cobro se atribuye solo al tour correcto. Lo que el QR no puede saber es
+   QUIÉN escanea — por eso el primer paso de la pantalla es identificarse tocando su
+   nombre en la lista de esa salida (2 toques, sin escribir códigos). Al hacerlo,
+   Audutor ya sabe cuántas personas eran y calcula el total sin preguntar nada. */
+var VJ={ pp:15, pax:5, metodo:'tarjeta', nombre:'Marco', guia:'Elena', tour:'free tour del centro histórico', salida:null, res:null };
 var VJ_METODOS=[ ['tarjeta','💳','Tarjeta'], ['apple','','Apple Pay'], ['google','G','Google Pay'], ['bizum','🟣','Bizum'] ];
 function vjTotal(){ return VJ.libre ? (VJ.otra||0) : VJ.pp*VJ.pax; }
 function vjMetodoNombre(){
@@ -3558,13 +3563,14 @@ function pintaGuidePage(nombre){
   pant.scrollTop=0;
 }
 
-function abrirViajero(){
+function abrirViajero(salida){
+  VJ.salida = salida || null; VJ.res = null;
   var nota=document.getElementById('vj-nota');
   if (NOTA_VIAJERO0!==null) nota.innerHTML=NOTA_VIAJERO0;
   VJ.pp=S.propCfg.pre; VJ.libre=false; VJ.otra=0; VJ.metodo='tarjeta';
   document.getElementById('viajero-overlay').classList.add('ver');
   document.body.style.overflow='hidden';
-  pintaViajero('importe');
+  pintaViajero(VJ.salida ? 'quien' : 'importe');
 }
 function cerrarViajero(){
   var ov=document.getElementById('viajero-overlay');
@@ -3572,6 +3578,19 @@ function cerrarViajero(){
   document.body.style.overflow='';
 }
 document.addEventListener('keydown', function(e){ if (e.key==='Escape') cerrarViajero(); });
+
+/* Paso 1 del QR: identificarse. Sin códigos: la lista es corta (las reservas de ESA
+   salida) y basta con tocar su nombre. Si no está —walk-in o reserva de otro— hay
+   salida digna: dice cuántos son y el cobro queda como propina del tour sin asignar. */
+function vjElige(i){
+  var r = VJ.salida.res[i];
+  VJ.res = r; VJ.nombre = r.n.split(' ')[0]; VJ.pax = r.p;
+  pintaViajero('importe');
+}
+function vjSinReserva(n){
+  VJ.res = null; VJ.nombre = 'amigo'; VJ.pax = n || 1;
+  pintaViajero('importe');
+}
 function vjSel(v){ VJ.pp=v; VJ.libre=false; pintaViajero('importe'); }
 /* «Otra cantidad»: el viajero escribe el TOTAL que quiera — no toca los importes fijos. */
 function vjLibre(){ VJ.libre=true; pintaViajero('importe');
@@ -3591,6 +3610,26 @@ function pintaViajero(paso){
   var cab='<div class="vj-estado"><span>12:47</span><span>📶&nbsp;&nbsp;🔋</span></div>'+
     '<div class="vj-cab"><span class="dot"></span><b>Bella Vita · Roma</b>'+
     '<span class="vj-seguro">🔒 pago seguro</span></div>';
+  if (paso==='quien'){
+    var t=VJ.salida;
+    var lista=t.res.map(function(r,i){
+      return '<button class="vj-imp" style="text-align:left; padding:11px 13px;" onclick="vjElige('+i+')">'+
+        '<b style="font-size:14px;">'+r.n+'</b><span>'+r.p+(r.p===1?' persona':' personas')+' · '+r.canal+'</span></button>';
+    }).join('');
+    pant.innerHTML=cab+
+      '<div class="vj-cuerpo">'+
+      '<div class="vj-burbuja"><div class="vj-de">🤖 GuIA</div>'+
+      '¡Gracias por venir al <b>'+t.tit+'</b> de las '+t.hora+' con <b>'+t.guia+'</b> 🧡<br>Para empezar, dime quién eres:'+
+      '<span class="vj-hora">'+t.hora+' ✓✓</span></div>'+
+      '<p class="vj-tit">¿Cuál es tu reserva?</p>'+
+      '<div style="display:grid; gap:8px;">'+lista+'</div>'+
+      '<button class="vj-volver" style="margin-top:12px;" onclick="vjSinReserva(prompt(\'¿Cuántos sois?\',2)|0)">No estoy en la lista (walk-in)</button>'+
+      '<p class="vj-legal">Al tocar tu nombre sabemos cuántos erais y calculamos el total solo — sin escribir códigos. '+
+      'Demo con datos ficticios.</p>'+
+      '</div>';
+    pant.scrollTop=0;
+    return;
+  }
   if (paso==='gracias'){
     var url=(S.post && S.post.resenaUrl) ? S.post.resenaUrl : 'g.page/bella-vita-roma/review';
     pant.innerHTML=cab+
