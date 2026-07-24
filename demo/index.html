@@ -2043,7 +2043,11 @@ function pintaGuiaDispo(nombre){
   h += '</table></div>'+
     '<div class="g-dispo"><h2>💳 Mi propina digital</h2>'+
     (g2 && g2.propinaOk
-      ? '<p class="mini muted" style="margin:0;">✅ <b>Activa.</b> Cada propina llega a TU cuenta (payout semanal). Comisión: la de tu plan + 0,30 €/cobro — sin sorpresas.</p>'
+      ? '<p class="mini muted" style="margin:0 0 8px;">✅ <b>Activa.</b> Cada propina llega a TU cuenta (payout semanal). Comisión: la de tu plan + 0,30 €/cobro.</p>'+
+        '<div class="fila" style="gap:6px; flex-wrap:wrap;">'+
+        '<button class="btn mini" onclick="toast(\'📲 (Simulado) Acerca la tarjeta del cliente al móvil: cobro cerrado en el momento, sin depender de que escanee nada.\')">📲 Cobrar ahora</button>'+
+        '<button class="btn mini sec" onclick="toast(\'💳 (Simulado) Se abre tu SumUp con el importe puesto y Audutor anota el cobro solo.\')">💳 Con mi SumUp</button>'+
+        '</div>'
       : '<p class="mini muted" style="margin:0 0 8px;">El dinero de la propina va <b>a tu cuenta, no a la de la empresa</b>. Actívala una vez: identidad + IBAN, ~10 minutos.</p>'+
         '<button class="btn mini" onclick="activarPropinaGuia()">Activar mi propina (10 min)</button>')+
     '</div>'+
@@ -2264,18 +2268,32 @@ function pintaManifiesto(){
       var prop=document.createElement('div'); prop.className='caja-propina';
       var ops=t.res.map(function(a,ai){
         return '<option value="'+ai+'">'+a.n+' ('+a.p+'p · '+a.canal+')</option>'; }).join('');
-      prop.innerHTML='<strong>💳 Propina digital <span class="chip turq" style="margin-left:4px;">'+pctPropinaPlan()+' + 0,30 € · va a tu cuenta</span></strong>'+
+      prop.innerHTML='<strong>💳 Cobrar la propina <span class="chip turq" style="margin-left:4px;">'+pctPropinaPlan()+' + 0,30 € · va a tu cuenta</span></strong>'+
+        '<p class="mini muted" style="margin:6px 0 8px;">Lo primero, <b>cobrar en el momento</b>: el cliente acerca su tarjeta a tu móvil y listo. '+
+        'El QR queda de respaldo para quien prefiera pagarlo por su cuenta.</p>'+
         '<div class="fila" style="gap:8px; margin-top:8px; align-items:center; flex-wrap:wrap;">'+
-          '<button class="btn mini sec pr-qr">📷 QR para el grupo</button>'+
-          '<span class="mini muted">o por WhatsApp:</span>'+
-          '<select class="pr-sel" style="max-width:190px;"><option value="-1">elige la reserva…</option>'+ops+'</select>'+
-          '<button class="btn mini pr-send">Enviar enlace</button>'+
+          '<button class="btn mini pr-tap">📲 Cobrar ahora (acercar tarjeta)</button>'+
+          '<button class="btn mini sec pr-sumup">💳 Cobrar con SumUp</button>'+
+          '<button class="btn mini sec pr-qr">📷 QR / enlace</button>'+
+        '</div>'+
+        '<div class="fila" style="gap:8px; margin-top:8px; align-items:center; flex-wrap:wrap;">'+
+          '<span class="mini muted">o mandar el enlace a una reserva:</span>'+
+          '<select class="pr-sel" style="max-width:180px;"><option value="-1">elige la reserva…</option>'+ops+'</select>'+
+          '<button class="btn mini sec pr-send">Enviar</button>'+
         '</div>'+
         '<div class="pr-qr-caja" style="display:none; margin-top:10px; text-align:center;">'+
           '<div class="pr-qr-svg"></div>'+
           '<p class="mini muted" style="margin:6px auto 0; max-width:34ch;">El grupo lo escanea y le sale la pantalla de propina — '+
           '<a href="#" class="pr-ver" style="color:var(--acc); font-weight:700;">así la ve el viajero →</a></p>'+
         '</div>';
+      prop.querySelector('.pr-tap').onclick=function(){
+        toast('📲 (Simulado) El cliente acerca su tarjeta o el móvil y el cobro se cierra ahí mismo — '+
+              'sin esperar a ver si escanea. Requiere la app del guía: iPhone XS+ o Android 9+ con NFC.');
+      };
+      prop.querySelector('.pr-sumup').onclick=function(){
+        toast('💳 (Simulado) ¿Ya usas SumUp? Audutor abre tu app con el importe puesto y anota el cobro solo — '+
+              'sigues con lo tuyo y la liquidación cuadra igual.');
+      };
       prop.querySelector('.pr-qr').onclick=function(){
         var c=prop.querySelector('.pr-qr-caja');
         var abre = c.style.display==='none';
