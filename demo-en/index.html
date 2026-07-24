@@ -577,7 +577,7 @@
 </svg>
 <div class="app">
 <aside>
-  <div style="background:#fff4d6; border:1px solid #e6c86a; border-radius:9px; padding:9px 11px; margin:0 0 10px; font-size:11.5px; color:#6b5518; line-height:1.45;">🇬🇧 <b>English demo — work in progress.</b> Data, currency (£), platforms and channels are localised for the UK/IE market. Interface strings are still being translated.</div>
+  <div style="background:#fff4d6; border:1px solid #e6c86a; border-radius:9px; padding:9px 11px; margin:0 0 10px; font-size:11.5px; color:#6b5518; line-height:1.45;">🇬🇧 <b>English demo.</b> Fully localised for the UK/IE market: currency (£), platforms, channels, plans and UK advertising rules. Navigation, headings and key screens are in English; some longer explanatory paragraphs are still being translated.</div>
   <div style="background:#e7f0fb; border:1px solid #9dbfe0; border-radius:9px; padding:9px 11px; margin:0 0 10px; font-size:11px; color:#24506e; line-height:1.45;">⚖️ <b>UK advertising rules built in.</b> No suggested tip amounts and no “pay what you want” wording — the CAP/ASA guidance on free walking tours forbids both. If the company takes a cut of the tip, that must be disclosed to the customer.</div>
   <div class="marca"><a class="marca-link" href="../" title="Ir a la web de Audutor"><span class="wm"><span class="wm-palabra">Audutor</span><svg class="wm-ruta" viewBox="0 0 96 14" preserveAspectRatio="none" aria-hidden="true"><path d="M2 10 C 20 4, 36 12, 52 7 S 78 5, 84 8" fill="none" stroke="#8fb0a6" stroke-width="1.7" stroke-dasharray="0.1 5.2" stroke-linecap="round"/><path d="M90 1.4c-2.4 0-4.4 2-4.4 4.4 0 3.2 4.4 7 4.4 7s4.4-3.8 4.4-7c0-2.4-2-4.4-4.4-4.4z" fill="#12805f"/><circle cx="90" cy="5.9" r="1.7" fill="#f3ecdb"/></svg></span></a> <span class="demo-chip">DEMO</span></div>
   <div class="tenant"><b>Old Town Walks · Edinburgh</b>fictional company — made-up data</div>
@@ -684,14 +684,14 @@
   <!-- Seguimiento del tour en marcha — el corazón del centro de operaciones -->
   <div class="card seg-card">
     <div class="fila" style="justify-content:space-between; align-items:baseline; flex-wrap:wrap;">
-      <h2 style="margin:0;"><span class="seg-vivo"></span>🚶 Tour en curso: Old Town · 10:00
+      <h2 style="margin:0;"><span class="seg-vivo"></span>🚶 Tour in progress: Old Town · 10:00
         <span class="mini muted" style="font-weight:600;">· en marcha</span></h2>
       <span class="mini muted">Guía: Emma</span>
     </div>
-    <p class="mini muted" style="margin:4px 0 0;">El guía está en el punto de encuentro: esto se actualiza
+    <p class="mini muted" style="margin:4px 0 0;">The guide is at the meeting point: esto se actualiza
       solo según va marcando llegadas en su manifiesto. Recordatorio del día antes y confirmación de la
       mañana ya enviados.</p>
-    <button class="btn mini sec" style="margin-top:10px;" onclick="toast('Aviso enviado a las reservas sin responder de este tour (simulado)')">📢 Avisar a los que faltan</button>
+    <button class="btn mini sec" style="margin-top:10px;" onclick="toast('Aviso enviado a las reservas no reply de este tour (simulado)')">📢 Nudge the ones missing</button>
     <div class="seg-kpis" id="seg-kpis"></div>
     <div id="seg-lista"></div>
     <div class="seg-cancel" id="seg-cancel"></div>
@@ -699,18 +699,18 @@
 
   <div class="card exc" id="exc-grupo">
     <div class="fila">
-      <div><b>👥 Grupo grande detectado — tour de las 10:00</b><br>
+      <div><b>👥 Large group detected — tour de las 10:00</b><br>
       <span class="mini muted">«Sofía Romano (6p)» + «Marco Romano (5p)» = <b>11 personas</b> · mismo apellido,
       reservas con 3 min de diferencia (GuruWalk). Política de adelanto avisada en su confirmación;
       el guía tiene la observación.</span></div>
-      <div><button class="btn mini sec" onclick="ir('manifiesto')">Ver en el manifiesto</button>
+      <div><button class="btn mini sec" onclick="ir('manifiesto')">See in the manifest</button>
       <button class="btn mini" onclick="resolver('exc-grupo')">✓ Revisado</button></div>
     </div>
   </div>
 
   <div class="card exc rojo" id="exc-guia">
     <div class="fila">
-      <div><b>🧭 Falta guía por asignar — Night walk · domingo 21:00</b><br>
+      <div><b>🧭 Guide missing — Night walk · domingo 21:00</b><br>
       <span class="mini muted">2 personas · sin guía. Liam marcó disponibilidad esa franja.
       Un toque para asignar (o míralo en Team &amp; availability).</span></div>
       <div><button class="btn mini" onclick="resolver('exc-guia', 'Liam asignado al Night walk del domingo')">Asignar a Liam</button></div>
@@ -718,7 +718,7 @@
   </div>
 
   <div class="card exc" id="exc-cupo">
-    <div><b>🎟️ Cupo casi lleno — cierra el tour en las plataformas</b>
+    <div><b>🎟️ Nearly full — close the tour on the platforms</b>
       <div class="mini muted" style="margin:4px 0 8px;">Leith · hoy 18:30 · <b>22/25</b> — quedan 3 plazas. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Cierra primero la plataforma que más cobra por persona; tu web, la última (cuesta 0 £ y te da el
         contacto). El cierre se hace en el panel de cada plataforma; marca aquí cada una al cerrarla
         para no perder la cuenta.</span></details></div>
@@ -770,13 +770,13 @@
 
 <!-- ================= MANIFIESTO ================= -->
 <section class="vista" id="v-manifiesto">
-  <div class="cab"><h1>Agenda del guía</h1><span class="sub">todos los tours del día, con llegadas, walk-ins y recaudación — lo que Emma ve en su móvil</span></div>
+  <div class="cab"><h1>Guide’s day</h1><span class="sub">every tour of the day, with check-ins, walk-ins and takings — what Emma sees on her phone</span></div>
 
   <div class="kpi-fila" style="margin:0 0 12px;">
-    <div class="kpi"><span class="v" id="ag-sem-pax">—</span><span class="l">personas agendadas <b>esta semana</b></span></div>
-    <div class="kpi"><span class="v" id="ag-sem-rec">—</span><span class="l">recaudación registrada · semana</span></div>
-    <div class="kpi"><span class="v" id="ag-mes-pax">—</span><span class="l">personas agendadas <b>este mes</b></span></div>
-    <div class="kpi"><span class="v" id="ag-mes-rec">—</span><span class="l">recaudación registrada · julio</span></div>
+    <div class="kpi"><span class="v" id="ag-sem-pax">—</span><span class="l">people booked <b>this week</b></span></div>
+    <div class="kpi"><span class="v" id="ag-sem-rec">—</span><span class="l">takings logged · semana</span></div>
+    <div class="kpi"><span class="v" id="ag-mes-pax">—</span><span class="l">people booked <b>este mes</b></span></div>
+    <div class="kpi"><span class="v" id="ag-mes-rec">—</span><span class="l">takings logged · julio</span></div>
   </div>
 
   <div class="card" style="padding:11px 14px; margin-bottom:12px;">
@@ -972,7 +972,7 @@
       se adapta al riesgo de cada reserva — el mes pasado recuperó <b>+34 personas ≈ 410 £</b> en propinas.
       Por <b>59 £/mes</b> la mantienes.</p>
     <div class="fila" style="gap:8px; justify-content:center; flex-wrap:wrap; margin-top:14px;">
-      <button class="btn" onclick="cambiarPlan('pro')">Cambiar a Pro</button>
+      <button class="btn" onclick="cambiarPlan('pro')">Upgrade to Pro</button>
       <button class="btn sec" onclick="desbloquear('noshowSmart')">🔓 Solo probarlo (demo)</button>
     </div>
   </div>
@@ -982,13 +982,13 @@
   </div>
 
   <div class="card" id="ns-franja" style="border-left:4px solid var(--acc);">
-    🌙 <b>Franja silenciosa: los WhatsApp solo salen de 8:00 a 21:00.</b>
+    🌙 <b>Quiet hours: los WhatsApp solo salen de 8:00 a 21:00.</b>
     Lo que caería fuera de esa franja se pospone a las 8:00 — <b>nadie recibe un WhatsApp a las 23:40</b>.
     Y un mensaje post-tour que caería de noche (tras el Night walk de las 21:00, p. ej.) sale a la mañana siguiente.
   </div>
 
   <div class="card" id="ns-smart">
-    <div class="switch-linea"><b>Modo inteligente</b>
+    <div class="switch-linea"><b>Smart mode</b>
       <label><input type="checkbox" id="sw-int" onchange="pintaNoshow()" checked> cadencia según riesgo
       (canal, antelación, tamaño, historial)</label></div>
   </div>
@@ -1026,7 +1026,7 @@
 
 <!-- ================= CARRITO Y COMBOS ================= -->
 <section class="vista" id="v-carrito">
-  <div class="cab"><h1>Carrito abandonado y combos</h1><span class="sub">la venta que se estaba escapando, recuperada sola</span></div>
+  <div class="cab"><h1>Abandoned cart and combos</h1><span class="sub">la venta que se estaba escapando, recuperada sola</span></div>
 
   <div class="card">
     <h2>🛒 Carritos abandonados (últimas 24 h)</h2>
@@ -1050,7 +1050,7 @@ Si era solo un vistazo, ¡ignórame y ya está! 🙂
   <div class="card">
     <h2>🔗 Combos: la segunda venta en la misma estancia</h2>
     <p class="mini muted" style="margin:0 0 10px;">Quien hace el free tour hoy es tu mejor cliente para
-      el tour de pago de esta semana — sin coste de adquisición.</p>
+      el tour de pago de this week — sin coste de adquisición.</p>
     <div style="background:var(--acc-soft); border-radius:10px; padding:10px 14px; font-size:12.5px; margin:0 0 12px;"
          id="combo-destinatarios"></div>
     <p class="mini muted" style="margin:0 0 10px;">✍️ El contenido del mensaje (gracias + reseña +
@@ -1068,7 +1068,7 @@ Si era solo un vistazo, ¡ignórame y ya está! 🙂
     </div>
     <div class="mensaje-prev" id="msj-combo">📲 <b>Se envía 1 h después del tour — SOLO a reservas de tu web</b> (las de plataforma ya reciben la petición de reseña de su propia plataforma)
 
-¡Gracias por venir esta mañana! 🙌 Si os quedasteis con ganas de más, esta semana tenéis el
+¡Gracias por venir esta mañana! 🙌 Si os quedasteis con ganas de más, this week tenéis el
 <b>Tour del Coliseo al atardecer</b> con un 15 % para los que ya nos conocéis: 20,40 £ (en vez de 24).
 Plazas de vuestro grupo guardadas 48 h 👉 luna.tours/combo/x3f9
 <button class="btn mini" style="margin-top:8px;" onclick="toast('Combo activado (simulado): se ofrece tras cada free tour')">Activar combo</button></div>
@@ -1077,29 +1077,29 @@ Plazas de vuestro grupo guardadas 48 h 👉 luna.tours/combo/x3f9
 
 <!-- ================= CANALES Y SINCRONIZACIÓN ================= -->
 <section class="vista" id="v-canales">
-  <div class="cab"><h1>Channels &amp; sync</h1><span class="sub">cómo entran las reservas al sistema — sin depender de ninguna plataforma</span></div>
+  <div class="cab"><h1>Channels &amp; sync</h1><span class="sub">how bookings get into the system — without depending on any single platform</span></div>
 
   <div class="card">
-    <h2>Las 3 vías de entrada</h2>
+    <h2>The three ways in</h2>
     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px,1fr)); gap:14px; margin-top:10px;">
       <div style="border:1.5px solid var(--acc); border-radius:11px; padding:14px;">
-        <b>📬 1 · Buzón de reservas</b> <span class="chip" style="background:var(--acc-soft); color:var(--acc);">la clave</span>
+        <b>📬 1 · Booking inbox</b> <span class="chip" style="background:var(--acc-soft); color:var(--acc);">la clave</span>
         <div class="mini muted" style="margin:8px 0 0;">Cada reserva de plataforma llega como <b>email de
         confirmación</b> (GuruWalk, Viator, GetYourGuide…). <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Audutor lee ese buzón — tu correo o un
         alias <b>reservas@tuempresa</b> que te damos — y crea o actualiza la reserva <b>al momento</b>,
         también cancelaciones y cambios. Sin API, sin permisos de la plataforma, sin tocar tu operativa:
         funciona con cualquier canal desde el día 1.</span></details></div>
-        <button class="btn mini" style="margin-top:10px;" onclick="probarBuzon()">📥 Probar el buzón ahora</button>
+        <button class="btn mini" style="margin-top:10px;" onclick="probarBuzon()">📥 Try the inbox now</button>
       </div>
       <div style="border:1px solid var(--line); border-radius:11px; padding:14px;">
-        <b>🌐 2 · Motor de reservas propio</b>
+        <b>🌐 2 · Your own booking engine</b>
         <div class="mini muted" style="margin:8px 0 0;">Tu página de reservas de Audutor (la «web propia»):
         reservas directas <b>sin comisión</b>, con enlace de gestión para el cliente (cancelar o cambiar
         en un clic) y detección de grupos al reservar. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Es el canal que el sistema empuja a crecer —
         carrito, combos y reseñas apuntan aquí.</span></details></div>
       </div>
       <div style="border:1px solid var(--line); border-radius:11px; padding:14px;">
-        <b>📄 3 · Importación manual</b>
+        <b>📄 3 · Manual import</b>
         <p class="mini muted" style="margin:8px 0 0;">CSV o texto pegado (el histórico al arrancar, o un
         canal esporádico). Con el <b>Importador con IA</b> también montas tours completos desde el
         listado de la plataforma.</p>
@@ -1114,38 +1114,38 @@ Plazas de vuestro grupo guardadas 48 h 👉 luna.tours/combo/x3f9
   </div>
 
   <div class="card" style="border-left:4px solid var(--acc);">
-    <h2>🛡️ Red de seguridad del buzón — si una plataforma cambia su plantilla</h2>
+    <h2>🛡️ Inbox safety net — si una plataforma cambia su plantilla</h2>
     <p class="mini muted" style="margin:0 0 12px;">Leer emails es cómodo, pero las plataformas cambian
       sus plantillas sin avisar. Por eso el buzón no se limita a leer: se <b>vigila a sí mismo</b> para
       que nunca te quedes ciego un sábado por la mañana.</p>
     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(230px,1fr)); gap:12px;">
       <div style="background:var(--acc-soft); border-radius:10px; padding:12px;">
-        <b class="mini" style="color:var(--acc);">1 · Detecta el fallo al instante</b>
+        <b class="mini" style="color:var(--acc);">1 · Spots the failure instantly</b>
         <p class="mini muted" style="margin:5px 0 0;">Si un email no encaja con la plantilla conocida,
           el sistema lo marca y te <b>avisa por WhatsApp en segundos</b> — no espera a que falte gente
           en el punto de encuentro.</p>
       </div>
       <div style="background:var(--gold-soft); border-radius:10px; padding:12px;">
-        <b class="mini" style="color:var(--amber);">2 · Nunca pierde la reserva</b>
+        <b class="mini" style="color:var(--amber);">2 · Never loses the booking</b>
         <p class="mini muted" style="margin:5px 0 0;">El email problemático queda en una bandeja de
           revisión con los datos que sí ha leído: lo confirmas en un clic o reenvías el texto plano.
           <b>La reserva nunca se cae</b> por un cambio de formato.</p>
       </div>
       <div style="background:#f2f7f4; border-radius:10px; padding:12px;">
-        <b class="mini">3 · La plantilla se re-aprende</b>
+        <b class="mini">3 · The template is re-learned</b>
         <p class="mini muted" style="margin:5px 0 0;">Cuando una plataforma cambia su formato, se
           actualiza <b>una vez y para todas las empresas</b> (multi-tenant): tu operación no depende de
           que tú hagas nada.</p>
       </div>
     </div>
-    <button class="btn mini sec" style="margin-top:12px;" onclick="toast('Simulado: llega un email con formato nuevo → aviso WhatsApp + a la bandeja de revisión. La reserva no se pierde.')">▶ Simular un email con formato desconocido</button>
+    <button class="btn mini sec" style="margin-top:12px;" onclick="toast('Simulado: llega un email con formato nuevo → aviso WhatsApp + a la bandeja de revisión. La reserva no se pierde.')">▶ Simulate an email in an unknown format</button>
   </div>
 
   <div class="card">
-    <h2>⚙️ Conexiones de la empresa — configurable</h2>
+    <h2>⚙️ Your connections — configurable</h2>
     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:14px; margin-top:10px;">
       <div style="border:1px solid var(--line); border-radius:11px; padding:14px;">
-        <b>📧 Email de reservas</b> <span class="chip" style="background:var(--acc-soft); color:var(--acc);">conectado</span>
+        <b>📧 Booking email</b> <span class="chip" style="background:var(--acc-soft); color:var(--acc);">conectado</span>
         <p class="mini muted" style="margin:6px 0 8px;">El buzón que lee el sistema: tu correo de
           empresa o el alias que te damos. Cámbialo cuando quieras.</p>
         <input id="cn-email" value="reservas@oldtownwalks.co.uk"
@@ -1162,7 +1162,7 @@ Plazas de vuestro grupo guardadas 48 h 👉 luna.tours/combo/x3f9
           onchange="S.canales.wa=this.value; toast('💬 Número actualizado — se verifica con Meta en el alta (5 min)');">
         <div id="wa-tope"></div>
         <div id="wa-filtros" style="border-top:1px dashed var(--line); padding-top:10px; margin-top:10px;">
-          <b class="mini">🎯 A quién responde GuIA</b>
+          <b class="mini">🎯 Who GuIA replies to</b>
           <label class="mini" style="display:flex; gap:7px; align-items:flex-start; margin-top:7px; cursor:pointer;">
             <input type="checkbox" id="fg-desc" onchange="setFiltroGuia('desconocidos', this.checked)">
             <span>Solo números que <b>NO</b> están en los contactos del teléfono enlazado
@@ -1182,7 +1182,7 @@ Plazas de vuestro grupo guardadas 48 h 👉 luna.tours/combo/x3f9
       </div>
     </div>
     <div style="border:1px solid var(--line); border-radius:11px; padding:14px; margin-top:14px;">
-      <b>🕵️ Detección de plataformas</b>
+      <b>🕵️ Platform detection</b>
       <div class="mini muted" style="margin:6px 0 8px;">El buzón reconoce cada plataforma por su
         <b>remitente</b> y por palabras clave del asunto. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Añade los de tus plataformas — hasta la más
         local — y sus reservas entran solas. Y si un día llega una reserva de un remitente que no
@@ -1198,7 +1198,7 @@ Plazas de vuestro grupo guardadas 48 h 👉 luna.tours/combo/x3f9
   </div>
 
   <div class="card" style="overflow-x:auto;">
-    <h2>Canales conectados — método y cobertura reales de cada plataforma</h2>
+    <h2>Connected channels — método y cobertura reales de cada plataforma</h2>
     <table>
       <tr><th>Canal</th><th>Método de sync</th><th>Cobertura</th><th>Estado</th><th>Última reserva</th><th>Este mes</th></tr>
       <tr><td><b>GuruWalk</b></td>
@@ -1224,7 +1224,7 @@ Plazas de vuestro grupo guardadas 48 h 👉 luna.tours/combo/x3f9
       <tr><td><b>GetYourGuide</b></td>
         <td class="mini">alta self-serve en su portal + 📬 buzón <span class="muted">(su API es solo para channel managers)</span></td>
         <td class="mini">—</td>
-        <td><span class="chip gris">sin conectar</span></td><td class="num">—</td>
+        <td><span class="chip gris">not connected</span></td><td class="num">—</td>
         <td><button class="btn mini sec" onclick="toast('En el alta: reenvío automático del email de confirmación al alias reservas@ — 2 minutos y conectado')">Conectar</button></td></tr>
     </table>
     <div class="mini muted" style="margin:10px 0 0;">El camino de conectividad: <b>hoy</b>, buzón con
@@ -1237,23 +1237,23 @@ Plazas de vuestro grupo guardadas 48 h 👉 luna.tours/combo/x3f9
 </section>
 
 <section class="vista" id="v-ahorro">
-  <div class="cab"><h1>Reconciliation &amp; savings</h1><span class="sub">los euros que recuperas de las plataformas — y los que dejas de pagarles</span></div>
+  <div class="cab"><h1>Reconciliation &amp; savings</h1><span class="sub">the money you claw back from platforms — and the money you stop paying them</span></div>
 
   <div class="card">
-    <h2>⚖️ Conciliación con plataformas — quién asume el coste de los descuadres</h2>
+    <h2>⚖️ Platform reconciliation — quién asume el coste de los descuadres</h2>
     <div class="kpi-fila" style="margin:0 0 12px;">
       <div class="kpi"><span class="v">70,00 £</span><span class="l">recuperados este mes reportando no-shows a tiempo</span></div>
       <div class="kpi malo"><span class="v">7,50 £</span><span class="l">asumido por la empresa por no reportar a tiempo</span></div>
     </div>
     <div class="gate-inline" id="gate-recon" style="display:none;">
       <div class="cerr">🔒</div>
-      <h2 style="margin:6px 0 2px;">Conciliación con plataformas</h2>
+      <h2 style="margin:6px 0 2px;">Platform reconciliation</h2>
       <p style="margin:6px 0;"><span class="chip" style="background:rgba(201,138,45,.25); color:var(--amber);">Incluido en el plan Pro · 59 £/mes</span></p>
       <p style="color:var(--ink2); max-width:48ch; margin:8px auto 0;">La conciliación es el <b>ROI en
         negro sobre blanco</b> de Pro: este mes recuperó <b>70 £</b> en comisiones de no-show —
         <b>más que la mensualidad</b>.</p>
       <div class="fila" style="gap:8px; justify-content:center; flex-wrap:wrap; margin-top:14px;">
-        <button class="btn" onclick="cambiarPlan('pro')">Cambiar a Pro</button>
+        <button class="btn" onclick="cambiarPlan('pro')">Upgrade to Pro</button>
         <button class="btn sec" onclick="desbloquear('conciliacion')">🔓 Solo probarlo (demo)</button>
       </div>
     </div>
@@ -1270,7 +1270,7 @@ Plazas de vuestro grupo guardadas 48 h 👉 luna.tours/combo/x3f9
     </div>
   </div>
   <div class="card" style="background:linear-gradient(115deg, var(--acc-soft), #f4f8f2); border-color:var(--acc);">
-    <h2>💚 Tu canal directo — el ahorro que paga Audutor</h2>
+    <h2>💚 Your direct channel — el ahorro que paga Audutor</h2>
     <p class="mini muted" style="margin:0 0 10px;">Cada persona que reserva en <b>tu web</b> en vez de en
       una plataforma te ahorra su comisión (~2,50 £/persona en GuruWalk, dinámica por ciudad). Carrito,
       combos, reseñas y el QR del guía empujan hacia aquí. Mueve el deslizador:</p>
@@ -1328,7 +1328,7 @@ Plazas de vuestro grupo guardadas 48 h 👉 luna.tours/combo/x3f9
   <div class="card" style="overflow-x:auto;">
     <h2>Detalle por guía · <span id="liq-rango" class="num"></span></h2>
     <table id="tabla-liq-guia">
-      <tr><th>Guía</th><th>Tours</th><th>Personas</th><th>Recaudación</th><th>💳 Coste reservas</th><th>Neto a repartir</th><th>💵 A pagar al guía</th><th>Empresa</th></tr>
+      <tr><th>Guía</th><th>Tours</th><th>Personas</th><th>Recaudación</th><th>💳 Booking costs</th><th>Net to split</th><th>💵 To pay the guide</th><th>Empresa</th></tr>
     </table>
     <div class="mini muted" style="margin:10px 0 0;">Con «<b>lo asume la empresa</b>» (lo habitual):
       el reparto se hace sobre el ingreso BRUTO — el guía cobra su parte entera — y las comisiones
@@ -1347,7 +1347,7 @@ Plazas de vuestro grupo guardadas 48 h 👉 luna.tours/combo/x3f9
 
 <!-- ================= PROYECCIÓN DE INGRESOS ================= -->
 <section class="vista" id="v-proyeccion">
-  <div class="cab"><h1>Revenue projection</h1><span class="sub">tu plan de negocio en vivo — mueve un deslizador y mira</span></div>
+  <div class="cab"><h1>Revenue projection</h1><span class="sub">your business plan, live — move a slider and watch</span></div>
 
   <div class="card">
     <div class="mini muted" style="margin:0 0 14px;">Cuánto gana <b>cada guía</b> y la <b>empresa</b>
@@ -1355,21 +1355,21 @@ Plazas de vuestro grupo guardadas 48 h 👉 luna.tours/combo/x3f9
       prospecto y su plan de negocio se hace solo, delante de él. Mismos modos de reparto y de coste
       que la Liquidación: lo que proyectas aquí es lo que liquidas después.</span></details></div>
     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(230px,1fr)); gap:10px 26px;">
-      <label class="mini">Personas por grupo <b><span id="py-grupo-v">20</span></b><br>
+      <label class="mini">People per group <b><span id="py-grupo-v">20</span></b><br>
         <input type="range" id="py-grupo" min="5" max="40" step="1" value="20" oninput="calcProy()" style="width:100%;"></label>
-      <label class="mini">Tours al día <b><span id="py-tours-v">3</span></b><br>
+      <label class="mini">Tours per day <b><span id="py-tours-v">3</span></b><br>
         <input type="range" id="py-tours" min="1" max="20" step="1" value="3" oninput="calcProy()" style="width:100%;"></label>
-      <label class="mini">Propina media por persona <b><span id="py-prop-v">11,50</span> £</b><br>
+      <label class="mini">Average tip per person <b><span id="py-prop-v">11,50</span> £</b><br>
         <input type="range" id="py-prop" min="4" max="16" step="0.5" value="11.5" oninput="calcProy()" style="width:100%;"></label>
       <label class="mini">Nº de guías <b><span id="py-ng-v">3</span></b><br>
         <input type="range" id="py-ng" min="1" max="40" step="1" value="3" oninput="calcProy()" style="width:100%;"></label>
-      <label class="mini">Reservas de tu web (sin comisión) <b><span id="py-dir-v">40</span> %</b><br>
+      <label class="mini">Bookings from your own site (no commission) <b><span id="py-dir-v">40</span> %</b><br>
         <input type="range" id="py-dir" min="0" max="100" step="5" value="40" oninput="calcProy()" style="width:100%;"></label>
-      <label class="mini">Comisión por reserva de plataforma <b><span id="py-com-v">2,50</span> £</b><br>
+      <label class="mini">Platform fee per booking <b><span id="py-com-v">2,50</span> £</b><br>
         <input type="range" id="py-com" min="0" max="5" step="0.25" value="2.5" oninput="calcProy()" style="width:100%;"></label>
-      <label class="mini">Gastos fijos de la empresa al mes <b><span id="py-ovh-v">250</span> £</b><br>
+      <label class="mini">Company fixed costs per month <b><span id="py-ovh-v">250</span> £</b><br>
         <input type="range" id="py-ovh" min="0" max="8000" step="100" value="250" oninput="calcProy()" style="width:100%;"></label>
-      <label class="mini">Días de operación al mes <b><span id="py-dias-v">26</span></b><br>
+      <label class="mini">Operating days per month <b><span id="py-dias-v">26</span></b><br>
         <input type="range" id="py-dias" min="12" max="31" step="1" value="26" oninput="calcProy()" style="width:100%;"></label>
     </div>
     <div class="fila" style="margin-top:14px; gap:8px;">
@@ -1494,20 +1494,20 @@ Plazas de vuestro grupo guardadas 48 h 👉 luna.tours/combo/x3f9
 
 <!-- ================= EQUIPO Y DISPONIBILIDAD ================= -->
 <section class="vista" id="v-equipo">
-  <div class="cab"><h1>Team &amp; availability</h1><span class="sub">quién guía, cuándo puede y qué salidas faltan por cubrir</span></div>
+  <div class="cab"><h1>Team &amp; availability</h1><span class="sub">who guides, when they can, and which departures need cover</span></div>
 
   <div class="card" style="overflow-x:auto;">
     <h2>👥 Equipo · <span id="eq-activos"></span></h2>
     <table id="eq-tabla">
-      <tr><th>Guía</th><th>Idiomas</th><th>Tours que guía</th><th>Valoración</th><th>Check-in por el guía</th><th>💳 Propina</th><th>Estado</th></tr>
+      <tr><th>Guía</th><th>Idiomas</th><th>Tours they guide</th><th>Valoración</th><th>Guide can check in</th><th>💳 Propina</th><th>Estado</th></tr>
     </table>
-    <p class="mini muted" style="margin:10px 0 0;">«Check-in por el guía»: permiso por persona — si lo
-      activas, ese guía puede marcar llegadas desde su manifiesto; si no, solo el encargado. Los guías
+    <p class="mini muted" style="margin:10px 0 0;">«Guide can check in»: permiso por persona — si lo
+      activas, ese guía can check people in desde su manifiesto; si no, solo el encargado. Los guías
       <b>nunca ven teléfonos de clientes</b>: GuIA hace de intermediario.</p>
   </div>
 
   <div class="card">
-    <h2>🔗 Página del guía — el QR que convierte un buen tour en la próxima reserva</h2>
+    <h2>🔗 Guide page — el QR que convierte un buen tour en la próxima reserva</h2>
     <div class="mini muted" style="margin:0 0 10px;">Cada guía tiene una página pública con sus tours y
       reserva directa en tu web — <b>sin comisión de plataforma</b>. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">El
       momento de oro es el final del tour: la gente acaba de pasarlo bien y pregunta «¿qué más hacéis?».
@@ -1517,10 +1517,10 @@ Plazas de vuestro grupo guardadas 48 h 👉 luna.tours/combo/x3f9
   </div>
 
   <div class="card">
-    <h2>🗓 Horario y calendario de la semana</h2>
-    <div class="mini muted" style="margin:0 0 6px;">Cada fila es un tour diario (hora + nombre, del
+    <h2>🗓 This week’s schedule</h2>
+    <div class="mini muted" style="margin:0 0 6px;">Each row is a daily tour (hora + nombre, del
       <a href="#cerebro" style="color:var(--acc); font-weight:700;" onclick="ir('cerebro'); return false;">🧠 Cerebro</a>);
-      cada columna, un día. <b>Toca una casilla</b> para asignar guías: aparece su inicial (si dos
+      each column, a day. <b>Tap a cell</b> to assign guides: aparece su inicial (si dos
       guías comparten inicial, se muestran <b>dos letras</b> — p. ej. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">El·Em — para no confundirlos) y la casilla
       se colorea. Si sale más de un guía, sus iniciales van <b>en secuencia — el orden marca la
       jerarquía de salida</b> (1º = guía principal). Las casillas rayadas son días sin salida (tócalas
@@ -1530,15 +1530,15 @@ Plazas de vuestro grupo guardadas 48 h 👉 luna.tours/combo/x3f9
     <div class="cal-leyenda" id="eq-cal-leyenda"></div>
     <div id="eq-cal-picker" style="display:none; margin-top:14px;"></div>
     <div class="fila" style="margin-top:14px; gap:8px;">
-      <input id="eq-nf-tour" placeholder="Tour especial" style="border:1.5px solid var(--line); border-radius:8px; padding:7px 10px; font-size:13px; font-family:inherit;">
+      <input id="eq-nf-tour" placeholder="Special tour" style="border:1.5px solid var(--line); border-radius:8px; padding:7px 10px; font-size:13px; font-family:inherit;">
       <input id="eq-nf-hora" placeholder="hh:mm" style="border:1.5px solid var(--line); border-radius:8px; padding:7px 10px; font-size:13px; font-family:var(--mono); width:80px;">
-      <button class="btn mini" onclick="anadirFranja()">+ Añadir tour al horario</button>
+      <button class="btn mini" onclick="anadirFranja()">+ Add tour to schedule</button>
     </div>
     <div class="fila" style="margin-top:10px; gap:8px; flex-wrap:wrap;">
-      <input id="eq-ng-nombre" placeholder="Nombre del guía" style="border:1.5px solid var(--line); border-radius:8px; padding:7px 10px; font-size:13px; font-family:inherit;">
+      <input id="eq-ng-nombre" placeholder="Guide name" style="border:1.5px solid var(--line); border-radius:8px; padding:7px 10px; font-size:13px; font-family:inherit;">
       <input id="eq-ng-tel" type="tel" placeholder="Teléfono (+34 …)" style="border:1.5px solid var(--line); border-radius:8px; padding:7px 10px; font-size:13px; font-family:var(--mono); width:150px;">
       <input id="eq-ng-email" type="email" placeholder="Email" style="border:1.5px solid var(--line); border-radius:8px; padding:7px 10px; font-size:13px; font-family:inherit;">
-      <button class="btn mini" onclick="anadirGuia()">+ Añadir guía</button>
+      <button class="btn mini" onclick="anadirGuia()">+ Add guide</button>
     </div>
     <p class="mini muted" style="margin:6px 0 0;">El nuevo guía recibe su <b>enlace personal</b> (sin cuenta ni
       contraseña) para marcar su disponibilidad. Teléfono y email se muestran <b>enmascarados</b> (RGPD).</p>
@@ -1546,7 +1546,7 @@ Plazas de vuestro grupo guardadas 48 h 👉 luna.tours/combo/x3f9
   </div>
 
   <div class="card" style="overflow-x:auto;">
-    <h2>🗓 Disponibilidad por guía</h2>
+    <h2>🗓 Availability by guide</h2>
     <p class="mini muted" style="margin:0 0 10px;">Cada guía <b>selecciona los tours a los que está
       disponible</b>, día a día — desde su móvil con su enlace personal (sin cuenta ni contraseña).
       Elige un guía y marca sus casillas; solo se pueden marcar los días en que ese tour sale.</p>
@@ -1556,7 +1556,7 @@ Plazas de vuestro grupo guardadas 48 h 👉 luna.tours/combo/x3f9
   </div>
 
   <div class="card exc">
-    <h2>⚠ Salidas sin guía</h2>
+    <h2>⚠ Departures with no guide</h2>
     <div id="eq-sin"></div>
   </div>
 </section>
@@ -1681,7 +1681,7 @@ var S = {
   derivadas:[],    // {q, tourId, canal, hace}
   chatCanal:'wa',  // canal visible en la vista Chat: 'wa' (mock interactivo) | 'web' (revision)
   filtrosGuia:{ desconocidos:true, estricto:false, listaNegra:false },  // a quién responde GuIA (Canales)
-  // Mensaje post-tour (ámbito EMPRESA): resena/privados empiezan sin responder
+  // Mensaje post-tour (ámbito EMPRESA): resena/privados empiezan no reply
   // a propósito — la demo enseña el flujo "responde → se despliega el mensaje".
   post:{ resena:null, resenaUrl:'g.page/bella-vita-roma/review', privados:null, desc:'10 %',
          oferta:'tour', web:'bellavita.roma', hora:'2 h después del tour' },
@@ -1851,14 +1851,14 @@ function normaliza(x){
 var SUPLEMENTOS={
   chat:      { n:'GuIA · Customer chat', plan:'Pro', d:'El asistente que atiende a tus clientes en el chat de tu web: responde con los hechos de cada tour y deriva lo que no sabe. Nunca inventa.' },
   cerebro:   { n:'GuIA · Cerebro', plan:'Pro', d:'El formulario de hechos por tour que alimenta al asistente, con IA que lo rellena desde la web del tour y borradores editables.' },
-  carrito:   { n:'Carrito abandonado y combos', plan:'Pro', d:'Recupera al que se quedó a medias reservando y ofrece el tour de pago a quien hizo el free tour — la segunda venta, sola.' },
+  carrito:   { n:'Abandoned cart and combos', plan:'Pro', d:'Recupera al que se quedó a medias reservando y ofrece el tour de pago a quien hizo el free tour — la segunda venta, sola.' },
   cuadro:    { n:'Dashboard', plan:'Premium', d:'La analítica del negocio: ocupación, canales, propina por guía y por franja, no-shows. Para decidir con datos, no a ojo.' },
   liquidacion:{ n:'Guide payouts', plan:'Pro', d:'La cuenta de cada tour siempre cuadrada: reparto por % o tarifa fija, coste de canal, CSV e imprimir. El guía nunca paga.' },
   proyeccion:{ n:'Revenue projection', plan:'Premium', d:'El simulador de plan de negocio: mueve los deslizadores y ve cuánto gana cada guía y la empresa al mes.' },
   /* Claves de gating INLINE (sin vista propia ni enlace de nav): las usa pintaGatesInline()
      para difuminar bloques dentro de vistas accesibles en todos los planes. */
   noshowSmart:{ n:'Cadencia anti-no-show inteligente', plan:'Pro', d:'La cadencia de recordatorios se adapta al riesgo de cada reserva: más toques donde más peligro de no-show hay, sin saturar al que ya confirmó.' },
-  conciliacion:{ n:'Conciliación con plataformas', plan:'Pro', d:'La lista de no-shows a reportar dentro del plazo de cada plataforma, montada sola con los ajustes del guía, para recuperar las comisiones.' },
+  conciliacion:{ n:'Platform reconciliation', plan:'Pro', d:'La lista de no-shows a reportar dentro del plazo de cada plataforma, montada sola con los ajustes del guía, para recuperar las comisiones.' },
 };
 /* Planes de la demo (precios congruentes con la landing) y qué desbloquea cada uno. */
 var PLANES={ esencial:{orden:0, n:'Essential', precio:'£0'},
@@ -1910,14 +1910,14 @@ function pintaWaTope(){
   if (S.plan==='esencial'){
     var pct=Math.round(WA_USADOS/WA_TOPE*100);
     e.innerHTML='<div style="border-top:1px dashed var(--line); padding-top:10px; margin-top:10px;">'+
-      '<div class="fila mini" style="justify-content:space-between; gap:8px;"><b>'+WA_USADOS+' / '+WA_TOPE+' mensajes este mes</b><span class="chip gris">tope Esencial</span></div>'+
+      '<div class="fila mini" style="justify-content:space-between; gap:8px;"><b>'+WA_USADOS+' / '+WA_TOPE+' messages this month</b><span class="chip gris">tope Esencial</span></div>'+
       '<div class="wa-barra"><i style="width:'+pct+'%; background:'+(pct>80?'var(--gold)':'var(--acc)')+';"></i></div>'+
       (pct>80 ? '<p class="mini" style="color:var(--amber); margin:2px 0 8px;">Te quedan '+(WA_TOPE-WA_USADOS)+' — con <b>Pro</b> no hay tope de mensajes.</p>'+
-        '<button class="btn mini" onclick="cambiarPlan(\'pro\')">Cambiar a Pro</button>' : '')+
+        '<button class="btn mini" onclick="cambiarPlan(\'pro\')">Upgrade to Pro</button>' : '')+
       '</div>';
   } else {
     e.innerHTML='<div style="border-top:1px dashed var(--line); padding-top:10px; margin-top:10px;" class="mini muted">'+
-      '<b style="color:var(--ink2);">'+WA_USADOS+' mensajes este mes</b> · sin tope en tu plan</div>';
+      '<b style="color:var(--ink2);">'+WA_USADOS+' messages this month</b> · sin tope en tu plan</div>';
   }
 }
 /* % de comisión de la propina digital según el plan activo (se cobra solo cuando la empresa cobra). */
@@ -2096,12 +2096,12 @@ function pintaSeguimiento(){
   var llego=0, conf=0, pend=0, tarde=0;
   S.att.forEach(function(a){ var e=estadoSeg(a);
     if(e==='llego') llego+=a.p; else if(e==='confirmado') conf++; else if(e==='tarde') tarde++; else pend++; });
-  var CH={ llego:'👣 Ya está aquí', confirmado:'✅ Confirmado', tarde:'🕐 Llega tarde', pendiente:'⏳ Sin responder' };
+  var CH={ llego:'👣 Here', confirmado:'✅ Confirmado', tarde:'🕐 Llega tarde', pendiente:'⏳ Sin responder' };
   document.getElementById('seg-kpis').innerHTML=
-    '<div class="seg-kpi llego"><span class="n">'+llego+'</span><span class="l">ya llegaron (personas)</span></div>'+
+    '<div class="seg-kpi llego"><span class="n">'+llego+'</span><span class="l">checked in (people)</span></div>'+
     '<div class="seg-kpi ok"><span class="n">'+conf+'</span><span class="l">confirmados</span></div>'+
-    '<div class="seg-kpi pend"><span class="n">'+pend+'</span><span class="l">sin responder</span></div>'+
-    '<div class="seg-kpi tarde"><span class="n">'+tarde+'</span><span class="l">llegan tarde</span></div>';
+    '<div class="seg-kpi pend"><span class="n">'+pend+'</span><span class="l">no reply</span></div>'+
+    '<div class="seg-kpi tarde"><span class="n">'+tarde+'</span><span class="l">running late</span></div>';
   lista.innerHTML='';
   S.att.forEach(function(a){ var e=estadoSeg(a);
     var f=document.createElement('div'); f.className='seg-fila '+e;
@@ -2201,13 +2201,13 @@ function pintaManifiesto(){
       d.className='att'+(a.ok?' ok':'')+(a.grupo?' grupo-marca':'')+(a.walkin?' walkin':'')+(dif&&!a.walkin?' aju':'');
       var difTxt = (dif&&!a.walkin) ? ' · <b style="color:'+(dif<0?'var(--rojo)':'var(--acc)')+';">reservó '+a.res0+' → '+a.p+' ('+(dif>0?'+':'−')+Math.abs(dif)+')</b>' : '';
       d.innerHTML='<div class="info">'+(a.walkin?'➕ ':'')+a.n+' · '+a.p+'p'+
-        '<small>'+a.canal+(a.tarde&&!a.ok?' · ⏰ avisó: llega tarde':'')+
+        '<small>'+a.canal+(a.tarde&&!a.ok?' · ⏰ said they’re running late':'')+
         (a.nsAuto?' · <b style="color:var(--rojo);">🚫 no-show (se marcó solo)</b>':'')+
         (a.grupo?' · 👥 grupo':'')+(a.walkin?' · walk-in':'')+difTxt+'</small></div>'+
         '<div class="fila" style="gap:4px; align-items:center;">'+
           '<button class="pax-b" data-d="-1" title="una persona menos">−</button>'+
           '<button class="pax-b" data-d="1" title="una persona más">+</button>'+
-          '<button class="chk" title="Marcar llegada">'+'🧍'.repeat(Math.min(a.p,4)||1)+'</button>'+
+          '<button class="chk" title="Check in">'+'🧍'.repeat(Math.min(a.p,4)||1)+'</button>'+
         '</div>';
       d.querySelector('.chk').onclick=function(){ a.ok=!a.ok; pintaManifiesto();
         if(a.ok) toast(a.n+' marcado en el punto ✓ — Operaciones lo ve al instante'); };
@@ -2232,13 +2232,13 @@ function pintaManifiesto(){
     }
     // botón walk-in + formulario
     var wbtn=document.createElement('button'); wbtn.className='btn sec btn-walkin';
-    wbtn.textContent='➕ Añadir walk-in (sin reserva)';
+    wbtn.textContent='➕ Add walk-in (no booking)';
     var wform=document.createElement('div'); wform.className='walkin-form';
-    wform.innerHTML='<input placeholder="Nombre (opcional)" class="wk-nombre">'+
+    wform.innerHTML='<input placeholder="Name (optional)" class="wk-nombre">'+
       '<div class="fila" style="gap:10px; margin:8px 0;">'+
         '<label class="mini">Personas <input type="number" min="1" max="20" value="2" class="wk-pax" style="width:56px;"></label>'+
       '</div>'+
-      '<button class="btn wk-add" style="width:100%;">✅ Añadir al tour</button>';
+      '<button class="btn wk-add" style="width:100%;">✅ Add to tour</button>';
     wform.style.display='none';
     wbtn.onclick=function(){ wform.style.display = wform.style.display==='none'?'block':'none'; };
     wform.querySelector('.wk-add').onclick=function(){
@@ -2252,13 +2252,13 @@ function pintaManifiesto(){
     // caja de recaudación
     var caja=document.createElement('div'); caja.className='caja-ingresos';
     var media = t.rec && pres ? ' · media '+euros(t.rec/pres)+'/persona' : '';
-    caja.innerHTML='<strong>💶 Ingresos del tour</strong>'+
+    caja.innerHTML='<strong>💶 Tour takings</strong>'+
       '<div class="fila" style="gap:8px; margin-top:8px; align-items:center;">'+
         '<input class="rec-in" inputmode="decimal" placeholder="0,00" value="'+(t.rec?String(t.rec).replace('.',','):'')+'" style="width:110px;"> £'+
         '<button class="btn mini rec-save">Guardar</button>'+
         '<span class="mini muted rec-media">'+(t.rec?media:'')+'</span>'+
       '</div>'+
-      '<p class="mini muted" style="margin:6px 0 0;">Apunta la propina total al terminar — con esto se calcula la liquidación'+
+      '<p class="mini muted" style="margin:6px 0 0;">Log the total tips at the end — that’s what the payout is worked out from'+
         (t.sinGuia?'. ⚠️ Este tour no tiene guía asignado (mira Team &amp; availability).':'.')+'</p>';
     caja.querySelector('.rec-save').onclick=function(){
       var v=parseFloat(caja.querySelector('.rec-in').value.replace(',','.'))||0;
@@ -2274,18 +2274,18 @@ function pintaManifiesto(){
       var prop=document.createElement('div'); prop.className='caja-propina';
       var ops=t.res.map(function(a,ai){
         return '<option value="'+ai+'">'+a.n+' ('+a.p+'p · '+a.canal+')</option>'; }).join('');
-      prop.innerHTML='<strong>💳 Cobrar la propina <span class="chip turq" style="margin-left:4px;">va a tu cuenta</span></strong>'+
-        '<p class="mini muted" style="margin:6px 0 8px;">Lo primero, <b>cobrar en el momento</b> con tu SumUp o datáfono: '+
-        '<b>sin comisión de Audutor</b> — da igual el método. El enlace y el QR son para <b>quien ya se fue</b> '+
+      prop.innerHTML='<strong>💳 Collect tips <span class="chip turq" style="margin-left:4px;">goes to your account</span></strong>'+
+        '<p class="mini muted" style="margin:6px 0 8px;">First, <b>charge on the spot</b> with your SumUp or card reader: '+
+        '<b>no Audutor fee</b>, whatever the method. The link and QR are for <b>whoever already left</b> '+
         'o para grupos: ahí sí, '+pctPropinaPlan()+' + 0,30 £.</p>'+
         '<div class="fila" style="gap:8px; margin-top:8px; align-items:center; flex-wrap:wrap;">'+
-          '<button class="btn mini pr-tap">📲 Cobrar ahora (acercar tarjeta)</button>'+
-          '<button class="btn mini sec pr-sumup">💳 Cobrar con SumUp</button>'+
+          '<button class="btn mini pr-tap">📲 Charge now (tap card)</button>'+
+          '<button class="btn mini sec pr-sumup">💳 Charge with SumUp</button>'+
           '<button class="btn mini sec pr-qr">📷 QR / enlace</button>'+
         '</div>'+
         '<div class="fila" style="gap:8px; margin-top:8px; align-items:center; flex-wrap:wrap;">'+
-          '<span class="mini muted">o mandar el enlace a una reserva:</span>'+
-          '<select class="pr-sel" style="max-width:180px;"><option value="-1">elige la reserva…</option>'+ops+'</select>'+
+          '<span class="mini muted">or send the link to one booking:</span>'+
+          '<select class="pr-sel" style="max-width:180px;"><option value="-1">pick a booking…</option>'+ops+'</select>'+
           '<button class="btn mini sec pr-send">Enviar</button>'+
         '</div>'+
         '<div class="pr-qr-caja" style="display:none; margin-top:10px; text-align:center;">'+
@@ -2323,9 +2323,9 @@ function pintaManifiesto(){
     t.obs = t.obs || [];
     var obsBox=document.createElement('div'); obsBox.style.cssText='margin-top:14px;';
     var pend=t.obs.filter(function(o){return !o.rec}).length;
-    obsBox.innerHTML='<strong>💬 Observaciones del tour</strong>'+
-      (pend?' <span class="chip rojo">'+pend+' por confirmar</span>':'')+
-      '<div class="mini muted" style="margin:4px 0 6px;">El canal entre encargado, GuIA y guía. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Los cambios de nº de personas (arriba) y los avisos de GuIA caen aquí solos. Lo que escribe el <b>encargado</b> le llega al guía como «por confirmar» y lo lee al abrir el manifiesto; cada «recibido» cuenta en la analítica.</span></details></div>';
+    obsBox.innerHTML='<strong>💬 Tour notes</strong>'+
+      (pend?' <span class="chip rojo">'+pend+' to confirm</span>':'')+
+      '<div class="mini muted" style="margin:4px 0 6px;">El canal entre encargado, GuIA y guía. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Los cambios de nº de personas (arriba) y los avisos de GuIA caen aquí solos. Lo que escribe el <b>encargado</b> le llega al guía como «to confirm» y lo lee al abrir el manifiesto; cada «recibido» cuenta en la analítica.</span></details></div>';
     if (!t.obs.length){
       obsBox.innerHTML+='<p class="mini muted" style="margin:0 0 8px;">Sin observaciones todavía — escribe una abajo o ajusta un nº de personas arriba.</p>';
     }
@@ -2347,8 +2347,8 @@ function pintaManifiesto(){
     });
     // recuadro para escribir una observación a mano
     var addObs=document.createElement('div'); addObs.style.cssText='display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; align-items:center;';
-    addObs.innerHTML='<textarea class="obs-in" rows="2" placeholder="Escribe una observación (retraso, incidencia, cambio…)" style="flex:1; min-width:180px; border:1.5px solid var(--line); border-radius:9px; padding:8px 10px; font-size:13px; font-family:inherit; resize:vertical;"></textarea>'+
-      '<select class="obs-quien" style="border:1.5px solid var(--line); border-radius:8px; padding:7px 8px; font-size:12.5px; font-family:inherit;"><option value="admin">como encargado → avisa al guía</option><option value="guía">como guía (nota propia)</option></select>'+
+    addObs.innerHTML='<textarea class="obs-in" rows="2" placeholder="Write a note (delay, incident, change…)" style="flex:1; min-width:180px; border:1.5px solid var(--line); border-radius:9px; padding:8px 10px; font-size:13px; font-family:inherit; resize:vertical;"></textarea>'+
+      '<select class="obs-quien" style="border:1.5px solid var(--line); border-radius:8px; padding:7px 8px; font-size:12.5px; font-family:inherit;"><option value="admin">as manager → notify the guide</option><option value="guía">como guía (nota propia)</option></select>'+
       '<button class="btn mini obs-add">+ Añadir</button>';
     addObs.querySelector('.obs-add').onclick=function(){
       var v=addObs.querySelector('.obs-in').value.trim();
@@ -2357,7 +2357,7 @@ function pintaManifiesto(){
       t.obs.unshift({ a:quien, rec: quien==='guía', t:v, manual:true });
       pintaManifiesto();
       toast(quien==='admin'
-        ? '📨 Enviada al guía — le aparece «por confirmar» y la lee al abrir su manifiesto'
+        ? '📨 Enviada al guía — le aparece «to confirm» y la lee al abrir su manifiesto'
         : 'Observación anotada — encargado, GuIA y Operaciones ya la tienen');
     };
     obsBox.appendChild(addObs);
@@ -2365,12 +2365,12 @@ function pintaManifiesto(){
     // ubicación / rescate (solo tour live)
     if (t.live){
       var ubi=document.createElement('button'); ubi.className='btn'; ubi.style.cssText='width:100%; margin-top:12px;';
-      ubi.textContent= S.ubi? '📍 Ubicación compartida hace '+S.ubiHace+' min — actualizar' : '📍 Compartir dónde está el grupo';
+      ubi.textContent= S.ubi? '📍 Ubicación compartida hace '+S.ubiHace+' min — actualizar' : '📍 Share where the group is';
       if (S.ubi) ubi.classList.add('sec');
       ubi.onclick=compartirUbi;
       mov.appendChild(ubi);
       var nota=document.createElement('p'); nota.className='mini muted'; nota.style.margin='6px 2px 0';
-      nota.innerHTML='Si alguien se pierde y escribe al chat, GuIA le pasará el mapa con esta posición — tu número nunca se comparte.';
+      nota.innerHTML='If someone gets lost and messages the chat, GuIA sends them this location — your number is never shared.';
       mov.appendChild(nota);
     }
     cont.appendChild(mov);
@@ -2703,7 +2703,7 @@ function respuestaGuiaES(t){
       return 'Tranquilo: el grupo va parando por el recorrido. Si te pierdes de verdad, dímelo por aquí con tu código y te paso un mapa con dónde están 🙂';
     if (S.ubi)
       return '¡Los encontramos! El grupo está aquí ahora mismo:\n📍 <b>maps.google.com/?q=41.899,12.473</b>\n(ubicación compartida por la guía hace '+S.ubiHace+' min). Pregunta por Emma al llegar. Si no los ves, dímelo.\n\n<i>— Fíjate: sin dar el teléfono de la guía, y sin que nadie llame a nadie.</i>';
-    return 'Ya le he pedido a tu guía que comparta su ubicación 📍 Pregúntame otra vez en 2-3 minutos y te paso el mapa.\n\n<i>— Prueba a ir al Manifiesto, pulsa «Compartir dónde está el grupo» y vuelve a preguntarme.</i>';
+    return 'Ya le he pedido a tu guía que comparta su ubicación 📍 Pregúntame otra vez en 2-3 minutos y te paso el mapa.\n\n<i>— Prueba a ir al Manifiesto, pulsa «Share where the group is» y vuelve a preguntarme.</i>';
   }
   /* ---- TERCERA PASADA · ideas de Madrid Latido y la competencia ---- */
   // No-show empático (ya pasó): reenganche sin reproche. Va ANTES de la regla
@@ -2736,7 +2736,7 @@ function respuestaGuiaES(t){
     if (man && man.tours && man.tours.length)
       return 'El próximo tour es mañana a las '+man.tours[0].hora+' ('+man.tours[0].tit+') 🙂';
     registraDerivada(t);
-    return 'No veo más salidas cargadas esta semana: se lo paso al encargado y te confirma enseguida 🙂';
+    return 'No veo más salidas cargadas this week: se lo paso al encargado y te confirma enseguida 🙂';
   }
   // «¿Queda sitio?» — aforo del cerebro × reservas confirmadas de la agenda de hoy.
   if (/queda sitio|quedan (plazas|sitio|huecos)|queda (plaza|hueco)|hay (sitio|plazas|hueco)|esta complet[oa]|esta llen[oa]|va llen[oa]/.test(m)){
@@ -3388,7 +3388,7 @@ function activarPropinaGuia(){
   g.propinaOk=true; pintaGuiaDispo(S.guiaVista);
   toast('💳 (Simulado) En producción esto abre el alta verificada de pagos: identidad + IBAN, ~10 min, y tus propinas llegan solas cada semana.');
 }
-/* ===== Página del guía (reserva directa): QR por guía + vista previa en el móvil ===== */
+/* ===== Guide page (reserva directa): QR por guía + vista previa en el móvil ===== */
 function gpSlug(n){ return n.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
 function pintaGpLista(){
   var box=document.getElementById('gp-lista'); if(!box) return;
@@ -3398,7 +3398,7 @@ function pintaGpLista(){
       '<div style="font-weight:800;">'+g.n+'</div>'+
       '<div class="mini muted num">oldtownwalks.co.uk/g/'+gpSlug(g.n)+'</div>'+
       '<div style="margin:8px 0 6px;">'+qrSvg('oldtownwalks.co.uk/g/'+gpSlug(g.n)).replace('width="128" height="128"','width="92" height="92"')+'</div>'+
-      '<button class="btn mini sec" onclick="abrirGuidePage(\''+g.n+'\')">📱 Ver su página</button></div>';
+      '<button class="btn mini sec" onclick="abrirGuidePage(\''+g.n+'\')">📱 See their page</button></div>';
   }).join('');
 }
 var NOTA_VIAJERO0=null;
@@ -3816,7 +3816,7 @@ function pintaLiq(){
   var neto=tot.rec-tot.coste;
   var kpi3;
   if (liqCoste==='ingreso'){
-    kpi3='<div class="kpi"><span class="v'+(neto<0?' neg':'')+'">'+eur(neto)+'</span><span class="l">Neto a repartir (tras coste)</span></div>';
+    kpi3='<div class="kpi"><span class="v'+(neto<0?' neg':'')+'">'+eur(neto)+'</span><span class="l">Net to split (tras coste)</span></div>';
   } else {
     var empBruta=tot.rec-tot.guia;
     var comido=empBruta>0? Math.round(tot.coste/empBruta*100) : 0;
@@ -3824,7 +3824,7 @@ function pintaLiq(){
   }
   document.getElementById('liq-kpis').innerHTML=
     '<div class="kpi"><span class="v">'+eur(tot.rec)+'</span><span class="l">Recaudación (propina)</span></div>'+
-    '<div class="kpi"><span class="v'+(tot.coste>0?' neg':'')+'">'+eur(tot.coste)+'</span><span class="l">💳 Coste reservas ('+sel.reduce(function(s,x){return s+x.plat},0)+'p × '+eur(COMISION_CANAL)+')'+(liqCoste==='empresa'?' — a cargo de la empresa':'')+'</span></div>'+
+    '<div class="kpi"><span class="v'+(tot.coste>0?' neg':'')+'">'+eur(tot.coste)+'</span><span class="l">💳 Booking costs ('+sel.reduce(function(s,x){return s+x.plat},0)+'p × '+eur(COMISION_CANAL)+')'+(liqCoste==='empresa'?' — a cargo de la empresa':'')+'</span></div>'+
     kpi3+
     '<div class="kpi"><span class="v pos-guia">'+eur(tot.guia)+'</span><span class="l">'+(liqModo==='pct'?'A guías ('+pct+' % '+(liqCoste==='empresa'?'del bruto':'del neto')+')':'A guías (resto tras '+eur(fijo)+'/p)')+'</span></div>'+
     '<div class="kpi"><span class="v'+(tot.emp<0?' neg':'')+'">'+eur(tot.emp)+'</span><span class="l">Empresa'+(liqModo==='fijo'?' ('+eur(fijo)+' × asistente':' ('+(100-pct)+' %')+(liqCoste==='empresa'?' − coste reservas)':')')+'</span></div>'+
@@ -3833,7 +3833,7 @@ function pintaLiq(){
 function csvLiq(){
   var del=document.getElementById('liq-del').value, al=document.getElementById('liq-al').value;
   var pct=+document.getElementById('rep-pct').value, fijo=+document.getElementById('rep-fijo').value;
-  var filas=[['Fecha','Tour','Guia','Asistentes','Recaudacion','Coste reservas','A pagar al guia','Empresa'].join(';')];
+  var filas=[['Fecha','Tour','Guia','Asistentes','Recaudacion','Booking costs','A pagar al guia','Empresa'].join(';')];
   TOURS_LIQ.filter(function(x){ return x.f>=del && x.f<=al; }).forEach(function(x){
     var r=repartoTour(x,pct,fijo);
     filas.push([x.f,x.t,x.g,x.ax,x.rec.toFixed(2),r.coste.toFixed(2),r.guia.toFixed(2),r.emp.toFixed(2)]
@@ -4144,7 +4144,7 @@ function seedCobertura(){
   for(var d=0; d<7; d++){ C[centro+'|10:00|'+d]=[0]; C[centro+'|17:00|'+d]=[1]; }
   C[centro+'|10:00|5']=[0,1];                    // sábado: Emma principal + Liam refuerzo
   [3,4,5].forEach(function(d){ C['Leith food & whisky walk|18:30|'+d]=[0]; });
-  // Night walk (vie/sáb/dom · 21:00): SIN CUBRIR a propósito para demostrar el flujo
+  // Night walk (vie/sáb/dom · 21:00): UNCOVERED a propósito para demostrar el flujo
 }
 function pintaEquipo(){
   pintaCalendario();
@@ -4161,12 +4161,12 @@ function pintaEquipo(){
     tr.innerHTML='<td><b>'+x.n+'</b>'+(x.tel||x.email?'<br><span class="mini muted">'+[x.tel,x.email].filter(Boolean).join(' · ')+'</span>':'')+'</td><td>'+x.idiomas+'</td><td>'+x.tours+'</td>'+
       '<td class="num">'+(x.nota==='—'?'—':x.nota+' ⭐')+'</td>'+
       '<td><label class="mini" style="cursor:pointer;"><input type="checkbox" '+(x.checkin?'checked':'')+
-      (x.activo?'':' disabled')+' onchange="toggleCheckin('+gi+')"> puede marcar llegadas</label></td>'+
+      (x.activo?'':' disabled')+' onchange="toggleCheckin('+gi+')"> can check people in</label></td>'+
       '<td>'+(x.propinaOk
         ? '<span class="chip" style="background:var(--turq-soft); color:var(--turq-deep);">activa · IBAN ✓</span>'
-        : '<span class="chip ambar" style="cursor:pointer;" title="El guía activa su cuenta desde su enlace personal (10 min)" onclick="toast(\'💳 '+x.n+' tiene pendiente activar su propina: se hace desde SU enlace personal (identidad + IBAN, ~10 min). El dinero de la propina va SIEMPRE al guía.\')">pendiente de activar</span>')+'</td>'+
+        : '<span class="chip ambar" style="cursor:pointer;" title="El guía activa su cuenta desde su enlace personal (10 min)" onclick="toast(\'💳 '+x.n+' tiene pendiente activar su propina: se hace desde SU enlace personal (identidad + IBAN, ~10 min). El dinero de la propina va SIEMPRE al guía.\')">not set up yet</span>')+'</td>'+
       '<td>'+(x.activo?'<span class="chip" style="background:var(--acc-soft); color:var(--acc);">en activo</span>'
-                      :'<span class="chip gris">de baja temporal</span>')+'</td>';
+                      :'<span class="chip gris">on leave</span>')+'</td>';
     tb.appendChild(tr);
   });
   // pestañas de guía para el cuadro de disponibilidad
@@ -4181,7 +4181,7 @@ function pintaEquipo(){
   // matriz FRANJAS (tours diarios) × DÍAS de la semana, para el guía elegido
   var gs=g[S.equipo.guiaSel], fr=franjasEmpresa();
   var dp=document.getElementById('eq-dispo');
-  var h='<tr><th>Tour diario</th>'+DIAS_SEM.map(function(d){return '<th style="text-align:center;">'+d+'</th>'}).join('')+'<th>Días</th></tr>';
+  var h='<tr><th>Daily tour</th>'+DIAS_SEM.map(function(d){return '<th style="text-align:center;">'+d+'</th>'}).join('')+'<th>Días</th></tr>';
   var totSel=0;
   fr.forEach(function(f){
     var seSel=0;
@@ -4204,7 +4204,7 @@ function pintaEquipo(){
   dp.innerHTML=h;
   // resumen de a qué tours está disponible el guía
   var res=document.getElementById('eq-dispo-resumen');
-  if(!gs.activo){ res.innerHTML='<b>'+gs.n+'</b> está de baja temporal — su disponibilidad no cuenta esta semana.'; }
+  if(!gs.activo){ res.innerHTML='<b>'+gs.n+'</b> está on leave — su disponibilidad no cuenta this week.'; }
   else {
     var porTour={}, totDisp=0;
     fr.forEach(function(f){ f.dias.forEach(function(d){
@@ -4225,7 +4225,7 @@ function pintaEquipo(){
     sc.innerHTML='<span>✅ <b>Todas las salidas de la semana están cubiertas.</b> Buen trabajo.</span>';
   } else {
     var enc=document.createElement('p'); enc.className='mini muted'; enc.style.margin='0 0 8px';
-    enc.innerHTML='<b>'+descubiertas.length+' salida'+(descubiertas.length>1?'s':'')+' sin cubrir</b> esta semana (también en <span style="color:var(--amber);">ámbar</span> en el calendario). Los guías que marcaron disponibilidad pueden asignarse en un clic:';
+    enc.innerHTML='<b>'+descubiertas.length+' salida'+(descubiertas.length>1?'s':'')+' sin cubrir</b> this week (también en <span style="color:var(--amber);">ámbar</span> en el calendario). Los guías que marcaron disponibilidad pueden asignarse en un clic:';
     sc.appendChild(enc);
     descubiertas.forEach(function(u){
       var d=document.createElement('div'); d.className='fila';
@@ -4252,7 +4252,7 @@ function pintaEquipo(){
 }
 function toggleCheckin(gi){
   var x=S.equipo.guias[gi]; x.checkin=!x.checkin; pintaEquipo();
-  toast(x.checkin ? '✅ '+x.n+' ya puede marcar llegadas desde su manifiesto'
+  toast(x.checkin ? '✅ '+x.n+' ya can check people in desde su manifiesto'
                   : 'Permiso retirado: las llegadas de sus tours las marca el encargado');
 }
 function toggleDispoFranja(gi, key, d){
@@ -4308,12 +4308,12 @@ function calcProy(){
   var empMes = brutoMes - bote - comMes - ovh;
   var margen = paxMes ? empMes/paxMes : 0;
   document.getElementById('py-kpis').innerHTML=
-    '<div class="kpi'+(guiaMes<0?' malo':'')+'"><span class="v"'+(guiaMes<0?'':' style="color:var(--acc);"')+'>'+eur0(guiaMes)+'</span><span class="l">cada guía / mes <b>('+dias+' días de operación)</b></span></div>'+
-    '<div class="kpi'+(empMes<0?' malo':'')+'"><span class="v">'+eur0(empMes)+'</span><span class="l">empresa neto / mes (tras '+eur0(ovh)+' de gastos fijos)</span></div>'+
-    '<div class="kpi"><span class="v">'+paxDia+'</span><span class="l">personas / día</span></div>'+
-    '<div class="kpi"><span class="v">'+eur0(brutoMes)+'</span><span class="l">propina bruta / mes</span></div>'+
-    '<div class="kpi"><span class="v">'+eur0(comMes)+'</span><span class="l">comisiones de plataforma / mes</span></div>'+
-    '<div class="kpi"><span class="v">'+margen.toLocaleString('es-ES',d2)+' £</span><span class="l">margen de la empresa por persona</span></div>';
+    '<div class="kpi'+(guiaMes<0?' malo':'')+'"><span class="v"'+(guiaMes<0?'':' style="color:var(--acc);"')+'>'+eur0(guiaMes)+'</span><span class="l">each guide / month <b>('+dias+' días de operación)</b></span></div>'+
+    '<div class="kpi'+(empMes<0?' malo':'')+'"><span class="v">'+eur0(empMes)+'</span><span class="l">company net / month (tras '+eur0(ovh)+' de gastos fijos)</span></div>'+
+    '<div class="kpi"><span class="v">'+paxDia+'</span><span class="l">people / day</span></div>'+
+    '<div class="kpi"><span class="v">'+eur0(brutoMes)+'</span><span class="l">gross tips / month</span></div>'+
+    '<div class="kpi"><span class="v">'+eur0(comMes)+'</span><span class="l">platform fees / month</span></div>'+
+    '<div class="kpi"><span class="v">'+margen.toLocaleString('es-ES',d2)+' £</span><span class="l">company margin per person</span></div>';
   document.getElementById('py-nota').innerHTML=
     (proyModoV==='pct'
       ? 'El guía se queda el <b>'+Math.round(rep*100)+' %</b> de lo que se reparte; la empresa, el resto. '
