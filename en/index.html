@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Audutor — el sistema operativo de tu empresa de tours</title>
+<title>Audutor — the operations layer for tour companies</title>
 <meta name="description" content="La capa operativa para empresas de tours y free tours: reservas multicanal, guías, no-shows, grupos, propinas y un asistente IA que no inventa. Modulable según tu tarifa y tu intensidad.">
 <style>
   :root{
@@ -215,14 +215,14 @@
   .plan{ background:var(--paper); border:1.5px solid var(--line); border-radius:16px; padding:26px;
     display:flex; flex-direction:column; }
   .plan.destacado{ border-color:var(--acc); box-shadow:0 10px 34px rgba(18,138,107,.13); position:relative; }
-  .plan.destacado::before{ content:"El de la mayoría"; position:absolute; top:-12px; left:22px;
+  .plan.destacado::before{ content:"Most popular"; position:absolute; top:-12px; left:22px;
       background:var(--acc); color:#fff; font-size:11.5px; font-weight:800; letter-spacing:.06em;
       padding:3px 12px; border-radius:99px; text-transform:uppercase; }
   /* Premium: la tarjeta estrella — crema cálida, elegante, con acento dorado */
   .plan.premium{ position:relative; z-index:2; color:var(--ink); border:1.5px solid var(--gold);
     background:linear-gradient(165deg,#fff9ea 0%,#fbeecb 100%);
     box-shadow:0 24px 52px rgba(163,106,16,.18); transform:translateY(-12px); }
-  .plan.premium::before{ content:"★ El más completo"; position:absolute; top:-13px; left:50%;
+  .plan.premium::before{ content:"★ The full thing"; position:absolute; top:-13px; left:50%;
     transform:translateX(-50%); background:linear-gradient(90deg,var(--gold),#e2ab48); color:#231400;
     font-size:11.5px; font-weight:800; letter-spacing:.05em; padding:4px 16px; border-radius:99px;
     text-transform:uppercase; white-space:nowrap; box-shadow:0 6px 16px rgba(201,138,45,.45); }
@@ -467,13 +467,13 @@
 <nav><div class="wrap">
   <a class="logo" href="#" aria-label="Audutor, inicio"><span class="wm">Audutor<svg class="ruta" viewBox="0 0 100 14" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M1 10.5 Q 24 5 46 9 T 86 8"/><path class="rpin" d="M93 1.2c-2.6 0-4.7 2.1-4.7 4.7 0 3.4 4.7 7.5 4.7 7.5s4.7-4.1 4.7-7.5c0-2.6-2.1-4.7-4.7-4.7z"/><circle class="rhueco" cx="93" cy="6" r="1.8"/></svg></span></a>
   <div class="links">
-    <a href="#producto" data-i18n="nav.producto">Producto</a>
-    <a href="#dia" data-i18n="nav.dia">Un día</a>
-    <a href="#planes" data-i18n="nav.planes">Planes</a>
-    <a href="#web" data-i18n="nav.web">Tu web</a>
-    <a class="btn" href="demo/" data-demo data-i18n="nav.demo">Probar la demo</a>
-    <button id="lang-sw" class="lang-sw" onclick="location.href='en/'" aria-label="Change language / Cambiar idioma">
-      <span class="bandera">🇬🇧</span><span class="lbl">EN</span></button>
+    <a href="#producto" data-i18n="nav.producto">Product</a>
+    <a href="#dia" data-i18n="nav.dia">A day</a>
+    <a href="#planes" data-i18n="nav.planes">Pricing</a>
+    <a href="#web" data-i18n="nav.web">Your site</a>
+    <a class="btn" href="../demo-en/" data-demo data-i18n="nav.demo">Try the demo</a>
+    <button id="lang-sw" class="lang-sw" onclick="location.href='../'" aria-label="Change language / Cambiar idioma">
+      <span class="bandera">🇪🇸</span><span class="lbl">ES</span></button>
   </div>
 </div></nav>
 
@@ -494,23 +494,17 @@
   <div class="hero-grid">
     <div>
       <div class="kicker reveal" style="--d:80ms" data-i18n="hero.kicker">Software de operaciones para empresas de free tours y tours a pie con equipo de guías</div>
-      <h1 data-split data-i18n="hero.h1">Tu software de reservas se olvida de lo que pasa después de la reserva.</h1>
-      <p class="lede reveal" style="--d:120ms">Audutor es <b>la capa operativa de tu empresa de tours</b>:
-      avisa a tus clientes por WhatsApp para que no te fallen, rescata a quien se pierde, detecta
-      los grupos grandes, liquida cada tour al céntimo y junta las reservas de todos tus canales
-      en un solo sitio. <b>Modulable</b>: empiezas con dos módulos y creces cuando quieras.</p>
+      <h1 data-split data-i18n="hero.h1">Your booking system forgets everything that happens after the booking.</h1>
+      <p class="lede reveal" style="--d:120ms">Audutor is <b>your tour company’s operations layer</b>:
+      it messages your customers so they actually turn up, rescues whoever gets lost, spots split groups, settles every tour to the penny, and pulls bookings from all your channels into one place. <b>Modular</b>: start with two modules and grow when you want to.</p>
       <div class="hero-ctas reveal" style="--d:220ms">
-        <a class="btn" href="demo/" data-demo>🖱️ Probar la demo interactiva</a>
-        <a class="btn sec" href="#contacto">Pedir una demo guiada</a>
+        <a class="btn" href="../demo-en/" data-demo>🖱️ Try the interactive demo</a>
+        <a class="btn sec" href="#contacto">Book a guided demo</a>
       </div>
-      <p class="hero-nota reveal" style="--d:300ms">Funciona cada día en una operación real de free
-      tours en Madrid — no nació en una sala de reuniones. Y arrancar es cosa de una tarde:
-      reenvías tus emails de reserva y el buzón monta el resto, sin migraciones ni permanencia.</p>
+      <p class="hero-nota reveal" style="--d:300ms">It already runs a real free tour operation in Madrid every day — this wasn’t born in a meeting room. And getting started takes an afternoon: forward your booking emails and the inbox builds the rest. No migration, no lock-in.</p>
       <div class="guia-saludo reveal" style="--d:380ms">
         <svg class="guia" aria-hidden="true" focusable="false"><use href="#guia"/></svg>
-        <p class="bocadillo"><b>¡Hola! Soy GuIA.</b> Atiendo a tus clientes por WhatsApp mientras
-        tú guías — confirmo, recuerdo y rescato al que se pierde. Solo te aviso si de verdad me
-        necesitas.</p>
+        <p class="bocadillo"><b>Hi! I’m GuIA.</b> I look after your customers while you’re out guiding — confirming, reminding and rescuing whoever gets lost. I only ping you when I genuinely need you.</p>
       </div>
     </div>
 
@@ -525,56 +519,48 @@
         <div class="mock-row ok"><span>Familia Dupont · 5p</span><span>✓ en el punto</span></div>
         <button>📍 Compartir dónde está el grupo</button>
       </div>
-      <div class="mock-pop pop2">⛑️ <b>«Me he perdido»</b> → GuIA le pasó el mapa del grupo
-        (ubicación del guía, hace 2 min). Sin dar su teléfono.</div>
+      <div class="mock-pop pop2">⛑️ <b>«Me he perdido»</b> → GuIA sent them the group’s map (the guide’s location, 2 min ago). Without sharing any number.</div>
     </div>
   </div>
 
   <div class="cifras">
-    <div class="cifra reveal"><span class="v">2,50 €</span><span class="l">te cuesta cada persona reservada en plataforma — venga o no venga. El no-show se paga igual.</span></div>
-    <div class="cifra reveal" style="--d:90ms"><span class="v">5 sitios</span><span class="l">donde vive hoy tu operación: extranets, Excel, WhatsApp, correo y la cabeza del encargado. Aquí, uno.</span></div>
-    <div class="cifra reveal" style="--d:180ms"><span class="v">Tour a tour</span><span class="l">sabes lo que entra, lo que se lleva la plataforma y lo que queda. Sin hoja de cálculo.</span></div>
-    <div class="cifra reveal" style="--d:270ms"><span class="v">0 %</span><span class="l">de comisión por tus reservas. No somos una OTA ni pertenecemos a ninguna.</span></div>
+    <div class="cifra reveal"><span class="v">2,50 €</span><span class="l">is what each platform booking costs you — whether they show up or not. A no-show costs the same.</span></div>
+    <div class="cifra reveal" style="--d:90ms"><span class="v">5 sitios</span><span class="l">is where your operation lives today: extranets, spreadsheets, WhatsApp, email and the manager’s memory. Here, one.</span></div>
+    <div class="cifra reveal" style="--d:180ms"><span class="v">Tour by tour</span><span class="l">you see what came in, what the platform took and what’s left. No spreadsheet.</span></div>
+    <div class="cifra reveal" style="--d:270ms"><span class="v">0 %</span><span class="l">commission on your bookings. We’re not an OTA and we don’t belong to one.</span></div>
   </div>
 </div></header>
 
 <section class="alt" id="producto"><div class="wrap">
   <div class="sec-head">
-    <h2 data-split>Todo lo que pasa entre la reserva y la propina</h2>
-    <p class="reveal">Cada módulo se activa o se apaga según tu plan. Empiezas por lo que te duele
-    hoy y creces sin cambiar de sistema.</p>
+    <h2 data-split>Everything that happens between the booking and the tip</h2>
+    <p class="reveal">Every module switches on or off with your plan. Start with what hurts today and grow without changing systems.</p>
   </div>
   <div class="grid3">
-    <div class="celda reveal"><span class="ico">📲</span><h3>Recordatorios que evitan no-shows</h3>
-      <p>Confirmación y recordatorios por WhatsApp con respuesta procesable: el «sí voy / llego
-      tarde» del cliente aparece en el manifiesto del guía al instante, como un semáforo. La
-      cadencia inteligente según riesgo va en el plan Pro.</p>
+    <div class="celda reveal"><span class="ico">📲</span><h3>Reminders that stop no-shows</h3>
+      <p>Confirmations and reminders with an actionable reply: the customer’s “I’m coming / running late” lands on the guide’s manifest straight away, like a traffic light. The smart risk-based sequence is on the Pro plan.</p>
       <span class="mini">módulo: comunicación</span></div>
-    <div class="celda star reveal" style="--d:70ms"><span class="ico">🧭</span><h3>Rescate de rezagados</h3>
+    <div class="celda star reveal" style="--d:70ms"><span class="ico">🧭</span><h3>Rescue for stragglers</h3>
       <p>¿Alguien se pierde a mitad de ruta o llega tarde a la parada? El guía comparte su ubicación
       con un botón y el asistente le pasa el mapa al turista al momento — sin exponer nunca el
       teléfono del guía.</p><span class="mini">módulo: rescate · solo en Audutor</span></div>
-    <div class="celda star reveal" style="--d:140ms"><span class="ico">👥</span><h3>Grupos grandes, detectados</h3>
+    <div class="celda star reveal" style="--d:140ms"><span class="ico">👥</span><h3>Split groups, spotted</h3>
       <p>Las plataformas limitan 6 por reserva y los grupos se parten en 2-3 reservas. Audutor los
       junta (teléfono, email, apellido, hora) y aplica tu política — aviso en su confirmación y al
       guía: «puedes pedir adelanto».</p><span class="mini">módulo: grupos · solo en Audutor</span></div>
-    <div class="celda reveal"><span class="ico">💶</span><h3>Liquidaciones al céntimo</h3>
-      <p>Propina o precio, comisiones por canal, reparto guía-empresa configurable — tour a tour,
-      con exportación para la gestoría. El guía nunca paga: es una regla del sistema.</p>
+    <div class="celda reveal"><span class="ico">💶</span><h3>Payouts to the penny</h3>
+      <p>Tips or ticket price, channel fees, configurable guide/company split — tour by tour, with an export for your accountant. The guide never pays: that’s a rule of the system.</p>
       <span class="mini">módulo: dinero</span></div>
-    <div class="celda celda-guia reveal" style="--d:70ms"><svg class="ico-svg" aria-hidden="true" focusable="false"><use href="#guia"/></svg><h3>Un asistente que no inventa</h3>
-      <p>GuIA responde 24/7, cancela, cambia de día o avisa al guía de un retraso — solo con el
-      código de reserva y solo con datos reales de tu negocio. Lo que no sabe, te lo pasa a ti.</p>
+    <div class="celda celda-guia reveal" style="--d:70ms"><svg class="ico-svg" aria-hidden="true" focusable="false"><use href="#guia"/></svg><h3>An assistant that never makes things up</h3>
+      <p>GuIA answers 24/7, cancels, moves a date or tells the guide someone’s running late — using only the booking code and only real facts from your business. Whatever it doesn’t know, it hands to you.</p>
       <span class="mini">módulo: asistente IA</span></div>
-    <div class="celda reveal" style="--d:140ms"><span class="ico">🧑‍🤝‍🧑</span><h3>Tus guías, sin cuentas ni líos</h3>
-      <p>Cada guía tiene su enlace: su tour de hoy, check-in con un toque, walk-ins, disponibilidad
-      y su analítica. Permisos que decides tú — quién ve qué, quién marca qué.</p>
+    <div class="celda reveal" style="--d:140ms"><span class="ico">🧑‍🤝‍🧑</span><h3>Your guides, no accounts, no faff</h3>
+      <p>Every guide gets their own link: today’s tour, one-tap check-in, walk-ins, availability and their own numbers. Permissions you decide — who sees what, who marks what.</p>
       <span class="mini">módulo: equipo</span></div>
-    <div class="celda reveal"><span class="ico">📊</span><h3>Operaciones por excepciones</h3>
-      <p>Un parte diario con lo que necesita tu atención — tours sin guía, sobreaforo, lista de
-      espera con hueco, reseñas negativas — y nada más. Si no hay nada, te lo dice y a otra cosa.</p>
+    <div class="celda reveal"><span class="ico">📊</span><h3>Exception-based operations</h3>
+      <p>A daily brief with what needs you — tours without a guide, over capacity, a waiting list with a free spot, bad reviews — and nothing else. If there’s nothing, it says so and you get on with your day.</p>
       <span class="mini">módulo: operaciones</span></div>
-    <div class="celda reveal" style="--d:70ms"><span class="ico">📥</span><h3>Reservas multicanal, solas</h3>
+    <div class="celda reveal" style="--d:70ms"><span class="ico">📥</span><h3>Multi-channel bookings, on their own</h3>
       <p>Las reservas de GuruWalk, Civitatis, Freetour y tu web entran y se actualizan solas —
       altas, cambios de día y cancelaciones. Sin API, sin copiar a mano: leemos los emails de las
       plataformas por ti.</p><span class="mini">módulo: canales</span></div>
@@ -593,7 +579,7 @@
   <div class="wrap">
   <div class="sec-head">
     <h2 data-split>Un día cualquiera con Audutor</h2>
-    <p class="reveal">Sin abrir Excel, sin copiar reservas, sin «¿alguien sabe dónde está el guía?».</p>
+    <p class="reveal">No spreadsheet, no copying bookings across, no “does anyone know where the guide is?”.</p>
   </div>
   <div class="dia">
     <div class="hito reveal"><span class="hora">08:41</span><span class="punto"></span>
@@ -629,57 +615,56 @@
   </svg>
   <div class="wrap">
   <div class="sec-head">
-    <h2 data-split>Pagas por lo que operas, no por tu equipo</h2>
-    <p class="reveal"><b>Sin comisión por reserva</b> y <b>guías ilimitados desde Pro</b> — Esencial empieza con 1 tour y 1 guía. El precio sube
+    <h2 data-split>You pay for what you run, not for your team</h2>
+    <p class="reveal"><b>No booking commission</b> and <b>unlimited guides from Pro</b> — Essential starts with 1 tour and 2 guides. The price goes up
     solo si creces en <b>tours</b> — no te penalizamos por tener más gente en el equipo (al revés que el
     software que cobra por usuario). Sin permanencia.</p>
   </div>
   <div class="fact-toggle-wrap reveal">
     <div class="fact-toggle" role="radiogroup" aria-label="Periodo de facturación" id="factToggle">
-      <button type="button" role="radio" aria-checked="true" data-modo="mensual">Mensual</button>
-      <button type="button" role="radio" aria-checked="false" data-modo="anual">Anual <span class="dto">−17 %</span></button>
+      <button type="button" role="radio" aria-checked="true" data-modo="mensual">Monthly</button>
+      <button type="button" role="radio" aria-checked="false" data-modo="anual">Annual <span class="dto">−17 %</span></button>
     </div>
-    <p class="pausa">El plan anual convierte 12 decisiones en 1 — y en temporada baja puedes pausar
-    tu suscripción hasta 2 meses conservando todos tus datos.</p>
+    <p class="pausa">The annual plan turns 12 decisions into one — and in the off season you can pause for up to 2 months, keeping all your data.</p>
   </div>
   <div class="planes">
     <div class="plan reveal">
-      <h3>Esencial</h3><div class="precio">0 €</div>
-      <div class="para">Para probar operando · <b>1 tour · 2 guías · 150 personas/mes</b></div>
+      <h3>Essential</h3><div class="precio">0 €</div>
+      <div class="para">To try it while you operate · <b>1 tour · 2 guides · 150 people/month</b></div>
       <ul>
-        <li>Parte del día y manifiesto móvil del guía (check-in, walk-ins)</li>
-        <li>Buzón de reservas: <b>hasta 2 canales</b> (p. ej. GuruWalk + tu web)</li>
+        <li>Daily brief and the guide’s mobile manifest (check-in, walk-ins)</li>
+        <li>Booking inbox: <b>up to 2 channels</b> (e.g. GuruWalk + your site)</li>
         <li>Recordatorio de confirmación anti-no-show por WhatsApp — 1 toque, el día antes <small>(hasta 100 mensajes/mes)</small></li>
-        <li>Detección de grupos grandes y rescate de rezagados</li>
-        <li>2 guías · <b>150 personas/mes</b> · historial de 30 días</li>
-        <li>Página del guía y propina con marca «con Audutor»</li>
+        <li>Split-group detection and rescue for stragglers</li>
+        <li>2 guides · <b>150 people/month</b> · 30-day history</li>
+        <li>Guide page and tip screen carry a small “with Audutor” mark</li>
         <li>Propina digital: <b>2,5 %</b></li>
       </ul>
-      <a class="btn sec" href="#contacto">Empezar gratis</a>
+      <a class="btn sec" href="#contacto">Start free</a>
     </div>
     <div class="plan destacado reveal" style="--d:110ms">
       <h3>Pro</h3><div class="precio"><span class="imp" data-mensual="59" data-anual="49">59</span> €<small>/mes</small></div>
-      <div class="fact-nota" data-nota hidden>facturado anualmente · 590 €/año (2 meses gratis)</div>
-      <div class="para">Para la empresa de free tours con equipo · <b>6 tours diarios incluidos</b></div>
+      <div class="fact-nota" data-nota hidden>billed annually · 590 €/año (2 months free)</div>
+      <div class="para">For the tour company with a team · <b>6 daily tours included</b></div>
       <ul>
-        <li>Todo lo de Esencial · <b>guías y canales ilimitados</b> —sin bandas ni saltos de precio al crecer el equipo— · historial completo · <b>+15 €/tour</b> a partir del séptimo</li>
-        <li>Sin marca «Audutor» — tu marca en la propina y la página del guía</li>
+        <li>Todo lo de Essential · <b>guías y canales ilimitados</b> —sin bandas ni saltos de precio al crecer el equipo— · historial completo · <b>+15 €/tour</b> a partir del séptimo</li>
+        <li>No Audutor branding — your brand on the tip screen and the guide page</li>
         <li><b>Cadencia anti-no-show inteligente completa</b>: se adapta al riesgo de cada
           reserva — y deja registrado quién avisó, cuándo y quién confirmó</li>
         <li>Mensajes WhatsApp <b>sin tope</b></li>
         <li><b>Conciliación con plataformas</b>: recupera las comisiones de los no-shows —
           € recuperados este mes, en negro sobre blanco</li>
-        <li><b>GuIA</b>: el asistente que atiende tu chat y no inventa</li>
+        <li><b>GuIA</b>: the assistant that answers your chat and never makes things up</li>
         <li><b>Liquidación a guías</b>: reparto configurable, cuenta cuadrada</li>
         <li><b>Carrito abandonado y combos</b>: la segunda venta, sola</li>
         <li>Propina digital: <b>1,9 %</b></li>
       </ul>
-      <a class="btn" href="#contacto">Pedir una demo</a>
+      <a class="btn" href="#contacto">Book a demo</a>
     </div>
     <div class="plan premium reveal" style="--d:220ms">
       <h3>Premium</h3><div class="precio"><span class="imp" data-mensual="179" data-anual="149">179</span> €<small>/mes</small></div>
-      <div class="fact-nota" data-nota hidden>facturado anualmente · 1.790 €/año (2 meses gratis)</div>
-      <div class="para">Todo Audutor · <b>tours y guías ilimitados</b> — para operadores que escalan</div>
+      <div class="fact-nota" data-nota hidden>billed annually · 1.790 €/año (2 months free)</div>
+      <div class="para">All of Audutor · <b>unlimited tours and guides</b> — for operators that are scaling</div>
       <ul>
         <li>Todo lo del plan Pro · <b>tours ilimitados</b> (sin coste por tour)</li>
         <li><b>Cuadro de mando</b>: analítica por tour, guía, canal y franja</li>
@@ -687,7 +672,7 @@
         <li>Soporte prioritario y onboarding dedicado</li>
         <li>Próximamente: cobro online, facturación y channel manager de pago</li>
       </ul>
-      <a class="btn" href="#contacto">Quiero Premium</a>
+      <a class="btn" href="#contacto">I want Premium</a>
     </div>
   </div>
   <p class="reveal" style="text-align:center; color:var(--muted); font-size:14px; margin:16px 0 0;">
@@ -695,7 +680,7 @@
     Un software que cobra por usuario te costaría el triple con 5 guías.</p>
   <div class="addon reveal">
     <div class="t">
-      <h3>💳 Propina digital — se cobra en el momento, con el móvil del guía</h3>
+      <h3>💳 Digital tips — taken on the spot, on the guide’s phone</h3>
       <p>Al acabar el tour, <b>el cliente acerca su tarjeta al móvil del guía</b> y listo: cobrado ahí
       mismo, sin esperar a ver si alguien escanea algo. <b>¿Tu equipo ya usa SumUp o un datáfono? Perfecto:
       sigue con lo suyo y nosotros no cobramos nada por esos cobros</b> — Audutor los anota igual. Solo hay
@@ -704,9 +689,9 @@
       en el mismo gesto, y tu parte se cuadra sola en la <b>liquidación</b>.</p>
     </div>
     <div class="tramos">
-      <div class="tramo"><span class="p">0 %</span><span class="n">cobrando en mano</span></div>
-      <div class="tramo"><span class="p">1,9 %</span><span class="n">+ 0,30 € por enlace o QR</span></div>
-      <span class="nota"><b>Todo incluido: la pasarela va dentro del 1,9 %, no se suma aparte.</b> Y cobrando en mano —SumUp, datáfono, Bizum— no te cobramos nada: solo hay comisión cuando el cobro lo hacemos nosotros.</span>
+      <div class="tramo"><span class="p">0 %</span><span class="n">charging in person</span></div>
+      <div class="tramo"><span class="p">1,9 %</span><span class="n">+ €0.30 per link or QR</span></div>
+      <span class="nota"><b>Todo incluido: la pasarela va dentro del 1,9 %, no se suma aparte.</b> Y charging in person —SumUp, datáfono, Bizum— no te cobramos nada: solo hay comisión cuando el cobro lo hacemos nosotros.</span>
     </div>
   </div>
 </div></section>
@@ -730,7 +715,7 @@
       </ul>
       <div class="web-precio">
         <span class="wp">12 €<small>/mes</small></span>
-        <span class="wn">add-on en <b>Esencial</b> y <b>Pro</b> · <b>incluida en Premium</b></span>
+        <span class="wn">add-on en <b>Essential</b> y <b>Pro</b> · <b>incluida en Premium</b></span>
       </div>
       <p class="web-comp"><b>Web + reservas + asistente por menos que Wix.</b> Los constructores
       te cobran más y te dejan el trabajo a ti; FareHarbor cobra 499 $/mes por su web. Aquí nace
@@ -788,7 +773,7 @@
 
 <section class="alt" id="porque"><div class="wrap">
   <div class="sec-head">
-    <h2 data-split>Por qué Audutor y no el software de siempre</h2>
+    <h2 data-split>Why Audutor and not the usual software</h2>
     <p class="reveal">El software de reservas clásico se hizo para vender tickets. El día a día de
     una empresa de tours a pie — guías, propinas, no-shows, grupos partidos, cinco plataformas —
     se quedó fuera. <b>Nosotros lo hicimos al revés: pensado para el guía en el punto de encuentro a
@@ -820,16 +805,16 @@
     <svg class="guia" aria-hidden="true" focusable="false"><use href="#guia"/></svg>
     <p class="bocadillo"><b>¿Empezamos?</b> Yo estaré dentro, atendiendo a tus clientes.</p>
   </div>
-  <h2 data-split>Lo estamos abriendo a las primeras empresas</h2>
+  <h2 data-split>We’re opening it to our first companies</h2>
   <p class="reveal">Audutor funciona ya cada día en una operación real de free tours en Madrid.
   Buscamos un grupo pequeño de empresas fundadoras para probarlo con ventajas de por vida:
   cuéntanos cómo trabajas y te lo enseñamos con tus propios tours.</p>
-  <a class="btn reveal" style="--d:120ms" href="#contacto">Quiero ser empresa fundadora</a>
+  <a class="btn reveal" style="--d:120ms" href="#contacto">I want to be a founding company</a>
 </div>
 
 <footer><div class="wrap">
   <span class="logo pie" aria-label="Audutor"><span class="wm">Audutor<svg class="ruta" viewBox="0 0 100 14" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M1 10.5 Q 24 5 46 9 T 86 8"/><path class="rpin" d="M93 1.2c-2.6 0-4.7 2.1-4.7 4.7 0 3.4 4.7 7.5 4.7 7.5s4.7-4.1 4.7-7.5c0-2.6-2.1-4.7-4.7-4.7z"/><circle class="rhueco" cx="93" cy="6" r="1.8"/></svg></span></span>
-  <span id="contacto">© 2026 Audutor · <b>dominio y email de contacto en trámite</b> · Hecho en Madrid</span>
+  <span id="contacto">© 2026 Audutor · <b>domain and contact email in progress</b> · Made in Madrid</span>
   <span>Reservas · Canales · Guías · Grupos · Rescate · Propinas · GuIA</span>
 </div></footer>
 
