@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Audutor — the operations layer for tour companies</title>
-<meta name="description" content="La capa operativa para empresas de tours y free tours: reservas multicanal, guías, no-shows, grupos, propinas y un asistente IA que no inventa. Modulable según tu tarifa y tu intensidad.">
+<title>Audutor — the operations layer for walking and free tour companies</title>
+<meta name="description" content="The operations layer for walking and free tour companies: bookings from every channel, guides, no-shows, split groups, tips and an assistant that never makes things up.">
 <style>
   :root{
     --ink:#1f2a25; --ink2:#4a5d54; --muted:#74857d; --bg:#faf6ec; --paper:#fffdf7;
@@ -90,8 +90,20 @@
   }
 
   /* ================= nav ================= */
-  nav{ position:sticky; top:0; z-index:50; background:rgba(250,246,236,.92);
-       backdrop-filter:blur(8px); border-bottom:1px solid var(--line); }
+  nav{ position:sticky; top:0; z-index:50; background:rgba(18,63,51,.94);
+       backdrop-filter:blur(8px); border-bottom:1px solid rgba(255,253,247,.14); }
+  nav .logo{ color:#fffdf7; }
+  nav .logo .ruta .rhueco{ fill:var(--deep); }
+  nav .logo .ruta .rpin{ fill:var(--coral); }        /* un pin verde sobre verde no se ve */
+  nav .lang-sw{ background:rgba(255,253,247,.10); border-color:rgba(255,253,247,.30);
+    color:#fffdf7; }
+  nav .lang-sw:hover{ background:rgba(255,253,247,.18); border-color:#fffdf7; color:#fff; }
+  nav .links a{ color:rgba(255,253,247,.84); }
+  nav .links a:hover{ color:#fff; }
+  nav .links a.btn{ color:#fff !important; }
+  nav .links a.btn.sec{ color:#fffdf7 !important; border-color:rgba(255,253,247,.55);
+    background:transparent; }
+  nav .links a.btn.sec:hover{ background:rgba(255,253,247,.14); border-color:#fffdf7; }
   nav .wrap{ display:flex; align-items:center; gap:26px; padding:14px 24px; }
   .logo{ font-family:var(--serif); font-weight:700; font-size:21px; color:var(--ink);
          text-decoration:none; line-height:1.05; }
@@ -222,7 +234,7 @@
   .plan.premium{ position:relative; z-index:2; color:var(--ink); border:1.5px solid var(--gold);
     background:linear-gradient(165deg,#fff9ea 0%,#fbeecb 100%);
     box-shadow:0 24px 52px rgba(163,106,16,.18); transform:translateY(-12px); }
-  .plan.premium::before{ content:"★ The full thing"; position:absolute; top:-13px; left:50%;
+  .plan.premium::before{ content:"★ Everything included"; position:absolute; top:-13px; left:50%;
     transform:translateX(-50%); background:linear-gradient(90deg,var(--gold),#e2ab48); color:#231400;
     font-size:11.5px; font-weight:800; letter-spacing:.05em; padding:4px 16px; border-radius:99px;
     text-transform:uppercase; white-space:nowrap; box-shadow:0 6px 16px rgba(201,138,45,.45); }
@@ -465,10 +477,10 @@
 <div id="progreso"></div>
 
 <nav><div class="wrap">
-  <a class="logo" href="#" aria-label="Audutor, inicio"><span class="wm">Audutor<svg class="ruta" viewBox="0 0 100 14" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M1 10.5 Q 24 5 46 9 T 86 8"/><path class="rpin" d="M93 1.2c-2.6 0-4.7 2.1-4.7 4.7 0 3.4 4.7 7.5 4.7 7.5s4.7-4.1 4.7-7.5c0-2.6-2.1-4.7-4.7-4.7z"/><circle class="rhueco" cx="93" cy="6" r="1.8"/></svg></span></a>
+  <a class="logo" href="#" aria-label="Audutor, home"><span class="wm">Audutor<svg class="ruta" viewBox="0 0 100 14" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M1 10.5 Q 24 5 46 9 T 86 8"/><path class="rpin" d="M93 1.2c-2.6 0-4.7 2.1-4.7 4.7 0 3.4 4.7 7.5 4.7 7.5s4.7-4.1 4.7-7.5c0-2.6-2.1-4.7-4.7-4.7z"/><circle class="rhueco" cx="93" cy="6" r="1.8"/></svg></span></a>
   <div class="links">
     <a href="#producto" data-i18n="nav.producto">Product</a>
-    <a href="#dia" data-i18n="nav.dia">A day</a>
+    <a href="#dia" data-i18n="nav.dia">A day in the life</a>
     <a href="#planes" data-i18n="nav.planes">Pricing</a>
     <a href="#web" data-i18n="nav.web">Your site</a>
     <a class="btn" href="../demo-en/" data-demo data-i18n="nav.demo">Try the demo</a>
@@ -496,37 +508,37 @@
       <div class="kicker reveal" style="--d:80ms" data-i18n="hero.kicker">Operations software for walking and free tour companies with a team of guides</div>
       <h1 data-split data-i18n="hero.h1">Your booking system forgets everything that happens after the booking.</h1>
       <p class="lede reveal" style="--d:120ms">Audutor is <b>your tour company’s operations layer</b>:
-      it messages your customers so they actually turn up, rescues whoever gets lost, spots split groups, settles every tour to the penny, and pulls bookings from all your channels into one place. <b>Modular</b>: start with two modules and grow when you want to.</p>
+      it messages your customers so they actually turn up, gets stragglers back to the group, spots the bookings that are really one group, and settles every tour to the penny. Every channel’s bookings land in one list. <b>Modular</b>: start with two modules and grow when you want to.</p>
       <div class="hero-ctas reveal" style="--d:220ms">
         <a class="btn" href="../demo-en/" data-demo>🖱️ Try the interactive demo</a>
         <a class="btn sec" href="#contacto">Book a guided demo</a>
       </div>
-      <p class="hero-nota reveal" style="--d:300ms">It already runs a real free tour operation in Madrid every day — this wasn’t born in a meeting room. And getting started takes an afternoon: forward your booking emails and the inbox builds the rest. No migration, no lock-in.</p>
+      <p class="hero-nota reveal" style="--d:300ms">It runs a real free tour operation in Madrid every day — it wasn’t dreamed up in a boardroom. Setting it up takes an afternoon: forward your booking emails and the inbox fills itself in. Nothing to migrate, nothing to sign.</p>
       <div class="guia-saludo reveal" style="--d:380ms">
         <svg class="guia" aria-hidden="true" focusable="false"><use href="#guia"/></svg>
-        <p class="bocadillo"><b>Hi! I’m GuIA.</b> I look after your customers while you’re out guiding — confirming, reminding and rescuing whoever gets lost. I only ping you when I genuinely need you.</p>
+        <p class="bocadillo"><b>Hi! I’m GuIA.</b> I look after your customers while you’re out guiding — confirming, reminding and rescuing whoever gets lost. I only come to you when I really need you.</p>
       </div>
     </div>
 
     <div class="mock reveal" style="--d:260ms" aria-hidden="true">
       <div class="mock-pop pop1">👥 <b>Split group detected</b> — 2 bookings, same phone number = 11 people. Deposit policy flagged in their confirmation.</div>
       <div class="mock-card principal">
-        <div class="mock-head">🕒 10:00 · Free tour centro <span class="chipv">en marcha</span></div>
-        <div class="mock-sem">📨 12/14 avisadas · ✓ 9 confirmed · <b>⏰ 1 running late (3p)</b> · 2 not responder</div>
-        <div class="mock-row ok"><span>Ana García · 4p</span><span>✓ checked in</span></div>
-        <div class="mock-row"><span>Marco Bianchi · 2p</span><span>pending</span></div>
-        <div class="mock-row ok"><span>Familia Dupont · 5p</span><span>✓ checked in</span></div>
+        <div class="mock-head">🕒 10:00 AM · Old Town free tour <span class="chipv">running now</span></div>
+        <div class="mock-sem">📨 12/14 messaged · ✓ 9 confirmed · <b>⏰ 1 running late (3 people)</b> · 2 no reply</div>
+        <div class="mock-row ok"><span>Hartley party · 4 people</span><span>✓ checked in</span></div>
+        <div class="mock-row"><span>Marco Bianchi · 2 people</span><span>pending</span></div>
+        <div class="mock-row ok"><span>Dupont party · 5 people</span><span>✓ checked in</span></div>
         <button>📍 Share where the group is</button>
       </div>
-      <div class="mock-pop pop2">⛑️ <b>«I’m lost»</b> → GuIA sent them the group’s map (the guide’s location, 2 min ago). Without sharing any number.</div>
+      <div class="mock-pop pop2">⛑️ <b>“I’m lost”</b> → GuIA sent them the group’s map (the guide’s location, 2 min ago). Without sharing any number.</div>
     </div>
   </div>
 
   <div class="cifras">
-    <div class="cifra reveal"><span class="v">£2.50</span><span class="l">is what every platform booking costs you — whether they show up or not. A no-show costs the same.</span></div>
-    <div class="cifra reveal" style="--d:90ms"><span class="v">5 places</span><span class="l">is where your operation lives today: extranets, spreadsheets, WhatsApp, email and the manager’s memory. Here, one.</span></div>
+    <div class="cifra reveal"><span class="v">£2.50</span><span class="l">— roughly what each booking through a platform costs you, whether anyone turns up or not.</span></div>
+    <div class="cifra reveal" style="--d:90ms"><span class="v">5 places</span><span class="l">— that’s how many places your operation lives in today: extranets, spreadsheets, WhatsApp, email and whatever the manager remembers. With Audutor, one.</span></div>
     <div class="cifra reveal" style="--d:180ms"><span class="v">Tour by tour</span><span class="l">you see what came in, what the platform took and what’s left. No spreadsheet.</span></div>
-    <div class="cifra reveal" style="--d:270ms"><span class="v">0 %</span><span class="l">commission on your bookings. We’re not an OTA and we don’t belong to one.</span></div>
+    <div class="cifra reveal" style="--d:270ms"><span class="v">0%</span><span class="l">commission on your bookings. We’re not an OTA and we don’t belong to one.</span></div>
   </div>
 </div></header>
 
@@ -548,19 +560,19 @@
       and nobody notices it’s one group. Audutor matches them up — phone, email, surname, time — and
       applies your policy: a note on their confirmation and a heads-up to the guide.</p>
       <span class="mini">module: groups · only on Audutor</span></div>
-    <div class="celda reveal"><span class="ico">💶</span><h3>Payouts to the penny</h3>
-      <p>Tips or ticket price, channel fees, configurable guide/company split — tour by tour, with an export for your accountant. The guide never pays: that’s a rule of the system.</p>
+    <div class="celda reveal"><span class="ico">💰</span><h3>Payouts to the penny</h3>
+      <p>Tips or ticket price, channel fees, configurable guide/company split — tour by tour, with an export for your accountant. The guide is never out of pocket — that’s built in.</p>
       <span class="mini">module: money</span></div>
     <div class="celda celda-guia reveal" style="--d:70ms"><svg class="ico-svg" aria-hidden="true" focusable="false"><use href="#guia"/></svg><h3>An assistant that never makes things up</h3>
-      <p>GuIA answers 24/7, cancels, moves a date or tells the guide someone’s running late — using only the booking code and only real facts from your business. Whatever it doesn’t know, it hands to you.</p>
+      <p>GuIA answers 24/7, cancels, moves a date or tells the guide someone’s running late — using only the booking code and only real facts from your business. Anything it doesn’t know goes straight to you.</p>
       <span class="mini">module: AI assistant</span></div>
     <div class="celda reveal" style="--d:140ms"><span class="ico">🧑‍🤝‍🧑</span><h3>Your guides, no accounts, no faff</h3>
-      <p>Every guide gets their own link: today’s tour, one-tap check-in, walk-ins, availability and their own numbers. Permissions you decide — who sees what, who marks what.</p>
+      <p>Every guide gets their own link: today’s tour, one-tap check-in, walk-ins, availability and their own numbers. You set the permissions: who can see what, and who can change it.</p>
       <span class="mini">module: team</span></div>
-    <div class="celda reveal"><span class="ico">📊</span><h3>Exception-based operations</h3>
-      <p>A daily brief with what needs you — tours without a guide, over capacity, a waiting list with a free spot, bad reviews — and nothing else. If there’s nothing, it says so and you get on with your day.</p>
+    <div class="celda reveal"><span class="ico">📊</span><h3>Only the things that need you</h3>
+      <p>A daily brief with the things that need a decision — tours with no guide, tours over capacity, a waiting list with a place free, a bad review — and nothing else. If there’s nothing, it says so and you get on with your day.</p>
       <span class="mini">module: operations</span></div>
-    <div class="celda reveal" style="--d:70ms"><span class="ico">📥</span><h3>Multi-channel bookings, on their own</h3>
+    <div class="celda reveal" style="--d:70ms"><span class="ico">📥</span><h3>Every channel, in one inbox</h3>
       <p>Bookings from GuruWalk, FreeTour, Viator, GetYourGuide and your own site arrive and keep
       themselves up to date — new bookings, date changes, cancellations. No API to set up and nothing
       to retype: we read the platform emails for you.</p><span class="mini">module: channels</span></div>
@@ -585,11 +597,11 @@
     <div class="hito reveal"><span class="hora">8:41 AM</span><span class="punto"></span>
       <div class="que"><b>3 bookings land from GuruWalk, 1 from Viator.</b> On their own. Two share a surname, 4 minutes apart: Audutor puts them together — 9 people — and flags the group policy in their confirmation.</div></div>
     <div class="hito reveal"><span class="hora">9:15 AM</span><span class="punto"></span>
-      <div class="que"><b>Tomorrow’s reminders go out by SMS.</b> One replies “we’re 5 now” — the booking updates itself and the guide sees it on the manifest. (SMS, not WhatsApp: that’s what your customers actually read here.)</div></div>
+      <div class="que"><b>Tomorrow’s reminders go out by SMS.</b> One replies “we’re 5 now” — the booking updates itself and the guide sees it on the manifest. (SMS rather than WhatsApp — it reaches their phone without an app or a data plan.)</div></div>
     <div class="hito reveal"><span class="hora">10:58 AM</span><span class="punto"></span>
       <div class="que"><b>“I’m lost, I can’t find the group.”</b> GuIA checks their code, sends the map with the location the guide shared at the last stop, and leaves a note on the tour. Nobody had to phone anybody.</div></div>
     <div class="hito reveal"><span class="hora">2:15 PM</span><span class="punto"></span>
-      <div class="que"><b>End of the free tour: the guide takes the tip.</b> Card in hand, tapped on the guide’s phone — no set amount suggested, as the CAP/ASA rules require. The review comes in the same motion. Two no-shows show up on the board: tomorrow those reminders go out earlier.</div></div>
+      <div class="que"><b>End of the free tour: the guide takes the tip.</b> Card in hand, tapped on the guide’s phone — no set amount suggested, as the CAP/ASA rules require. The review comes with the same tap. Two no-shows land on the board: tomorrow those reminders go out earlier.</div></div>
     <div class="hito reveal"><span class="hora">11:00 PM</span><span class="punto"></span>
       <div class="que"><b>The day settles itself.</b> Tips and ticket sales, channel fees, the guide’s share and the company’s — tour by tour, ready for your accountant. Plus tomorrow’s brief: “2 things to check”.</div></div>
   </div>
@@ -612,63 +624,63 @@
     true of software priced per user. No lock-in, and no contract to get out of.</p>
   </div>
   <div class="fact-toggle-wrap reveal">
-    <div class="fact-toggle" role="radiogroup" aria-label="Periodo de facturación" id="factToggle">
+    <div class="fact-toggle" role="radiogroup" aria-label="Billing period" id="factToggle">
       <button type="button" role="radio" aria-checked="true" data-modo="mensual">Monthly</button>
-      <button type="button" role="radio" aria-checked="false" data-modo="anual">Annual <span class="dto">−17 %</span></button>
+      <button type="button" role="radio" aria-checked="false" data-modo="anual">Annual <span class="dto">Save 17%</span></button>
     </div>
-    <p class="pausa">The annual plan turns 12 decisions into one — and in the off season you can pause for up to 2 months, keeping all your data.</p>
+    <p class="pausa">Pay annually and it’s one decision instead of twelve. In the off-season you can pause for up to 2 months and keep all your data.</p>
   </div>
   <div class="planes">
     <div class="plan reveal">
-      <h3>Essential</h3><div class="precio">0 €</div>
-      <div class="para">To try it while you operate · <b>1 tour · 2 guides · 150 people/month</b></div>
+      <h3>Essential</h3><div class="precio">€0</div>
+      <div class="para">For trying it out on a live operation · <b>1 tour · 2 guides · 150 people a month</b></div>
       <ul>
         <li>Daily brief and the guide’s mobile manifest (check-in, walk-ins)</li>
         <li>Booking inbox: <b>up to 2 channels</b> (e.g. GuruWalk + your site)</li>
-        <li>Anti-no-show confirmation reminder by SMS or WhatsApp — one tap, the day before <small>(up to 100 messages/month)</small></li>
+        <li>Confirmation reminder by SMS or WhatsApp the day before — one tap for the customer, and you know who is coming <small>(up to 100 messages a month)</small></li>
         <li>Split-group detection and rescue for stragglers</li>
         <li>2 guides · <b>150 people/month</b> · 30-day history</li>
-        <li>Guide page and tip screen carry a small “with Audutor” mark</li>
+        <li>A small “with Audutor” badge shows on the guide page and the tip screen</li>
         <li>Digital tips: <b>2.5&nbsp;%</b></li>
       </ul>
       <a class="btn sec" href="#contacto">Start free</a>
     </div>
     <div class="plan destacado reveal" style="--d:110ms">
-      <h3>Pro</h3><div class="precio"><span class="imp" data-mensual="59" data-anual="49">59</span> €<small>/mes</small></div>
-      <div class="fact-nota" data-nota hidden>billed annually · 590 €/año (2 months free)</div>
-      <div class="para">For the tour company with a team · <b>6 daily tours included</b></div>
+      <h3>Pro</h3><div class="precio">€<span class="imp" data-mensual="59" data-anual="49">59</span><small>/month</small></div>
+      <div class="fact-nota" data-nota hidden>billed annually · €590/year (2 months free)</div>
+      <div class="para">For companies running a team of guides · <b>6 tours a day included</b></div>
       <ul>
-        <li>Everything in Essential · <b>unlimited guides and channels</b> — no bands, no price jumps as the team grows — · full history · <b>+15 €/tour</b> from the seventh</li>
+        <li>Everything in Essential · <b>unlimited guides and channels</b> — no bands, no price jumps as the team grows — · full history · <b>+€15 per tour</b> beyond the sixth</li>
         <li>No Audutor branding — your brand on the tip screen and the guide page</li>
         <li><b>The full smart anti-no-show sequence</b>: it adapts to how risky each booking looks — and
           leaves a record of who was contacted, when, and who confirmed</li>
         <li><b>Unlimited</b> SMS and WhatsApp messages</li>
-        <li><b>Platform reconciliation</b>: claw back the fees you paid on people who never turned up — money recovered this month, in black and white</li>
+        <li><b>Platform reconciliation</b>: claw back the fees you paid on people who never turned up — with a running total of what you have reclaimed this month</li>
         <li><b>GuIA</b>: the assistant that answers your chat and never makes things up</li>
-        <li><b>Guide payouts</b>: your own split, and the numbers add up</li>
-        <li><b>Abandoned checkout and tour combos</b>: the second sale, on its own</li>
+        <li><b>Guide payouts</b>: your own split, worked out tour by tour — and the totals reconcile</li>
+        <li><b>Abandoned checkouts and tour bundles</b>: the follow-up sale happens without you</li>
         <li>Digital tips: <b>1.9&nbsp;%</b></li>
       </ul>
       <a class="btn" href="#contacto">Book a demo</a>
     </div>
     <div class="plan premium reveal" style="--d:220ms">
-      <h3>Premium</h3><div class="precio"><span class="imp" data-mensual="179" data-anual="149">179</span> €<small>/mes</small></div>
-      <div class="fact-nota" data-nota hidden>billed annually · 1.790 €/año (2 months free)</div>
-      <div class="para">All of Audutor · <b>unlimited tours and guides</b> — for operators that are scaling</div>
+      <h3>Premium</h3><div class="precio">€<span class="imp" data-mensual="179" data-anual="149">179</span><small>/month</small></div>
+      <div class="fact-nota" data-nota hidden>billed annually · €1,790/year (2 months free)</div>
+      <div class="para">Everything Audutor does · <b>unlimited tours and guides</b> — for operators running several tours a day</div>
       <ul>
         <li>Everything in Pro · <b>unlimited tours</b> (no per-tour cost)</li>
-        <li><b>Operations dashboard</b>: the numbers by tour, guide, channel and time slot</li>
+        <li><b>Analytics</b>: the numbers by tour, guide, channel and time slot</li>
         <li><b>Digital tips</b> — 0&nbsp;% when the guide takes the money in person; 1.9&nbsp;% + €0.30 <b>all in</b> when we take the payment</li>
         <li>Priority support and hands-on setup</li>
         <li>Coming next: online payments, invoicing and a channel manager for ticketed tours</li>
       </ul>
-      <a class="btn" href="#contacto">I want Premium</a>
+      <a class="btn" href="#contacto">Talk to us about Premium</a>
     </div>
   </div>
   <p class="reveal" style="text-align:center; color:var(--muted); font-size:14px; margin:16px 0 0;">
-    Example: 8 daily tours with whatever team you need → <b>Pro 89 €/month</b> (59 € + 2 extra tours).
-    Software priced per guide jumps to 175 €/month the moment you hire your tenth.
-    <br><small>Prices in euros — that’s what we bill in, in the UK too. Your card does the conversion and we add no FX fee of our own.</small></p>
+    Example: 8 tours a day, with as many guides as you need → <b>Pro at €89/month</b> (€59 plus 2 extra tours).
+    Software priced per guide jumps to €175/month the moment you take on a tenth guide.
+    <br><small>We bill in euros, in the UK as everywhere else. Your bank converts at its own rate and we add no currency fee on top.</small></p>
   <div class="addon reveal">
     <div class="t">
       <h3>💳 Digital tips — taken on the spot, on the guide’s phone</h3>
@@ -676,13 +688,13 @@
       paid there and then, instead of hoping someone scans something on their way to lunch.
       <b>Already using SumUp or a card reader? Keep it — we charge nothing on those payments</b>, and
       Audutor still logs every one. There’s only a fee when Audutor takes the money: the link the
-      assistant sends to whoever walked off without paying, and the QR for groups. The tip always goes
+      assistant sends to anyone who left before they had a chance to tip, and the QR code for groups. The tip always goes
       <b>straight into the guide’s own account</b>, the review comes in the same motion, and your share
       settles itself in the payout.</p>
     </div>
     <div class="tramos">
-      <div class="tramo"><span class="p">0 %</span><span class="n">charging in person</span></div>
-      <div class="tramo"><span class="p">1,9 %</span><span class="n">+ €0.30 per link or QR</span></div>
+      <div class="tramo"><span class="p">0%</span><span class="n">taken in person</span></div>
+      <div class="tramo"><span class="p">1.9%</span><span class="n">+ €0.30 per link or QR</span></div>
       <span class="nota"><b>All in: card processing is inside the 1.9&nbsp;%, not added on top.</b> Take it in
       person — SumUp, your own card reader, cash — and we charge nothing at all. There is only ever a fee
       when the payment goes through us.</span>
@@ -695,14 +707,14 @@
     <div>
       <span class="web-chip">✨ Add-on · your website included</span>
       <h2>Your website, already built. You had the data all along.</h2>
-      <p class="lead">Audutor builds your company website with AI <b>straight from your assistant’s brain</b>:
+      <p class="lead">Audutor builds your company website from everything your assistant already knows:
       tours, the meeting point and how to spot the guide, times, languages, policies and reviews. Live in
-      minutes on <b>yourname.yourdomain</b> — or on your own domain, if you’d rather. Change a time or add
+      minutes on <b>an address we set up for you</b> — or on your own domain, if you’d rather. Change a time or add
       a tour and the site updates itself.</p>
       <ul>
         <li><b>Real bookings built in</b>: availability by language and time slot with instant confirmation — no plugins, no iframes, no booking fee</li>
         <li><b>GuIA behind one chat button</b>: the questions people ask before booking are handled by your assistant, not by your evenings</li>
-        <li><b>Multilingual and GDPR-ready out of the box</b>: the legal notices are written and your data stays in the EU, without you touching a thing</li>
+        <li><b>Multilingual, with your privacy and cookie notices already written</b>: nothing for you to draft, and nothing to plug in</li>
       </ul>
       <div class="web-precio">
         <span class="wp">12 €<small>/mes</small></span>
@@ -737,24 +749,32 @@
     <div class="calc-panel">
       <div class="calc-campo">
         <label for="inReservas">Monthly revenue from online bookings</label>
-        <output id="outReservas" for="inReservas">6.000 €</output>
+        <output id="outReservas" for="inReservas">€6,000</output>
         <input type="range" id="inReservas" min="0" max="10000" step="100" value="6000">
-        <div class="calc-escala" aria-hidden="true"><span>0 €</span><span>10.000 €</span></div>
+        <div class="calc-escala" aria-hidden="true"><span>€0</span><span>€10,000</span></div>
       </div>
       <div class="calc-campo">
         <label for="inPropinas">Digital tips per month</label>
-        <output id="outPropinas" for="inPropinas">2.000 €</output>
+        <output id="outPropinas" for="inPropinas">€2,000</output>
         <input type="range" id="inPropinas" min="0" max="8000" step="100" value="2000">
-        <div class="calc-escala" aria-hidden="true"><span>0 €</span><span>8.000 €</span></div>
+        <div class="calc-escala" aria-hidden="true"><span>€0</span><span>€8,000</span></div>
+      </div>
+      <div class="calc-campo">
+        <label for="inEquipo">People who need an account</label>
+        <output id="outEquipo" for="inEquipo">4</output>
+        <input type="range" id="inEquipo" min="1" max="20" step="1" value="4">
+        <div class="calc-escala" aria-hidden="true"><span>1</span><span>20</span></div>
       </div>
     </div>
     <div>
       <div class="barras" id="barras"></div>
       <div class="calc-ahorro" id="calcAhorro" aria-live="polite"></div>
       <p class="calc-fuente">Taken from each product’s own public pricing page in July 2026 (turitop.com,
-      trekksoft.com, bokun.io, fareharbor.com). Competitors may add charges we haven’t counted here —
-      per ticket, per user, or for card processing. A guide to the order of magnitude, for a walking
-      tour company.</p>
+      trekksoft.com, bokun.io, fareharbor.com). <b>Donicus is an estimate:</b> they do not publish a
+      price, so we use the €49 per user, per month starting figure listed on Capterra — check it
+      against your own quote before you rely on it. Competitors may add charges we haven’t counted
+      here, per ticket or for card processing. These are rough figures, for a walking tour
+      company.</p>
     </div>
   </div>
 </div></section>
@@ -762,22 +782,22 @@
 <section class="alt" id="porque"><div class="wrap">
   <div class="sec-head">
     <h2 data-split>Why Audutor and not the usual software</h2>
-    <p class="reveal">Classic booking software was built to sell tickets. The day-to-day of a walking tour company — guides, tips, no-shows, split groups, five platforms — was left out. <b>We started at the other end: from the guide standing at the meeting point at 10:15, counting heads.</b> That’s why your team actually uses it.</p>
+    <p class="reveal">Classic booking software was built to sell tickets. The day-to-day of a walking tour company — guides, tips, no-shows, split groups, five platforms — was left out. <b>We started at the other end: with the guide standing at the meeting point at 10:15 AM, counting heads.</b> That’s why your team actually uses it.</p>
   </div>
   <div class="vs reveal">
     <div class="vs-row"><div>The usual booking software</div><div>Audutor</div></div>
     <div class="vs-row"><div class="malo">Handles the <b>booking</b>: it lands in a dashboard and that’s where its job ends</div>
       <div class="bueno">Handles the <b>operation</b>: everything between the booking landing and the tour ending</div></div>
-    <div class="vs-row"><div class="malo">Takes 3–6 % of every booking (or charges your customer at checkout)</div>
-      <div class="bueno">Flat subscription. On a free tour there’s no ticket to take a percentage of — we build for that, they don’t</div></div>
+    <div class="vs-row"><div class="malo">Takes 3–6% of every booking (or adds a fee at your customer’s checkout)</div>
+      <div class="bueno">Flat subscription. On a free tour there’s no ticket price to take a cut of — that’s the model Audutor was built for</div></div>
     <div class="vs-row"><div class="malo">Owned by an OTA that competes with you for your own customer</div>
       <div class="bueno">Neutral: we’re not an OTA and we don’t hand your data to one</div></div>
-    <div class="vs-row"><div class="malo">Guides, tips and actually answering customers end up in a spreadsheet and a WhatsApp group</div>
-      <div class="bueno">Real check-in, walk-ins, groups, splits and payouts per tour — the “after” is the product</div></div>
+    <div class="vs-row"><div class="malo">Guides, tips and customer messages all end up in a spreadsheet and a WhatsApp group</div>
+      <div class="bueno">Real check-in, walk-ins, groups, split bookings and payouts, tour by tour — what happens after the booking is the product</div></div>
     <div class="vs-row"><div class="malo">A chatbot that invents the meeting point</div>
-      <div class="bueno">GuIA only states facts that are really in your business; anything doubtful comes to you. Always</div></div>
+      <div class="bueno">GuIA answers only with what is actually in your system. Anything it isn’t sure of comes straight to you, every time</div></div>
     <div class="vs-row"><div class="malo">Support on someone else’s clock, three time zones away</div>
-      <div class="bueno">Built by people who have stood at the meeting point on a Saturday at noon</div></div>
+      <div class="bueno">Support from the people who built it — and who have stood at the meeting point on a wet Saturday morning</div></div>
   </div>
 </div></section>
 
@@ -788,17 +808,17 @@
   <svg class="adorno pin-acento final-pin" viewBox="0 0 24 28" aria-hidden="true" focusable="false"><use href="#pin-acento"/></svg>
   <div class="guia-final reveal">
     <svg class="guia" aria-hidden="true" focusable="false"><use href="#guia"/></svg>
-    <p class="bocadillo"><b>¿Empezamos?</b> Yo estaré dentro, atendiendo a tus clientes.</p>
+    <p class="bocadillo"><b>Shall we get started?</b> I’ll be in there, looking after your customers.</p>
   </div>
-  <h2 data-split>We’re opening it to our first companies</h2>
-  <p class="reveal">Audutor already runs a real free tour operation in Madrid, every day. We’re looking for a small group of founding companies to try it with lifetime terms: tell us how you work and we’ll show it to you with your own tours.</p>
-  <a class="btn reveal" style="--d:120ms" href="#contacto">I want to be a founding company</a>
+  <h2 data-split>We’re taking on our first companies</h2>
+  <p class="reveal">Audutor already runs a real free tour operation in Madrid, every day. We’re looking for a small group of founding companies, on founding-member pricing: tell us how you work and we’ll set up the demo with your own tours.</p>
+  <a class="btn reveal" style="--d:120ms" href="#contacto">Apply as a founding company</a>
 </div>
 
 <footer><div class="wrap">
   <span class="logo pie" aria-label="Audutor"><span class="wm">Audutor<svg class="ruta" viewBox="0 0 100 14" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M1 10.5 Q 24 5 46 9 T 86 8"/><path class="rpin" d="M93 1.2c-2.6 0-4.7 2.1-4.7 4.7 0 3.4 4.7 7.5 4.7 7.5s4.7-4.1 4.7-7.5c0-2.6-2.1-4.7-4.7-4.7z"/><circle class="rhueco" cx="93" cy="6" r="1.8"/></svg></span></span>
-  <span id="contacto">© 2026 Audutor · <b>domain and contact email in progress</b> · Made in Madrid</span>
-  <span>Reservas · Canales · Guías · Grupos · Rescate · Propinas · GuIA</span>
+  <span id="contacto">© 2026 Audutor · <b>domain and contact email coming soon</b> · Made in Madrid</span>
+  <span>Bookings · Channels · Guides · Groups · Rescue · Tips · GuIA</span>
 </div></footer>
 
 <script>
@@ -870,7 +890,9 @@
   // Calculadora de coste total: cuota + % sobre reservas (o sobre propinas, en Audutor).
   var inR = document.getElementById('inReservas'), inP = document.getElementById('inPropinas');
   if (inR && inP) {
-    var outR = document.getElementById('outReservas'),
+    var inQ  = document.getElementById('inEquipo'),
+        outQ = document.getElementById('outEquipo'),
+        outR = document.getElementById('outReservas'),
         outP = document.getElementById('outPropinas'),
         cajaBarras = document.getElementById('barras'),
         cajaAhorro = document.getElementById('calcAhorro');
@@ -880,8 +902,7 @@
     };
     var opciones = [
       { id: 'hito',       nombre: 'Audutor Pro',          calcula: function (r, p) { return 59 + 0.019 * p; } },
-      { id: 'tourdash',   nombre: 'TourDash (4-9 guides)', calcula: function (r, p) { return 59; } },
-      { id: 'tourdash2',  nombre: 'TourDash (10-25 guides)', calcula: function (r, p) { return 175; } },
+      { id: 'donicus',    nombre: 'Donicus',           calcula: function (r, p, q) { return 49 * q; } },
       { id: 'turitop',    nombre: 'TuriTop Starter',   calcula: function (r, p) { return 29 + 0.02 * r; } },
       { id: 'trekksoft',  nombre: 'TrekkSoft Starter', calcula: function (r, p) { return 49 + 0.03 * r; } },
       { id: 'bokun',      nombre: 'Bókun Start',       calcula: function (r, p) { return 49 + 0.015 * r; } },
@@ -892,34 +913,36 @@
       fila.className = 'barra-fila' + (o.id === 'hito' ? ' marca' : '');
       fila.innerHTML = '<span class="barra-nombre">' + o.nombre + '</span>' +
         '<span class="barra-pista"><span class="barra-fill"></span></span>' +
-        '<span class="barra-imp"><span class="v">0</span> <small>€/month</small></span>';
+        '<span class="barra-imp"><span class="v">€0</span> <small>/month</small></span>';
       cajaBarras.appendChild(fila);
       o.fila = fila;
       o.fill = fila.querySelector('.barra-fill');
       o.imp = fila.querySelector('.v');
     });
     var recalcula = function () {
-      var r = +inR.value, p = +inP.value;
-      outR.textContent = fmt(r) + ' €';
-      outP.textContent = fmt(p) + ' €';
-      opciones.forEach(function (o) { o.coste = o.calcula(r, p); });
+      var r = +inR.value, p = +inP.value, q = +inQ.value;
+      outR.textContent = '€' + fmt(r);
+      outP.textContent = '€' + fmt(p);
+      outQ.textContent = q + (q === 1 ? ' person' : ' people');
+      opciones.forEach(function (o) { o.coste = o.calcula(r, p, q); });
       var max = Math.max.apply(null, opciones.map(function (o) { return o.coste; }).concat([1]));
       opciones.slice().sort(function (a, b) { return a.coste - b.coste; }).forEach(function (o) {
         cajaBarras.appendChild(o.fila); // reordena de menor a mayor coste
-        o.imp.textContent = fmt(o.coste);
+        o.imp.textContent = '€' + fmt(o.coste);
         o.fill.style.width = (o.coste / max * 100).toFixed(1) + '%';
       });
       var hito = opciones[0];
       var barata = opciones.slice(1).reduce(function (a, b) { return b.coste < a.coste ? b : a; });
       var dif = Math.round(barata.coste - hito.coste);
-      var matiz = '<span class="matiz">TuriTop and Bókun also charge per user as the team grows; ' +
-        'Audutor includes unlimited guides.</span>';
+      var matiz = '<span class="matiz">Donicus charges <b>per person with an account</b>, and TuriTop ' +
+        'and Bókun add per-user costs too — drag the team slider and watch. Audutor includes ' +
+        'unlimited guides from Pro, so that line stays flat.</span>';
       if (dif > 0) {
-        cajaAhorro.innerHTML = 'Audutor saves you <b>' + fmt(dif) + ' €/month — ' +
-          fmt(dif * 12) + ' €/year</b> against ' + barata.nombre + '.' + matiz;
+        cajaAhorro.innerHTML = 'Audutor saves you <b>€' + fmt(dif) + '/month — €' +
+          fmt(dif * 12) + '/year</b> against ' + barata.nombre + '.' + matiz;
       } else if (dif < 0) {
-        cajaAhorro.innerHTML = barata.nombre + ' comes out <b>' + fmt(-dif) +
-          ' €/month cheaper</b> on these numbers — on paper.' + matiz;
+        cajaAhorro.innerHTML = barata.nombre + ' comes out <b>€' + fmt(-dif) +
+          '/month cheaper</b> on these numbers — on the monthly fee alone.' + matiz;
       } else {
         cajaAhorro.innerHTML = 'Level with ' + barata.nombre +
           ' on price — <b>the difference is what happens after the booking</b>.' + matiz;
@@ -927,6 +950,7 @@
     };
     inR.addEventListener('input', recalcula);
     inP.addEventListener('input', recalcula);
+    inQ.addEventListener('input', recalcula);
     recalcula();
   }
 

@@ -90,8 +90,20 @@
   }
 
   /* ================= nav ================= */
-  nav{ position:sticky; top:0; z-index:50; background:rgba(250,246,236,.92);
-       backdrop-filter:blur(8px); border-bottom:1px solid var(--line); }
+  nav{ position:sticky; top:0; z-index:50; background:rgba(18,63,51,.94);
+       backdrop-filter:blur(8px); border-bottom:1px solid rgba(255,253,247,.14); }
+  nav .logo{ color:#fffdf7; }
+  nav .logo .ruta .rhueco{ fill:var(--deep); }
+  nav .logo .ruta .rpin{ fill:var(--coral); }        /* un pin verde sobre verde no se ve */
+  nav .lang-sw{ background:rgba(255,253,247,.10); border-color:rgba(255,253,247,.30);
+    color:#fffdf7; }
+  nav .lang-sw:hover{ background:rgba(255,253,247,.18); border-color:#fffdf7; color:#fff; }
+  nav .links a{ color:rgba(255,253,247,.84); }
+  nav .links a:hover{ color:#fff; }
+  nav .links a.btn{ color:#fff !important; }
+  nav .links a.btn.sec{ color:#fffdf7 !important; border-color:rgba(255,253,247,.55);
+    background:transparent; }
+  nav .links a.btn.sec:hover{ background:rgba(255,253,247,.14); border-color:#fffdf7; }
   nav .wrap{ display:flex; align-items:center; gap:26px; padding:14px 24px; }
   .logo{ font-family:var(--serif); font-weight:700; font-size:21px; color:var(--ink);
          text-decoration:none; line-height:1.05; }
@@ -774,14 +786,22 @@
         <input type="range" id="inPropinas" min="0" max="8000" step="100" value="2000">
         <div class="calc-escala" aria-hidden="true"><span>0 €</span><span>8.000 €</span></div>
       </div>
+      <div class="calc-campo">
+        <label for="inEquipo">Personas del equipo que necesitan cuenta</label>
+        <output id="outEquipo" for="inEquipo">4</output>
+        <input type="range" id="inEquipo" min="1" max="20" step="1" value="4">
+        <div class="calc-escala" aria-hidden="true"><span>1</span><span>20</span></div>
+      </div>
     </div>
     <div>
       <div class="barras" id="barras"></div>
       <div class="calc-ahorro" id="calcAhorro" aria-live="polite"></div>
       <p class="calc-fuente">Precios públicos de las páginas de tarifas de cada producto a julio de
-      2026 (turitop.com, trekksoft.com, bokun.io, fareharbor.com). Los competidores pueden aplicar
-      cargos adicionales (por ticket, usuario o procesamiento) no incluidos. Cálculo orientativo
-      para una empresa de free tours.</p>
+      2026 (turitop.com, trekksoft.com, bokun.io, fareharbor.com). <b>Donicus es una estimación:</b>
+      no publica tarifa, así que usamos los 49 € por usuario y mes que figuran como precio de partida
+      en Capterra — contrástalo con tu presupuesto antes de darlo por bueno. Los competidores pueden
+      aplicar cargos adicionales (por ticket o procesamiento) no incluidos. Cálculo orientativo para
+      una empresa de free tours.</p>
     </div>
   </div>
 </div></section>
@@ -902,7 +922,9 @@
   // Calculadora de coste total: cuota + % sobre reservas (o sobre propinas, en Audutor).
   var inR = document.getElementById('inReservas'), inP = document.getElementById('inPropinas');
   if (inR && inP) {
-    var outR = document.getElementById('outReservas'),
+    var inQ  = document.getElementById('inEquipo'),
+        outQ = document.getElementById('outEquipo'),
+        outR = document.getElementById('outReservas'),
         outP = document.getElementById('outPropinas'),
         cajaBarras = document.getElementById('barras'),
         cajaAhorro = document.getElementById('calcAhorro');
@@ -912,8 +934,7 @@
     };
     var opciones = [
       { id: 'hito',       nombre: 'Audutor Pro',          calcula: function (r, p) { return 59 + 0.019 * p; } },
-      { id: 'tourdash',   nombre: 'TourDash (4-9 guías)', calcula: function (r, p) { return 59; } },
-      { id: 'tourdash2',  nombre: 'TourDash (10-25 guías)', calcula: function (r, p) { return 175; } },
+      { id: 'donicus',    nombre: 'Donicus',           calcula: function (r, p, q) { return 49 * q; } },
       { id: 'turitop',    nombre: 'TuriTop Starter',   calcula: function (r, p) { return 29 + 0.02 * r; } },
       { id: 'trekksoft',  nombre: 'TrekkSoft Starter', calcula: function (r, p) { return 49 + 0.03 * r; } },
       { id: 'bokun',      nombre: 'Bókun Start',       calcula: function (r, p) { return 49 + 0.015 * r; } },
@@ -931,10 +952,11 @@
       o.imp = fila.querySelector('.v');
     });
     var recalcula = function () {
-      var r = +inR.value, p = +inP.value;
+      var r = +inR.value, p = +inP.value, q = +inQ.value;
       outR.textContent = fmt(r) + ' €';
       outP.textContent = fmt(p) + ' €';
-      opciones.forEach(function (o) { o.coste = o.calcula(r, p); });
+      outQ.textContent = q + (q === 1 ? ' persona' : ' personas');
+      opciones.forEach(function (o) { o.coste = o.calcula(r, p, q); });
       var max = Math.max.apply(null, opciones.map(function (o) { return o.coste; }).concat([1]));
       opciones.slice().sort(function (a, b) { return a.coste - b.coste; }).forEach(function (o) {
         cajaBarras.appendChild(o.fila); // reordena de menor a mayor coste
@@ -944,8 +966,9 @@
       var hito = opciones[0];
       var barata = opciones.slice(1).reduce(function (a, b) { return b.coste < a.coste ? b : a; });
       var dif = Math.round(barata.coste - hito.coste);
-      var matiz = '<span class="matiz">TuriTop y Bókun cobran también por usuario al crecer el ' +
-        'equipo; Audutor incluye guías ilimitados.</span>';
+      var matiz = '<span class="matiz">Donicus cobra <b>por persona con cuenta</b>, y TuriTop y Bókun ' +
+        'añaden coste por usuario al crecer el equipo — mueve el deslizador del equipo y míralo. ' +
+        'Audutor incluye guías ilimitados desde Pro, así que esa línea no se mueve.</span>';
       if (dif > 0) {
         cajaAhorro.innerHTML = 'Con Audutor te ahorras <b>' + fmt(dif) + ' €/mes — ' +
           fmt(dif * 12) + ' €/año</b> frente a ' + barata.nombre + '.' + matiz;
@@ -959,6 +982,7 @@
     };
     inR.addEventListener('input', recalcula);
     inP.addEventListener('input', recalcula);
+    inQ.addEventListener('input', recalcula);
     recalcula();
   }
 

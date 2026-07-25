@@ -227,7 +227,7 @@
   .cal-cell.off::after{ content:'+'; color:#c3ccc6; font-weight:800; font-size:15px; opacity:0; transition:opacity .12s; }
   .cal-cell.off:hover::after{ opacity:1; }
   .cal-cell.free{ background:var(--gold-soft); border:1.5px dashed var(--gold); }
-  .cal-cell.free::after{ content:'sin cubrir'; font-size:9.5px; font-weight:800; color:var(--amber);
+  .cal-cell.free::after{ content:'uncovered'; font-size:9.5px; font-weight:800; color:var(--amber);
     text-transform:uppercase; letter-spacing:.03em; }
   .cal-cell.cov{ background:var(--acc-soft); }
   .cal-cell.sel{ box-shadow:0 0 0 2.5px var(--acc); }
@@ -468,6 +468,40 @@
   .vj-cta-g:hover{ background:#f2f7f4; }
   .vj-volver{ background:none; border:0; color:var(--acc); font-weight:700; font-size:12.5px;
     cursor:pointer; margin-top:16px; font-family:inherit; }
+  /* Reservar otro tour desde el QR del guía: tiras de días y horas + nº de personas */
+  .gp-tour{ border:1.5px solid var(--line); border-radius:12px; padding:11px 13px; margin-top:9px;
+    background:#fff; text-align:left; width:100%; cursor:pointer; font-family:inherit;
+    transition:border-color .15s, background .15s; }
+  .gp-tour:hover{ border-color:var(--acc); background:var(--acc-soft); }
+  .gp-tour b{ display:block; font-size:14px; }
+  .gp-tour .gp-meta{ font-size:11px; color:var(--muted); margin-top:3px; display:block; }
+  .gp-tour .gp-precio{ font-size:11.5px; font-weight:800; color:var(--acc); }
+  .gp-tira{ display:flex; gap:7px; overflow-x:auto; padding:2px 1px 6px; scrollbar-width:thin; }
+  .gp-dia{ flex:0 0 auto; min-width:52px; border:1.5px solid var(--line); background:#fff;
+    border-radius:11px; padding:7px 8px; cursor:pointer; text-align:center; font-family:inherit;
+    transition:border-color .15s, background .15s; }
+  .gp-dia small{ display:block; font-size:9.5px; color:var(--muted); text-transform:uppercase;
+    letter-spacing:.04em; }
+  .gp-dia b{ display:block; font-size:15px; font-variant-numeric:tabular-nums; }
+  .gp-dia.on{ border-color:var(--acc); background:var(--acc-soft); }
+  .gp-horas{ display:grid; grid-template-columns:repeat(auto-fit, minmax(84px,1fr)); gap:7px; }
+  .gp-hora{ border:1.5px solid var(--line); background:#fff; border-radius:10px; padding:9px 4px;
+    cursor:pointer; font-family:inherit; text-align:center; font-weight:700; font-size:13px;
+    transition:border-color .15s, background .15s; }
+  .gp-hora small{ display:block; font-weight:600; font-size:9.5px; color:var(--muted); margin-top:2px; }
+  .gp-hora.on{ border-color:var(--acc); background:var(--acc-soft); }
+  .gp-hora.lleno{ opacity:.42; cursor:not-allowed; text-decoration:line-through; }
+  .gp-pax{ display:flex; align-items:center; justify-content:space-between; gap:10px;
+    border:1.5px solid var(--line); border-radius:12px; padding:9px 12px; background:#fff; }
+  .gp-pax .gp-n{ font-size:21px; font-weight:800; font-variant-numeric:tabular-nums; min-width:2ch;
+    text-align:center; }
+  .gp-pax button{ width:32px; height:32px; border:1.5px solid var(--line); background:#fff;
+    border-radius:9px; font-size:17px; font-weight:800; cursor:pointer; font-family:inherit;
+    color:var(--acc); line-height:1; }
+  .gp-pax button:hover{ border-color:var(--acc); background:var(--acc-soft); }
+  .gp-pax button:disabled{ opacity:.35; cursor:not-allowed; }
+  .gp-resumen{ background:var(--acc-soft); border:1px solid var(--line); border-radius:11px;
+    padding:10px 12px; font-size:12.5px; margin-top:12px; line-height:1.5; }
   .vj-nota{ max-width:290px; color:#d5e6df; font-size:12.5px; line-height:1.6; }
   .vj-nota h3{ font-family:var(--serif); color:#fff; font-size:17px; margin:0 0 10px; }
   .vj-nota li{ margin-bottom:8px; }
@@ -584,12 +618,12 @@
 </svg>
 <div class="app">
 <aside>
-  <div style="background:#fff4d6; border:1px solid #e6c86a; border-radius:9px; padding:9px 11px; margin:0 0 10px; font-size:11.5px; color:#6b5518; line-height:1.45;">🇬🇧 <b>English demo.</b> Fully localised for the UK/IE market, not translated: an Edinburgh operator, sterling, GuruWalk and Viator, SMS instead of WhatsApp, 12-hour times and the UK advertising rules. Pick another country below and the currency, business model and channels follow.</div>
+  <div style="background:#fff4d6; border:1px solid #e6c86a; border-radius:9px; padding:9px 11px; margin:0 0 10px; font-size:11.5px; color:#6b5518; line-height:1.45;">🇬🇧 <b>English demo.</b> Fully localised for the UK/IE market, not translated: an Edinburgh operator, sterling, GuruWalk and Viator, SMS first with WhatsApp as a fallback, 12-hour times and the UK advertising rules. Pick another country below and the currency, business model and channels follow.</div>
   <div style="background:#e7f0fb; border:1px solid #9dbfe0; border-radius:9px; padding:9px 11px; margin:0 0 10px; font-size:11px; color:#24506e; line-height:1.45;">⚖️ <b>UK advertising rules built in.</b> No suggested tip amounts and no “pay what you want” wording — the CAP/ASA guidance on free walking tours forbids both. If the company takes a cut of the tip, that must be disclosed to the customer.</div>
-  <div class="marca"><a class="marca-link" href="../" title="Ir a la web de Audutor"><span class="wm"><span class="wm-palabra">Audutor</span><svg class="wm-ruta" viewBox="0 0 96 14" preserveAspectRatio="none" aria-hidden="true"><path d="M2 10 C 20 4, 36 12, 52 7 S 78 5, 84 8" fill="none" stroke="#8fb0a6" stroke-width="1.7" stroke-dasharray="0.1 5.2" stroke-linecap="round"/><path d="M90 1.4c-2.4 0-4.4 2-4.4 4.4 0 3.2 4.4 7 4.4 7s4.4-3.8 4.4-7c0-2.4-2-4.4-4.4-4.4z" fill="#12805f"/><circle cx="90" cy="5.9" r="1.7" fill="#f3ecdb"/></svg></span></a> <span class="demo-chip">DEMO</span></div>
+  <div class="marca"><a class="marca-link" href="../" title="Go to the Audutor website"><span class="wm"><span class="wm-palabra">Audutor</span><svg class="wm-ruta" viewBox="0 0 96 14" preserveAspectRatio="none" aria-hidden="true"><path d="M2 10 C 20 4, 36 12, 52 7 S 78 5, 84 8" fill="none" stroke="#8fb0a6" stroke-width="1.7" stroke-dasharray="0.1 5.2" stroke-linecap="round"/><path d="M90 1.4c-2.4 0-4.4 2-4.4 4.4 0 3.2 4.4 7 4.4 7s4.4-3.8 4.4-7c0-2.4-2-4.4-4.4-4.4z" fill="#12805f"/><circle cx="90" cy="5.9" r="1.7" fill="#f3ecdb"/></svg></span></a> <span class="demo-chip">DEMO</span></div>
   <div class="tenant"><b>Old Town Walks · Edinburgh</b>fictional company — made-up data</div>
   <nav>
-    <a href="#operaciones" data-v="operaciones" class="act destacada">🗞️ Operations <span class="n" id="n-exc">6</span></a>
+    <a href="#operaciones" data-v="operaciones" class="act destacada">🗞️ Dashboard <span class="n" id="n-exc">6</span></a>
     <div class="nav-g" id="ng-dia">
       <button class="nav-g-cab" onclick="this.parentElement.classList.toggle('abierto')">📅 Day to day <span class="flecha">▾</span></button>
       <div class="nav-g-hijos">
@@ -609,15 +643,15 @@
       <div class="nav-g-hijos">
         <a href="#canales" data-v="canales">🔌 Channels &amp; sync</a>
         <a href="#noshow" data-v="noshow">📉 Anti no-show</a>
-        <a href="#carrito" data-v="carrito">🛒 Cart &amp; combos <span class="cand">🔒</span></a>
+        <a href="#carrito" data-v="carrito">🛒 Baskets &amp; combos <span class="cand">🔒</span></a>
       </div>
     </div>
     <div class="nav-g" id="nav-eco">
       <button class="nav-g-cab" onclick="this.parentElement.classList.toggle('abierto')">💼 Money <span class="sup-chip">add-on</span><span class="flecha">▾</span></button>
       <div class="nav-g-hijos">
         <a href="#ahorro" data-v="ahorro">⚖️ Reconciliation &amp; savings</a>
-        <a href="#cuadro" data-v="cuadro">📈 Dashboard <span class="cand">🔒</span></a>
-        <a href="#liquidacion" data-v="liquidacion">💶 Guide payouts <span class="cand">🔒</span></a>
+        <a href="#cuadro" data-v="cuadro">📈 Analytics <span class="cand">🔒</span></a>
+        <a href="#liquidacion" data-v="liquidacion">💷 Guide payouts <span class="cand">🔒</span></a>
         <a href="#proyeccion" data-v="proyeccion">📊 Revenue projection <span class="cand">🔒</span></a>
       </div>
     </div>
@@ -659,12 +693,12 @@
 
 <!-- ================= OPERACIONES ================= -->
 <section class="vista act" id="v-operaciones">
-  <div class="cab"><h1>Operations centre</h1><span class="sub">Sat 18 · what needs you today, plus the live tour</span></div>
+  <div class="cab"><h1>Dashboard</h1><span class="sub">Sat 18 · what needs your attention today, plus the walk that is out right now</span></div>
 
   <div class="card" style="background:linear-gradient(120deg,var(--acc),var(--acc2)); border:0; color:#fff;">
     <div class="fila" style="justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
       <div>
-        <div style="font-size:12px; letter-spacing:.06em; text-transform:uppercase; opacity:.85; font-weight:800;">What Audutor has given you back this month</div>
+        <div style="font-size:12px; letter-spacing:.06em; text-transform:uppercase; opacity:.85; font-weight:800;">What Audutor has recovered for you this month</div>
         <div style="font-family:var(--serif); font-size:38px; font-weight:700; line-height:1.1; margin-top:2px;"><span data-dinero="1640" data-dec="0">+£1,640</span></div>
         <div class="mini" style="opacity:.9;">≈ 142 people saved from no-shows (38 % → 17 %) · average tip £11.60</div>
       </div>
@@ -686,7 +720,7 @@
         <span class="l" id="kpi-propina-plan" style="display:block; margin-top:3px; font-weight:800; color:var(--acc);">your plan: 1.9 %</span>
         <button class="btn mini sec" style="margin-top:7px;" onclick="abrirViajero()">📱 traveller view</button></div>
       <div class="kpi"><span class="v">£70</span><span class="l">no-show fees recovered this month (reconciliation)</span></div>
-      <div class="kpi"><span class="v">2</span><span class="l">no-shows marked automatically when yesterday's 10:00 tour closed — no message sent to anyone</span></div>
+      <div class="kpi"><span class="v">2</span><span class="l">no-shows marked automatically when yesterday’s 10:00 AM tour closed — no message sent to anyone</span></div>
     </div>
   </div>
 
@@ -703,7 +737,7 @@
     <p class="mini muted" style="margin:4px 0 0;">The guide is at the meeting point: this updates itself
       as they check people in on their manifest. Yesterday’s reminder and this morning’s confirmation
       have already gone out.</p>
-    <button class="btn mini sec" style="margin-top:10px;" onclick="toast('Nudge sent to the bookings on this tour that haven’t replied (simulated)')">📢 Nudge the ones missing</button>
+    <button class="btn mini sec" style="margin-top:10px;" onclick="toast('Nudge sent to the bookings on this tour that haven’t replied (simulated)')">📢 Chase the ones who haven’t replied</button>
     <div class="seg-kpis" id="seg-kpis"></div>
     <div id="seg-lista"></div>
     <div class="seg-cancel" id="seg-cancel"></div>
@@ -800,14 +834,14 @@
     <p class="mini muted" style="margin:6px 0 0; text-align:center;" id="ag-resumen-dia"></p>
   </div>
 
-  <p class="mini muted ag-hint" style="margin:0 0 6px;">The day’s tours, <b>in order</b> of departure (swipe if they don’t fit →).</p>
+  <p class="mini muted ag-hint" style="margin:0 0 6px;">The day’s tours, <b>in order</b> of departure (swipe to see them all →).</p>
   <div class="ag-wrap" id="ag-wrap"><div id="ag-tours"></div></div>
 </section>
 
 <!-- ================= CHAT ================= -->
 <section class="vista" id="v-chat">
   <div class="cab"><svg class="guia-cab" aria-hidden="true" focusable="false"><use href="#guia"/></svg>
-    <h1>GuIA</h1><span class="sub">handles SMS, WhatsApp and the chat on your site — and hands you whatever it doesn’t know</span>
+    <h1>GuIA</h1><span class="sub">handles SMS, WhatsApp and the chat on your site — and passes anything it can’t answer straight to you</span>
     <span class="canal-sw" style="margin-left:auto;" role="group" aria-label="Conversation channel">
       <button id="sw-wa" class="on" aria-pressed="true" onclick="cambiaCanalChat('wa')">WhatsApp</button>
       <button id="sw-web" aria-pressed="false" onclick="cambiaCanalChat('web')">🌐 Your website</button>
@@ -817,7 +851,7 @@
   <div class="der-chat" id="der-chat">
     <div class="fila" style="justify-content:space-between; flex-wrap:wrap; gap:8px;">
       <b style="font-size:14px;">⚑ Questions handed to you</b>
-      <span class="mini muted">GuIA never improvises: what it doesn’t know comes to you — answer it once and it learns it</span>
+      <span class="mini muted">GuIA never guesses: what it doesn’t know comes to you — answer it once and it learns it</span>
     </div>
     <div id="der-chat-lista"></div>
   </div>
@@ -1037,12 +1071,12 @@
 
 <!-- ================= CARRITO Y COMBOS ================= -->
 <section class="vista" id="v-carrito">
-  <div class="cab"><h1>Abandoned cart and combos</h1><span class="sub">the sale that was slipping away, recovered on its own</span></div>
+  <div class="cab"><h1>Abandoned baskets and combos</h1><span class="sub">the sale that was slipping away, recovered on its own</span></div>
 
   <div class="card">
-    <h2>🛒 Abandoned checkouts (last 24 h)</h2>
+    <h2>🛒 Abandoned baskets (last 24 h)</h2>
     <table>
-      <tr><th>Who</th><th>What they left half-done</th><th>Ago</th><th></th></tr>
+      <tr><th>Who</th><th>Where they got to</th><th>Ago</th><th></th></tr>
       <tr><td><b>Julia K.</b><br><span class="mini muted">julia•••@gmail.com</span></td>
         <td>Free tour · tomorrow 10:00 AM · 2p</td><td class="num">42 min</td>
         <td><button class="btn mini" onclick="verMsj('msj-carrito')">Recover now</button></td></tr>
@@ -1138,7 +1172,7 @@ Places held for your group for 48 h 👉 oldtownwalks.co.uk/combo/x3f9
       </div>
       <div style="background:var(--gold-soft); border-radius:10px; padding:12px;">
         <b class="mini" style="color:var(--amber);">2 · Never loses the booking</b>
-        <p class="mini muted" style="margin:5px 0 0;">The awkward email lands in a review tray
+        <p class="mini muted" style="margin:5px 0 0;">The email it can’t read lands in a review tray
           with whatever it did manage to read: you confirm it in one tap, or forward the plain text.
           <b>A booking is never lost</b> to a change of format.</p>
       </div>
@@ -1277,7 +1311,7 @@ Places held for your group for 48 h 👉 oldtownwalks.co.uk/combo/x3f9
     <div style="overflow-x:auto;"><table id="cn-recon"></table></div>
     <p class="mini muted" style="margin:10px 0 0;">From the guide’s head count plus these settings, Audutor builds
       the list of <b>no-shows to report</b> inside each platform’s deadline on its own, and works out what
-      the company would absorb if they aren’t reported (you see it on the 📈 Dashboard).</p>
+      the company would absorb if they aren’t reported (you see it under 📈 Analytics).</p>
     </div>
   </div>
   <div class="card" style="background:linear-gradient(115deg, var(--acc-soft), #f4f8f2); border-color:var(--acc);">
@@ -1314,7 +1348,7 @@ Places held for your group for 48 h 👉 oldtownwalks.co.uk/combo/x3f9
         to <input type="date" id="liq-al" value="2026-07-18" onchange="pintaLiq()"
           style="border:1.5px solid var(--line); border-radius:8px; padding:7px 9px; font-family:var(--mono); font-size:13px;">
       </span>
-      <span class="chip">invariant: takings = booking costs + guide + company ✓</span>
+      <span class="chip">always balances: takings = booking costs + guide + company ✓</span>
     </div>
     <div class="fila" style="margin-top:12px; gap:8px;">
       <b class="mini">Booking costs (platform fees):</b>
@@ -1351,7 +1385,7 @@ Places held for your group for 48 h 👉 oldtownwalks.co.uk/combo/x3f9
   <div class="card" style="overflow-x:auto;">
     <h2>Tour by tour</h2>
     <table id="tabla-liq">
-      <tr><th>Tour</th><th>Guide</th><th>Attendees</th><th>Takings</th><th>Platform fees</th><th>Guide’s share</th><th>Company’s share</th></tr>
+      <tr><th>Tour</th><th>Guide</th><th>Turned up</th><th>Takings</th><th>Platform fees</th><th>Guide’s share</th><th>Company’s share</th></tr>
     </table>
   </div>
 </section>
@@ -1370,7 +1404,7 @@ Places held for your group for 48 h 👉 oldtownwalks.co.uk/combo/x3f9
         <input type="range" id="py-grupo" min="5" max="40" step="1" value="20" oninput="calcProy()" style="width:100%;"></label>
       <label class="mini">Tours per day <b><span id="py-tours-v">3</span></b><br>
         <input type="range" id="py-tours" min="1" max="20" step="1" value="3" oninput="calcProy()" style="width:100%;"></label>
-      <label class="mini">Average tip per person <b><span id="py-prop-v">11,50</span> £</b><br>
+      <label class="mini">Average tip per person <b>£<span id="py-prop-v">11.50</span></b><br>
         <input type="range" id="py-prop" min="4" max="16" step="0.5" value="11.5" oninput="calcProy()" style="width:100%;"></label>
       <label class="mini">Number of guides <b><span id="py-ng-v">3</span></b><br>
         <input type="range" id="py-ng" min="1" max="40" step="1" value="3" oninput="calcProy()" style="width:100%;"></label>
@@ -1410,14 +1444,14 @@ Places held for your group for 48 h 👉 oldtownwalks.co.uk/combo/x3f9
 
 <!-- ================= CUADRO DE MANDO (analítica) ================= -->
 <section class="vista" id="v-cuadro">
-  <div class="cab"><h1>Dashboard</h1><span class="sub">how the business is doing, at a glance · July 2026</span></div>
+  <div class="cab"><h1>Analytics</h1><span class="sub">how the business is doing, at a glance · July 2026</span></div>
 
   <div class="kpi-fila" style="margin:0 0 14px;">
     <div class="kpi"><span class="v">114</span><span class="l">people this month (7 departures)</span></div>
-    <div class="kpi"><span class="v">65 %</span><span class="l">average occupancy (against 25 capacity)</span></div>
+    <div class="kpi"><span class="v">65 %</span><span class="l">average occupancy (on 25 places)</span></div>
     <div class="kpi"><span class="v">£11.60</span><span class="l">average tip per person</span></div>
     <div class="kpi"><span class="v">17 %</span><span class="l">actual no-show rate (38 % before the system)</span></div>
-    <div class="kpi"><span class="v">4,9 ⭐</span><span class="l">average rating · 32 new reviews</span></div>
+    <div class="kpi"><span class="v">4.9 ⭐</span><span class="l">average rating · 32 new reviews</span></div>
   </div>
 
   <div class="card">
@@ -1459,12 +1493,13 @@ Places held for your group for 48 h 👉 oldtownwalks.co.uk/combo/x3f9
       <tr><td><b>Old Town · 10:00 AM</b></td><td>3</td><td>57</td><td class="num">19.0</td><td class="num">£12.10</td></tr>
       <tr><td><b>Old Town · 5:00 PM</b></td><td>2</td><td>43</td><td class="num">21.5</td><td class="num">£11.40</td></tr>
       <tr><td><b>Leith · 6:30 PM</b></td><td>1</td><td>12</td><td class="num">12.0</td><td class="num">£25.10</td></tr>
-      <tr><td><b>Night walk · 9:00 PM</b></td><td>1</td><td>2</td><td class="num neg">2.0</td><td class="num neg">£0.00</td></tr>
+      <tr><td><b>Night walk · 9:00 PM</b></td><td>1</td><td>2</td><td class="num neg">2.0</td><td class="num">— <span class="mini muted">(ticketed)</span></td></tr>
     </table>
-    <div class="mini muted" style="margin:10px 0 0;">⚠ The <b>Night walk</b> isn’t pulling: 2 people and no
-      tips. <details class="mas"><summary>ⓘ more</summary><span class="mas-p">Move the time or rest the departure — deciding that on data instead of a hunch is exactly
-      what this page is for. Leith is the opposite: small groups but £25 a head in tips → run it more
-      often.</span></details></div>
+    <div class="mini muted" style="margin:10px 0 0;">⚠ The <b>Night walk</b> is not pulling: 2 on a ticketed
+      walk that needs 4 to run. <details class="mas"><summary>ⓘ more</summary><span class="mas-p">It is a ticketed walk, so the question is occupancy, not tips: move the time, cut the
+      frequency, or push it harder to the people who did the free walk that morning. Leith is the
+      opposite problem — small groups, but £25 a head in tips, so it earns its slot. Deciding this on
+      the numbers instead of a hunch is what this page is for.</span></details></div>
   </div>
 
   <div class="card" style="overflow-x:auto;">
@@ -1512,7 +1547,7 @@ Places held for your group for 48 h 👉 oldtownwalks.co.uk/combo/x3f9
     <table id="eq-tabla">
       <tr><th>Guide</th><th>Languages</th><th>Tours they guide</th><th>Rating</th><th>Guide can check in</th><th>💳 Tips</th><th>Status</th></tr>
     </table>
-    <p class="mini muted" style="margin:10px 0 0;">“Guide can check in”: a per-person permission — switch it
+    <p class="mini muted" style="margin:10px 0 0;">“Guide can check in”: a permission you set guide by guide — switch it
       on and that guide can check people in from their own manifest; leave it off and only the manager can. Guides
       <b>never see customer phone numbers</b>: GuIA sits in between.</p>
   </div>
@@ -1585,7 +1620,7 @@ Places held for your group for 48 h 👉 oldtownwalks.co.uk/combo/x3f9
   <div class="vj-nota" id="vj-nota">
     <h3>What the customer actually sees 📱</h3>
     <ul>
-      <li>📲 <b>GuIA sends the link</b> when the guide checks out of the manifest — it is the formal close
+      <li>📲 <b>GuIA sends the link</b> when the guide closes the tour off on their manifest — it is the formal close
         of the tour, not spam.</li>
       <li>⚖️ <b>No suggested amount in this market.</b> The CAP/ASA code treats a pre-set figure as a price on
         something advertised as free, so the screen offers a free amount only. Switch the market in the sidebar to
@@ -1611,20 +1646,20 @@ var MERCADOS = {
     empresa:'Old Town Walks · Edinburgh', pais:'GB',
     moneda:{ cod:'GBP', sim:'£', pre:true, loc:'en-GB', dec:2 },
     modelo:'mixto',
-    canales:['GuruWalk','FreeTour.com','Viator','GetYourGuide','Own site'],
+    canales:['GuruWalk','FreeTour.com','Viator / Tripadvisor','GetYourGuide','Airbnb Experiences','Partner brand','Own site'],
     aviso:['sms','email','whatsapp'],
-    propinaPax:15, pagoP2P:false, sinSugerir:true,
+    propinaPax:15, precioTicket:24, pagoP2P:false, sinSugerir:true,
     nota:'Free tours to fill the funnel, ticketed themed tours (ghosts, food) to monetise. £15 is the standard tip. ⚖️ CAP/ASA rules apply: never suggest an amount.'
   },
   'ie-paid': {
-    nombre:'Ireland · ticketed', bandera:'🇮🇪',
+    nombre:'Ireland · mixed', bandera:'🇮🇪',
     empresa:'Dublin Story Walks', pais:'IE',
     moneda:{ cod:'EUR', sim:'€', pre:true, loc:'en-IE', dec:2 },
-    modelo:'pago',
-    canales:['Viator','GetYourGuide','TripAdvisor','Own site'],
-    aviso:['email','sms'],
+    modelo:'mixto',
+    canales:['Viator','GetYourGuide','TripAdvisor','FreeTour.com','Own site'],
+    aviso:['whatsapp','email','sms'],
     propinaPax:6, precioTicket:25, pagoP2P:false,
-    nota:'Paid upfront: refund policy matters and a no-show costs you the seat, not just the platform fee.'
+    nota:'Free walks and ticketed ones side by side, and WhatsApp is normal here. On the ticketed ones a no-show costs you the seat, not just the platform fee.'
   },
   'us-mixed': {
     nombre:'United States · mixed', bandera:'🇺🇸',
@@ -1633,7 +1668,7 @@ var MERCADOS = {
     modelo:'mixto',
     canales:['Viator','GetYourGuide','Airbnb Experiences','Own site'],
     aviso:['sms','email'],
-    propinaPax:20, pagoP2P:false,
+    propinaPax:20, precioTicket:32, pagoP2P:false,
     nota:'Tipping is highest here, but WhatsApp barely exists — SMS and email carry the reminders.'
   },
   'au-paid': {
@@ -1682,7 +1717,7 @@ var CAMPOS_KB = [
   { k:'comida', s:'On the day', l:'Food and stops', t:'is there a break? can we grab something?', sug:'We take a short break halfway round — water, coffee or a bite, depending on how hungry the group is 🙂' },
   { k:'ritmo',  s:'On the day', l:'Pace and terrain', t:'is it a lot of walking? are there hills?', sug:'Gentle pace and fine for all ages; we walk without rushing' },
   { k:'distancia', s:'On the day', l:'Distance covered', t:'how far do we walk?', sug:'About [3] km in total' },
-  { k:'acces',  s:'On the day', l:'Accessibility', t:'wheelchair? pushchair?', sug:'The route works for wheelchairs and pushchairs' },
+  { k:'acces',  s:'On the day', l:'Accessibility', t:'wheelchair? pushchair? step-free?', imp:true, sug:'Tell us when you book and we will take the step-free route. As it stands: [the route has steps at __ and a steep stretch at __]. Ask us anything — we would rather answer now than have you find out on the day.' },
   { k:'ninos',  s:'On the day', l:'Children', t:'can they come? do they tip?', sug:'Children are very welcome and are not expected to tip' },
   { k:'mascotas',s:'On the day', l:'Dogs', t:'can I bring my dog?', sug:'Your dog is welcome on a lead — more than one tour has ended with a new official mascot 🐾' },
   { k:'llevar', s:'On the day', l:'What to bring', t:'what should I bring? water, shoes?', sug:'Comfortable shoes, water and a bit of curiosity — the stories are on us' },
@@ -1719,9 +1754,36 @@ var CAMPOS_EMPRESA = [
 var PERFIL_GURUWALK = 'Essential Edinburgh Old Town Free Tour\n⭐ 4.9 (2,140 reviews) · GuruWalk\nLanguages: English, Español\n\nSee the heart of the Old Town: the Royal Mile, St Giles’ Cathedral, the Grassmarket, Greyfriars Kirkyard and the hidden closes.\n\nTimes: every day, departures at 10:00 AM and 5:00 PM\nMeeting point: Mercat Cross, outside St Giles’ Cathedral on the Royal Mile. Look for the yellow umbrella.\nDuration: 2 h 30 min\nGroups: max. 25 people. The tour runs even if only a few people book.\nThis is a tip-based tour — booking is free.\nFree cancellation up to the start time.\nStep-free route available on request. Dogs welcome on a lead.\nThe tour finishes on the Castle Esplanade.';
 var PERFIL_CIVITATIS = 'Leith Food &amp; Whisky Walk\n8.9 / 10 · 1,560 reviews · Viator\nFree — book now!\n\nWe walk Leith: The Shore, the old docks, Leith Links and the backstreets of Edinburgh’s port, with a stop for haggis and a dram.\n\nDuration: 2 hours\nLanguage: the tour is run in English\nTimes: Thursday to Saturday at 6:30 PM\nMeeting point: The Shore, by the Water of Leith footbridge. The guide wears an orange vest.\nMaximum 20 people per group.\nChildren are welcome; under-12s are not expected to tip.\nThe walk finishes at a whisky bar on The Shore.\nFree cancellation up to 24 hours before.';
 
+/* ===== Tour de pago: los hechos se derivan del mercado activo =====
+   El preset trae precioTicket, así que el mismo walk vale £24 en Edimburgo, €25 en
+   Dublín y A$39 en Sídney sin tocar los datos semilla. Antes precioTicket estaba
+   declarado en dos presets y no lo leía nadie. */
+function precioTicket(){ return MK.precioTicket || 24; }
+/* Un precio de entrada se escribe «£24», no «£24.00»: los decimales solo si los hay. */
+function precioTxt(v){ return dinero(v, v % 1 === 0 ? 0 : 2); }
+function TICKET_MODELO(){
+  return 'Ticketed walk — ' + precioTxt(precioTicket()) + ' per person, paid when you book';
+}
+function TICKET_ENTRADAS(){
+  return 'The ' + precioTxt(precioTicket()) + ' covers the whole walk. Nothing else to pay on the night';
+}
+function TICKET_CANCELAR(){
+  return 'Free cancellation up to 24 hours before. After that we can move you to another date, but we cannot refund';
+}
+/* Al cambiar de mercado, los tours con ticket se reescriben en la moneda nueva. */
+function sincronizaTickets(){
+  S.tours.forEach(function(t){
+    if (!t.ticket) return;
+    t.kb.modelo   = TICKET_MODELO();
+    t.kb.entradas = TICKET_ENTRADAS();
+  });
+}
 function tourNuevo(nombre, fuente, valores){
   var kb={}; CAMPOS_KB.forEach(function(c){ kb[c.k]=(valores&&valores[c.k])||''; });
-  return { id:'t'+(S?S.tours.length+1:1), nombre:nombre, fuente:fuente, kb:kb };
+  /* ticket no es un hecho del Cerebro, es una propiedad del tour: marca los walks
+     con entrada de pago para que su precio siga a la moneda del mercado. */
+  return { id:'t'+(S?S.tours.length+1:1), nombre:nombre, fuente:fuente, kb:kb,
+           ticket: !!(valores && valores.ticket) };
 }
 
 var S = {
@@ -1760,12 +1822,12 @@ S.tours.push(tourNuevo('Free Old Town walking tour', 'semilla', {
   horas:'every day · 10:00 AM and 5:00 PM',
   dur:'2 h 30 min',
   punto:'Mercat Cross, outside St Giles’ Cathedral on the Royal Mile',
-  fin:'the Castle Esplanade',
+  fin:'the top of the Royal Mile, by the Castle Esplanade — while the Tattoo stands are up over the summer we finish at the Camera Obscura corner instead',
   idiomas:'English (and Spanish if you ask when booking)',
   aforo:'25',
   senal:'yellow umbrella',
   espera:'10–15 minutes from the start time',
-  lluvia:'The tour runs in the rain too — this is Edinburgh. We only call it off for a serious weather warning, and we tell you before you set out',
+  lluvia:'We walk in the rain — this is Edinburgh, we would never go out otherwise. We only call a walk off for an amber or red Met Office warning, and it is almost always wind rather than rain. If that happens you hear from us before you leave your hotel.',
   cancelar:'Free, one tap from your booking link, right up to the start time',
   cambios:'Yes — change the date or the number of people at no cost, right up to the start time',
   grupomin:'£10',
@@ -1803,14 +1865,15 @@ S.tours.push(tourNuevo('Leith food & whisky walk', 'semilla', {
   grupomin:'£10',
   visita:'The Shore, the old docks, Leith Links and the backstreets of the port — with a stop for haggis and a dram',
   minimo:'We always go out, even if only one person turns up',
-  entradas:'Tastings are not included: everyone pays for what they order at each stop (£2–4)',
+  entradas:'Food and drink are not included and nothing is compulsory. If you order at every stop, expect around £12–15 each in total, paid to each place directly. You are welcome to come along and just watch.',
   corte:'2 hours before the start',
   distancia:'2 km',
   propina:'Entirely up to you. There is no set amount and no minimum — people give what the walk was worth to them',
 }));
 S.tours.push(tourNuevo('Ghosts & legends night walk', 'semilla', {
   titulo:'Ghosts & legends night walk',
-  modelo:'Free tour (tip-based) — book for £0',
+  modelo:TICKET_MODELO(),          /* de pago: se regenera al cambiar de mercado */
+  ticket:true,
   horas:'Friday to Sunday · 9:00 PM',
   dur:'1 h 45 min',
   punto:'the Greyfriars Kirkyard gate, on Candlemaker Row',
@@ -1820,18 +1883,18 @@ S.tours.push(tourNuevo('Ghosts & legends night walk', 'semilla', {
   senal:'red lantern',
   espera:'10–15 minutes from the start time',
   lluvia:'The walk runs in the rain too; we only call it off for a serious weather warning, and we tell you before you set out',
-  cancelar:'Free, one tap from your booking link, right up to the start time',
   cambios:'Yes — change the date or the number of people at no cost, right up to the start time',
   grupomin:'£10',
   visita:'the ghost stories of the Old Town: Greyfriars Kirkyard, the Covenanters’ Prison, the West Bow and the vaults under South Bridge',
-  minimo:'The night walk needs 4 people to run. If we are short we tell you the evening before and move you to another date at no cost',
-  entradas:'Nothing to pay: everything on the route is seen from the outside',
+  minimo:'The night walk needs 4 people to run. If we are short we tell you the evening before and move you to another date, or refund you in full',
+  entradas:TICKET_ENTRADAS(),
+  cancelar:TICKET_CANCELAR(),      /* política más estricta que el free tour, como es normal en un tour con ticket */
   corte:'2 hours before the start',
   distancia:'2.5 km',
-  propina:'Entirely up to you. There is no set amount and no minimum — people give what the walk was worth to them',
+  propina:'Not expected — the ticket is the price. If you want to look after your guide at the end, that is entirely up to you',
 }));
 S.kbEmpresa = {
-  quienes:'We are Old Town Walks, a local company of qualified Edinburgh guides with over 2,000 verified reviews. And yes, the free tour really is free: you book at no cost and give what you think it was worth at the end.',
+  quienes:'We are Old Town Walks, an Edinburgh company. Every walk is led by one of our own guides, trained here in the city, and two of them hold the STGA Blue Badge. Over 2,000 verified reviews between us. The free walk really is free: nothing to pay to book and nothing to pay on the day. Our guides work on a tips-only basis, so tips are welcome at the end.',
   privados:'Yes! We run tailored private walks from £180 per group. Tell me and the manager will put a no-obligation proposal together for you.',
   catalogo:'',      // vacíos a propósito: se ven huecos "de empresa"
   seguridad:'',
@@ -1918,14 +1981,14 @@ function normaliza(x){
    que añade valor pero no es la base. */
 var SUPLEMENTOS={
   chat:      { n:'GuIA · Customer chat', plan:'Pro', d:'The assistant that handles your customers in the chat on your site: it answers with the facts of each tour and hands over anything it does not know. It never makes things up.' },
-  cerebro:   { n:'GuIA · Cerebro', plan:'Pro', d:'The per-tour fact sheet that feeds the assistant, with AI filling it in from the tour’s own page and drafts you can edit.' },
-  carrito:   { n:'Abandoned cart and combos', plan:'Pro', d:'Picks up whoever abandoned a booking halfway and offers the ticketed walk to anyone who did the free one — the second sale, on its own.' },
-  cuadro:    { n:'Dashboard', plan:'Premium', d:'The numbers behind the business: occupancy, channels, tips by guide and time slot, no-shows. So you decide on data, not on a hunch.' },
+cerebro:   { n:'GuIA’s brain', plan:'Pro', d:'The per-tour fact sheet that feeds the assistant, with AI filling it in from the tour’s own page and drafts you can edit.' },   // y L1991: n:'Smart anti-no-show sequence'
+  carrito:   { n:'Abandoned baskets and combos', plan:'Pro', d:'Picks up whoever abandoned a booking halfway and offers the ticketed walk to anyone who did the free one — the second sale, on its own.' },
+  cuadro:    { n:'Analytics', plan:'Premium', d:'The numbers behind the business: occupancy, channels, tips by guide and time slot, no-shows. So you decide on data, not on a hunch.' },
   liquidacion:{ n:'Guide payouts', plan:'Pro', d:'Every tour’s books balanced: split by percentage or flat fee, channel cost, CSV and print. The guide never pays.' },
   proyeccion:{ n:'Revenue projection', plan:'Premium', d:'The business-plan simulator: drag the sliders and see what each guide and the company earn per month.' },
   /* Claves de gating INLINE (sin vista propia ni enlace de nav): las usa pintaGatesInline()
      para difuminar bloques dentro de vistas accesibles en todos los planes. */
-  noshowSmart:{ n:'Cadencia anti-no-show inteligente', plan:'Pro', d:'The reminder sequence adapts to how risky each booking looks: more nudges where the no-show risk is highest, without pestering anyone who already confirmed.' },
+  noshowSmart:{ n:'Smart no-show reminders', plan:'Pro', d:'The reminder sequence adapts to how risky each booking looks: more nudges where the no-show risk is highest, without pestering anyone who already confirmed.' },
   conciliacion:{ n:'Platform reconciliation', plan:'Pro', d:'The list of no-shows to report inside each platform’s deadline, built for you from the guide’s own head count, so you claw the fees back.' },
 };
 /* Planes de la demo (precios congruentes con la landing) y qué desbloquea cada uno. */
@@ -1963,7 +2026,9 @@ function pintaDineroEstatico(){
 function cambiaMercado(k){
   MK = MERCADOS[k];
   document.querySelector('.tenant b').textContent = MK.empresa;
-  pintaMkSel(); pintaDineroEstatico(); try{ pintaPropCfg(); }catch(e){}
+  pintaMkSel(); pintaDineroEstatico();
+  try{ sincronizaTickets(); pintaCerebro(); }catch(e){}
+  try{ pintaPropCfg(); }catch(e){}
   ['operaciones','manifiesto','equipo','canales','liquidacion','cuadro','ahorro'].forEach(function(v){
     try{ var f={operaciones:pintaOperaciones,manifiesto:pintaManifiesto,equipo:pintaEquipo,
                 canales:pintaCanales,liquidacion:pintaLiquidacion,cuadro:pintaCuadro,ahorro:pintaCanales}[v]; if(f) f(); }catch(e){}
@@ -1983,7 +2048,7 @@ function pintaGate(v){
   document.getElementById('gate-body').innerHTML=
     '<div class="cerr">🔒</div>'+
     '<h2 style="margin:6px 0 2px;">'+i.n+'</h2>'+
-    '<p class="chip" style="background:rgba(201,138,45,.25); color:var(--amber); margin:6px 0; display:inline-block;">Incluido en el plan '+P.n+' · '+P.precio+'/mes</p>'+
+    '<p class="chip" style="background:rgba(201,138,45,.25); color:var(--amber); margin:6px 0; display:inline-block;">Included in '+P.n+' · '+P.precio+'/month</p>'+
     '<p style="color:var(--ink2); max-width:40ch; margin:6px auto 0;">'+i.d+'</p>'+
     '<p class="mini muted" style="max-width:42ch; margin:12px auto;">The <b>core</b> is in every plan — on Essential with <b>1 tour, 1 guide and 2 channels</b>; unlimited guides and channels from Pro. Add-ons switch on according to your plan.</p>'+
     '<div class="fila" style="gap:8px; justify-content:center; flex-wrap:wrap;">'+
@@ -2010,9 +2075,9 @@ function pintaWaTope(){
   if (S.plan==='esencial'){
     var pct=Math.round(WA_USADOS/WA_TOPE*100);
     e.innerHTML='<div style="border-top:1px dashed var(--line); padding-top:10px; margin-top:10px;">'+
-      '<div class="fila mini" style="justify-content:space-between; gap:8px;"><b>'+WA_USADOS+' / '+WA_TOPE+' messages this month</b><span class="chip gris">tope Esencial</span></div>'+
+      '<div class="fila mini" style="justify-content:space-between; gap:8px;"><b>'+WA_USADOS+' / '+WA_TOPE+' messages this month</b><span class="chip gris">Essential cap</span></div>'+
       '<div class="wa-barra"><i style="width:'+pct+'%; background:'+(pct>80?'var(--gold)':'var(--acc)')+';"></i></div>'+
-      (pct>80 ? '<p class="mini" style="color:var(--amber); margin:2px 0 8px;">Te quedan '+(WA_TOPE-WA_USADOS)+' — on <b>Pro</b> there is no message cap.</p>'+
+      (pct>80 ? '<p class="mini" style="color:var(--amber); margin:2px 0 8px;">Only '+(WA_TOPE-WA_USADOS)+' left this month — on <b>Pro</b> there is no cap.</p>'+
         '<button class="btn mini" onclick="cambiarPlan(\'pro\')">Upgrade to Pro</button>' : '')+
       '</div>';
   } else {
@@ -2064,7 +2129,7 @@ function pintaEsPlus(){
   e.style.display = S.plan==='esencial' ? 'block' : 'none';
 }
 function ofertaEsencialPlus(){
-  toast('In the demo, Essential+ (£29) switches on as you grow: when a second tour or the message cap calls for it. It is not a public plan — it only appears as an upgrade from Esencial.');
+  toast('In the demo, Essential+ (£29) switches on as you grow: when a second tour or the message cap calls for it. It is not a public plan — it only appears as an upgrade from Essential.');
 }
 function cambiarPlan(p){ S.plan=p; pintaPlanSel(); pintaCandados(); pintaWaTope(); pintaPropinaPlan(); pintaEsPlus();
   ir((location.hash.slice(1))||'operaciones');   // re-evalúa el bloqueo de la vista actual
@@ -2120,10 +2185,10 @@ function pintaGuiaCab(nombre){
 function toggleDispoGuia(fkey, d){
   var g = S.equipo.guias.filter(function(x){ return x.n===S.guiaVista; })[0]; if(!g) return;
   var slot = fkey+'|'+d;
-  if (estaAsignado(S.equipo.guias.indexOf(g), slot)) { toast('Ese tour ya te lo han asignado 🙂'); return; }
+  if (estaAsignado(S.equipo.guias.indexOf(g), slot)) { toast('You’re already down for that one 🙂'); return; }
   g.dispo[slot] = !g.dispo[slot];
   pintaGuiaDispo(S.guiaVista);
-  toast(g.dispo[slot] ? 'You’ve put yourself down for that day ✓' : 'Quitado de tu disponibilidad');
+  toast(g.dispo[slot] ? 'You’ve put yourself down for that day ✓' : 'Taken off your availability');
 }
 function pintaGuiaDispo(nombre){
   var g = S.equipo.guias.filter(function(x){ return x.n===nombre; })[0];
@@ -2133,7 +2198,7 @@ function pintaGuiaDispo(nombre){
   var fr = franjasEmpresa();
   var h = '<div class="g-dispo"><h2>🗓 My availability</h2>'+
     '<p class="mini muted" style="margin:0;">Mark the days you can do each tour. The manager sees it on their calendar. '+
-    '<span style="color:'+g.color+'; font-weight:700;">🔒 = ya te lo han asignado</span>.</p>'+
+    '<span style="color:'+g.color+'; font-weight:700;">🔒 = already assigned to you</span>.</p>'+
     '<table><tr><th></th>'+DIAS_SEM.map(function(x){return '<th>'+x+'</th>';}).join('')+'</tr>';
   fr.forEach(function(f){
     h += '<tr><td><b class="num">'+f.hora+'</b> · '+f.tour+'</td>'+
@@ -2150,13 +2215,13 @@ function pintaGuiaDispo(nombre){
   h += '</table></div>'+
     '<div class="g-dispo"><h2>💳 My digital tips</h2>'+
     (g2 && g2.propinaOk
-      ? '<p class="mini muted" style="margin:0 0 8px;">✅ <b>Active.</b> Every tip lands in YOUR account (weekly payout). Taken in person, <b>we charge nothing</b>; solo el enlace o el QR llevan 1,9 % + £0.30.</p>'+
+      ? '<p class="mini muted" style="margin:0 0 8px;">✅ <b>Active.</b> Every tip lands in YOUR account (weekly payout). Taken in person, <b>we charge nothing</b>; only the link or the QR carries 1.9% + £0.30.</p>'+
         '<div class="fila" style="gap:6px; flex-wrap:wrap;">'+
-        '<button class="btn mini" onclick="toast(\'📲 (Simulated) Hold the customer’s card to the phone: payment done on the spot, with nobody having to scan anythina.\')">📲 Cobrar ahora</button>'+
+        '<button class="btn mini" onclick="toast(\'📲 (Simulated) Hold the customer’s card to the phone: payment done on the spot, with nobody having to scan anything.\')">📲 Charge now</button>'+
         '<button class="btn mini sec" onclick="toast(\'💳 (Simulated) Your SumUp opens with the amount already in, and Audutor logs the payment itself.\')">💳 Use my SumUp</button>'+
         '</div>'
-      : '<p class="mini muted" style="margin:0 0 8px;">Tip money goes <b>into your account, not the company’s</b>. Set it up once: ID + bank details, about 10 minutos.</p>'+
-        '<button class="btn mini" onclick="activarPropinaGuia()">Activar mi propina (10 min)</button>')+
+      : '<p class="mini muted" style="margin:0 0 8px;">Tip money goes <b>into your account, not the company’s</b>. Set it up once: ID and bank details, about 10 minutes.</p>'+
+        '<button class="btn mini" onclick="activarPropinaGuia()">Set up my tips (10 min)</button>')+
     '</div>'+
     '<div class="g-dispo"><h2>🔗 My page</h2>'+
     '<p class="mini muted" style="margin:0 0 8px;">Show it at the end of the tour: whoever scans books '+
@@ -2179,7 +2244,7 @@ function resolver(id, msj){
   if (S.excs>0){ n.textContent=S.excs; } else { if(n) n.style.display='none';
     document.getElementById('todo-ok').style.display='block'; }
   pintaEstadoBanner();
-  toast(msj || 'Marcado como revisado');
+  toast(msj || 'Marked as reviewed');
 }
 function pintaEstadoBanner(){
   var b=document.getElementById('estado-banner'), t=document.getElementById('estado-txt');
@@ -2210,7 +2275,7 @@ function pintaSeguimiento(){
       '<span class="seg-nombre">'+a.n+' <span class="mini muted" style="font-weight:400;">· '+a.p+'p</span></span>'+
       '<span class="seg-chip">'+CH[e]+'</span>';
     if(e==='pendiente'){ var b=document.createElement('button'); b.className='btn mini sec'; b.style.flexShrink='0';
-      b.textContent='📲 Reenviar'; b.onclick=function(){ toast('Recordatorio reenviado a '+a.n+' por WhatsApp'); };
+      b.textContent='📲 Send again'; b.onclick=function(){ toast('Reminder sent again to '+a.n+' by text'); };
       f.appendChild(b); }
     lista.appendChild(f);
   });
@@ -2257,7 +2322,7 @@ function pintaManifiesto(){
     (S.agDia===0?'':'')+ '📅 '+dia.fecha + (dia.hoy?'':'') ;
   var diaPax=0, diaRec=0; tours.forEach(function(t){ diaPax+=paxDe(t.res); diaRec+=(t.rec||0); });
   document.getElementById('ag-resumen-dia').textContent= tours.length
-    ? tours.length+' tour'+(tours.length>1?'s':'')+' · '+diaPax+' personas'+(diaRec?' · '+euros(diaRec)+' recaudado':'')
+    ? tours.length+' tour'+(tours.length>1?'s':'')+' · '+diaPax+' people'+(diaRec?' · '+euros(diaRec)+' taken':'')
     : 'No tours scheduled for this day';
   var cont=document.getElementById('ag-tours'); cont.innerHTML='';
   if (!tours.length){
@@ -2272,21 +2337,21 @@ function pintaManifiesto(){
     var tarde=t.res.filter(function(r){return r.tarde&&!r.ok});
     var nsAuto=t.res.filter(function(r){return r.nsAuto});   // no-shows marcados solos al cerrar el tour
     // cabecera
-    var chip = t.live?'<span class="chip" style="background:var(--acc-soft); color:var(--acc);">en marcha</span>'
+    var chip = t.live?'<span class="chip" style="background:var(--acc-soft); color:var(--acc);">out now</span>'
              : t.sinGuia?'<span class="chip rojo">no guide</span>'
              : dia.pasado?'<span class="chip gris">cerrado</span>'
              : '<span class="chip gris">programado</span>';
     t.res.forEach(function(a){ if(a.res0==null) a.res0=a.p; });
     var descu=t.res.reduce(function(s,r){ return s+(r.res0-r.p); },0);  // reservado − real
     var h='<div class="fila" style="justify-content:space-between; margin-bottom:4px;">'+
-      '<b>🕒 '+t.hora+' · '+t.tit+'</b>'+chip+'</div>'+
+      '<b>🕒 '+gpHora12(t.hora)+' · '+t.tit+'</b>'+chip+'</div>'+
       '<div class="mini muted" style="margin-bottom:6px;">Guide: <b>'+t.guia+'</b> · '+t.res.length+' booking'+(t.res.length===1?'':'s')+'</div>'+
-      '<div class="sem">👥 <b>'+pax+' people</b> · ✓ '+pres+' en el punto'+
-        (tarde.length?' · <b>⏰ '+tarde.length+' tarde</b>':'')+
+      '<div class="sem">👥 <b>'+pax+' people</b> · ✓ '+pres+' at the meeting point'+
+        (tarde.length?' · <b>⏰ '+tarde.length+' running late</b>':'')+
         (dia.pasado && nsAuto.length
           ? ' · <b style="color:var(--rojo);">🚫 '+nsAuto.length+' no-shows (auto)</b>'
-          : ' · '+(pax-pres)+' por llegar')+
-        (descu!==0?' · <b style="color:'+(descu>0?'var(--rojo)':'var(--acc)')+';">descuadre '+(descu>0?'−':'+')+Math.abs(descu)+'</b>':'')+'</div>';
+          : ' · '+(pax-pres)+' still to come')+
+        (descu!==0?' · <b style="color:'+(descu>0?'var(--rojo)':'var(--acc)')+';">out by '+(descu>0?'−':'+')+Math.abs(descu)+'</b>':'')+'</div>';
     mov.innerHTML=h;
     // aviso de grupo (solo tour live, con el grupo Romano si está)
     if (t.live && t.res.some(function(r){return r.grupo})){
@@ -2311,7 +2376,7 @@ function pintaManifiesto(){
           '<button class="chk" title="Check in">'+'🧍'.repeat(Math.min(a.p,4)||1)+'</button>'+
         '</div>';
       d.querySelector('.chk').onclick=function(){ a.ok=!a.ok; pintaManifiesto();
-        if(a.ok) toast(a.n+' checked in ✓ — Operations sees it straight away'); };
+        if(a.ok) toast(a.n+' checked in ✓ — it shows on the dashboard straight away'); };
       d.querySelectorAll('.pax-b').forEach(function(b){ b.onclick=function(){ ajustarPax(t, a, +b.dataset.d); }; });
       mov.appendChild(d);
     });
@@ -2337,7 +2402,7 @@ function pintaManifiesto(){
     var wform=document.createElement('div'); wform.className='walkin-form';
     wform.innerHTML='<input placeholder="Name (optional)" class="wk-nombre">'+
       '<div class="fila" style="gap:10px; margin:8px 0;">'+
-        '<label class="mini">Personas <input type="number" min="1" max="20" value="2" class="wk-pax" style="width:56px;"></label>'+
+        '<label class="mini">People <input type="number" min="1" max="20" value="2" class="wk-pax" style="width:56px;"></label>'+
       '</div>'+
       '<button class="btn wk-add" style="width:100%;">✅ Add to tour</button>';
     wform.style.display='none';
@@ -2355,12 +2420,12 @@ function pintaManifiesto(){
     var media = t.rec && pres ? ' · average '+euros(t.rec/pres)+'/person' : '';
     caja.innerHTML='<strong>💶 Tour takings</strong>'+
       '<div class="fila" style="gap:8px; margin-top:8px; align-items:center;">'+
-        '<input class="rec-in" inputmode="decimal" placeholder="0,00" value="'+(t.rec?String(t.rec).replace('.',','):'')+'" style="width:110px;"> £'+
+        '£ <input class="rec-in" inputmode="decimal" placeholder="0.00" value="'+(t.rec?String(t.rec):'')+'" style="width:110px;">'+
         '<button class="btn mini rec-save">Save</button>'+
         '<span class="mini muted rec-media">'+(t.rec?media:'')+'</span>'+
       '</div>'+
       '<p class="mini muted" style="margin:6px 0 0;">Log the total tips at the end — that’s what the payout is worked out from'+
-        (t.sinGuia?'. ⚠️ Este tour no tiene guía asignado (mira Team &amp; availability).':'.')+'</p>';
+        (t.sinGuia?'. ⚠️ Nobody is down to guide this one yet (see Team &amp; availability).':'.')+'</p>';
     caja.querySelector('.rec-save').onclick=function(){
       var v=parseFloat(caja.querySelector('.rec-in').value.replace(',','.'))||0;
       t.rec=v; pintaManifiesto();
@@ -2382,7 +2447,7 @@ function pintaManifiesto(){
         '<div class="fila" style="gap:8px; margin-top:8px; align-items:center; flex-wrap:wrap;">'+
           '<button class="btn mini pr-tap">📲 Charge now (tap card)</button>'+
           '<button class="btn mini sec pr-sumup">💳 Charge with SumUp</button>'+
-          '<button class="btn mini sec pr-qr">📷 QR / enlace</button>'+
+          '<button class="btn mini sec pr-qr">📷 QR or link</button>'+
         '</div>'+
         '<div class="fila" style="gap:8px; margin-top:8px; align-items:center; flex-wrap:wrap;">'+
           '<span class="mini muted">or send the link to one booking:</span>'+
@@ -2414,9 +2479,9 @@ function pintaManifiesto(){
         if (ai<0){ toast('Pick who it goes to first 🙂'); return; }
         var a=t.res[ai];
         t.obs=t.obs||[];
-        t.obs.push({ a:'GuIA', rec:true, t:'💳 Tip link sent to “'+a.n+'” por WhatsApp ('+t.hora+')' });
+        t.obs.push({ a:'GuIA', rec:true, t:'💳 Tip link sent to “'+a.n+'” by text ('+t.hora+')' });
         pintaManifiesto();
-        toast('💳 GuIA sends to '+a.n+' the tip link over WhatsApp');
+        toast('💳 GuIA has sent '+a.n+' the tip link by text');
       };
       mov.appendChild(prop);
     }
@@ -2432,11 +2497,11 @@ function pintaManifiesto(){
     }
     t.obs.forEach(function(o){
       var d=document.createElement('div'); d.className='obs-item'+(o.rec?'':' pend');
-      var quien={ 'guía':'🧭 guía', 'GuIA':'🤖 GuIA', 'admin':'🧑‍💼 encargado', 'sistema':'⚙️ sistema' }[o.a]||o.a;
+      var quien={ 'guía':'🧭 guide', 'GuIA':'🤖 GuIA', 'admin':'🧑‍💼 manager', 'sistema':'⚙️ system' }[o.a]||o.a;
       d.innerHTML='<span><b>'+quien+'</b> · '+o.t+'</span>';
       if (!o.rec){
         var b=document.createElement('button'); b.className='btn mini'; b.style.flexShrink='0';
-        b.textContent='✓ Recibido';
+        b.textContent='✓ Got it';
         b.onclick=function(){ o.rec=true; pintaManifiesto();
           toast('✓ Note confirmed by the guide — it now counts in the analytics and the reconciliation'); };
         d.appendChild(b);
@@ -2449,7 +2514,7 @@ function pintaManifiesto(){
     // recuadro para escribir una observación a mano
     var addObs=document.createElement('div'); addObs.style.cssText='display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; align-items:center;';
     addObs.innerHTML='<textarea class="obs-in" rows="2" placeholder="Write a note (delay, incident, change…)" style="flex:1; min-width:180px; border:1.5px solid var(--line); border-radius:9px; padding:8px 10px; font-size:13px; font-family:inherit; resize:vertical;"></textarea>'+
-      '<select class="obs-quien" style="border:1.5px solid var(--line); border-radius:8px; padding:7px 8px; font-size:12.5px; font-family:inherit;"><option value="admin">as manager → notify the guide</option><option value="guía">como guía (nota propia)</option></select>'+
+      '<select class="obs-quien" style="border:1.5px solid var(--line); border-radius:8px; padding:7px 8px; font-size:12.5px; font-family:inherit;"><option value="admin">as manager → notify the guide</option><option value="guía">as guide → my own note</option></select>'+
       '<button class="btn mini obs-add">+ Add</button>';
     addObs.querySelector('.obs-add').onclick=function(){
       var v=addObs.querySelector('.obs-in').value.trim();
@@ -2459,14 +2524,14 @@ function pintaManifiesto(){
       pintaManifiesto();
       toast(quien==='admin'
         ? '📨 Sent to the guide — it shows as “to confirm” and they read it when they open their manifest'
-        : 'Note logged — manager, GuIA and Operations all have it');
+        : 'Note logged — the manager, GuIA and the dashboard all have it');
     };
     obsBox.appendChild(addObs);
     mov.appendChild(obsBox);
     // ubicación / rescate (solo tour live)
     if (t.live){
       var ubi=document.createElement('button'); ubi.className='btn'; ubi.style.cssText='width:100%; margin-top:12px;';
-      ubi.textContent= S.ubi? '📍 Location shared '+S.ubiHace+' min — actualizar' : '📍 Share where the group is';
+      ubi.textContent= S.ubi? '📍 Location shared '+S.ubiHace+' min ago — update it' : '📍 Share where the group is';
       if (S.ubi) ubi.classList.add('sec');
       ubi.onclick=compartirUbi;
       mov.appendChild(ubi);
@@ -2495,7 +2560,7 @@ function ajustarPax(t, a, delta){
         (plat && dif<0 ? ' · ⚠ '+Math.abs(dif)+' platform no-show — report it so you don’t pay their fee' : '') });
   }
   pintaManifiesto();
-  if(dif<0) toast('Registrado: '+Math.abs(dif)+' fewer than booked. It stays in the notes and in the discrepancy analytics.');
+  if(dif<0) toast('Logged: '+Math.abs(dif)+' fewer than booked. It stays in the notes and in the discrepancy analytics.');
   else if(dif>0) toast('Registrado: '+dif+' more than booked (a walk-in on an existing booking).');
 }
 /* muestra/oculta el degradado de los bordes del carrusel según haya más tours
@@ -2527,10 +2592,10 @@ function fraseGuia(k, o){
     case 'titulo':  return 'Hi! 👋 I’m GuIA. Ask me anything about “'+v+'” 🙂';
     case 'modelo':  return 'It works like this: '+v+'. At the end you give whatever you think it was worth 💛';
     case 'horas':   return 'We set off '+v+(punto?' from '+punto:'')+' 🙂 Shall I book you a place?';
-    case 'dur':     return 'El tour dura '+v+', at a gentle pace with stops for the stories (and the odd photo 📸).';
-    case 'punto':   return 'Quedamos en '+v+' 📍'+(horas?' Salimos '+horas+'.':'')+(senal?' Llega unos minutos antes y busca el '+senal+'.':'');
-    case 'fin':     return 'El recorrido termina en '+v+' — we leave you well placed there to carry on by yourself 🙂';
-    case 'visita':  return 'Veremos '+v+' — no rushing, and all the best stories 🙂';
+    case 'dur':     return 'It runs '+v+', at a gentle pace with stops for the stories (and the odd photo 📸).';
+    case 'punto':   return 'We meet at '+v+' 📍'+(horas?' We set off '+horas+'.':'')+(senal?' Get there a few minutes early and look for the '+senal+'.':'');
+    case 'fin':     return 'The walk finishes at '+v+' — we leave you well placed there to carry on by yourself 🙂';
+    case 'visita':  return 'We’ll see '+v+' — no rushing, and all the best stories 🙂';
     case 'idiomas': return 'El tour es en '+v+'. If you need another language, tell me and I’ll check with the manager.';
     case 'aforo':   return 'Each departure takes a maximum of '+v+' people — a manageable group and a guide you can actually hear 🙂';
     case 'grupomin':return 'For groups of more than 6 (even if you split it across several bookings), the guide will ask for a deposit of '+v+' per person AT MINIMUM at the start — never less. It comes off what you give at the end.';
@@ -2555,7 +2620,7 @@ function pintaSelectorChat(){
 }
 function cambiaTourChat(){
   S.tourChat=+document.getElementById('chat-tour').value;
-  msg('bot','<i>— Contexto cambiado: ahora respondo sobre “'+tourChat().nombre+'”. Su cerebro es '+
+  msg('bot','<i>— Contexto cambiado: ahora respondo sobre “'+tourChat().nombre+'”. Its brain is '+
       'separate: nothing I know about other tours or companies leaks in here.</i>');
 }
 function msg(quien, texto){
@@ -2573,14 +2638,14 @@ function derivaPorHueco(campoKey, pregunta){
   var c=CAMPOS_KB.filter(function(x){return x.k===campoKey})[0];
   registraDerivada(pregunta);
   return 'That one I can’t confirm myself: I’ll pass it to the manager and they’ll get back to you shortly 🙂\n\n'+
-    '<i>— GuIA deriva porque el hecho “'+c.l+'” for THIS tour is empty. Fill it in under 🧠 Brain '+
+    '<i>— GuIA handed this over because the fact “'+c.l+'” is empty for THIS tour. Fill it in under 🧠 Brain '+
     'and this question will stop reaching the manager.</i>';
 }
 function derivaPorHuecoEmp(campoKey, pregunta){
   var c=CAMPOS_EMPRESA.filter(function(x){return x.k===campoKey})[0];
   registraDerivada(pregunta);
   return 'That one I can’t confirm myself: I’ll pass it to the manager and they’ll get back to you shortly 🙂\n\n'+
-    '<i>— GuIA deriva porque el hecho de empresa “'+c.l+'” is empty. Fill it in under 🧠 Brain '+
+    '<i>— GuIA hands it over because the company fact “'+c.l+'” is empty. Fill it in under 🧠 Brain '+
     '(the 🏢 Company block) and it covers every tour at once.</i>';
 }
 function registraDerivada(q){
@@ -2593,7 +2658,7 @@ function registraDerivada(q){
 function derivaSiempre(t){
   registraDerivada(t);
   return 'I’d rather not answer this one myself and risk getting it wrong: I’ll pass it to the manager and they’ll reply shortly 🙂\n\n'+
-    '<i>— Cortafuegos: facturas, reembolsos, quejas, prensa, alergias y similares van SIEMPRE a ti. GuIA nunca los improvisa.</i>';
+    '<i>— Firewall: invoices, refunds, complaints, press and allergies ALWAYS come to you. GuIA never improvises on those.</i>';
 }
 /* GuIA no solo contesta: lo que gestiona queda escrito en el tour en curso —
    se ve después en el 📋 Manifiesto (observaciones) y alimenta Operaciones. */
@@ -2635,6 +2700,61 @@ var EN_ES={
   'confirm':'confirmar','confirmation':'confirmacion','available':'disponible','availability':'disponibilidad',
   'spots':'plazas','places':'plazas','alone':'solo','solo':'solo','safe':'seguro','stairs':'escaleras',
   'sunday':'domingo','monday':'lunes','tomorrow':'manana','today':'hoy',
+
+  /* --- Variedad regional. El mismo objeto se llama distinto a cada lado del
+     Atlántico y hasta a cada lado del mar de Irlanda; si falta la palabra, el
+     intent no dispara y GuIA deriva una pregunta que sabía contestar. --- */
+  'restroom':'bano','restrooms':'banos','washroom':'bano','lavatory':'bano',
+  'loo':'bano','loos':'banos','bog':'bano',
+  'pram':'carrito','prams':'carrito','pushchair':'carrito','pushchairs':'carrito',
+  'buggy':'carrito','buggies':'carrito',
+  'handicap':'silla','handicapped':'silla','disabled':'silla','wheelchairs':'silla',
+  'subway':'llegar','tube':'llegar','underground':'llegar','tram':'llegar',
+  'trams':'llegar','metro':'llegar','transport':'llegar',
+  'sidewalk':'acera','pavement':'acera','elevator':'ascensor','lift':'ascensor',
+  'queue':'cola','line':'cola','trash':'basura','rubbish':'basura','bin':'basura',
+  'vacation':'vacaciones','holidays':'vacaciones','fortnight':'vacaciones',
+  'cellphone':'movil','cell':'movil','mobile':'movil',
+
+  /* --- Coloquial escocés, irlandés y australiano. No cambian el intent, pero si
+     no se neutralizan ensucian el match de la frase que los rodea. --- */
+  'wee':'pequeno','bonnie':'bonito','aye':'si','naw':'no','ken':'sabes',
+  'grand':'bien','craic':'ambiente','lads':'grupo','folks':'grupo',
+  'arvo':'hora','avo':'hora','mate':'','mates':'grupo','heaps':'mucho','reckon':'crees',
+
+  /* --- Inglés de no nativos: falsos amigos y calcos que se repiten. Un
+     hispanohablante escribe «persons» y «doubt», un francófono «actually», un
+     italiano «I have 3 years old son». --- */
+  'persons':'personas','peoples':'personas','pax':'personas',
+  'doubt':'pregunta','doubts':'pregunta','question':'pregunta',
+  'possible':'posible','reservation':'reserva','reservations':'reservas',
+  'assist':'ir','assisting':'ir','realise':'saber','realize':'saber',
+
+  /* --- Escritura de móvil: abreviaturas y erratas de dedo reales. Sin esto,
+     «wot time is the tour» no se entiende y «acessible» tampoco. --- */
+  'wot':'que','wat':'que','wht':'que','whats':'que','wats':'que',
+  'whr':'donde','wher':'donde','were':'donde','wheres':'donde',
+  'cn':'puedo','pls':'','plz':'','thx':'gracias','ty':'gracias',
+  'u':'tu','ur':'tu','r':'','n':'y','abt':'sobre','bcos':'porque',
+  'acessible':'accesible','accessable':'accesible','acessable':'accesible',
+  'wheelchar':'silla','wheelchari':'silla','wheelcair':'silla',
+  'meting':'punto','metting':'punto','meetin':'punto',
+  'availabe':'disponible','availabilty':'disponibilidad','avaliable':'disponible',
+  'cancle':'cancelar','cancell':'cancelar','recieve':'recibir',
+
+  /* --- Tours privados: sin estas entradas el bloque de privados no dispara. --- */
+  'private':'privado','privately':'privado','exclusive':'privado',
+  'bespoke':'privado','tailored':'privado','custom':'privado','customised':'privado',
+  'customized':'privado','itinerary':'itinerario','charter':'privado',
+  'corporate':'empresa','company':'empresa','team':'equipo','staff':'equipo',
+  'school':'colegio','schools':'colegio','students':'colegio','pupils':'colegio',
+  'university':'colegio','college':'colegio','educational':'colegio',
+  'hen':'despedida','stag':'despedida','birthday':'celebracion',
+  'cruise':'crucero','cruises':'crucero','ship':'crucero','port':'crucero',
+  'shore':'crucero','excursion':'crucero','disembark':'crucero',
+  'hotel':'hotel','hotels':'hotel','pickup':'recogida','collect':'recogida',
+  'deposit':'senal','quote':'presupuesto','invoice':'factura','advance':'antelacion',
+  'maximum':'maximo','max':'maximo','biggest':'maximo','largest':'maximo',
   /* Términos del CORTAFUEGOS: sin ellos “do you do a discount for school groups?”
      caía en la regla de grupos y GuIA contestaba en vez de derivar. */
   'discount':'descuento','discounts':'descuento','voucher':'cupon','coupon':'cupon',
@@ -2667,7 +2787,7 @@ function trEN(txt){ return (txt||'').trim() || null; }
 
 /* Respuestas en inglés con los MISMOS hechos confirmados del Cerebro. */
 function respuestaEN(t){
-  var m=normalizaEN(t), o=tourChat().kb, E=S.empresa;
+  var m=normalizaEN(t), o=tourChat().kb;
   function v(k){ return (o[k]||'').trim(); }
   function falta(){ registraDerivada(t);
     return 'Let me check that with a colleague so I don\'t give you the wrong info — they\'ll reply here shortly 🙂'; }
@@ -2681,6 +2801,61 @@ function respuestaEN(t){
   // cortafuegos: lo delicado va a una persona, también en inglés
   if (/factura|reembols|devoluc|descuento|cupon|queja|reclamacion|prensa|colabora|alergi|celiaco|intoleran/.test(m))
     return falta();
+
+  /* ========== BLOQUE DE ENCARGO A MEDIDA ==========
+     Va ANTES de las FAQ a propósito. Todo lo de aquí lleva palabras que las reglas
+     de abajo se comerían: «private GROUP» caía en la política de grupos, «will we be
+     back in TIME» contestaba con el horario de salidas, y «SCHOOL groups» contestaba
+     el adelanto de 10 £. Eso es peor que no contestar: es contestar con seguridad a
+     una pregunta que no te han hecho. */
+  var priv = (S.kbEmpresa && (S.kbEmpresa.privados||'').trim()) || '';
+  /* Deriva a una persona pero devolviendo lo que SÍ sabemos, en vez del texto genérico:
+     el hecho de empresa es real, y solo el detalle concreto se pasa al encargado. */
+  function conPrivado(cola){
+    registraDerivada(t);
+    return (priv ? priv+' ' : 'We do run private walks. ')+cola;
+  }
+  // cruceros: la pregunta nunca es la hora, es si llegan a tiempo al barco
+  if (/crucero/.test(m))
+    return conPrivado('For a ship call we work back from your all-aboard time rather than the public '+
+      'timetable, so tell me your ship and date and the manager will confirm what fits.');
+  // grupos escolares: ratios, permisos y seguros — nada de esto lo puede improvisar GuIA
+  if (/colegio/.test(m))
+    return conPrivado('School and university groups we quote separately, because the ratios and the '+
+      'paperwork are different. Tell me the year group and how many, and the manager will come back to you.');
+  // recogida en hotel: no es un servicio del walking tour, y decir que sí sería inventar
+  if (/recogida|hotel/.test(m))
+    return conPrivado('We do not collect from hotels on the scheduled walks — they start at the meeting '+
+      'point. On a private walk we can start wherever suits you, so ask the manager.');
+  // privados en general, con las variantes que de verdad pregunta la gente
+  if (/privado|itinerario|despedida|celebracion|equipo|empresa/.test(m)){
+    if (/presupuesto|cuanto|precio|cuesta/.test(m))
+      return conPrivado('The exact figure depends on how many of you there are, the date and how long '+
+        'you want, so the manager will send you a quote — usually the same day.');
+    if (/idioma|ingles|espanol/.test(m))
+      return conPrivado('On a private walk we can put a guide who speaks your language with the group, '+
+        'subject to who is free that day. Tell me the language and the date.');
+    if (/itinerario/.test(m))
+      return conPrivado('On a private walk you choose the route: tell us what you want to see, or what '+
+        'you have already done, and the guide builds it around that.');
+    if (/equipo|empresa/.test(m))
+      return conPrivado('We do a fair few of these for companies. Tell me how many people and roughly '+
+        'when, and the manager will put something together.');
+    if (/senal|antelacion|reserva|cancelar|cuantos|personas|aforo|maximo/.test(m))
+      return conPrivado('The manager will confirm the details — group size, how far ahead and the '+
+        'deposit — when they send you the proposal.');
+    return conPrivado('Tell me roughly how many of you and when, and the manager will come back with a '+
+      'proposal, no obligation.');
+  }
+  /* Disponibilidad de FECHAS, no aforo: «do you have availability this vacation» caía
+     en la regla del aforo y contestaba «máximo 25 personas», que no es la pregunta. */
+  if (/disponibilidad|disponible/.test(m) && /vacaciones|manana|hoy|semana|mes|agosto|julio|fecha/.test(m))
+    return falta();
+  /* Cómo llegar: no había ninguna palabra inglesa que apuntara a este hecho, así que
+     el intent no se disparaba nunca y la derivación no quedaba registrada. */
+  if (/llegar/.test(m))
+    return v('llegar') ? v('llegar')+' 🚇' : falta();
+
   // FAQ con hechos del Cerebro
   if (/punto|donde|quedamos/.test(m) && !/termina/.test(m))
     return v('punto') ? 'We meet at '+v('punto')+' 📍'+(v('horas')?' We start '+v('horas')+'.':'')+
@@ -2689,11 +2864,25 @@ function respuestaEN(t){
     return v('horas') ? 'We run '+v('horas')+(v('punto')?' from '+v('punto'):'')+' 🙂 Want me to save you a spot?' : falta();
   if (/dura|duracion/.test(m))
     return v('dur') ? 'The tour lasts '+v('dur')+' — relaxed pace, with stops for the stories (and photos 📸).' : falta();
-  if (/precio|cuesta|gratis|propina|pagar/.test(m))
-    /* El hecho “propina” ya es una frase completa (y en UK no puede sugerir importe),
-       así que se añade tal cual en vez de meterlo en “Most people leave around X”. */
-    return v('modelo') ? 'It works like this — '+(trEN(v('modelo'))||'you book for free and give what you feel it was worth at the end')+' 💛'
-      +(v('propina')?' '+v('propina')+'.':'') : falta();
+  if (/precio|cuesta|gratis|propina|pagar|cuanto/.test(m) && !/cuantos/.test(m)){
+    /* Dos marcos que NO se pueden mezclar: en un free tour el precio es la propina; en
+       un walk con ticket la propina no viene al caso, y el 💛 de «aporta lo que quieras»
+       suena a error. Se bifurca por el tour, no por el mercado, porque un catálogo
+       mixto tiene los dos a la vez. El hecho “propina” ya es una frase completa (en UK
+       no puede sugerir importe), así que se añade tal cual. */
+    if (!v('modelo')) return falta();
+    if (tourChat().ticket){
+      /* En un walk con ticket, «cuánto se deja de propina» y «cuánto cuesta» son dos
+         preguntas distintas: /precio|propina/ caen en la misma regla, así que aquí se
+         separan o se contesta el precio a quien preguntaba por la propina. */
+      if (/propina/.test(m) && !/precio|cuesta|gratis/.test(m))
+        return v('propina') || 'The ticket is the price — anything beyond that is entirely up to you 🙂';
+      return v('modelo')+'.'+(v('entradas')?' '+v('entradas')+'.':'')+
+        ' You can book it on our site in a couple of taps.';
+    }
+    return 'It works like this — '+(trEN(v('modelo'))||'you book for free and give what you feel it was worth at the end')+' 💛'+
+      (v('propina')?' '+v('propina')+'.':'');
+  }
   if (/termina|fin\b/.test(m))
     return v('fin') ? 'The tour ends at '+v('fin')+' — a great spot to carry on exploring on your own 🙂' : falta();
   if (/lluvia|tiempo|calor|nieva/.test(m))
@@ -2709,7 +2898,11 @@ function respuestaEN(t){
     return v('idiomas') ? 'The tour runs in '+v('idiomas')+'. If you need another language, tell me and I\'ll check with the team.' : falta();
   if (/guia|paraguas|bandera|chaleco|reconoc/.test(m))
     return v('senal') ? 'Easy: look for the '+v('senal')+(v('punto')?' at '+v('punto'):'')+'. The guide gets there a few minutes before we start 🙂' : falta();
-  if (/nino|bebe|carrito|familia/.test(m))
+  /* Un cochecito pregunta por el terreno, no por los niños: en Edimburgo la
+     respuesta útil es la de accesibilidad, y el hecho de niños está vacío a propósito. */
+  if (/carrito/.test(m))
+    return trEN(v('acces')) || trEN(v('ninos')) || falta();
+  if (/nino|bebe|familia/.test(m))
     return trEN(v('ninos')) || falta();
   if (/perro|mascota/.test(m))
     return trEN(v('mascotas')) || falta();
@@ -2720,10 +2913,10 @@ function respuestaEN(t){
      — que es justo la función de rescate que vende la demo. */
   if (/perdido/.test(m))
     return 'No problem — send me your booking code (OTW-…) and I\'ll share the guide\'s live location so you can catch up 🙂';
-  if (/grupo/.test(m))
+  if (/grupo/.test(m) || /\d+\s*personas/.test(m))
     return v('grupomin') ? 'For groups over 6 (even if you split it across bookings), the guide will ask for a deposit of '
       +v('grupomin')+' per person 🙂' : falta();
-  if (/aforo|plazas|disponib|sitio/.test(m))
+  if (/aforo|plazas|disponib|sitio/.test(m) || /cuantos\s+personas/.test(m))
     return v('aforo') ? 'Each departure takes up to '+v('aforo')+' people — a manageable group where you can actually hear the guide 🙂' : falta();
   if (/visita|ver\b|veremos/.test(m))
     return v('visita') ? 'We\'ll see '+v('visita')+' — no rush, and with the best stories 🙂' : falta();
@@ -2880,13 +3073,13 @@ function respuestaGuiaES(t){
   if (/grupo|somos \d+|despedida/.test(m)){
     var af=kb('aforo'); if(!af) return derivaPorHueco('aforo', t);
     var gm=kb('grupomin'); if(!gm) return derivaPorHueco('grupomin', t);
-    return 'Groups are a maximum of '+af+' per departure, and you can all come together 🙂 One thing, so it’s clear: for groups of more than 6 (even if you split it across several bookings), the guide will ask for a deposit of '+gm+' per person AT MINIMUM at the start — never less. It comes off what you give at the end, so you’re never paying twice.\n\n<i>— The minimum comes from the fact sheet del Cerebro: cada empresa pone el suyo.</i>';
+    return 'Groups are a maximum of '+af+' per departure, and you can all come together 🙂 One thing that helps us: tell us the real number, even if you booked across several reservations, so the guide can plan the walk and bring a radio set if you need one. There is nothing to pay to book and nothing to pay on the day. Tips are welcome at the end and entirely up to you.\n\n<i>— The minimum comes from the fact sheet del Cerebro: cada empresa pone el suyo.</i>';
   }
   if (/cancel|anul|no puedo ir|no podre|no vamos a poder/.test(m)){
     var cod=(t.match(/blv-[a-z0-9]+/i)||[])[0];
     if (cod){
       anotaGuia('Booking “'+cod+'” cancelled over chat — place released; the waiting list checks itself');
-      return 'Done! Your booking is cancelled ✅ Thanks for letting us know in good time: your place is free again straight away.\n\n<i>— Once released, the waiting list checks itself: if somebody fitted, they have already been told (see it in Operations). Nothing to chase by hand. And it is written into today’s tour notes.</i>';
+      return 'Done! Your booking is cancelled ✅ Thanks for letting us know in good time: your place is free again straight away.\n\n<i>— Once released, the waiting list checks itself: if somebody fitted, they have already been told (see it on the dashboard). Nothing to chase by hand. And it is written into today’s tour notes.</i>';
     }
     if (/guruwalk|viator|getyourguide|plataforma/i.test(m))
       return 'You made that booking on the platform, so cancel it from their confirmation email — that way <b>their</b> refund policy applies to you 🙂 As soon as you do, your place frees itself on our list: no need to tell us as well — and it won’t count against you as a no-show.';
@@ -3092,7 +3285,7 @@ function pintaChatWeb(){
   c.innerHTML=
     convo('Website visitor · today 11:42 AM',
       burb('cli','Where do we meet?')+
-      burb('bot', fraseGuia('punto', k)||'Te lo confirmo enseguida 🙂')+
+      burb('bot', fraseGuia('punto', k)||'I’ll confirm that for you shortly 🙂')+
       burb('cli','What if it rains?')+
       burb('bot', (k.lluvia||'We walk in the rain too')+' ☔ If we did have to call it off, we’d let you know here in advance.'))+
     convo('Website visitor · today 9:15 AM',
@@ -3122,7 +3315,7 @@ function cuentaRespuestas(){
 function pintaRespuestas(){
   var el=document.getElementById('resp-n'); if (!el) return;
   el.textContent=cuentaRespuestas();
-  document.getElementById('resp-toggle').textContent=S.respAbierto?'▴ Ocultar':'▾ See them all';
+  document.getElementById('resp-toggle').textContent=S.respAbierto?'▴ Hide them':'▾ See them all';
   var l=document.getElementById('resp-lista');
   l.style.display=S.respAbierto?'block':'none';
   if (!S.respAbierto) return;
@@ -3136,7 +3329,7 @@ function pintaRespuestas(){
     } else if (r.tipo==='emp'){
       var ce=CAMPOS_EMPRESA.filter(function(c){return c.k===r.k})[0];
       if (!ce || !(S.kbEmpresa[r.k]||'').trim()) return;
-      chip='🏢 empresa'; tema=ce.l; frase=fraseGuia(r.k, S.kbEmpresa);
+      chip='🏢 company'; tema=ce.l; frase=fraseGuia(r.k, S.kbEmpresa);
     } else {
       var tt=S.tours.filter(function(t){return t.id===r.tourId})[0];
       var ck=CAMPOS_KB.filter(function(c){return c.k===r.k})[0];
@@ -3146,7 +3339,7 @@ function pintaRespuestas(){
     var esNuevo=!r.seed && nuevos<5; if (esNuevo) nuevos++;
     var d=document.createElement('div');
     d.style.cssText='padding:8px 10px; border-left:3px solid var(--acc); background:#f2f7f4; border-radius:0 8px 8px 0; margin:5px 0;';
-    d.innerHTML=(esNuevo?'<span class="chip ambar" style="margin-right:6px;">nuevo</span>':'')+
+    d.innerHTML=(esNuevo?'<span class="chip ambar" style="margin-right:6px;">new</span>':'')+
       '<span class="chip gris">'+chip+'</span> <b class="mini">'+tema+'</b>'+
       '<div class="mini" style="margin-top:3px; color:var(--ink2);">“'+frase+'”</div>';
     l.appendChild(d);
@@ -3157,8 +3350,8 @@ function pintaEnsAmbito(){
   var previo=sa.value;
   sa.innerHTML='';
   S.tours.forEach(function(t){ var o=document.createElement('option');
-    o.value='t:'+t.id; o.textContent='Solo: '+t.nombre; sa.appendChild(o); });
-  var oe=document.createElement('option'); oe.value='empresa'; oe.textContent='Toda la empresa';
+    o.value='t:'+t.id; o.textContent='This tour only: '+t.nombre; sa.appendChild(o); });
+  var oe=document.createElement('option'); oe.value='empresa'; oe.textContent='All tours';
   sa.appendChild(oe);
   var vale=[].some.call(sa.options, function(o){ return o.value===previo });
   sa.value = vale ? previo : 't:'+tourKb().id;
@@ -3186,7 +3379,7 @@ function pintaCerebro(){
       '<span class="mini muted num">'+llenos+' confirmed of '+campos.length+'</span>'+
       (imps.length?'<span class="mini num" title="importantes" style="color:'+(impsOk===imps.length?'var(--acc)':'var(--rojo)')+'; font-weight:800;">★ '+impsOk+' de '+imps.length+'</span>':'');
     var btn=document.createElement('button'); btn.className='btn mini'+(abierto?' sec':'');
-    btn.textContent= abierto ? '▲ Plegar' : (llenos<campos.length ? '✏️ Revisar' : '✏️ Editar');
+    btn.textContent= abierto ? '▲ Collapse' : (llenos<campos.length ? '✏️ Review' : '✏️ Edit');
     var alterna=function(ev){ ev.stopPropagation();
       S.kbAbierto = abierto ? null : id;
       if (!abierto && alAbrir) alAbrir();
@@ -3199,7 +3392,7 @@ function pintaCerebro(){
       if (esTour){
         var ia=document.createElement('div');
         ia.style.cssText='background:var(--acc-soft); border:1.5px solid var(--acc); border-radius:10px; padding:12px; margin-bottom:12px;';
-        ia.innerHTML='<b style="font-size:13.5px;">🪄 Rellenar con IA</b>'+
+        ia.innerHTML='<b style="font-size:13.5px;">🪄 Fill it in with AI</b>'+
           '<p class="mini muted" style="margin:4px 0 8px;">Quickest way: the <b>tour URL</b> (GuruWalk, Viator, your own site…). If you don’t have it handy, paste the profile text instead. The AI <b>confirms</b> what it finds; everything else stays a draft — nothing goes in without your OK.</p>'+
           '<div class="fila" style="gap:8px;">'+
             '<input class="ia-url" value="https://www.guruwalk.com/walks/essential-edinburgh-old-town-free-tour" style="flex:1; min-width:220px; border:1.5px solid var(--line); border-radius:8px; padding:8px 10px; font-size:12px; font-family:var(--mono);">'+
@@ -3213,8 +3406,8 @@ function pintaCerebro(){
           var n=rellenarConIA(valores, texto, function(k){ registraActiva('kb', id, k); });
           if (alIA) alIA(); else if (alCambiar) alCambiar();
           S.kbAbierto=id; pintaCerebro();
-          toast(n ? '🪄 AI: '+n+' fields confirmed from '+fuente+' — check the rest (they already have drafts) and guarda'
-                  : '🪄 I didn’t recognise any new fields in '+fuente+' — revisa el texto o rellena los borradores');
+          toast(n ? '🪄 AI: '+n+' fields confirmed from '+fuente+' — check the rest (they already have drafts) and save'
+                  : '🪄 I didn’t recognise any new fields in '+fuente+' — check the text, or fill the drafts in yourself');
         };
         ia.querySelector('.ia-go-url').onclick=function(){
           var u=ia.querySelector('.ia-url').value.trim();
@@ -3235,12 +3428,12 @@ function pintaCerebro(){
       }
       var pd=document.createElement('p'); pd.className='mini muted'; pd.style.margin='0 0 6px';
       pd.innerHTML= borradores.length
-        ? '<b>'+llenos+' confirmados.</b> Los otros <b>'+borradores.length+'</b> already have a <b style="color:var(--gold);">draft</b> from GuIA: change anything that doesn’t fit, or press ✓ to accept it. Until you confirm it, GuIA hands the question to you instead (it never lets a draft out without your OK). <b style="color:var(--acc);">★ The important ones are in colour.</b>'
+        ? '<b>'+llenos+' confirmed.</b> The other <b>'+borradores.length+'</b> already have a <b style="color:var(--gold);">draft</b> from GuIA: change anything that doesn’t fit, or press ✓ to accept it. Until you confirm it, GuIA hands the question to you instead (it never lets a draft out without your OK). <b style="color:var(--acc);">★ The important ones are in colour.</b>'
         : 'Fact sheet complete! Everything confirmed — no routine question will reach the manager.';
       f.appendChild(pd);
       if (borradores.length){
         var acc=document.createElement('button'); acc.className='btn mini'; acc.style.margin='0 0 8px';
-        acc.textContent='✓ Aceptar los '+borradores.length+' borradores';
+        acc.textContent='✓ Accept all '+borradores.length+' drafts';
         acc.onclick=function(){ borradores.forEach(function(c){ valores[c.k]=c.sug;
             registraActiva(esTour?'kb':'emp', id, c.k); });
           if (alCambiar) alCambiar(); S.kbAbierto=id; pintaCerebro();
@@ -3258,7 +3451,7 @@ function pintaCerebro(){
         d.style.cssText='display:grid; grid-template-columns:190px 1fr auto; gap:10px; padding:6px 0; border-bottom:1px dashed var(--line); align-items:center;';
         d.innerHTML='<span class="mini'+(c.imp?'':' muted')+'"'+(c.imp?' style="color:var(--acc); font-weight:800;"':'')+'>'+
           (c.imp?'★ ':'')+c.l+
-          (c.t?'<br><span style="font-size:10.5px; font-weight:400; color:var(--muted);">responde a: '+c.t+'</span>':'')+'</span>';
+          (c.t?'<br><span style="font-size:10.5px; font-weight:400; color:var(--muted);">answers: '+c.t+'</span>':'')+'</span>';
         var inp=document.createElement('input');
         inp.id='kb-'+id+'-'+c.k;
         inp.value = esConf ? valores[c.k] : (c.sug||'');
@@ -3282,7 +3475,7 @@ function pintaCerebro(){
           vb.onclick=function(){
             S.verFrase = (S.verFrase && S.verFrase.id===id && S.verFrase.k===c.k) ? null : {id:id, k:c.k};
             pintaCerebro(); };
-          acs.innerHTML='<span class="mini" style="color:var(--acc); margin-right:6px;" title="confirmado">✓</span>';
+          acs.innerHTML='<span class="mini" style="color:var(--acc); margin-right:6px;" title="confirmed">✓</span>';
           acs.appendChild(vb);
         } else {
           var ab=document.createElement('button'); ab.className='btn mini sec'; ab.textContent='✓';
@@ -3306,18 +3499,18 @@ function pintaCerebro(){
       g.textContent='💾 Save fact sheet';
       g.onclick=function(){ S.kbAbierto=null; pintaCerebro();
         var ll=campos.filter(conf).length;
-        toast('💾 Guardado — '+ll+' de '+campos.length+' temas confirmados en “'+nombre+'”'); };
+        toast('💾 Saved — '+ll+' of '+campos.length+' facts confirmed on “'+nombre+'”'); };
       f.appendChild(g);
       w.appendChild(f);
     }
     ac.appendChild(w);
   }
-  itemForm('empresa', '🏢 La empresa', 'shared across every tour', CAMPOS_EMPRESA, S.kbEmpresa, false, null, null, null);
+  itemForm('empresa', '🏢 The company', 'shared across every tour', CAMPOS_EMPRESA, S.kbEmpresa, false, null, null, null);
   S.tours.forEach(function(t,idx){
     itemForm(t.id, t.nombre, t.fuente, CAMPOS_KB, t.kb, true,
       function(){ S.tourKb=idx; },
-      function(){ t.fuente='editado a mano'; S.tourKb=idx; },
-      function(){ t.fuente='importado con IA (por revisar)'; S.tourKb=idx; });
+      function(){ t.fuente='edited by hand'; S.tourKb=idx; },
+      function(){ t.fuente='imported with AI (needs a look)'; S.tourKb=idx; });
   });
   // botón nuevo tour (crea en blanco y lo abre; dentro, la caja IA lo rellena)
   var nt=document.createElement('button'); nt.className='btn sec'; nt.style.cssText='margin-top:10px; border-style:dashed;';
@@ -3364,7 +3557,7 @@ function pintaCerebro(){
 function ensenar(){
   var q=document.getElementById('ens-q').value.trim();
   var a=document.getElementById('ens-a').value.trim();
-  if (!q || !a){ toast('Escribe la pregunta y la respuesta'); return; }
+  if (!q || !a){ toast('Fill in both the question and the answer'); return; }
   // el desplegable lista cada tour POR SU NOMBRE (sincronizado con los creados)
   var sel=document.getElementById('ens-ambito').value;
   var ambito = sel==='empresa' ? 'empresa' : 'tour';
@@ -3378,7 +3571,7 @@ function ensenar(){
   document.getElementById('ens-q').value=''; document.getElementById('ens-a').value='';
   pintaCerebro();
   var nombreTour=(S.tours.filter(function(t){return t.id===tourId})[0]||{}).nombre||'';
-  toast('🎓 Aprendido ('+(ambito==='tour'?'solo '+nombreTour:'toda la empresa')+') — ya son '+cuentaRespuestas()+' respuestas activas');
+  toast('🎓 Aprendido ('+(ambito==='tour'?'solo '+nombreTour:'toda la empresa')+') — that’s '+cuentaRespuestas()+' respuestas activas');
 }
 
 /* ============ mensaje post-tour (ámbito empresa) ============ */
@@ -3393,12 +3586,12 @@ function msgPost(t){
   var p=S.post, li=[];
   if (p.resena===true){
     li.push('Thanks for coming on the '+t.nombre+'! 🧡 It was a pleasure showing you the city.');
-    li.push('If you enjoyed it, a review here helps us enormously 👉 <b>'+p.resenaUrl+'</b> — se tarda un minuto.');
+    li.push('If you enjoyed it, a review here helps us enormously 👉 <b>'+p.resenaUrl+'</b> — it takes a minute.');
   } else {
     li.push('Thank you so much for choosing us for the '+t.nombre+'! 🧡 It was a pleasure showing you the city — we hope to see you again soon.');
   }
   if (p.privados===true)
-    li.push('🎁 Como agradecimiento: <b>'+p.desc+' off</b> if you book a private walk with us — reply to this message and we’ll set it up.');
+    li.push('🎁 A thank-you from us: <b>'+p.desc+' off</b> if you book a private walk with us — reply to this message and we’ll set it up.');
   if (p.oferta==='tour')
     li.push('And if you’re after more, we also run the <b>'+otroTour(t)+'</b>.');
   if (p.oferta==='web')
@@ -3420,14 +3613,14 @@ function pintaPost(){
   h+=fila('2 · Do you run private tours?',
     b('Yes', p.privados===true, "postSet('privados',true)")+b('No', p.privados===false, "postSet('privados',false)")+
     (p.privados===true ? '<label class="mini">descuento a ofrecer <input value="'+p.desc+'" style="'+inp+' width:70px;" onchange="S.post.desc=this.value; pintaPost();"></label>' : '')+
-    (p.privados===false ? '<span class="chip gris">solo agradecimiento por la confianza</span>' : ''));
+    (p.privados===false ? '<span class="chip gris">just the thank-you</span>' : ''));
   h+=fila('3 · Anything else to add? <span class="mini muted">(optional)</span>',
     b('Otro tour de la empresa', p.oferta==='tour', "postSet('oferta','tour')")+
     b('The company page', p.oferta==='web', "postSet('oferta','web')")+
     b('Nada', p.oferta==='nada', "postSet('oferta','nada')")+
     (p.oferta==='web' ? '<input value="'+p.web+'" style="'+inp+' width:170px;" onchange="S.post.web=this.value; pintaPost();">' : ''));
   h+=fila('4 · When does it go out?',
-    ['2 h after the tour','esa misma tarde · 19:00','the next day · 10:00 AM'].map(function(x){
+    ['2 h after the tour','that same evening · 7:00 PM','the next day · 10:00 AM'].map(function(x){
       return b(x, p.hora===x, "postSet('hora','"+x+"')"); }).join('')+
     '<span class="mini muted">🌙 if it falls outside 8:00 AM–9:00 PM (after the night walk, say), it goes out at 8:00 the next morning</span>');
   c.innerHTML=h;
@@ -3453,7 +3646,7 @@ function postSet(k,v){
   var antes=(S.post.resena===null?1:0)+(S.post.privados===null?1:0);
   S.post[k]=v; pintaPost();
   var ahora=(S.post.resena===null?1:0)+(S.post.privados===null?1:0);
-  if (antes>0 && ahora===0) toast('💬 Configurado — abajo tienes el mensaje final de cada tour');
+  if (antes>0 && ahora===0) toast('💬 Set up — the finished message for each walk is below');
 }
 
 /* ============ vista previa del viajero: propina + reseña en una pantalla ============
@@ -3493,36 +3686,247 @@ function abrirGuidePage(nombre){
   var nota=document.getElementById('vj-nota');
   if (NOTA_VIAJERO0===null) NOTA_VIAJERO0=nota.innerHTML;
   nota.innerHTML='<h3>The guide’s page 🔗</h3><ul>'+
-    '<li>🎯 <b>The moment that counts:</b> the end of the tour. The guide shows their QR and the recommendation lands on <b>your site</b>, not the platform’s.</li>'+
-    '<li>💶 <b>Direct booking, no commission</b> — everyone who comes in this way saves you the platform’s ~£2.50 per person.</li>'+
-    '<li>📈 The page carries the <b>guide’s name</b>: the analytics tell you which guides bring bookings in (which is its own motivation).</li>'+
-    '<li>💚 It links to <b>digital tips</b>: anyone coming off a tour can leave one right there.</li></ul>'+
-    '<p class="mini">The booking buttons are simulated. The real page would live on your own domain.</p>';
+    '<li>🎯 <b>The moment that counts:</b> the end of the walk. The guide shows their QR and the recommendation lands on <b>your site</b>, not the platform’s.</li>'+
+    '<li>🗓 <b>Real availability, not a contact form.</b> The walks, days and times come straight from your schedule — add a departure in Team &amp; availability and it appears here on its own.</li>'+
+    '<li>👥 <b>The group size is already filled in</b> with the booking they just walked on. Five of you this morning, five for the ghost walk tonight — one tap instead of a form.</li>'+
+    '<li>💶 <b>Direct booking, no commission</b> — everyone who comes in this way saves you the platform’s ~£2.50 per person, and it lands on the guide’s manifest for that departure.</li>'+
+    '<li>📈 The page carries the <b>guide’s name</b>, so you can see which guides bring bookings in.</li></ul>'+
+    '<p class="mini">Nothing is really booked. The real page would live on your own domain.</p>';
   document.getElementById('viajero-overlay').classList.add('ver');
   document.body.style.overflow='hidden';
+  GP.paso='tours'; GP.tour=null; GP.hora=null; GP.diaIdx=0; GP.pax=null; GP.codigo=null;
   pintaGuidePage(nombre);
 }
+/* ============ Página del guía: reservar OTRO tour desde su QR ============
+   El guía enseña el QR al acabar el tour, así que quien escanea acaba de andar
+   con él. De ahí dos decisiones:
+   - Los tours y sus horarios NO están escritos a mano: salen de franjasEmpresa(),
+     el mismo horario que el encargado ve en 🗓 This week's schedule. Si añade una
+     salida o cambia un día, aquí aparece solo.
+   - El nº de personas viene PREFIJADO con el de la reserva de quien escanea
+     (VJ.pax): acaba de venir en grupo de 5, lo más probable es que reserve para 5.
+   Los datos de cada tour (duración, punto de encuentro, modelo de precio) vienen
+   del Cerebro, así que el operador los mantiene en un solo sitio. */
+var GP={ guia:null, paso:'tours', tour:null, diaIdx:0, hora:null, pax:null, codigo:null };
+
+/* Próximos 14 días desde el «hoy» de la demo (sáb 18 jul 2026). Sin Date() para
+   que la demo sea determinista y no cambie según el día en que se abra. */
+/* «Old Town Walks · Edinburgh» -> «Old Town Walks»: la cabecera quiere la ciudad,
+   una frase corrida no. */
+function empresaCorta(){ return String(MK.empresa).split('·')[0].trim(); }
+var GP_DOW=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];   /* dow 0 = lunes */
+function gpDias(){
+  var MESES=[['Jul',31],['Aug',31],['Sep',30]];
+  var out=[], d=18, mi=0, dow=5;   /* 18 jul 2026 fue sábado */
+  for (var i=0;i<14;i++){
+    out.push({ i:i, d:d, mes:MESES[mi][0], dow:dow,
+               et:(i===0?'Today':(i===1?'Tomorrow':GP_DOW[dow])) });
+    d++; if (d>MESES[mi][1]){ d=1; mi=Math.min(mi+1, MESES.length-1); }
+    dow=(dow+1)%7;
+  }
+  return out;
+}
+/* Tours de la empresa con sus franjas, tal cual los tiene el horario. */
+function gpTours(){
+  var map={}, orden=[];
+  franjasEmpresa().forEach(function(f){
+    if(!map[f.tour]){ map[f.tour]={ tour:f.tour, franjas:[] }; orden.push(f.tour); }
+    map[f.tour].franjas.push({ hora:f.hora, dias:f.dias });
+  });
+  return orden.map(function(k){ return map[k]; });
+}
+function gpKb(tour){
+  var t=S.tours.filter(function(x){ return x.nombre===tour })[0];
+  return t ? t.kb : {};
+}
+/* Etiqueta de precio derivada del hecho «modelo» del Cerebro — no duplicada. */
+function gpPrecio(tour){
+  var m=(gpKb(tour).modelo)||'';
+  if (/free|tip/i.test(m)) return 'Free to book · tip at the end';
+  var pr=m.match(/£\s?(\d+(?:\.\d+)?)/);
+  return pr ? precioTxt(+pr[1]) + ' per person' : '';
+}
+/* Días en que sale ese tour, en toda la ventana de 14 días. */
+function gpDiasDe(tour){
+  var t=gpTours().filter(function(x){ return x.tour===tour })[0];
+  if(!t) return [];
+  var dows={}; t.franjas.forEach(function(f){ f.dias.forEach(function(d){ dows[d]=1; }); });
+  return gpDias().filter(function(x){ return dows[x.dow]; });
+}
+/* Horas de ese tour ese día concreto. */
+function gpHorasDe(tour, dow){
+  var t=gpTours().filter(function(x){ return x.tour===tour })[0];
+  if(!t) return [];
+  return t.franjas.filter(function(f){ return f.dias.indexOf(dow)>=0; })
+    .map(function(f){ return f.hora; })
+    .filter(function(v,i,a){ return a.indexOf(v)===i; })
+    .sort();
+}
+/* Plazas libres deterministas (hash de tour+día+hora) para que la demo no mienta
+   distinto en cada recarga. Se calculan sobre el aforo REAL del Cerebro. */
+function gpLibres(tour, dia, hora){
+  var aforo=parseInt(gpKb(tour).aforo,10)||20;
+  var k=tour+'|'+dia.mes+dia.d+'|'+hora, h=0;
+  for (var i=0;i<k.length;i++) h=(h*31+k.charCodeAt(i))>>>0;
+  var libres=h%(aforo+3);                 /* de vez en cuando sale 0 = completo */
+  return libres>aforo ? aforo : libres;
+}
+function gpHora12(h){
+  var m=String(h).match(/^(\d{1,2}):(\d{2})$/); if(!m) return h;
+  var hh=+m[1], ap=hh<12?'AM':'PM', h12=hh%12; if(h12===0) h12=12;
+  return h12+':'+m[2]+' '+ap;
+}
+
+function gpElige(tour){
+  GP.tour=tour; GP.paso='cuando'; GP.hora=null;
+  var ds=gpDiasDe(tour); GP.diaIdx = ds.length ? ds[0].i : 0;
+  var hs=gpHorasDe(tour, ds.length?ds[0].dow:0); GP.hora = hs.length?hs[0]:null;
+  /* Prefijado con las personas de SU reserva — es el caso normal al salir de un tour */
+  if (GP.pax===null) GP.pax = Math.max(1, VJ.pax||1);
+  pintaGuidePage(GP.guia);
+}
+function gpDia(i){
+  GP.diaIdx=i;
+  var dia=gpDias()[i];
+  var hs=gpHorasDe(GP.tour, dia.dow);
+  if (hs.indexOf(GP.hora)<0) GP.hora = hs.length?hs[0]:null;
+  pintaGuidePage(GP.guia);
+}
+function gpHora(h){ GP.hora=h; pintaGuidePage(GP.guia); }
+function gpPax(delta){
+  var aforo=parseInt(gpKb(GP.tour).aforo,10)||20;
+  GP.pax=Math.min(aforo, Math.max(1, (GP.pax||1)+delta));
+  pintaGuidePage(GP.guia);
+}
+function gpVuelve(){ GP.paso='tours'; GP.tour=null; GP.hora=null; pintaGuidePage(GP.guia); }
+function gpReserva(){
+  var dia=gpDias()[GP.diaIdx];
+  if (!GP.hora){ toast('Pick a time first 🙂'); return; }
+  if (gpLibres(GP.tour, dia, GP.hora) < GP.pax){
+    toast('That departure hasn’t got room for '+GP.pax+' — try another time or day.'); return;
+  }
+  var k=GP.tour+dia.d+GP.hora+GP.pax, h=0;
+  for (var i=0;i<k.length;i++) h=(h*33+k.charCodeAt(i))>>>0;
+  GP.codigo='OTW-'+h.toString(36).slice(0,6);
+  GP.paso='hecho';
+  pintaGuidePage(GP.guia);
+  toast('✅ Simulated direct booking on your own site — no platform fee, and it shows up on the guide’s manifest for that departure.');
+}
+
 function pintaGuidePage(nombre){
+  GP.guia=nombre;
   var g=S.equipo.guias.filter(function(x){return x.n===nombre})[0]||{n:nombre,color:'#0c6b56',nota:'—'};
   var pant=document.getElementById('viajero-pantalla');
-  var tours={};
-  franjasEmpresa().forEach(function(f){ if(!tours[f.tour]) tours[f.tour]=f.hora; });
-  pant.innerHTML='<div class="vj-estado"><span>18:52</span><span>📶&nbsp;&nbsp;🔋</span></div>'+
-    '<div class="vj-cab"><span class="dot"></span><b>Old Town Walks · Edinburgh</b>'+
-    '<span class="vj-seguro">direct booking</span></div>'+
+  var cab='<div class="vj-estado"><span>18:52</span><span>📶&nbsp;&nbsp;🔋</span></div>'+
+    '<div class="vj-cab"><span class="dot"></span><b>'+MK.empresa+'</b>'+
+    '<span class="vj-seguro">direct booking</span></div>';
+
+  /* ---- paso 3: hecho ---- */
+  if (GP.paso==='hecho'){
+    var d3=gpDias()[GP.diaIdx];
+    pant.innerHTML=cab+
+      '<div class="vj-cuerpo vj-gracias">'+
+      '<div class="vj-check">🎟️</div>'+
+      '<h3 style="margin:8px 0 2px;">You’re booked in</h3>'+
+      '<p class="mini muted" style="margin:0 0 10px;">Confirmation on its way to you now.</p>'+
+      '<div class="gp-resumen" style="text-align:left;">'+
+        '<b>'+GP.tour+'</b><br>'+
+        d3.et+' '+d3.d+' '+d3.mes+' · '+gpHora12(GP.hora)+'<br>'+
+        GP.pax+(GP.pax===1?' person':' people')+' · '+gpPrecio(GP.tour)+'<br>'+
+        '<span class="mini muted">Booking reference '+GP.codigo+'</span>'+
+      '</div>'+
+      '<div class="vj-transp" style="text-align:left;">📋 It is already on '+g.n+'’s manifest for that departure, '+
+        'and '+empresaCorta()+' paid <b>no platform commission</b> on it — you booked direct.</div>'+
+      '<button class="vj-volver" onclick="gpVuelve()">← Book something else</button>'+
+      '</div>';
+    pant.scrollTop=0; return;
+  }
+
+  /* ---- paso 2: cuándo y cuántos ---- */
+  if (GP.paso==='cuando'){
+    var kb=gpKb(GP.tour);
+    var dias=gpDiasDe(GP.tour);
+    var dia=gpDias()[GP.diaIdx];
+    var horas=gpHorasDe(GP.tour, dia.dow);
+    var libres=GP.hora ? gpLibres(GP.tour, dia, GP.hora) : 0;
+    var aforo=parseInt(kb.aforo,10)||20;
+    var mismaReserva=(GP.pax===Math.max(1, VJ.pax||1));
+    pant.innerHTML=cab+
+      '<div class="vj-cuerpo">'+
+      '<button class="vj-volver" style="margin:0 0 6px;" onclick="gpVuelve()">← All tours</button>'+
+      '<h3 style="font-family:var(--serif); font-size:18px; margin:2px 0 1px;">'+GP.tour+'</h3>'+
+      '<p class="mini muted" style="margin:0 0 4px;">'+
+        (kb.dur?kb.dur+' · ':'')+gpPrecio(GP.tour)+
+        (kb.punto?'<br>Meets at '+kb.punto:'')+'</p>'+
+      '<p class="vj-tit">Which day?</p>'+
+      '<div class="gp-tira">'+
+        dias.map(function(x){
+          return '<button class="gp-dia'+(x.i===GP.diaIdx?' on':'')+'" onclick="gpDia('+x.i+')">'+
+            '<small>'+x.et+'</small><b>'+x.d+'</b><small>'+x.mes+'</small></button>';
+        }).join('')+
+      '</div>'+
+      '<p class="vj-tit">What time?</p>'+
+      '<div class="gp-horas">'+
+        (horas.length
+          ? horas.map(function(h){
+              var lib=gpLibres(GP.tour, dia, h);
+              var lleno=lib===0;
+              return '<button class="gp-hora'+(h===GP.hora?' on':'')+(lleno?' lleno':'')+'"'+
+                (lleno?' disabled':' onclick="gpHora(\''+h+'\')"')+'>'+gpHora12(h)+
+                '<small>'+(lleno?'full':lib+' left of '+aforo)+'</small></button>';
+            }).join('')
+          : '<span class="mini muted">Nothing on this day — pick another.</span>')+
+      '</div>'+
+      '<p class="vj-tit">How many of you?</p>'+
+      '<div class="gp-pax">'+
+        '<button onclick="gpPax(-1)"'+(GP.pax<=1?' disabled':'')+' aria-label="One fewer">−</button>'+
+        '<span class="gp-n">'+GP.pax+'</span>'+
+        '<button onclick="gpPax(1)"'+(GP.pax>=aforo?' disabled':'')+' aria-label="One more">+</button>'+
+      '</div>'+
+      (mismaReserva
+        ? '<p class="mini muted" style="margin:6px 2px 0;">Same as the booking you came on today — change it if the group has.</p>'
+        : '')+
+      (GP.hora && libres && libres<GP.pax
+        ? '<div class="vj-transp">⚠️ Only '+libres+' left at '+gpHora12(GP.hora)+'. Try another time, or split the group.</div>'
+        : '')+
+      '<div class="gp-resumen">'+
+        '<b>'+dia.et+' '+dia.d+' '+dia.mes+(GP.hora?' · '+gpHora12(GP.hora):'')+'</b> · '+
+        GP.pax+(GP.pax===1?' person':' people')+'<br>'+
+        gpPrecio(GP.tour)+' — nothing to pay now.'+
+      '</div>'+
+      '<button class="vj-cta" onclick="gpReserva()">Book '+GP.pax+(GP.pax===1?' place':' places')+'</button>'+
+      '<p class="vj-legal">Free cancellation right up to the start time. Demo with made-up data — nothing is really booked.</p>'+
+      '</div>';
+    pant.scrollTop=0; return;
+  }
+
+  /* ---- paso 1: los tours del guía ---- */
+  var tours=gpTours();
+  pant.innerHTML=cab+
     '<div class="vj-cuerpo">'+
     '<div style="text-align:center; margin:6px 0 2px;">'+
       '<span class="ini grande" style="background:'+g.color+'; width:56px; height:56px; font-size:22px; display:inline-flex; margin:0;">'+iniGuia(g)+'</span>'+
       '<h3 style="margin:8px 0 2px; font-size:20px;">'+g.n+'</h3>'+
-      '<p class="mini muted" style="margin:0;">guía en Old Town Walks · ⭐ '+(g.nota||'—')+' · te lo cuenta como nadie</p></div>'+
+      '<p class="mini muted" style="margin:0;">Guide at '+empresaCorta()+' · ⭐ '+(g.nota||'—')+'</p></div>'+
     '<div class="vj-burbuja" style="margin-top:10px;">💬 <i>“The walk with '+g.n+' was the best thing we did all trip. We’d do it again tomorrow.”</i>'+
       '<span class="vj-hora">verified review</span></div>'+
-    '<p class="vj-tit">Mis tours — reserva gratis, plazas al momento</p>'+
-    Object.keys(tours).map(function(t){
-      return '<button class="vj-cta" style="margin-top:8px;" onclick="toast(\'Simulated direct booking — in production this lands on your own site, with no platform fee\')">'+
-        t+' · '+tours[t]+' → book</button>'; }).join('')+
-    '<div class="vj-transp" style="margin-top:12px;">✨ Reservas <b>directas con Old Town Walks</b> — sin intermediarios ni comisiones.</div>'+
-    '<button class="vj-volver" onclick="pintaViajero(\'importe\')">💚 Just done their tour? Leave them a tip</button>'+
+    '<p class="vj-tit">Walks you can book with us</p>'+
+    tours.map(function(t){
+      var kb=gpKb(t.tour);
+      var dias=gpDiasDe(t.tour);
+      var cuando = dias.length>=13 ? 'Every day'
+        : dias.slice(0,3).map(function(x){ return x.et; }).join(', ')+(dias.length>3?'…':'');
+      return '<button class="gp-tour" onclick="gpElige(\''+t.tour.replace(/'/g,"\\'")+'\')">'+
+        '<b>'+t.tour+'</b>'+
+        '<span class="gp-meta">'+cuando+' · '+
+          t.franjas.map(function(f){ return gpHora12(f.hora); }).filter(function(v,i,a){return a.indexOf(v)===i}).join(' / ')+
+          (kb.dur?' · '+kb.dur:'')+'</span>'+
+        '<span class="gp-precio">'+gpPrecio(t.tour)+' →</span>'+
+        '</button>';
+    }).join('')+
+    '<div class="vj-transp">✨ Booked <b>straight with '+empresaCorta()+'</b> — no middleman, no platform fee, '+
+      'and free cancellation up to the start time.</div>'+
+    '<button class="vj-volver" onclick="pintaViajero(\'importe\')">💚 Just done their walk? Leave '+g.n+' a tip</button>'+
     '</div>';
   pant.scrollTop=0;
 }
@@ -3548,33 +3952,33 @@ function vjLibre(){ VJ.libre=true; pintaViajero('importe');
 function vjOtraCambia(el){
   VJ.otra=Math.max(0, Math.round((parseFloat(String(el.value).replace(',','.'))||0)*100)/100);
   var b=document.getElementById('vj-cta-btn');
-  if(b) b.textContent='Leave a tip · '+vjTotal()+' £';
+  if(b) b.textContent='Leave a tip · '+dinero(vjTotal());
 }
 function vjMetodo(m){ VJ.metodo=m; pintaViajero('importe'); }
 function vjPagar(){
-  if (!vjTotal()){ toast('Escribe primero una cantidad 🙂'); return; }
+  if (!vjTotal()){ toast('Put an amount in first 🙂'); return; }
   pintaViajero('gracias');
 }
 function pintaViajero(paso){
   var pant=document.getElementById('viajero-pantalla');
   var cab='<div class="vj-estado"><span>12:47</span><span>📶&nbsp;&nbsp;🔋</span></div>'+
     '<div class="vj-cab"><span class="dot"></span><b>Old Town Walks · Edinburgh</b>'+
-    '<span class="vj-seguro">🔒 pago seguro</span></div>';
+    '<span class="vj-seguro">🔒 secure payment</span></div>';
   if (paso==='gracias'){
     var url=(S.post && S.post.resenaUrl) ? S.post.resenaUrl : 'g.page/oldtownwalks/review';
     pant.innerHTML=cab+
       '<div class="vj-cuerpo vj-gracias">'+
       '<div class="vj-check">🧡</div>'+
       '<h3>Thank you, '+VJ.nombre+'!</h3>'+
-      '<p class="vj-total">'+vjTotal()+' £</p>'+
-      '<p class="mini muted">recibidos con '+vjMetodoNombre()+' — they reach the Old Town Walks team in full.</p>'+
+      '<p class="vj-total">'+dinero(vjTotal())+'</p>'+
+      '<p class="mini muted">received by '+vjMetodoNombre()+' — it reaches '+VJ.guia+' in full.</p>'+
       '<div class="vj-resena">'+
       '<p><b>Would you leave us a Google review?</b><br>'+
       '<span class="mini muted">It’s optional and separate from your tip — takes a minute.</span></p>'+
       '<button class="vj-cta vj-cta-g" onclick="toast(\'This would open the Google listing ('+url+') — simulated\')">⭐ Leave a Google review</button>'+
       '<p class="mini" style="margin-top:9px;">💡 Mentioning <b>'+VJ.guia+'</b> by name helps enormously.</p>'+
       '</div>'+
-      '<button class="vj-volver" onclick="pintaViajero(\'importe\')">← cambiar el importe</button>'+
+      '<button class="vj-volver" onclick="pintaViajero(\'importe\')">← change the amount</button>'+
       '</div>';
     pant.scrollTop=0;
     return;
@@ -3586,12 +3990,13 @@ function pintaViajero(paso){
   }).join('');
   // “Otra cantidad”: casilla libre — el total que el viajero quiera, fuera de los fijos
   var libre = S.propCfg.libre
-    ? '<button class="vj-imp vj-imp-libre'+(VJ.libre?' on':'')+'" onclick="vjLibre()"><b>✏️ Otra</b><span>cantidad libre</span></button>'
+    ? '<button class="vj-imp vj-imp-libre'+(VJ.libre?' on':'')+'" onclick="vjLibre()"><b>✏️ Other</b><span>your own amount</span></button>'
     : '';
   var libreInput = (S.propCfg.libre && VJ.libre)
     ? '<div class="fila" style="gap:8px; margin-top:8px; align-items:center;">'+
+      '<b style="font-size:17px;">'+MK.moneda.sim+'</b>'+
       '<input id="vj-otra" inputmode="decimal" placeholder="How much in total?" value="'+(VJ.otra||'')+'"'+
-      ' oninput="vjOtraCambia(this)" style="flex:1; border:1.5px solid var(--acc); border-radius:10px; padding:10px 12px; font-size:16px; font-family:inherit;"> £'+
+      ' oninput="vjOtraCambia(this)" style="flex:1; border:1.5px solid var(--acc); border-radius:10px; padding:10px 12px; font-size:16px; font-family:inherit;">'+
       '<span class="mini muted">in total — whatever you like</span></div>'
     : '';
   var metodos=VJ_METODOS.map(function(m){
@@ -3605,12 +4010,12 @@ function pintaViajero(paso){
     '<b>'+VJ.guia+'</b>. If you enjoyed it, this is where you can say thanks 🧡'+
     '<span class="vj-hora">12:47 ✓✓</span></div>'+
     '<div class="vj-transp" style="margin-bottom:10px;">🇬🇧 <b>Tips only, no set amount.</b> Your guide works on a tips-only basis — give whatever you feel it was worth, or nothing at all.</div>'+
-    '<p class="vj-tit">How much would you like to leave? <span class="mini muted" style="font-weight:400;">· booking for '+VJ.pax+' personas</span></p>'+
+    '<p class="vj-tit">How much would you like to leave? <span class="mini muted" style="font-weight:400;">· booking for '+VJ.pax+' people</span></p>'+
     '<div class="vj-importes'+(libre?' con-libre':'')+'">'+importes+libre+'</div>'+libreInput+
     '<p class="vj-tit">How would you like to pay?</p>'+
     '<div class="vj-metodos">'+metodos+'</div>'+
     '<div class="vj-transp">✨ <b>Your tip goes straight to '+VJ.guia+'</b> — with no surcharge to you.</div>'+
-    '<button class="vj-cta" id="vj-cta-btn" onclick="vjPagar()">Dejar propina · '+vjTotal()+' £</button>'+
+    '<button class="vj-cta" id="vj-cta-btn" onclick="vjPagar()">Leave a tip · '+dinero(vjTotal())+'</button>'+
     '<p class="vj-legal">Payment processed securely. We use your details only to handle this tip (GDPR).<br>'+
     'Demo with made-up data — no payment is taken.</p>'+
     '</div>';
@@ -3801,9 +4206,10 @@ function razonesDe(r){
 function cadencia(r, inteligente){
   if (!inteligente) return 'T-24h wa';
   var alto=+document.getElementById('ns-alto').value, medio=+document.getElementById('ns-medio').value;
-  if (r>=alto)  return 'T-72h wa · T-24h wa · T-3h wa ⏰→8:00 · T-45min mapa 📍';
-  if (r>=medio) return 'T-24h wa · T-3h wa ⏰→8:00';
-  return 'T-24h wa (y gracias)';
+  var ca=canalAviso();
+  if (r>=alto)  return 'T-72h '+ca+' · T-24h '+ca+' · T-3h '+ca+' ⏰→8:00 AM · T-45min map 📍';
+  if (r>=medio) return 'T-24h '+ca+' · T-3h '+ca+' ⏰→8:00 AM';
+  return 'T-24h '+ca+' (and a thank-you)';
 }
 function pintaNoshow(){
   var inteligente=document.getElementById('sw-int').checked;
@@ -3841,8 +4247,8 @@ function pintaCombosDestinatarios(){
   var web=S.att.filter(function(a){ return a.canal==='Own site' });
   var plat=S.att.filter(function(a){ return a.canal!=='Own site' });
   document.getElementById('combo-destinatarios').innerHTML=
-    '🎯 <b>Today’s recipients: '+web.length+' de '+S.att.length+' bookings</b> — only the ones from your own site ('+
-    web.map(function(a){return a.n}).join(', ')+'). Las '+plat.length+' de plataforma ('+
+    '🎯 <b>Today’s recipients: '+web.length+' of '+S.att.length+' bookings</b> — only the ones from your own site ('+
+    web.map(function(a){return a.n}).join(', ')+'). The '+plat.length+' from platforms ('+
     plat.map(function(a){return a.canal}).filter(function(v,i,arr){return arr.indexOf(v)===i}).join(', ')+
     ') already get a review request from their own platform — the message isn’t sent twice.';
 }
@@ -3852,7 +4258,7 @@ function pintaCombosDestinatarios(){
    con coste de canal: se ve la regla "el guía nunca paga" (lo absorbe la empresa,
    en rojo) — el caso real que asusta si el software no lo explica. */
 var TOURS_LIQ = [
-  { f:'2026-06-24', t:'10:00 · Centro', g:'Emma',        ax:19, rec:198.0, plat:9  },
+  { f:'2026-06-24', t:'10:00 · Old Town', g:'Emma',        ax:19, rec:198.0, plat:9  },
   { f:'2026-06-27', t:'17:00 · Centro', g:'Liam',        ax:15, rec:171.5, plat:7  },
   { f:'2026-06-29', t:'18:30 · Leith', g:'Emma',    ax:11, rec:240.0, plat:0  },
   { f:'2026-07-03', t:'10:00 · Centro', g:'Emma',        ax:21, rec:212.0, plat:11 },
@@ -3868,7 +4274,7 @@ var COMISION_CANAL = 2.5;
 var liqModo = 'pct';
 var liqCoste = 'empresa';   // LO HABITUAL: la empresa asume las comisiones de canal
 
-function eur(x){ return x.toFixed(2).replace('.',',')+' £'; }
+function eur(x){ return dinero(x, 2); }
 function celdaEur(x, esGuia){
   var cls = x<0 ? ' class="num neg"' : (esGuia && x>0 ? ' class="num pos-guia"' : ' class="num"');
   return '<td'+cls+'>'+eur(x)+'</td>';
@@ -3935,7 +4341,7 @@ function pintaLiq(){
     var g=porGuia[x.g]=porGuia[x.g]||{tours:0,ax:0,rec:0,coste:0,guia:0,emp:0};
     g.tours++; g.ax+=x.ax; g.rec+=x.rec; g.coste+=r.coste; g.guia+=r.guia; g.emp+=r.emp;
     var tr=document.createElement('tr');
-    tr.innerHTML='<td>'+x.f.slice(5)+' · '+x.t+'</td><td>'+x.g+'</td><td class="num">'+x.ax+'</td>'+
+    tr.innerHTML='<td>'+fechaCorta(x.f)+' · '+x.t+'</td><td>'+x.g+'</td><td class="num">'+x.ax+'</td>'+
       celdaEur(x.rec)+celdaEur(-r.coste)+celdaEur(r.guia,true)+celdaEur(r.emp);
     tb.appendChild(tr);
   });
@@ -3955,15 +4361,15 @@ function pintaLiq(){
   var neto=tot.rec-tot.coste;
   var kpi3;
   if (liqCoste==='ingreso'){
-    kpi3='<div class="kpi"><span class="v'+(neto<0?' neg':'')+'">'+eur(neto)+'</span><span class="l">Net to split (tras coste)</span></div>';
+    kpi3='<div class="kpi"><span class="v'+(neto<0?' neg':'')+'">'+eur(neto)+'</span><span class="l">Net to split (after costs)</span></div>';
   } else {
     var empBruta=tot.rec-tot.guia;
     var comido=empBruta>0? Math.round(tot.coste/empBruta*100) : 0;
-    kpi3='<div class="kpi"><span class="v'+(comido>=100?' neg':'')+'">'+comido+' %</span><span class="l">de la parte de la empresa se va en comisiones de canal</span></div>';
+    kpi3='<div class="kpi"><span class="v'+(comido>=100?' neg':'')+'">'+comido+'%</span><span class="l">of the company’s share goes on channel fees</span></div>';
   }
   document.getElementById('liq-kpis').innerHTML=
     '<div class="kpi"><span class="v">'+eur(tot.rec)+'</span><span class="l">Takings (tips)</span></div>'+
-    '<div class="kpi"><span class="v'+(tot.coste>0?' neg':'')+'">'+eur(tot.coste)+'</span><span class="l">💳 Booking costs ('+sel.reduce(function(s,x){return s+x.plat},0)+'p × '+eur(COMISION_CANAL)+')'+(liqCoste==='empresa'?' — a cargo de la empresa':'')+'</span></div>'+
+    '<div class="kpi"><span class="v'+(tot.coste>0?' neg':'')+'">'+eur(tot.coste)+'</span><span class="l">💳 Booking costs ('+sel.reduce(function(s,x){return s+x.plat},0)+'p × '+eur(COMISION_CANAL)+')'+(liqCoste==='empresa'?' — absorbed by the company':'')+'</span></div>'+
     kpi3+
     '<div class="kpi"><span class="v pos-guia">'+eur(tot.guia)+'</span><span class="l">'+(liqModo==='pct'?'To guides ('+pct+' % '+(liqCoste==='empresa'?'del bruto':'del neto')+')':'To guides (what’s left after '+eur(fijo)+'/p)')+'</span></div>'+
     '<div class="kpi"><span class="v'+(tot.emp<0?' neg':'')+'">'+eur(tot.emp)+'</span><span class="l">Empresa'+(liqModo==='fijo'?' ('+eur(fijo)+' × asistente':' ('+(100-pct)+' %')+(liqCoste==='empresa'?' − booking costs)':')')+'</span></div>'+
@@ -3972,26 +4378,31 @@ function pintaLiq(){
 function csvLiq(){
   var del=document.getElementById('liq-del').value, al=document.getElementById('liq-al').value;
   var pct=+document.getElementById('rep-pct').value, fijo=+document.getElementById('rep-fijo').value;
-  var filas=[['Fecha','Tour','Guia','Asistentes','Recaudacion','Booking costs','A pagar al guia','Empresa'].join(';')];
+  var filas=[['Date','Tour','Guide','Attendees','Takings','Booking costs','Owed to guide','Company'].join(',')];
   TOURS_LIQ.filter(function(x){ return x.f>=del && x.f<=al; }).forEach(function(x){
     var r=repartoTour(x,pct,fijo);
-    filas.push([x.f,x.t,x.g,x.ax,x.rec.toFixed(2),r.coste.toFixed(2),r.guia.toFixed(2),r.emp.toFixed(2)]
-      .join(';').replace(/\./g,','));
+    /* Los campos de texto van entrecomillados: un nombre de tour con una coma
+       partiría la fila en dos columnas. */
+    function q(v){ return '"'+String(v).replace(/"/g,'""')+'"'; }
+    filas.push([q(x.f),q(x.t),q(x.g),x.ax,x.rec.toFixed(2),r.coste.toFixed(2),r.guia.toFixed(2),r.emp.toFixed(2)]
+      .join(','));
   });
-  // BOM + ';' como la liquidación real: para que Excel en español lo abra bien.
+  /* BOM para que Excel respete los acentos. Separador coma y decimales con punto:
+     es lo que espera un Excel en inglés. Antes la cabecera iba con comas y las filas
+     con ';', así que el archivo salía mal formado en cualquier idioma. */
   var blob=new Blob(['﻿'+filas.join('\n')],{type:'text/csv;charset=utf-8'});
   var a=document.createElement('a'); a.href=URL.createObjectURL(blob);
-  a.download='liquidacion_'+del+'_'+al+'.csv'; a.click();
+  a.download='guide-payouts_'+del+'_'+al+'.csv'; a.click();
   toast('CSV downloaded — ready for your accountant');
 }
 
 /* ============ canales y sincronización ============ */
-S.canales={ email:'reservas@oldtownwalks.co.uk', wa:'+39 331 204 7792',
+S.canales={ email:'bookings@oldtownwalks.co.uk', wa:'+44 7700 900 812',
   remitentes:['noreply@guruwalk.com','reservas@viator.com','confirm@freetour.com','subject contains “new booking”'],
   // Regla por plataforma (modulable). Cifras de partida según investigación jul-2026:
   // GuruWalk cobra por asistente reservado; no-show reportable hasta 72 h post-tour.
   recon:[
-    { plat:'GuruWalk',  base:'per person booked', coste:2.5, ventanaH:72, nota:'reportar el no-show ≤72 h o lo pagas' },
+    { plat:'GuruWalk',  base:'per person booked', coste:2.5, ventanaH:72, nota:'report the no-show within 72 h or you pay it' },
     { plat:'FreeTour.com',  base:'per person booked', coste:2.0, ventanaH:48, nota:'estimated window — confirm it' },
     { plat:'Viator', base:'commission on the sale',  coste:0,   ventanaH:0,  nota:'free tour, no per-person fee; changes in their own dashboard' },
     { plat:'Own site', base:'no cost',            coste:0,   ventanaH:0,  nota:'direct booking: £0 commission' },
@@ -4002,7 +4413,7 @@ function pintaCanales(){
     S.canales.remitentes.forEach(function(r, i){
       var b=document.createElement('span'); b.className='chip gris';
       b.style.cssText='display:inline-flex; gap:6px; align-items:center; font-family:var(--mono); text-transform:none; letter-spacing:0;';
-      b.innerHTML='📨 '+r+'<button onclick="quitarRemitente('+i+')" title="quitar" style="border:0; background:none; cursor:pointer; color:var(--muted); padding:0;">✕</button>';
+      b.innerHTML='📨 '+r+'<button onclick="quitarRemitente('+i+')" title="remove" style="border:0; background:none; cursor:pointer; color:var(--muted); padding:0;">✕</button>';
       c.appendChild(b);
     });
   }
@@ -4032,7 +4443,7 @@ function setFiltroGuia(k, v){
            : 'GuIA will also answer numbers in your contacts')
     : k==='estricto'
       ? (v ? 'Strict mode: GuIA only answers numbers with a booking, or that mention a tour'
-           : 'Modo estricto desactivado')
+           : 'Strict mode off')
       : (v ? 'Block list active — GuIA will never answer those 2 numbers'
            : 'Lista de bloqueo desactivada'));
 }
@@ -4058,7 +4469,7 @@ function calcDirecto(){
   var base = 48*(S.canales.recon[0].coste||0) + 6*(S.canales.recon[1].coste||0);
   var anual = base*12*pct/100;
   document.getElementById('cd-ahorro').textContent =
-    anual.toLocaleString('es-ES',{maximumFractionDigits:0})+' £';
+    '£'+anual.toLocaleString('en-GB',{maximumFractionDigits:0});
   document.getElementById('cd-nota').innerHTML =
     'At Old Town Walks’ volume (54 people/month on platforms that charge per person). An operator of '+
     '4 tours a day (~1,100 platform bookings a month) would save <b>~'+
@@ -4083,7 +4494,7 @@ function probarBuzon(){
   buzonProbado=true;
   S.att.push({ n:'Ana Rossi', p:3, canal:'GuruWalk', ok:false });
   pintaManifiesto(); pintaCombosDestinatarios();
-  document.getElementById('cn-guruwalk').textContent='ahora mismo';
+  document.getElementById('cn-guruwalk').textContent='just now';
   toast('📥 Read from the inbox: Ana Rossi · 3p · GuruWalk · tomorrow 10:00 AM — already on the manifest and in the anti-no-show sequence');
 }
 
@@ -4189,7 +4600,7 @@ function anadirGuia(){
   var em=document.getElementById('eq-ng-email').value.trim();
   if(!n){ toast('Enter the guide’s name'); return; }
   if(S.equipo.guias.some(function(g){ return g.n.toLowerCase()===n.toLowerCase(); })){
-    toast('There is already a guide called '+n+' en el equipo'); return; }
+    toast('There is already a guide called '+n+' on the team'); return; }
   if(tel.replace(/\D/g,'').length<9){ toast('Not a valid phone number — it needs at least 9 digits'); return; }
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em)){ toast('Not a valid email — check the format'); return; }
   S.equipo.guias.push({ n:n, color:COLORES_GUIA[S.equipo.guias.length%COLORES_GUIA.length],
@@ -4253,7 +4664,7 @@ function calQuitarSalida(slot){
   var fr=franjasEmpresa(); var f=fr.filter(function(x){return x.key===key})[0]; if(!f) return;
   S.equipo.diasFranja[key]=f.dias.filter(function(x){return x!==d});
   delete S.equipo.cobertura[slot]; S.equipo.pick=null; pintaEquipo();
-  toast('Salida quitada del horario');
+  toast('Departure taken off the schedule');
 }
 function pintaCalPicker(){
   var p=document.getElementById('eq-cal-picker'); if(!p) return;
@@ -4269,7 +4680,7 @@ function pintaCalPicker(){
     ? cob.map(function(gi,ix){ var g=S.equipo.guias[gi];
         return '<span class="fila" style="gap:5px; align-items:center;">'+
           '<span class="ini grande" style="background:'+g.color+'">'+iniGuia(g)+'</span>'+
-          '<b>'+(ix+1)+'º</b> '+g.n+(ix===0?' <span class="chip" style="background:var(--acc-soft); color:var(--acc);">principal</span>':
+          '<b>'+ordEN(ix+1)+'</b> '+g.n+(ix===0?' <span class="chip" style="background:var(--acc-soft); color:var(--acc);">lead</span>':
             ' <button class="btn mini sec" style="padding:3px 8px;" onclick="calSubir(\''+slot+'\','+gi+')" title="move up the running order">▲</button>')+
           ' <button class="btn mini sec" style="padding:3px 8px;" onclick="calToggleGuia(\''+slot+'\','+gi+')" title="quitar">✕</button></span>'; }).join('')
     : '<i class="mini muted">Nobody assigned — tap a guide to put them at the front of this departure.</i>';
@@ -4284,8 +4695,8 @@ function pintaCalPicker(){
   p.style.cssText='display:block; margin-top:14px; background:var(--acc-soft); border:1.5px solid var(--acc); border-radius:12px; padding:14px;';
   p.innerHTML='<div class="fila" style="justify-content:space-between; align-items:center; flex-wrap:wrap;">'+
       '<b>🗓 '+DIA_LARGO[d]+' · '+f.hora+' · '+f.tour+'</b>'+
-      '<button class="btn mini sec" onclick="S.equipo.pick=null; pintaEquipo();">Cerrar</button></div>'+
-    '<p class="mini muted" style="margin:6px 0 8px;">Who’s out? Tap the guides in <b>running order</b> — the first one leads. 🟢 = has marked themselves availabnibilidad para esta salida.</p>'+
+      '<button class="btn mini sec" onclick="S.equipo.pick=null; pintaEquipo();">Close</button></div>'+
+    '<p class="mini muted" style="margin:6px 0 8px;">Who’s out? Tap the guides in <b>running order</b> — the first one leads. 🟢 = has put themselves down for this departure.</p>'+
     '<div style="display:flex; flex-direction:column; gap:6px; margin-bottom:10px;">'+seq+'</div>'+
     '<div class="fila" style="gap:6px; flex-wrap:wrap;">'+chips+'</div>'+
     '<div style="margin-top:10px;"><button class="btn mini sec" onclick="calQuitarSalida(\''+slot+'\')" style="border-color:var(--rojo); color:var(--rojo);">🗑 Quitar esta salida del horario</button></div>';
@@ -4293,8 +4704,8 @@ function pintaCalPicker(){
 function seedDispo(){
   var fr=franjasEmpresa();
   var pref={
-    'Emma': function(f){ return (/centro/i.test(f.tour) && f.hora==='10:00') || /trastevere/i.test(f.tour); },
-    'Liam': function(f){ return (/centro/i.test(f.tour) && f.hora==='17:00') || /nocturno/i.test(f.tour); },
+    'Emma': function(f){ return (/old town/i.test(f.tour) && f.hora==='10:00') || /leith/i.test(f.tour); },
+    'Liam': function(f){ return (/old town/i.test(f.tour) && f.hora==='17:00') || /ghosts/i.test(f.tour); },
   };
   S.equipo.guias.forEach(function(g){
     if(g.dispoSeeded) return; g.dispoSeeded=true;
@@ -4319,7 +4730,7 @@ function pintaEquipo(){
   pintaGpLista();
   var g=S.equipo.guias;
   document.getElementById('eq-activos').textContent=
-    g.filter(function(x){return x.activo}).length+' en activo de '+g.length;
+    g.filter(function(x){return x.activo}).length+' active of '+g.length;
   // tabla del equipo
   var tb=document.getElementById('eq-tabla');
   tb.querySelectorAll('tr:not(:first-child)').forEach(function(r){r.remove()});
@@ -4393,7 +4804,7 @@ function pintaEquipo(){
     sc.innerHTML='<span>✅ <b>Every departure this week is covered.</b> Nice work.</span>';
   } else {
     var enc=document.createElement('p'); enc.className='mini muted'; enc.style.margin='0 0 8px';
-    enc.innerHTML='<b>'+descubiertas.length+' salida'+(descubiertas.length>1?'s':'')+' uncovered</b> this week (also in <span style="color:var(--amber);">amber</span> on the calendar). Guides who marked themselves available can be assignerse en un clic:';
+    enc.innerHTML='<b>'+descubiertas.length+' departure'+(descubiertas.length>1?'s':'')+' uncovered</b> this week (also in <span style="color:var(--amber);">amber</span> on the calendar). Guides who marked themselves available can be assigned in one tap:';
     sc.appendChild(enc);
     descubiertas.forEach(function(u){
       var d=document.createElement('div'); d.className='fila';
@@ -4401,13 +4812,13 @@ function pintaEquipo(){
       var cand=g.map(function(x,gi){ return {x:x, gi:gi} })
         .filter(function(p){ return p.x.activo && p.x.dispo[u.slot]; });
       var txt='<span>⚠ <b>'+u.f.hora+' · '+u.f.tour+'</b> · '+DIA_L[u.d]+' — '+
-        (cand.length?'disponibles:':'nobody marked themselves available')+'</span>';
+        (cand.length?'available:':'nobody marked themselves available')+'</span>';
       d.innerHTML=txt;
       cand.forEach(function(p){
         var b=document.createElement('button'); b.className='btn mini';
         b.innerHTML='<span class="ini" style="background:'+p.x.color+'; width:18px; height:18px; font-size:10px; margin:0; border:0; display:inline-flex; vertical-align:middle;">'+iniGuia(p.x)+'</span> '+p.x.n;
         b.onclick=function(){ S.equipo.cobertura[u.slot]=[p.gi]; pintaEquipo();
-          toast('✅ '+p.x.n+' asignada al '+u.f.tour+' de las '+u.f.hora+' ('+DIA_L[u.d]+') — manifiesto creado'); };
+          toast('✅ '+p.x.n+' assigned to the '+gpHora12(u.f.hora)+' '+u.f.tour+' ('+DIA_L[u.d]+') — manifest created'); };
         d.appendChild(b);
       });
       var vc=document.createElement('button'); vc.className='btn mini sec'; vc.textContent='See on the calendar';
@@ -4420,7 +4831,7 @@ function pintaEquipo(){
 }
 function toggleCheckin(gi){
   var x=S.equipo.guias[gi]; x.checkin=!x.checkin; pintaEquipo();
-  toast(x.checkin ? '✅ '+x.n+' ya can check people in desde su manifiesto'
+  toast(x.checkin ? '✅ '+x.n+' can now check people in from their own manifest'
                   : 'Permission removed: the manager now checks people in on their tours');
 }
 function toggleDispoFranja(gi, key, d){
@@ -4459,7 +4870,7 @@ function calcProy(){
   var d2={minimumFractionDigits:2, maximumFractionDigits:2};
   document.getElementById('py-grupo-v').textContent=grupo;
   document.getElementById('py-tours-v').textContent=tours;
-  document.getElementById('py-prop-v').textContent=prop.toLocaleString('es-ES',d2);
+  document.getElementById('py-prop-v').textContent=prop.toLocaleString(MK.moneda.loc,d2);
   document.getElementById('py-ng-v').textContent=ng;
   document.getElementById('py-dir-v').textContent=Math.round(dir*100);
   document.getElementById('py-com-v').textContent=com.toLocaleString('es-ES',d2);
@@ -4477,7 +4888,7 @@ function calcProy(){
   var margen = paxMes ? empMes/paxMes : 0;
   document.getElementById('py-kpis').innerHTML=
     '<div class="kpi'+(guiaMes<0?' malo':'')+'"><span class="v"'+(guiaMes<0?'':' style="color:var(--acc);"')+'>'+eur0(guiaMes)+'</span><span class="l">each guide / month <b>('+dias+' operating days)</b></span></div>'+
-    '<div class="kpi'+(empMes<0?' malo':'')+'"><span class="v">'+eur0(empMes)+'</span><span class="l">company net / month (tras '+eur0(ovh)+' de gastos fijos)</span></div>'+
+    '<div class="kpi'+(empMes<0?' malo':'')+'"><span class="v">'+eur0(empMes)+'</span><span class="l">company net / month (after '+eur0(ovh)+' of fixed costs)</span></div>'+
     '<div class="kpi"><span class="v">'+paxDia+'</span><span class="l">people / day</span></div>'+
     '<div class="kpi"><span class="v">'+eur0(brutoMes)+'</span><span class="l">gross tips / month</span></div>'+
     '<div class="kpi"><span class="v">'+eur0(comMes)+'</span><span class="l">platform fees / month</span></div>'+
