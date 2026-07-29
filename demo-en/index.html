@@ -2967,31 +2967,31 @@ function respuestaGuiaES(t){
     toks.some(function(w){ return NUC_DESP.indexOf(w)!==-1 || NUC_GRAC.indexOf(w)!==-1 });
   if (esCortesia){
     if (toks.some(function(w){ return NUC_DESP.indexOf(w)!==-1 }))
-      return 'See you soon! We’re here for whatever you need 🙂';
-    return 'Thank you! Anything else, we’re right here 🙂';
+      return '¡Hasta pronto! Aquí estamos para lo que necesites 🙂';
+    return '¡A ti! Cualquier otra cosa, por aquí estamos 🙂';
   }
   // 4) TELÉFONO SUELTO (RGPD): nunca localizamos reservas por teléfono. Y un
   //    código OTW-… jamás se confunde con un número, aunque parezca uno.
   if (!/blv-[a-z0-9]+/i.test(t) && /^\+?[0-9][0-9 .\-()]{5,}[0-9]$/.test(t.trim()))
-    return 'For privacy I don’t look bookings up by phone number: give me your code (OTW-…), it’s in your confirmation email 🙂';
+    return 'Por privacidad no localizo reservas por teléfono: dime tu código (OTW-…), lo tienes en tu email de confirmación 🙂';
   // 5) DEMASIADO CORTO para clasificar (y no es cortesía ni código): pedir un
   //    poco más de contexto — sin derivar.
   if (m.replace(/[^a-z0-9]/g,'').length<4 && !/lun-/.test(m))
-    return 'Tell me a bit more and I’ll help you right away 🙂';
+    return 'Cuéntame un poco más tu duda y te ayudo al momento 🙂';
   if (/perdido|no.*encuentro|donde esta el grupo|where are you/.test(m)){
     if (/que pasa|y si/.test(m))
-      return 'Don’t worry: the group stops along the way. If you really do lose them, tell me here with your code and I’ll send you a map of where they are 🙂';
+      return 'Tranquilo: el grupo va parando por el recorrido. Si te pierdes de verdad, dímelo por aquí con tu código y te paso un mapa con dónde están 🙂';
     if (S.ubi)
-      return 'Found them! The group is right here:\n📍 <b>maps.google.com/?q=55.9486,-3.1908</b>\n(location shared by the guide '+S.ubiHace+' min ago). Ask for Emma when you get there. If you can’t see them, tell me.\n\n<i>— Notice: without handing out the guide’s number, and without anybody phoning anybody.</i>';
-    return 'I’ve asked your guide to share their location 📍 Ask me again in 2–3 minutes and I’ll send you the map.\n\n<i>— Prueba a ir al Manifiesto, pulsa “Share where the group is” y vuelve a preguntarme.</i>';
+      return '¡Los encontramos! El grupo está aquí ahora mismo:\n📍 <b>maps.google.com/?q=55.9486,-3.1908</b>\n(ubicación compartida por la guía hace '+S.ubiHace+' min). Pregunta por Emma al llegar. Si no los ves, dímelo.\n\n<i>— Fíjate: sin dar el teléfono de la guía, y sin que nadie llame a nadie.</i>';
+    return 'Ya le he pedido a tu guía que comparta su ubicación 📍 Pregúntame otra vez en 2-3 minutos y te paso el mapa.\n\n<i>— Prueba a ir al Manifiesto, pulsa «Compartir dónde está el grupo» y vuelve a preguntarme.</i>';
   }
   /* ---- TERCERA PASADA · ideas de Madrid Latido y la competencia ---- */
   // No-show empático (ya pasó): reenganche sin reproche. Va ANTES de la regla
   // “llego tarde”, que es para quien avisa de que viene de camino.
   if (/me perdi (el tour|la salida)|perdi el tour|no pude (llegar|venir|ir)|llegue tarde|llegamos tarde|ya se habian ido|se habian ido/.test(m)){
     var hN=kb('horas');
-    return 'No problem at all! You can join the next departure'+(hN?' ('+hN+')':'')+
-      ' on the same booking. If you’d rather cancel, give me your code (OTW-…) and I’ll release it straight away.';
+    return '¡No pasa nada! Puedes unirte a la próxima salida'+(hN?' ('+hN+')':'')+
+      ' con tu misma reserva. Si prefieres cancelar, dime tu código (OTW-…) y la libero al instante.';
   }
   // Confirmación de asistencia — nunca si lleva “?”: una pregunta no confirma.
   // Faltan datos → se omite esa parte, no se deriva.
@@ -3004,19 +3004,19 @@ function respuestaGuiaES(t){
   }
   // “¿Es guiado?” — respuesta fija, no es un dato del formulario.
   if (/es guiad|va guiad|tour guiad|lleva guia|hay guia|va (con )?un guia|con guia local/.test(m))
-    return 'Yes, it’s fully guided: a local guide walks the whole route with you, telling the history and the stories behind each corner.';
+    return 'Sí, es un tour 100% guiado: un guía local os acompaña todo el recorrido contando la historia y los secretos de cada rincón.';
   // Fumar — respuesta fija de sentido común.
   if (/fuma|tabaco|cigarro|vapea|vaper|porro/.test(m))
-    return 'It’s an outdoor walk 🙂 If you need a minute, just tell the guide. Out of respect for the group, best not to smoke while they’re talking.';
+    return 'Es un paseo al aire libre 🙂 Si necesitas un minuto, díselo al guía. Por respeto al grupo, mejor no fumar mientras explica.';
   // Próximo tour: se CALCULA de la agenda de verdad (hoy = S.agenda[S.agDia]).
   if (/(el|la|es|hay) proxim[oa]|proxim[oa] (tour|salida)|siguiente (tour|salida)|cuando salis/.test(m)){
     var salHoy=(S.agenda[S.agDia].tours||[]).filter(function(x){ return !x.live });
-    if (salHoy.length) return 'The next tour is today at '+salHoy[0].hora+' ('+salHoy[0].tit+') 🙂';
+    if (salHoy.length) return 'El próximo tour es hoy a las '+salHoy[0].hora+' ('+salHoy[0].tit+') 🙂';
     var man=S.agenda[S.agDia+1];
     if (man && man.tours && man.tours.length)
-      return 'The next tour is tomorrow at '+man.tours[0].hora+' ('+man.tours[0].tit+') 🙂';
+      return 'El próximo tour es mañana a las '+man.tours[0].hora+' ('+man.tours[0].tit+') 🙂';
     registraDerivada(t);
-    return 'I can’t see any more departures loaded this week: I’ll pass it to the manager and they’ll confirm shortly 🙂';
+    return 'No veo más salidas cargadas esta semana: se lo paso al encargado y te confirma enseguida 🙂';
   }
   // “¿Queda sitio?” — aforo del cerebro × reservas confirmadas de la agenda de hoy.
   if (/queda sitio|quedan (plazas|sitio|huecos)|queda (plaza|hueco)|hay (sitio|plazas|hueco)|esta complet[oa]|esta llen[oa]|va llen[oa]/.test(m)){
@@ -3026,25 +3026,25 @@ function respuestaGuiaES(t){
     var salida=(S.agenda[S.agDia].tours||[]).filter(function(x){
       var titN=normaliza(x.tit);
       return nomT.indexOf(titN)!==-1 || titN.indexOf(nomT)!==-1; })[0];
-    if (!salida) return 'There’s no departure of this tour today — give me your code (OTW-…) and I’ll tell you the next one right away 🙂';
+    if (!salida) return 'Hoy no hay salida de este tour — dime tu código (OTW-…) y te digo la próxima al momento 🙂';
     var paxOk=0; (salida.res||[]).forEach(function(r){ if (r.ok) paxOk+=r.p; });
-    if (paxOk<afN) return 'Today you’re '+paxOk+' out of a maximum of '+afN+' — quedan plazas 🙂';
-    return 'That departure is full, but I’ll put you on the waiting list and tell you the moment a place opens up — it checks itself.';
+    if (paxOk<afN) return 'Hoy vais '+paxOk+' de un máximo de '+afN+' — quedan plazas 🙂';
+    return 'Esa salida está completa, pero te apunto a la lista de espera y te aviso al momento si se libera una plaza — se revisa sola.';
   }
   // Reseña post-tour — dato de EMPRESA (“resena”); vacío → deriva por hueco.
   if (/resena|valoracion|dejar (una )?opinion|review|estrellas/.test(m)){
     var rs=kbE('resena'); if(!rs) return derivaPorHuecoEmp('resena', t);
-    return 'That makes our day! ⭐ Leave it here: '+rs+'. Mentioning the guide by name helps enormously.';
+    return '¡Nos hace el día! ⭐ Déjala aquí: '+rs+'. Mencionar al guía por su nombre ayuda un montón.';
   }
   // Entradas / gastos extra — va ANTES de la regla de pago, que casa “pagar”.
   if (/entrada|gastos? extras?|hay que pagar|se paga (algo|aparte)|cuesta entrar/.test(m)){
     var ent=kb('entradas'); if(!ent) return derivaPorHueco('entradas', t);
-    return ent+'. Beyond that, whatever you think it was worth at the end 💛';
+    return ent+'. Lo demás, lo que tú consideres al final 💛';
   }
   // Cierre de reservas (“¿hasta cuándo puedo reservar?”).
   if (/hasta cuando (puedo|se puede|puede) reservar|cuanto antes|ultima hora|ultimo momento|puedo reservar|cierran? (las )?reservas|reservar (hoy|ahora|ya|mismo)/.test(m)){
     var cor=kb('corte'); if(!cor) return derivaPorHueco('corte', t);
-    return 'You can book up to '+cor+'. If it’s already closed, come to the meeting point anyway — if there’s room, the guide adds you on the spot 🙂';
+    return 'Puedes reservar hasta '+cor+'. Si ya cerró, vente al punto y, si queda hueco, el guía te apunta allí mismo 🙂';
   }
   // Distancia — va ANTES de “ritmo”, que casa “se camina”.
   if (/cuanto se camina|cuantos (km|kilometros)|que distancia|cuanta distancia|cuanto hay que andar|cuanto se anda|se camina mucho/.test(m)){
@@ -3057,8 +3057,8 @@ function respuestaGuiaES(t){
   // libre. Si pregunta por tarjeta/efectivo, manda la regla de pago (abajo).
   if (/propina|cuanto se suele (dar|aportar|dejar)|bote|cuanto es lo normal/.test(m) && !/tarjeta|efectivo|bizum/.test(m)){
     var pro=kb('propina');
-    if (pro) return 'It really is up to you. If it helps, most people give around '+pro+'.';
-    return 'It’s entirely up to you: everyone gives what feels right at the end 💛';
+    if (pro) return 'Es libre, de verdad. Como orientación, la mayoría suele dar '+pro+'.';
+    return 'Es totalmente libre: cada uno aporta lo que le parece al final 💛';
   }
   // Otras ciudades — dato de EMPRESA (“ciudades”).
   if (/otras ciudades|otra ciudad|tours en (?!ingles|espanol)|haceis.*(barcelona|madrid|florencia|paris|lisboa|venecia|napoles)/.test(m)){
@@ -3073,59 +3073,59 @@ function respuestaGuiaES(t){
   if (/grupo|somos \d+|despedida/.test(m)){
     var af=kb('aforo'); if(!af) return derivaPorHueco('aforo', t);
     var gm=kb('grupomin'); if(!gm) return derivaPorHueco('grupomin', t);
-    return 'Groups are a maximum of '+af+' per departure, and you can all come together 🙂 One thing that helps us: tell us the real number, even if you booked across several reservations, so the guide can plan the walk and bring a radio set if you need one. There is nothing to pay to book and nothing to pay on the day. Tips are welcome at the end and entirely up to you.\n\n<i>— The minimum comes from the fact sheet del Cerebro: cada empresa pone el suyo.</i>';
+    return 'Los grupos son de un máximo de '+af+' por salida, y podéis ir todos juntos 🙂 Eso sí, la política clara: en grupos de más de 6 (aunque lo repartáis en varias reservas), el guía os pedirá un adelanto de '+gm+' por persona COMO MÍNIMO al empezar — nunca menos. Se descuenta de vuestra aportación final, así que no pagáis de más.\n\n<i>— El mínimo sale del formulario del Cerebro: cada empresa pone el suyo.</i>';
   }
   if (/cancel|anul|no puedo ir|no podre|no vamos a poder/.test(m)){
     var cod=(t.match(/blv-[a-z0-9]+/i)||[])[0];
     if (cod){
-      anotaGuia('Booking “'+cod+'” cancelled over chat — place released; the waiting list checks itself');
-      return 'Done! Your booking is cancelled ✅ Thanks for letting us know in good time: your place is free again straight away.\n\n<i>— Once released, the waiting list checks itself: if somebody fitted, they have already been told (see it on the dashboard). Nothing to chase by hand. And it is written into today’s tour notes.</i>';
+      anotaGuia('Reserva «'+cod+'» cancelada por el chat — plaza liberada; la lista de espera se revisa sola');
+      return '¡Hecho! Cancelo tu reserva ✅ Gracias por avisar con tiempo: tu plaza queda libre al instante.\n\n<i>— Al liberarse, la lista de espera se revisa sola: si alguien cabía, ya está avisado (míralo en el Dashboard). Nada de gestionarlo a mano. Y queda apuntado en las observaciones del tour de hoy.</i>';
     }
-    if (/guruwalk|viator|getyourguide|plataforma/i.test(m))
-      return 'You made that booking on the platform, so cancel it from their confirmation email — that way <b>their</b> refund policy applies to you 🙂 As soon as you do, your place frees itself on our list: no need to tell us as well — and it won’t count against you as a no-show.';
+    if (/guruwalk|civitatis|getyourguide|plataforma/i.test(m))
+      return 'Esa reserva la hiciste en la plataforma, así que cancélala desde su email de confirmación — así te aplican <b>su</b> política de devolución 🙂 En cuanto lo hagas, tu plaza se libera sola en nuestra lista: no hace falta que nos avises — así no te cuenta como no presentado.';
     var pc=kb('cancelar'); if(!pc) return derivaPorHueco('cancelar', t);
-    return pc+'\n\nTwo ways, whichever suits: (1) if you booked on <b>our site</b>, open your <b>manage booking link</b> (the one in your confirmation email) and cancel in one tap, or give me your code (OTW-…) and I’ll cancel it here; (2) if it was through a <b>platform</b>, cancel it there and I’ll update the list myself.';
+    return pc+'\n\nDos formas, la que te venga mejor: (1) si reservaste en <b>nuestra web</b>, abre tu <b>enlace de gestión</b> (el del email de confirmación) y la cancelas en un clic, o dime tu código (OTW-…) y te la cancelo yo aquí; (2) si fue por una <b>plataforma</b>, cancélala allí y yo actualizo la lista sola.';
   }
   if (/cambiar|cambio de (dia|fecha|hora)|otra fecha|otro dia|persona mas|personas mas|somos (una|dos|uno) menos|menos personas|anadir (una|otra) persona/.test(m)){
     var cbio=kb('cambios'); if(!cbio) return derivaPorHueco('cambios', t);
-    return cbio+'\n\nFrom your <b>manage booking link</b> you can change the date or number of people in one tap (if you booked on our site), or give me your code (OTW-…) and I’ll do it. If it was through a platform and only the <b>number of people</b> changes, tell me and I’ll adjust it on the guide’s manifest so they’re expecting the right number — the platform booking itself you change there.';
+    return cbio+'\n\nDesde tu <b>enlace de gestión</b> cambias fecha o nº de personas en un clic (si reservaste en nuestra web), o dime tu código (OTW-…) y te lo hago yo. Si fue por plataforma y solo cambia el <b>número de personas</b>, dímelo y lo ajusto en el manifiesto del guía para que os espere bien — la reserva en la plataforma la cambias tú allí.';
   }
   if (/tarde|retraso/.test(m)){
     var es=kb('espera'); if(!es) return derivaPorHueco('espera', t);
     var codT=(t.match(/blv-[a-z0-9]+/i)||[])[0];
-    if (codT) anotaGuia('“'+codT+'” messaged to say they’re running late — flagged ⏰ for the guide');
-    return 'Don’t worry! The guide waits at the meeting point for about '+es+', so a few minutes is no problem 🙂 Give me your code (OTW-…) and I’ll tell them right now — you’ll show on their manifest as “⏰ running late”.'+
-      (codT ? '\n\n<i>— Logged: written into today’s tour notes (see it under 📋 Manifest).</i>' : '');
+    if (codT) anotaGuia('«'+codT+'» avisa por el chat de que llega tarde — marcado ⏰ para el guía');
+    return '¡Tranquilo! El guía espera por el punto de encuentro unos '+es+', así que unos minutos no son problema 🙂 Si me dices tu código (OTW-…), le aviso ahora mismo — y aparecerás en su manifiesto como «⏰ llega tarde».'+
+      (codT ? '\n\n<i>— Aviso registrado: escrito en las observaciones del tour de hoy (míralo en el 📋 Manifest).</i>' : '');
   }
   if (/donde (quedamos|es|empieza|salis)|punto de encuentro|meeting point|donde os (veo|encuentro)/.test(m)){
     var pu=kb('punto'); if(!pu) return derivaPorHueco('punto', t);
     return 'Quedamos en '+pu+' 📍'+(kb('horas')?' Salimos '+kb('horas')+'.':'')+
       (kb('senal')?' Llega unos minutos antes y busca el '+kb('senal')+'.':'')+
-      '\n\n<i>— Dato del cerebro de “'+tourChat().nombre+'” — switch the tour above and you’ll get a different answer.</i>';
+      '\n\n<i>— Dato del cerebro de «'+tourChat().nombre+'» — cambia el tour arriba y verás otra respuesta.</i>';
   }
   if (/donde (acaba|termina)|final del (tour|recorrido)/.test(m)){
     var fi=kb('fin'); if(!fi) return derivaPorHueco('fin', t);
-    return 'El recorrido termina en '+fi+' — we leave you well placed there to carry on by yourself 🙂';
+    return 'El recorrido termina en '+fi+' — desde allí te dejamos bien situado para seguir por tu cuenta 🙂';
   }
   if (/que (se )?visit|que vemos|que veremos|que vamos a ver|recorrido|la ruta|que se ve|monumento|que sitios/.test(m)){
     var vi=kb('visita'); if(!vi) return derivaPorHueco('visita', t);
-    return 'Veremos '+vi+' — no rushing, and all the best stories 🙂';
+    return 'Veremos '+vi+' — sin prisas y con las mejores historias 🙂';
   }
   if (/a que hora|que hora|horario|cuando sal|que dias/.test(m)){
     var ho=kb('horas'); if(!ho) return derivaPorHueco('horas', t);
-    return 'We set off '+ho+(kb('punto')?' from '+kb('punto'):'')+' 🙂 Shall I book you a place?';
+    return 'Salimos '+ho+(kb('punto')?' desde '+kb('punto'):'')+' 🙂 ¿Te reservo plaza?';
   }
   if (/cuanto dura|duracion|how long/.test(m)){
     var du=kb('dur'); if(!du) return derivaPorHueco('dur', t);
-    return 'El tour dura '+du+', at a gentle pace with stops for the stories (and the odd photo 📸).';
+    return 'El tour dura '+du+', a ritmo tranquilo y con paradas para las explicaciones (y alguna foto 📸).';
   }
   if (/idioma|ingles|english|language/.test(m)){
     var id=kb('idiomas'); if(!id) return derivaPorHueco('idiomas', t);
-    return 'El tour es en '+id+'. If you need another language, tell me and I’ll check with the manager.';
+    return 'El tour es en '+id+'. Si necesitáis otro idioma, dímelo y lo consulto con el encargado.';
   }
   if (/reconozc|reconoc|como os veo|como te encuentro|como es el guia|paraguas|bandera|chaleco|farol/.test(m)){
     var se=kb('senal'); if(!se) return derivaPorHueco('senal', t);
-    return 'Easy: look for the '+se+(kb('punto')?' en '+kb('punto'):'')+'. The guide gets there a few minutes before the start 🙂';
+    return 'Muy fácil: busca el '+se+(kb('punto')?' en '+kb('punto'):'')+'. El guía llega unos minutos antes de la salida 🙂';
   }
   if (/metro|autobus|bus |como (llego|llegar|se llega)|parada de/.test(m)){
     var ll=kb('llegar'); if(!ll) return derivaPorHueco('llegar', t);
@@ -3181,7 +3181,7 @@ function respuestaGuiaES(t){
   }
   if (/lluev|lluvia|rain|mal tiempo|haga malo|niev/.test(m)){
     var lu=kb('lluvia'); if(!lu) return derivaPorHueco('lluvia', t);
-    return lu+' ☔ If we did have to call it off, we’d let you know here in advance.';
+    return lu+' ☔ Si hubiera que cancelar, te avisamos por aquí con antelación.';
   }
   if (/calor|frio|nieve|nieva|clima|temperatura/.test(m)){
     var cli=kb('clima'); if(!cli) return derivaPorHueco('clima', t);
@@ -3214,12 +3214,12 @@ function respuestaGuiaES(t){
   }
   if (/cuanto|precio|cuesta|gratis|free/.test(m)){
     var mo=kb('modelo'); if(!mo) return derivaPorHueco('modelo', t);
-    return 'It works like this: '+mo+'. At the end you give whatever you think it was worth 💛';
+    return 'Funciona así: '+mo+'. Al final aportas lo que tú consideres 💛';
   }
   if (/hola|buenas|hello/.test(m))
-    return 'Hi! 👋 I’m GuIA. Right now I’m answering about “'+tourChat().nombre+'”: times, meeting point, duration… and with your code I can cancel, flag a delay or send you the map of where the group is.';
+    return '¡Hola! 👋 Soy GuIA. Ahora mismo te atiendo sobre «'+tourChat().nombre+'»: horarios, punto de encuentro, duración… y con tu código puedo cancelar, avisar de un retraso o pasarte el mapa del grupo.';
   registraDerivada(t);
-  return 'I’d rather not answer this one myself and risk getting it wrong: I’ll pass it to the manager and they’ll reply shortly 🙂\n\n<i>— Golden rule: GuIA never invents. This question is logged in the Brain: answer it there once and it will know it for good.</i>';
+  return 'Esto prefiero no responderlo yo para no equivocarme: se lo paso al encargado y te contesta enseguida 🙂\n\n<i>— Regla de oro: GuIA nunca inventa. Esta pregunta queda registrada en el Cerebro: respóndela una vez allí y la sabrá para siempre.</i>';
 }
 
 /* ---- bandeja de derivadas arriba del chat + conmutador de canal ---- */
