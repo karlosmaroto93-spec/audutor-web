@@ -856,6 +856,22 @@
     <div id="der-chat-lista"></div>
   </div>
 
+  <div class="card" id="coste-panel" style="border-left:4px solid var(--acc);">
+    <div class="fila" style="justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:8px;">
+      <b style="font-size:14px;">🌍 One set of facts, any language</b>
+      <span class="mini muted">write each fact once — GuIA answers in the customer’s language</span>
+    </div>
+    <div class="mini muted" style="margin:6px 0 10px;">Try writing in Spanish, German or French: the
+      <b>rules</b> work out what is being asked (that part is free), and only the <b>facts and the
+      sentence mould</b> get translated — each one once, then cached.
+      <details class="mas"><summary>ⓘ more</summary><span class="mas-p">The cache key is the fact
+      itself, so editing a fact in the Brain retires the old translation on its own. And the mould is
+      cached with the facts taken out, which means the same mould serves every tour and every company.
+      If a translation is missing, GuIA does <b>not</b> send a half-translated sentence — it hands the
+      question over, same rule as always.</span></details></div>
+    <div class="kpi-fila" id="coste-kpis"></div>
+  </div>
+
   <div class="chat" id="chat-wa-wrap">
     <div class="fila" style="margin-bottom:8px;">
       <span class="mini muted">The customer is asking about:</span>
@@ -2581,7 +2597,185 @@ function compartirUbi(){ S.ubi=true; S.ubiHace=0; pintaManifiesto();
 
 /* ============ chat GuIA (aislado por tour) ============ */
 function tourChat(){ return S.tours[S.tourChat]; }
-function kb(x){ var v=(tourChat().kb[x]||'').trim(); return v||null; }
+/* ============ Traducción de hechos al idioma del viajero ============
+   Hay UN solo juego de hechos, escrito por el operador en SU idioma. Cuando el viajero
+   escribe en otro, se traduce EL HECHO, no la respuesta entera: así el cortafuegos sigue
+   operando sobre el hecho que el operador confirmó y no sobre texto generado.
+
+   La caché va por (idioma, texto literal del hecho). Dos consecuencias, y son el motivo
+   de que esto salga barato:
+   - El punto de encuentro se traduce UNA vez y sirve a todos los clientes de ese tour
+     para siempre. Un tour tiene ~35 hechos: son ~35 llamadas por idioma en toda su vida,
+     no una por mensaje. El coste por mensaje tiende a cero con el uso.
+   - Si el operador EDITA un hecho, cambia la clave y la entrada vieja deja de usarse
+     sola. No hay que invalidar nada a mano. Es justo lo que le faltaba a la tabla
+     HECHOS_EN que hubo aquí: estaba fijada al texto original, se quedó obsoleta y acabó
+     pisando un hecho ya corregido con una versión antigua y falsa.
+
+   SI NO HAY TRADUCCIÓN, SE DERIVA. Nunca se suelta un hecho a medias ni en el idioma
+   equivocado — el mismo guardarraíl de siempre, aplicado a la traducción. */
+
+var IDIOMA_HECHOS = 'en';        /* idioma en que el operador escribió los hechos */
+var TRAD_CACHE = {};             /* 'es\x00texto del hecho' -> traducción */
+var TRAD_STATS = { nativo:0, cache:0, api:0, sinTraducir:0 };
+
+/* EL PUNTO DE ENGANCHE CON EL LLM.
+   En producción esto es UNA llamada al backend del operador, que a su vez llama al
+   modelo con la clave del servidor:
+       fetch('/api/traduce', {method:'POST', body: JSON.stringify({texto:txt, a:lang})})
+   La clave NUNCA va en el navegador: esta demo es un archivo estático público.
+   Aquí devuelve lo que haya en TRAD_DEMO, y si no lo tiene devuelve null — que es
+   exactamente lo que pasaría si la API fallara, y así se ve el guardarraíl funcionando. */
+function tradApi(txt, lang){
+  var d = TRAD_DEMO[lang];
+  return (d && d[txt]) || null;
+}
+
+function traduceHecho(txt, lang){
+  txt = (txt||'').trim();
+  if (!txt) return null;
+  if (lang === IDIOMA_HECHOS){ TRAD_STATS.nativo++; return txt; }
+  var k = lang + '\x00' + txt;
+  if (TRAD_CACHE[k] !== undefined){ TRAD_STATS.cache++; return TRAD_CACHE[k]; }
+  var tr = tradApi(txt, lang);
+  if (tr){ TRAD_CACHE[k] = tr; TRAD_STATS.api++; return tr; }
+  TRAD_STATS.sinTraducir++;
+  return null;                    /* quien llama deriva */
+}
+
+/* Respuesta COMPLETA en un idioma para el que no hay plantillas propias (ni en ni es).
+   Los datos variables se enmascaran antes de traducir para que la caché acierte: el
+   código de reserva y la hora cambian en cada mensaje, pero la FORMA de la frase no.
+   Así la caché converge en el número de formas de respuesta (~60), no de mensajes. */
+function traduceRespuesta(txt, lang){
+  if (!txt) return null;
+  /* Se enmascaran DOS cosas antes de traducir, y por motivos distintos:
+     - Los HECHOS, porque ya tienen su propia caché por hecho: sacarlos de aquí deja el
+       molde de la frase limpio, y ese molde es el mismo para todos los tours y todas las
+       empresas. La caché de plantillas converge en el número de FORMAS de respuesta
+       (~60 en todo el motor), no en el de mensajes ni en el de clientes.
+     - Los datos variables (código de reserva, horas, importes), porque cambian en cada
+       mensaje y sin enmascararlos la caché no acertaría nunca.
+     Resultado: con la caché caliente, un mensaje cuesta CERO llamadas. */
+  var hechos = [], vars = [], mask = txt;
+  var kbT = tourChat().kb, k2;
+  var valores = [];
+  for (k2 in kbT) if ((kbT[k2]||'').trim().length > 3) valores.push(kbT[k2].trim());
+  for (k2 in S.kbEmpresa) if ((S.kbEmpresa[k2]||'').trim().length > 3) valores.push(S.kbEmpresa[k2].trim());
+  /* De más largo a más corto: si un hecho contiene a otro, el corto no debe partir al largo. */
+  valores.sort(function(a,b){ return b.length - a.length; });
+  valores.forEach(function(val){
+    if (mask.indexOf(val) === -1) return;
+    hechos.push(val);
+    mask = mask.split(val).join('⟦H' + (hechos.length - 1) + '⟧');
+  });
+  mask = mask.replace(/(OTW-[\w]+|\d{1,2}:\d{2}(?:\s?[AP]M)?|[£€$]\s?[\d.,]+|\d+(?:[.,]\d+)?\s*(?:km|h|min)|\b\d{1,4}\b)/g,
+    function(v){ vars.push(v); return '⟦V' + (vars.length - 1) + '⟧'; });
+
+  var k = lang + '\x00' + mask, tr;
+  if (TRAD_CACHE[k] !== undefined){ TRAD_STATS.cache++; tr = TRAD_CACHE[k]; }
+  else {
+    tr = tradApi(mask, lang);
+    if (tr){ TRAD_CACHE[k] = tr; TRAD_STATS.api++; }
+    else { TRAD_STATS.sinTraducir++; return null; }
+  }
+  /* Cada hecho por su propia vía. Si a UNO le falta traducción se deriva entero: soltar
+     una frase alemana con un hecho en inglés dentro es el fallo que ya cometimos una vez. */
+  var fallo = false;
+  tr = tr.replace(/⟦H(\d+)⟧/g, function(_, i){
+    var h = traduceHecho(hechos[+i], lang);
+    if (!h){ fallo = true; return ''; }
+    return h;
+  });
+  if (fallo) return null;
+  return tr.replace(/⟦V(\d+)⟧/g, function(_, i){ return vars[+i]; });
+}
+
+/* Diccionario de la DEMO haciendo de API. En producción no existe. */
+var TRAD_DEMO = {
+  es: {
+    'Mercat Cross, outside St Giles’ Cathedral on the Royal Mile':
+      'Mercat Cross, junto a la catedral de St Giles, en la Royal Mile',
+    '10–15 minutes from the start time':
+      '10-15 minutos desde la hora de salida',
+    'Free, one tap from your booking link, right up to the start time':
+      'Gratis y con un toque desde tu enlace de reserva, hasta la hora de salida',
+    'Yes — change the date or the number of people at no cost, right up to the start time':
+      'Sí: cambia la fecha o el número de personas sin coste, hasta la hora de salida',
+    'the Royal Mile, St Giles’ Cathedral, the Grassmarket, Greyfriars Kirkyard and the closes of the Old Town':
+      'la Royal Mile, la catedral de St Giles, el Grassmarket, el cementerio de Greyfriars y los callejones del casco antiguo',
+    'We always go out, even if only one person turns up':
+      'Salimos siempre, aunque venga una sola persona',
+    'Nothing to pay: everything on the route is seen from the outside':
+      'No hay que pagar nada: todo el recorrido se ve por fuera',
+    '2 hours before the start': '2 horas antes de la salida',
+    'Entirely up to you. There is no set amount and no minimum — people give what the walk was worth to them':
+      'Totalmente libre. No hay importe fijado ni mínimo: cada uno aporta lo que le ha parecido el paseo',
+    'Nothing to print: your name at the meeting point is enough':
+      'No hace falta imprimir nada: con tu nombre en el punto de encuentro vale',
+    'Mostly accessible, but the Old Town is steep and a few closes have steps. Tell me in advance and the guide takes the step-free route':
+      'Bastante accesible, pero el casco antiguo tiene cuestas y algunos callejones con escalones. Dímelo con antelación y el guía hace la ruta sin escalones',
+    'Your dog is welcome on a lead — more than one tour has ended with a new official mascot 🐾':
+      'Tu perro es bienvenido con correa: más de un tour ha acabado con mascota oficial nueva 🐾',
+    'Just Edinburgh for now 🙂 If it suits you, book your place on our site.':
+      'Por ahora solo Edimburgo 🙂 Si te encaja, reserva tu plaza en nuestra web.',
+    'Yes! We run tailored private walks from £180 per group. Tell me and the manager will put a no-obligation proposal together for you.':
+      '¡Sí! Hacemos paseos privados a medida desde 180 £ por grupo. Dímelo y el encargado te prepara una propuesta sin compromiso.',
+    'every day · 10:00 AM and 5:00 PM': 'todos los días · 10:00 y 17:00',
+    '2 h 30 min': '2 h 30 min',
+    'yellow umbrella': 'paraguas amarillo',
+    '3 km': '3 km',
+    '£10': '10 £',
+    'English (and Spanish if you ask when booking)':
+      'en inglés (y en español si lo pides al reservar)',
+    'Free tour (tip-based) — book for £0':
+      'free tour (a base de propina) — la reserva cuesta 0 £',
+    'the top of the Royal Mile, by the Castle Esplanade — while the Tattoo stands are up over the summer we finish at the Camera Obscura corner instead':
+      'lo alto de la Royal Mile, junto a la explanada del castillo. Mientras están montados los graderíos del Tattoo, en verano, acabamos en la esquina de la Camera Obscura',
+    'We walk in the rain — this is Edinburgh, we would never go out otherwise. We only call a walk off for an amber or red Met Office warning, and it is almost always wind rather than rain. If that happens you hear from us before you leave your hotel.':
+      'Salimos con lluvia: esto es Edimburgo, si no nunca saldríamos. Solo cancelamos con aviso ámbar o rojo del Met Office, y casi siempre es por viento, no por lluvia. Si pasa, te avisamos antes de que salgas del hotel.'
+  },
+  /* Un tercer idioma, para que se vea que la ruta funciona: aquí se traduce la RESPUESTA
+     entera con los datos enmascarados, porque no hay plantillas en alemán. */
+  /* Alemán y francés: se siembran los MOLDES (⟦H⟧ = hecho, ⟦V⟧ = dato variable) y los
+     HECHOS por separado. Son las dos cachés, y por eso un mensaje nuevo en alemán sobre
+     un tour ya visto no cuesta nada. Lo que NO está sembrado deriva, y así se ve el
+     guardarraíl en marcha en vez de tener que creérselo. */
+  de: {
+    'We meet at ⟦H0⟧ 📍 We start ⟦H1⟧. Look for the ⟦H2⟧ — the guide arrives a few minutes early.':
+      'Wir treffen uns an ⟦H0⟧ 📍 Wir starten ⟦H1⟧. Achten Sie auf den ⟦H2⟧ — die Reiseleitung ist ein paar Minuten früher da.',
+    'The tour lasts ⟦H0⟧ — relaxed pace, with stops for the stories (and photos 📸).':
+      'Die Tour dauert ⟦H0⟧ — gemütliches Tempo, mit Pausen für die Geschichten (und Fotos 📸).',
+    '⟦H0⟧ ☔': '⟦H0⟧ ☔',
+    'Each departure takes up to ⟦V0⟧ people — a manageable group where you can actually hear the guide 🙂':
+      'Jede Tour nimmt bis zu ⟦V0⟧ Personen — eine überschaubare Gruppe, in der man die Reiseleitung wirklich hört 🙂',
+    'The tour ends at ⟦H0⟧ — a great spot to carry on exploring on your own 🙂':
+      'Die Tour endet an ⟦H0⟧ — ein guter Ausgangspunkt, um auf eigene Faust weiterzugehen 🙂',
+    /* hechos */
+    'Mercat Cross, outside St Giles’ Cathedral on the Royal Mile':
+      'Mercat Cross, vor der St Giles’ Cathedral an der Royal Mile',
+    'every day · 10:00 AM and 5:00 PM': 'täglich · um 10:00 und 17:00',
+    'yellow umbrella': 'gelben Regenschirm',
+    '2 h 30 min': '2 Std. 30 Min.',
+    'We walk in the rain — this is Edinburgh, we would never go out otherwise. We only call a walk off for an amber or red Met Office warning, and it is almost always wind rather than rain. If that happens you hear from us before you leave your hotel.':
+      'Wir gehen auch bei Regen — das ist Edinburgh, sonst kämen wir nie raus. Wir sagen eine Tour nur bei einer amber- oder roten Warnung des Met Office ab, und meist ist es Wind, nicht Regen. Dann hören Sie von uns, bevor Sie Ihr Hotel verlassen.'
+  },
+  fr: {
+    'We meet at ⟦H0⟧ 📍 We start ⟦H1⟧. Look for the ⟦H2⟧ — the guide arrives a few minutes early.':
+      'On se retrouve à ⟦H0⟧ 📍 On part ⟦H1⟧. Cherchez le ⟦H2⟧ — le guide arrive quelques minutes avant.',
+    'The tour lasts ⟦H0⟧ — relaxed pace, with stops for the stories (and photos 📸).':
+      'La visite dure ⟦H0⟧ — rythme tranquille, avec des pauses pour les histoires (et les photos 📸).',
+    'Mercat Cross, outside St Giles’ Cathedral on the Royal Mile':
+      'Mercat Cross, devant la cathédrale St Giles, sur le Royal Mile',
+    'every day · 10:00 AM and 5:00 PM': 'tous les jours · à 10h00 et 17h00',
+    'yellow umbrella': 'parapluie jaune',
+    '2 h 30 min': '2 h 30'
+  }
+};
+
+/* El motor español atiende al viajero hispanohablante, así que sus hechos van
+   traducidos al español. Si no hay traducción devuelve null y el intent deriva. */
+function kb(x){ return traduceHecho(tourChat().kb[x], 'es'); }
 function kbE(x){ var v=(S.kbEmpresa[x]||'').trim(); return v||null; }
 /* La frase COMPLETA que dirá GuIA con un hecho confirmado — la misma envoltura
    que usa el chat, para enseñársela al usuario en cuanto confirma el campo. */
@@ -2610,8 +2804,18 @@ function fraseGuia(k, o){
   }
 }
 function respuestaGuia(t){
-  if (idiomaDe(t)==='en') return respuestaEN(t);
-  return respuestaGuiaES(t);
+  var lang = idiomaDe(t);
+  if (lang === 'en') return respuestaEN(t);
+  if (lang === 'es') return respuestaGuiaES(t);
+  /* Idioma sin plantillas propias: las REGLAS resuelven en inglés (coste cero) y solo
+     se traduce la respuesta ya construida. Una llamada por FORMA de respuesta, no por
+     mensaje, porque los datos variables van enmascarados. */
+  var base = respuestaEN(t);
+  var tr = traduceRespuesta(base, lang);
+  if (tr) return tr;
+  registraDerivada(t);
+  return 'Sorry — I can read you but I cannot answer properly in your language yet. '+
+         'I have passed this to a colleague and they will reply here shortly 🙂';
 }
 function pintaSelectorChat(){
   var sel=document.getElementById('chat-tour'); sel.innerHTML='';
@@ -2631,8 +2835,31 @@ function msg(quien, texto){
 function chatRapido(t){ document.getElementById('chat-in').value=t; enviarChat(); }
 function enviarChat(){
   var i=document.getElementById('chat-in'); var t=i.value.trim(); if(!t) return;
+  S.msgsChat = (S.msgsChat||0) + 1;
   msg('cli', t.replace(/</g,'&lt;')); i.value='';
-  setTimeout(function(){ msg('bot', respuestaGuia(t)); }, 450);
+  setTimeout(function(){ msg('bot', respuestaGuia(t)); pintaCoste(); }, 450);
+}
+/* El argumento del coste, medido en vez de contado: cuántas llamadas al modelo han hecho
+   falta de verdad para los mensajes de esta sesión. */
+function pintaCoste(){
+  var c=document.getElementById('coste-kpis'); if(!c) return;
+  var msgs=S.msgsChat||0;
+  var porMsg = msgs ? (TRAD_STATS.api/msgs) : 0;
+  /* Honestidad sobre el arranque en frío: las primeras preguntas de la VIDA de una
+     empresa pagan la caché (un hecho y un molde cada una), y a partir de ahí no se paga
+     nada. Enseñar solo «llamadas por mensaje» sin esto haría parecer caro lo que es un
+     pago único, y enseñar solo la caché haría parecer gratis lo que no lo es al empezar. */
+  var techo = 35 + 60;   /* ~35 hechos por tour + ~60 moldes de respuesta, por idioma */
+  c.innerHTML=
+    '<div class="kpi"><span class="v">'+msgs+'</span><span class="l">messages in this session</span></div>'+
+    '<div class="kpi"><span class="v" style="color:var(--acc);">'+TRAD_STATS.api+'</span>'+
+      '<span class="l">paid translations — one-offs, not per message</span></div>'+
+    '<div class="kpi"><span class="v" style="color:var(--turq-deep);">'+TRAD_STATS.cache+'</span>'+
+      '<span class="l">answered from cache · free</span></div>'+
+    '<div class="kpi"><span class="v">'+porMsg.toFixed(2)+'</span>'+
+      '<span class="l">calls per message so far — heading to 0</span></div>'+
+    '<div class="kpi"><span class="v">'+Object.keys(TRAD_CACHE).length+' / ~'+techo+'</span>'+
+      '<span class="l">cache filled, per language. Once full, every message is free</span></div>';
 }
 function derivaPorHueco(campoKey, pregunta){
   var c=CAMPOS_KB.filter(function(x){return x.k===campoKey})[0];
@@ -2755,6 +2982,47 @@ var EN_ES={
   'hotel':'hotel','hotels':'hotel','pickup':'recogida','collect':'recogida',
   'deposit':'senal','quote':'presupuesto','invoice':'factura','advance':'antelacion',
   'maximum':'maximo','max':'maximo','biggest':'maximo','largest':'maximo',
+
+  /* --- Vocabulario de las situaciones generales. Cada palabra que falta aquí es un
+     mensaje que se va al LLM teniendo la respuesta escrita en el Cerebro. --- */
+  'toilets':'banos','toilet':'bano','wc':'bano',
+  'eat':'comida','snack':'comida','coffee':'comida','hungry':'comida','break':'pausa',
+  'breaks':'pausa','thirsty':'beber','drink':'beber',
+  'pace':'ritmo','steep':'empinado','hilly':'empinado','hills':'empinado',
+  'uphill':'empinado','difficult':'dificil','tiring':'dificil','strenuous':'dificil',
+  'slow':'lento','elderly':'mayores','fitness':'forma','fit':'forma',
+  'wear':'llevar','shoes':'calzado','footwear':'calzado','trainers':'calzado',
+  'clothes':'ropa','jacket':'ropa','coat':'ropa',
+  'photo':'foto','photos':'fotos','photograph':'foto','photographs':'fotos',
+  'pictures':'fotos','pics':'fotos','camera':'camara','selfie':'foto',
+  'luggage':'equipaje','suitcase':'maleta','suitcases':'equipaje','bags':'equipaje',
+  'backpack':'mochila','rucksack':'mochila','locker':'consigna','lockers':'consigna',
+  'storage':'consigna','store':'consigna',
+  'print':'imprimir','printed':'imprimir','printout':'imprimir','paper':'papel',
+  'voucher':'imprimir','ticketless':'imprimir',
+  'snows':'nieva','snowing':'nieva','cold':'frio','freezing':'frio','wind':'viento',
+  'windy':'viento','storm':'tormenta','heatwave':'calor','sunny':'calor',
+  'charge':'cargo','charged':'cargo','penalty':'multa','fined':'multa',
+  'noshow':'noshow','forfeit':'multa',
+  'cutoff':'corte','deadline':'corte','lastminute':'corte','walkup':'corte',
+  'cash':'efectivo','contactless':'tarjeta','notes':'efectivo','coins':'efectivo',
+  'minimum':'minimo','cancelled':'cancelar','called':'cancelar',
+  'trust':'fiable','trustworthy':'fiable','scam':'timo','catch':'timo',
+  'legit':'fiable','agency':'agencia','licensed':'titulado','qualified':'titulado',
+  'pickpocket':'carterista','pickpockets':'carterista','theft':'robo',
+  'dangerous':'peligro','crime':'peligro','unsafe':'peligro',
+  'cities':'ciudades','elsewhere':'ciudades',
+  'smoke':'fumar','smoking':'fumar','vape':'fumar','alcohol':'alcohol','beer':'alcohol',
+  'age':'edad','ages':'edad','teenager':'edad','toddler':'edad',
+  'bike':'bici','bicycle':'bici','scooter':'bici',
+  'forgot':'olvide','left':'olvide','lost':'perdido','found':'encontrado',
+  /* 'leave' va DESPUÉS de que /resena/ se compruebe («leave a review»), y «what time
+     do we leave» cae antes en /hora/. 'own' cubre «on my own», que es como se dice de
+     verdad «voy solo». 'other' solo activa el catálogo si además hay «tour». */
+  'leave':'irme','leaving':'irme','own':'solo','other':'otros','else':'otros',
+  /* «estoy aquí y no veo a nadie»: el intent exige AMBOS tokens, así que mapear 'here'
+     (que es palabra muy común) no puede disparar nada por su cuenta. */
+  'here':'aqui','anybody':'nadie','anyone':'nadie','nobody':'nadie','noone':'nadie',
   /* Términos del CORTAFUEGOS: sin ellos “do you do a discount for school groups?”
      caía en la regla de grupos y GuIA contestaba en vez de derivar. */
   'discount':'descuento','discounts':'descuento','voucher':'cupon','coupon':'cupon',
@@ -2763,18 +3031,89 @@ var EN_ES={
   'allergy':'alergia','allergies':'alergia','allergic':'alergia','coeliac':'celiaco',
   'celiac':'celiaco','gluten':'celiaco','intolerance':'intolerancia','vat':'factura','receipt':'factura'
 };
+/* Antes solo distinguía dos idiomas, así que un alemán, un italiano y un francés caían
+   todos a español y recibían plantilla española con hecho inglés. Ahora se detectan seis
+   y el que no tiene plantillas propias pasa por la traducción de la respuesta entera. */
+var MARCADORES_IDIOMA = {
+  en:[' the ',' is ',' are ',' do ',' does ',' can ',' i ',' we ',' you ',' my ',' your ',' what ',
+      ' where ',' when ',' how ',' hi ',' hello ',' thanks ',' thank ',' please ',' and ',' with ',' for '],
+  es:[' el ',' la ',' los ',' las ',' que ',' donde ',' cuando ',' como ',' hola ',' gracias ',' por ',
+      ' para ',' con ',' una ',' un ',' es ',' está ',' esta ',' cuánto ',' cuanto ',' puedo ',' hay '],
+  de:[' der ',' die ',' das ',' und ',' ist ',' sind ',' wir ',' ich ',' wie ',' wo ',' wann ',' kann ',
+      ' danke ',' hallo ',' mit ',' für ',' nicht ',' ein ',' eine ',' treffen '],
+  fr:[' le ',' la ',' les ',' des ',' est ',' nous ',' je ',' vous ',' où ',' quand ',' comment ',
+      ' merci ',' bonjour ',' avec ',' pour ',' pas ',' une ',' combien ',' puis '],
+  it:[' il ',' lo ',' gli ',' che ',' sono ',' siamo ',' dove ',' quando ',' come ',' grazie ',
+      ' ciao ',' con ',' per ',' non ',' una ',' quanto ',' posso ',' dobbiamo '],
+  pt:[' o ',' os ',' as ',' que ',' está ',' somos ',' onde ',' quando ',' como ',' obrigado ',
+      ' olá ',' com ',' para ',' não ',' uma ',' quanto ',' posso ']
+};
+function sinTildes(x){ return x.normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
 function idiomaDe(t){
-  var x=' '+t.toLowerCase().replace(/[^a-záéíóúñü\s]/g,' ')+' ';
-  var EN=[' the ',' is ',' are ',' do ',' does ',' can ',' i ',' we ',' you ',' my ',' your ',' what ',
-          ' where ',' when ',' how ',' hi ',' hello ',' thanks ',' thank ',' please ',' and ',' with ',' for '];
-  var ES=[' el ',' la ',' los ',' las ',' que ',' donde ',' cuando ',' como ',' hola ',' gracias ',' por ',
-          ' para ',' con ',' una ',' un ',' es ',' está ',' esta ',' cuánto ',' cuanto ',' puedo ',' hay '];
-  var e=EN.filter(function(w){return x.indexOf(w)!==-1}).length;
-  var s=ES.filter(function(w){return x.indexOf(w)!==-1}).length;
-  return e>s ? 'en' : 'es';
+  var x=' '+sinTildes(t.toLowerCase()).replace(/[^a-zñ\s]/g,' ').replace(/\s+/g,' ')+' ';
+  var mejor='en', max=-1;
+  for (var k in MARCADORES_IDIOMA){
+    var n=MARCADORES_IDIOMA[k].filter(function(w){ return x.indexOf(sinTildes(w))!==-1 }).length;
+    /* El empate se resuelve a favor del idioma en que están los hechos: es el caso más
+       probable y el único que no cuesta una llamada al modelo. */
+    if (n>max || (n===max && k===IDIOMA_HECHOS)){ max=n; mejor=k; }
+  }
+  return mejor;
 }
+/* ============ Palabras clave en otros idiomas ============
+   El motor hace match con tokens ESPAÑOLES. EN_ES traduce del inglés; sin esto, un
+   mensaje en alemán no activa ningún intent y la respuesta que se traduciría sería la
+   de «no lo sé» — traducir la salida no sirve de nada si la entrada no se entiende.
+
+   Solo las preguntas que de verdad se repiten. Es la diferencia entre 0 y 1 llamada al
+   modelo por mensaje: con esto, «Wo treffen wir uns?» lo resuelven las reglas gratis, y
+   solo lo raro paga traducción de la pregunta.
+
+   OJO con los falsos amigos: 'come' en italiano es «cómo» pero en inglés es un verbo muy
+   usado («can I come alone»), así que NO se mapea. Lo mismo con 'a', 'no', 'die'. */
+var MULTI_KW = {
+  /* dónde / punto de encuentro */
+  'wo':'donde','wohin':'donde','treffpunkt':'punto','treffen':'quedamos',
+  'ou':'donde','rendezvous':'punto','retrouve':'quedamos',
+  'dove':'donde','incontriamo':'quedamos','ritrovo':'punto',
+  'onde':'donde','encontramos':'quedamos',
+  /* cuándo / hora */
+  'wann':'cuando','uhrzeit':'hora','beginnt':'empieza','startet':'empieza',
+  'quand':'cuando','heure':'hora','commence':'empieza',
+  'quando':'cuando','ora':'hora','inizia':'empieza',
+  'horario':'hora','comeca':'empieza',
+  /* cuánto dura */
+  'lange':'dura','dauert':'dura','dauer':'duracion',
+  'duree':'duracion','dure':'dura',
+  'durata':'duracion','dura':'dura',
+  /* precio */
+  'viel':'cuanto','kostet':'cuesta','kostenlos':'gratis','preis':'precio',
+  'combien':'cuanto','coute':'cuesta','gratuit':'gratis','prix':'precio',
+  'costa':'cuesta','gratuito':'gratis','prezzo':'precio',
+  'quanto':'cuanto','gratis':'gratis','preco':'precio',
+  /* el día del tour */
+  'hund':'perro','chien':'perro','cane':'perro','cao':'perro',
+  'toilette':'bano','toiletten':'banos','toilettes':'banos','bagno':'bano','banheiro':'bano',
+  'regen':'lluvia','pluie':'lluvia','pioggia':'lluvia','chuva':'lluvia',
+  'kinder':'nino','enfants':'nino','bambini':'nino','criancas':'nino',
+  'rollstuhl':'silla','fauteuil':'silla','sedia':'silla','cadeira':'silla',
+  'gruppe':'grupo','groupe':'grupo','gruppo':'grupo',
+  'spat':'tarde','retard':'tarde','tardi':'tarde','atrasado':'tarde',
+  'verloren':'perdido','perdu':'perdido','perso':'perdido','perdi':'perdido',
+  'fotos':'fotos','photos':'fotos','fotografieren':'fotos',
+  /* reserva */
+  'stornieren':'cancelar','absagen':'cancelar','annuler':'cancelar','cancellare':'cancelar',
+  'buchung':'reserva','reservation':'reserva','prenotazione':'reserva','reserva':'reserva',
+  'andern':'cambiar','changer':'cambiar','cambiare':'cambiar',
+  /* cortesías, para que no caigan en un intent por accidente */
+  'danke':'gracias','merci':'gracias','grazie':'gracias','obrigado':'gracias',
+  'hallo':'hola','bonjour':'hola','ciao':'hola','ola':'hola'
+};
 function normalizaEN(t){
-  return normaliza(t).split(/\b/).map(function(tok){ return EN_ES[tok]||tok; }).join('');
+  /* Se quitan las tildes antes de mapear: «où» y «ou», «spät» y «spat» tienen que dar
+     el mismo token, si no la tabla no acierta nunca. */
+  return sinTildes(normaliza(t)).split(/\b/)
+    .map(function(tok){ return EN_ES[tok] || MULTI_KW[tok] || tok; }).join('');
 }
 
 /* Los hechos del Cerebro los escribe el operador EN SU IDIOMA — y en esta demo el
@@ -2783,12 +3122,16 @@ function normalizaEN(t){
    redundante, PISABA el hecho corregido de accesibilidad con un «wheelchair and stroller
    friendly» que es falso en el casco antiguo de Edimburgo. Ahora es un paso a través, y
    el guardarraíl se mantiene: si el hecho está vacío, devuelve '' y quien llama deriva. */
-function trEN(txt){ return (txt||'').trim() || null; }
+function trEN(txt){ return traduceHecho(txt, 'en'); }
 
 /* Respuestas en inglés con los MISMOS hechos confirmados del Cerebro. */
 function respuestaEN(t){
   var m=normalizaEN(t), o=tourChat().kb;
   function v(k){ return (o[k]||'').trim(); }
+  /* Los hechos de EMPRESA (quiénes somos, seguridad, otras ciudades, catálogo) se
+     responden una vez y valen para todos los tours. El motor inglés no tenía forma de
+     leerlos, así que cinco hechos más quedaban muertos. */
+  function EMP(k){ return ((S.kbEmpresa && S.kbEmpresa[k]) || '').trim(); }
   function falta(){ registraDerivada(t);
     return 'Let me check that with a colleague so I don\'t give you the wrong info — they\'ll reply here shortly 🙂'; }
   // cortesías
@@ -2885,8 +3228,10 @@ function respuestaEN(t){
   }
   if (/termina|fin\b/.test(m))
     return v('fin') ? 'The tour ends at '+v('fin')+' — a great spot to carry on exploring on your own 🙂' : falta();
-  if (/lluvia|tiempo|calor|nieva/.test(m))
+  if (/lluvia/.test(m) || (/tiempo/.test(m) && !/calor|frio|viento|nieva|tormenta/.test(m)))
     return trEN(v('lluvia')) ? trEN(v('lluvia'))+' ☔' : falta();
+  if (/calor|frio|viento|nieva|tormenta/.test(m))
+    return trEN(v('clima')) || trEN(v('lluvia')) || falta();
   if (/cancelar|cancelacion/.test(m))
     return trEN(v('cancelar')) ? trEN(v('cancelar'))+' 🙂 Just send me your booking code (OTW-…) and I\'ll cancel it right now.' : falta();
   if (/cambiar/.test(m))
@@ -2896,7 +3241,7 @@ function respuestaEN(t){
       +' If you\'re running later, send me your code (OTW-…) and I\'ll let the guide know.' : falta();
   if (/idioma|ingles/.test(m))
     return v('idiomas') ? 'The tour runs in '+v('idiomas')+'. If you need another language, tell me and I\'ll check with the team.' : falta();
-  if (/guia|paraguas|bandera|chaleco|reconoc/.test(m))
+  if (/guia|paraguas|bandera|chaleco|reconoc/.test(m) && !/llevar|calzado|ropa/.test(m))
     return v('senal') ? 'Easy: look for the '+v('senal')+(v('punto')?' at '+v('punto'):'')+'. The guide gets there a few minutes before we start 🙂' : falta();
   /* Un cochecito pregunta por el terreno, no por los niños: en Edimburgo la
      respuesta útil es la de accesibilidad, y el hecho de niños está vacío a propósito. */
@@ -2924,15 +3269,61 @@ function respuestaEN(t){
     return v('distancia') ? 'We cover about '+v('distancia')+' at an easy pace, with plenty of stops.' : falta();
   if (/entrada|museo|dentro/.test(m))
     return trEN(v('entradas')) || falta();
-  if (/bano/.test(m)) return falta();
+
+  /* ===== Situaciones generales =====
+     Cada uno de estos hechos ya se podía rellenar en el Cerebro y NINGÚN intent lo
+     alcanzaba: el operador escribía la respuesta y el cliente no podía sacarla. Eran
+     20 hechos huérfanos, y cada uno es un mensaje que se iba al LLM (o a una persona)
+     con la respuesta escrita al lado. Es la forma más barata de bajar el coste. */
+  if (/bano/.test(m))      return trEN(v('banos'))  || falta();
+  if (/comida|pausa|beber|agua/.test(m))
+                            return trEN(v('comida'))  || falta();
+  if (/empinado|dificil|lento|mayores|forma|ritmo/.test(m))
+                            return trEN(v('ritmo'))   || trEN(v('acces')) || falta();
+  if (/llevar|calzado|ropa/.test(m))
+                            return trEN(v('llevar'))  || falta();
+  if (/foto|camara/.test(m)) return trEN(v('fotos'))  || falta();
+  if (/equipaje|maleta|mochila|consigna/.test(m))
+                            return trEN(v('equipaje'))|| falta();
+  if (/imprimir|papel/.test(m))
+                            return trEN(v('imprimir'))|| falta();
+  if (/cargo|multa|penaliz/.test(m))
+                            return trEN(v('noshow'))  || falta();
+  if (/irme|marchar/.test(m)) return trEN(v('antes')) || falta();
+  if (/corte/.test(m))
+    return v('corte') ? 'You can book up to '+v('corte')+'. If it has already closed, come to the meeting point anyway — if there is room the guide adds you on the spot 🙂' : falta();
+  if (/minimo/.test(m))    return trEN(v('minimo'))  || falta();
+  if (/fumar|alcohol/.test(m))
+    return 'It is an outdoor walk 🙂 If you need a moment, just tell the guide. Out of respect for the group, best not to smoke while they are talking.';
+  if (/edad/.test(m))
+    return trEN(v('ninos')) ? trEN(v('ninos'))+' If you are asking about a specific age, tell me and I will check.' : falta();
+  if (/bici/.test(m))      return falta();
+  if (/olvide/.test(m))    return falta();   /* objetos perdidos: siempre a una persona */
+
+  /* ===== Hechos de EMPRESA — se responden una vez y valen para todos los tours ===== */
+  if (/fiable|timo|agencia|titulado/.test(m))
+                            return trEN(EMP('quienes'))  || falta();
+  if (/carterista|robo|peligro/.test(m))
+                            return trEN(EMP('seguridad')) || falta();
+  if (/ciudades/.test(m))  return trEN(EMP('ciudades'))  || falta();
+  if (/catalogo|otros|mas\b/.test(m) && /tour/.test(m))
+                            return trEN(EMP('catalogo'))  || falta();
+
+  /* ===== Acciones sobre la reserva ===== */
   if (/reserva|reservar|confirmar/.test(m))
     return 'You can book on our website in a minute — no card needed. If you already booked, send me your code (OTW-…) and I\'ll check it for you 🙂';
   if (/resena/.test(m))
-    return 'That would mean a lot 💛 After the tour I\'ll send you a link so you can leave one in a couple of taps.';
-  if (/perdido/.test(m))
-    return 'No problem — send me your booking code (OTW-…) and I\'ll share the guide\'s live location so you can catch up 🙂';
-  if (/solo|seguro/.test(m))
-    return 'Absolutely — lots of people come on their own and it\'s a great way to meet others 🙂';
+    return 'That would mean a lot 💛'+(EMP('resena') ? ' You can leave one here: '+EMP('resena')+'.' : '')+
+      ' Mentioning your guide by name helps enormously.';
+  /* «Estoy aquí y no veo a nadie»: la respuesta útil es la seña + cuánto espera el guía,
+     no derivar. Va al final porque sus palabras aparecen en muchas otras preguntas. */
+  if (/aqui|aquí|aparece|encuentro/.test(m) && /nadie|ninguno|nobody/.test(m))
+    return (v('senal') ? 'Look for the '+v('senal') : 'Look for the guide')+
+      (v('punto')?' at '+v('punto'):'')+'. '+
+      (v('espera') ? 'The guide waits '+v('espera')+', so hold on a moment. ' : '')+
+      'If you still cannot see them, send me your code (OTW-…) and I will get the guide to share their location 🙂';
+  if (/solo/.test(m))      return trEN(v('solo'))    || falta();
+  if (/seguro/.test(m))    return trEN(EMP('seguridad')) || falta();
   return falta();
 }
 
@@ -4918,7 +5309,7 @@ S.tours.forEach(function(t){ CAMPOS_KB.forEach(function(c){ if ((t.kb[c.k]||'').
   S.recientes.push({ tipo:'kb', tourId:t.id, k:c.k, seed:true }); }); });
 seedDispo(); seedCobertura();
 pintaManifiesto(); pintaNoshowCfg(); pintaNoshow(); pintaLiq(); pintaCerebro(); pintaCombosDestinatarios(); pintaPost(); calcProy(); pintaEquipo(); pintaCanales(); pintaOperaciones();
-pintaGatesInline(); pintaWaTope(); pintaPropinaPlan(); pintaCanalChat(); pintaPropCfg();
+pintaGatesInline(); pintaWaTope(); pintaPropinaPlan(); pintaCanalChat(); pintaPropCfg(); pintaCoste();
 msg('bot','Hi! 👋 I’m GuIA. Right now I answer about “'+tourChat().nombre+'” — try the examples, or create another tour under 🧠 Brain and you’ll see each one has its own brain, with nothing mixed in.');
 </script>
 </body>
