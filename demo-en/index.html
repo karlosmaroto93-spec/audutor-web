@@ -2691,6 +2691,29 @@ function traduceRespuesta(txt, lang){
   return tr.replace(/⟦V(\d+)⟧/g, function(_, i){ return vars[+i]; });
 }
 
+/* ===== Precalentado: el coste se paga al GUARDAR el hecho, no en el primer mensaje =====
+   Al guardar el formulario del Cerebro, cada hecho confirmado se traduce ya a los
+   idiomas activos y entra en caché. El primer cliente alemán no paga el arranque en
+   frío: su respuesta sale de caché. En producción esto es un lote asíncrono en el
+   servidor tras el guardado; aquí usa el mismo tradApi. Un fallo aquí no es grave —
+   el hecho se traducirá cuando alguien pregunte — así que no se deriva ni se avisa. */
+var IDIOMAS_ACTIVOS=['es','de','fr'];
+function prewarmTraducciones(valores){
+  var n=0;
+  for (var k in valores){
+    var txt=(valores[k]||'').trim();
+    if (txt.length<4) continue;
+    IDIOMAS_ACTIVOS.forEach(function(lang){
+      if (lang===IDIOMA_HECHOS) return;
+      var key=lang+'\x00'+txt;
+      if (TRAD_CACHE[key]!==undefined) return;
+      var tr=tradApi(txt, lang);
+      if (tr){ TRAD_CACHE[key]=tr; TRAD_STATS.prewarm=(TRAD_STATS.prewarm||0)+1; n++; }
+    });
+  }
+  return n;
+}
+
 /* Diccionario de la DEMO haciendo de API. En producción no existe. */
 var TRAD_DEMO = {
   es: {
@@ -2742,6 +2765,11 @@ var TRAD_DEMO = {
      un tour ya visto no cuesta nada. Lo que NO está sembrado deriva, y así se ve el
      guardarraíl en marcha en vez de tener que creérselo. */
   de: {
+    'Anytime! I\'m here if you need anything else 🙂':
+      'Gern geschehen! Wenn Sie noch etwas brauchen, bin ich hier 🙂',
+    'See you soon! Enjoy the city 🙂': 'Bis bald! Genießen Sie die Stadt 🙂',
+    'Hi there! 👋 I\'m GuIA. Ask me anything about the tour 🙂':
+      'Hallo! 👋 Ich bin GuIA. Fragen Sie mich alles zur Tour 🙂',
     'We meet at ⟦H0⟧ 📍 We start ⟦H1⟧. Look for the ⟦H2⟧ — the guide arrives a few minutes early.':
       'Wir treffen uns an ⟦H0⟧ 📍 Wir starten ⟦H1⟧. Achten Sie auf den ⟦H2⟧ — die Reiseleitung ist ein paar Minuten früher da.',
     'The tour lasts ⟦H0⟧ — relaxed pace, with stops for the stories (and photos 📸).':
@@ -2761,6 +2789,11 @@ var TRAD_DEMO = {
       'Wir gehen auch bei Regen — das ist Edinburgh, sonst kämen wir nie raus. Wir sagen eine Tour nur bei einer amber- oder roten Warnung des Met Office ab, und meist ist es Wind, nicht Regen. Dann hören Sie von uns, bevor Sie Ihr Hotel verlassen.'
   },
   fr: {
+    'Anytime! I\'m here if you need anything else 🙂':
+      'Avec plaisir ! Je suis là s\'il vous faut autre chose 🙂',
+    'See you soon! Enjoy the city 🙂': 'À bientôt ! Profitez bien de la ville 🙂',
+    'Hi there! 👋 I\'m GuIA. Ask me anything about the tour 🙂':
+      'Bonjour ! 👋 Je suis GuIA. Posez-moi vos questions sur la visite 🙂',
     'We meet at ⟦H0⟧ 📍 We start ⟦H1⟧. Look for the ⟦H2⟧ — the guide arrives a few minutes early.':
       'On se retrouve à ⟦H0⟧ 📍 On part ⟦H1⟧. Cherchez le ⟦H2⟧ — le guide arrive quelques minutes avant.',
     'The tour lasts ⟦H0⟧ — relaxed pace, with stops for the stories (and photos 📸).':
@@ -2776,7 +2809,9 @@ var TRAD_DEMO = {
 /* El motor español atiende al viajero hispanohablante, así que sus hechos van
    traducidos al español. Si no hay traducción devuelve null y el intent deriva. */
 function kb(x){ return traduceHecho(tourChat().kb[x], 'es'); }
-function kbE(x){ var v=(S.kbEmpresa[x]||'').trim(); return v||null; }
+/* Hechos de empresa para el motor ESPAÑOL: traducidos, como kb(). Solo lo usa ese
+   motor, así que no toca la interfaz del Cerebro (que va en el idioma del operador). */
+function kbE(x){ return traduceHecho(S.kbEmpresa[x], 'es'); }
 /* La frase COMPLETA que dirá GuIA con un hecho confirmado — la misma envoltura
    que usa el chat, para enseñársela al usuario en cuanto confirma el campo. */
 function fraseGuia(k, o){
@@ -2856,36 +2891,80 @@ function pintaCoste(){
       '<span class="l">paid translations — one-offs, not per message</span></div>'+
     '<div class="kpi"><span class="v" style="color:var(--turq-deep);">'+TRAD_STATS.cache+'</span>'+
       '<span class="l">answered from cache · free</span></div>'+
+    '<div class="kpi"><span class="v" style="color:var(--gold);">'+(TRAD_STATS.prewarm||0)+'</span>'+
+      '<span class="l">pre-warmed when facts were saved — the first customer never pays</span></div>'+
     '<div class="kpi"><span class="v">'+porMsg.toFixed(2)+'</span>'+
       '<span class="l">calls per message so far — heading to 0</span></div>'+
     '<div class="kpi"><span class="v">'+Object.keys(TRAD_CACHE).length+' / ~'+techo+'</span>'+
       '<span class="l">cache filled, per language. Once full, every message is free</span></div>';
 }
-function derivaPorHueco(campoKey, pregunta){
+function caraDeriva(lang){
+  return (lang==='es')
+    ? 'Esa no te la puedo asegurar yo: se la paso al encargado y te contesta enseguida 🙂'
+    : 'That one I can’t confirm myself: I’ll pass it to the manager and they’ll get back to you shortly 🙂';
+}
+function derivaPorHueco(campoKey, pregunta, lang){
   var c=CAMPOS_KB.filter(function(x){return x.k===campoKey})[0];
   registraDerivada(pregunta);
-  return 'That one I can’t confirm myself: I’ll pass it to the manager and they’ll get back to you shortly 🙂\n\n'+
+  return caraDeriva(lang)+'\n\n'+
     '<i>— GuIA handed this over because the fact “'+c.l+'” is empty for THIS tour. Fill it in under 🧠 Brain '+
     'and this question will stop reaching the manager.</i>';
 }
-function derivaPorHuecoEmp(campoKey, pregunta){
+function derivaPorHuecoEmp(campoKey, pregunta, lang){
   var c=CAMPOS_EMPRESA.filter(function(x){return x.k===campoKey})[0];
   registraDerivada(pregunta);
-  return 'That one I can’t confirm myself: I’ll pass it to the manager and they’ll get back to you shortly 🙂\n\n'+
+  return caraDeriva(lang)+'\n\n'+
     '<i>— GuIA hands it over because the company fact “'+c.l+'” is empty. Fill it in under 🧠 Brain '+
     '(the 🏢 Company block) and it covers every tour at once.</i>';
 }
 function registraDerivada(q){
-  var ya=S.derivadas.some(function(d){ return d.q===q && d.tourId===tourChat().id });
-  if (!ya){ S.derivadas.push({ q:q, tourId:tourChat().id,
+  /* Dedup por pregunta NORMALIZADA: «wot time is the tour» y «what time is the tour»
+     son la misma derivada. Sin esto, el encargado ve la misma duda tres veces con tres
+     erratas distintas, y la responde tres veces. */
+  var k=normalizaEN(q).replace(/[^a-z0-9ñ ]/gi,'').replace(/\s+/g,' ').trim();
+  var ya=S.derivadas.some(function(d){ return (d.k || normalizaEN(d.q))===k && d.tourId===tourChat().id });
+  if (!ya){ S.derivadas.push({ q:q, k:k, tourId:tourChat().id,
     canal: S.chatCanal==='web' ? '🌐 web' : 'WhatsApp', hace:'ahora mismo' }); pintaCerebro(); }
 }
 /* Cortafuegos “deriva siempre”: facturas, reembolsos, quejas, prensa, alergias…
    van a ti SÍ O SÍ — GuIA no los improvisa nunca. */
-function derivaSiempre(t){
+/* La frase que ve el CLIENTE va en su idioma; la nota en cursiva es la capa didáctica
+   de la demo (para quien la está viendo, con la interfaz en inglés) y se queda en inglés
+   a propósito. */
+/* ===== Respuestas enseñadas, compartidas entre motores =====
+   Antes solo las consultaba el motor español, así que en ESTA demo (operador y clientes
+   en inglés) estaban MUERTAS: «answer it once and it learns it» no se cumplía nunca, y
+   cada pregunta enseñada seguía derivando con la respuesta guardada al lado.
+
+   El match va sobre normalizaEN(mensaje): EN_ES y MULTI_KW convierten inglés, alemán,
+   francés, italiano y portugués a los mismos tokens, así que una respuesta enseñada en
+   inglés («toilets») también salta cuando preguntan «toiletten» o «baños» — las palabras
+   clave de la pregunta enseñada pasan por la misma normalización al guardarse.
+
+   Si el idioma del que pregunta no es el de la respuesta enseñada, se intenta traducir
+   como molde; si no hay traducción, NO se suelta a medias: se sigue con las reglas. */
+function buscaAprendida(t, lang){
+  var m=normalizaEN(t);
+  for (var i=0;i<S.aprendidas.length;i++){
+    var ap=S.aprendidas[i];
+    if (ap.ambito==='tour' && ap.tourId!==tourChat().id) continue;
+    var pal = ap.palN || ap.palabras;
+    var hits=pal.filter(function(w){ return m.indexOf(w)!==-1 }).length;
+    if (hits < Math.max(1, Math.ceil(pal.length/2))) continue;
+    var nota='\n\n<i>— Answer taught in the Brain ('+(ap.ambito==='tour'?'this tour only':'whole company')+').</i>';
+    if (idiomaDe(ap.a)===lang) return ap.a+nota;
+    var tr=traduceRespuesta(ap.a, lang);
+    if (tr) return tr+nota;
+    return null;   /* enseñada en otro idioma y sin traducción: que sigan las reglas */
+  }
+  return null;
+}
+function derivaSiempre(t, lang){
   registraDerivada(t);
-  return 'I’d rather not answer this one myself and risk getting it wrong: I’ll pass it to the manager and they’ll reply shortly 🙂\n\n'+
-    '<i>— Firewall: invoices, refunds, complaints, press and allergies ALWAYS come to you. GuIA never improvises on those.</i>';
+  var cara = (lang==='es')
+    ? 'Esto prefiero que lo vea una persona para no equivocarme: se lo paso al encargado y te contesta enseguida 🙂'
+    : 'I’d rather not answer this one myself and risk getting it wrong: I’ll pass it to the manager and they’ll reply shortly 🙂';
+  return cara+'\n\n<i>— Firewall: invoices, refunds, complaints, press and allergies ALWAYS come to you. GuIA never improvises on those.</i>';
 }
 /* GuIA no solo contesta: lo que gestiona queda escrito en el tour en curso —
    se ve después en el 📋 Manifiesto (observaciones) y alimenta Operaciones. */
@@ -2961,7 +3040,7 @@ var EN_ES={
      «wot time is the tour» no se entiende y «acessible» tampoco. --- */
   'wot':'que','wat':'que','wht':'que','whats':'que','wats':'que',
   'whr':'donde','wher':'donde','were':'donde','wheres':'donde',
-  'cn':'puedo','pls':'','plz':'','thx':'gracias','ty':'gracias',
+  'can':'puedo','could':'puedo','cn':'puedo','pls':'','plz':'','thx':'gracias','ty':'gracias',
   'u':'tu','ur':'tu','r':'','n':'y','abt':'sobre','bcos':'porque',
   'acessible':'accesible','accessable':'accesible','acessable':'accesible',
   'wheelchar':'silla','wheelchari':'silla','wheelcair':'silla',
@@ -3014,7 +3093,7 @@ var EN_ES={
   'cities':'ciudades','elsewhere':'ciudades',
   'smoke':'fumar','smoking':'fumar','vape':'fumar','alcohol':'alcohol','beer':'alcohol',
   'age':'edad','ages':'edad','teenager':'edad','toddler':'edad',
-  'bike':'bici','bicycle':'bici','scooter':'bici',
+  'bike':'bici','bikes':'bici','bicycle':'bici','bicycles':'bici','scooter':'bici',
   'forgot':'olvide','left':'olvide','lost':'perdido','found':'encontrado',
   /* 'leave' va DESPUÉS de que /resena/ se compruebe («leave a review»), y «what time
      do we leave» cae antes en /hora/. 'own' cubre «on my own», que es como se dice de
@@ -3023,6 +3102,8 @@ var EN_ES={
   /* «estoy aquí y no veo a nadie»: el intent exige AMBOS tokens, así que mapear 'here'
      (que es palabra muy común) no puede disparar nada por su cuenta. */
   'here':'aqui','anybody':'nadie','anyone':'nadie','nobody':'nadie','noone':'nadie',
+  'next':'proximo','upcoming':'proximo','space':'plazas','spaces':'plazas',
+  'seat':'plazas','seats':'plazas','room':'sitio','full':'lleno','soldout':'lleno','waitlist':'plazas',
   /* Términos del CORTAFUEGOS: sin ellos “do you do a discount for school groups?”
      caía en la regla de grupos y GuIA contestaba en vez de derivar. */
   'discount':'descuento','discounts':'descuento','voucher':'cupon','coupon':'cupon',
@@ -3038,7 +3119,8 @@ var MARCADORES_IDIOMA = {
   en:[' the ',' is ',' are ',' do ',' does ',' can ',' i ',' we ',' you ',' my ',' your ',' what ',
       ' where ',' when ',' how ',' hi ',' hello ',' thanks ',' thank ',' please ',' and ',' with ',' for '],
   es:[' el ',' la ',' los ',' las ',' que ',' donde ',' cuando ',' como ',' hola ',' gracias ',' por ',
-      ' para ',' con ',' una ',' un ',' es ',' está ',' esta ',' cuánto ',' cuanto ',' puedo ',' hay '],
+      ' para ',' con ',' una ',' un ',' es ',' está ',' esta ',' cuánto ',' cuanto ',' puedo ',' hay ',
+      ' mi ',' nos ',' os ',' vamos ',' somos ',' pero ',' ya ',' dime ',' quiero ',' tengo '],
   de:[' der ',' die ',' das ',' und ',' ist ',' sind ',' wir ',' ich ',' wie ',' wo ',' wann ',' kann ',
       ' danke ',' hallo ',' mit ',' für ',' nicht ',' ein ',' eine ',' treffen '],
   fr:[' le ',' la ',' les ',' des ',' est ',' nous ',' je ',' vous ',' où ',' quand ',' comment ',
@@ -3134,13 +3216,36 @@ function respuestaEN(t){
   function EMP(k){ return ((S.kbEmpresa && S.kbEmpresa[k]) || '').trim(); }
   function falta(){ registraDerivada(t);
     return 'Let me check that with a colleague so I don\'t give you the wrong info — they\'ll reply here shortly 🙂'; }
-  // cortesías
-  if (/^\s*(hola|hi|hello|hey|good (morning|afternoon|evening))[\s!.,]*$/i.test(t))
+  /* Lo ENSEÑADO manda, igual que en el motor español. Antes este motor no consultaba
+     las respuestas enseñadas y en esta demo estaban muertas: cada pregunta enseñada
+     seguía derivando con la respuesta guardada al lado. */
+  var ens=buscaAprendida(t, 'en');
+  if (ens) return ens;
+  /* Cortesías — también por TOKEN, para que un «Danke!» o un «merci» no acaben
+     derivados al encargado como si fueran una duda. */
+  if (/^\s*(hola|hi|hello|hey|good (morning|afternoon|evening))[\s!.,]*$/i.test(t) || /^\s*hola[\s!.,]*$/.test(m))
     return 'Hi there! 👋 I\'m GuIA. Ask me anything about the tour 🙂';
-  if (/^\s*(thanks|thank you|ok|okay|great|perfect|cheers)[\s!.,]*$/i.test(t))
+  if (/^\s*(thanks|thank you|ok|okay|great|perfect|cheers|lovely|brilliant|nice one)[\s!.,]*$/i.test(t) || /^\s*(muchas )?gracias[\s!.,]*$/.test(m))
     return 'Anytime! I\'m here if you need anything else 🙂';
-  if (/^\s*(bye|goodbye|see you|ciao)[\s!.,]*$/i.test(t))
+  if (/^\s*(bye|goodbye|see you|see ya|ciao|cheerio)[\s!.,]*$/i.test(t) || /^\s*(adios|hasta luego|hasta pronto)[\s!.,]*$/.test(m))
     return 'See you soon! Enjoy the city 🙂';
+  /* Solo emojis, o demasiado corto para clasificar: pedir contexto SIN derivar.
+     Un 👍 no es una duda que el encargado tenga que ver. */
+  if (!m.replace(/[^a-z0-9ñ]/gi,''))
+    return /[👍🙏👌😊🙂❤♥🎉🥰😍💛🧡]/.test(t)
+      ? 'Anytime! I\'m here if you need anything else 🙂'
+      : 'Tell me a bit more and I\'ll help you right away 🙂';
+  if (m.replace(/[^a-z0-9]/gi,'').length<4 && !/otw-/i.test(t))
+    return 'Tell me a bit more and I\'ll help you right away 🙂';
+  /* Solo un código de reserva: preguntar qué hacer con él, no derivar. */
+  var soloCod=t.trim().match(/^otw-[a-z0-9]+$/i);
+  if (soloCod)
+    return 'Got it — what would you like me to do with booking '+soloCod[0].toUpperCase()+
+      '? I can cancel it, change it, or flag that you\'re running late 🙂';
+  /* Teléfono suelto (RGPD): nunca localizamos reservas por teléfono — mismo criterio
+     que el motor español, que ya lo tenía. */
+  if (!/otw-[a-z0-9]+/i.test(t) && /^\+?[0-9][0-9 .\-()]{5,}[0-9]$/.test(t.trim()))
+    return 'For privacy I don\'t look bookings up by phone number: give me your code (OTW-…), it\'s in your confirmation email 🙂';
   // cortafuegos: lo delicado va a una persona, también en inglés
   if (/factura|reembols|devoluc|descuento|cupon|queja|reclamacion|prensa|colabora|alergi|celiaco|intoleran/.test(m))
     return falta();
@@ -3199,13 +3304,32 @@ function respuestaEN(t){
   if (/llegar/.test(m))
     return v('llegar') ? v('llegar')+' 🚇' : falta();
 
+  /* Confirmación de asistencia: «count us in» no es una duda — sin esto derivaba, y el
+     encargado recibía como pregunta lo que era un «allí estaremos». */
+  if (/\b(i'?ll be there|we'?ll be there|see you (there|then)|count (me|us) in|we('| a)?re coming|on (our|my) way)\b/i.test(t) && t.indexOf('?')===-1){
+    var partesC=[];
+    if (v('horas')) partesC.push(v('horas'));
+    if (v('punto')) partesC.push('at '+v('punto'));
+    return 'Perfect, noted ✅ We\'ll be expecting you'+(partesC.length?': '+partesC.join(', '):'')+
+      (v('senal')?' — look for the '+v('senal'):'')+'.';
+  }
+  /* Próximo tour CALCULADO de la agenda real, como ya hacía el motor español — la
+     respuesta estática del horario obliga al cliente a deducir; esta le contesta. */
+  if (/proxim|siguiente/.test(m)){
+    var salHoy=(S.agenda[S.agDia].tours||[]).filter(function(x){ return !x.live });
+    if (salHoy.length) return 'The next tour is today at '+gpHora12(salHoy[0].hora)+' ('+salHoy[0].tit+') 🙂';
+    var manN=S.agenda[S.agDia+1];
+    if (manN && manN.tours && manN.tours.length)
+      return 'The next tour is tomorrow at '+gpHora12(manN.tours[0].hora)+' ('+manN.tours[0].tit+') 🙂';
+    return falta();
+  }
   // FAQ con hechos del Cerebro
   if (/punto|donde|quedamos/.test(m) && !/termina/.test(m))
     return v('punto') ? 'We meet at '+v('punto')+' 📍'+(v('horas')?' We start '+v('horas')+'.':'')+
       (v('senal')?' Look for the '+v('senal')+' — the guide arrives a few minutes early.':'') : falta();
   if (/hora|empieza|cuando/.test(m))
     return v('horas') ? 'We run '+v('horas')+(v('punto')?' from '+v('punto'):'')+' 🙂 Want me to save you a spot?' : falta();
-  if (/dura|duracion/.test(m))
+  if (/dura|duracion/.test(m) && !/espera/.test(m))
     return v('dur') ? 'The tour lasts '+v('dur')+' — relaxed pace, with stops for the stories (and photos 📸).' : falta();
   if (/precio|cuesta|gratis|propina|pagar|cuanto/.test(m) && !/cuantos/.test(m)){
     /* Dos marcos que NO se pueden mezclar: en un free tour el precio es la propina; en
@@ -3232,13 +3356,28 @@ function respuestaEN(t){
     return trEN(v('lluvia')) ? trEN(v('lluvia'))+' ☔' : falta();
   if (/calor|frio|viento|nieva|tormenta/.test(m))
     return trEN(v('clima')) || trEN(v('lluvia')) || falta();
-  if (/cancelar|cancelacion/.test(m))
+  if (/cancelar|cancelacion/.test(m)){
+    /* Si el código YA viene en el mensaje, se cancela — pedirle el código que acaba de
+       mandar es obligarle a un segundo mensaje, que es justo el coste a evitar. */
+    var codC=(t.match(/otw-[a-z0-9]+/i)||[])[0];
+    if (codC){
+      anotaGuia('Booking “'+codC+'” cancelled over chat — place released; the waiting list checks itself');
+      return 'Done! Your booking is cancelled ✅ Thanks for letting us know in good time: your place is free again straight away.\n\n<i>— Once released, the waiting list checks itself: if somebody fitted, they have already been told (see it on the dashboard). And it is written into today\'s tour notes.</i>';
+    }
+    if (/guruwalk|viator|getyourguide|tripadvisor|plataforma/.test(m))
+      return 'You made that booking on the platform, so cancel it from their confirmation email — that way <b>their</b> refund policy applies to you 🙂 As soon as you do, your place frees itself on our list, and it won\'t count against you as a no-show.';
     return trEN(v('cancelar')) ? trEN(v('cancelar'))+' 🙂 Just send me your booking code (OTW-…) and I\'ll cancel it right now.' : falta();
+  }
   if (/cambiar/.test(m))
     return trEN(v('cambios')) ? trEN(v('cambios'))+' Send me your code (OTW-…) and I\'ll sort it out.' : falta();
-  if (/tarde|retraso/.test(m))
-    return v('espera') ? 'Don\'t worry! The guide waits around '+v('espera')+' at the meeting point, so a few minutes are fine 🙂'
-      +' If you\'re running later, send me your code (OTW-…) and I\'ll let the guide know.' : falta();
+  if (/tarde|retraso|espera/.test(m)){
+    if (!v('espera')) return falta();
+    var codL=(t.match(/otw-[a-z0-9]+/i)||[])[0];
+    if (codL) anotaGuia('“'+codL+'” messaged to say they\'re running late — flagged ⏰ for the guide');
+    return 'Don\'t worry! The guide waits around '+v('espera')+' at the meeting point, so a few minutes are fine 🙂'+
+      (codL ? '\n\n<i>— Logged: written into today\'s tour notes, and they show on the manifest as “⏰ running late”.</i>'
+            : ' If you\'re running later, send me your code (OTW-…) and I\'ll let the guide know.');
+  }
   if (/idioma|ingles/.test(m))
     return v('idiomas') ? 'The tour runs in '+v('idiomas')+'. If you need another language, tell me and I\'ll check with the team.' : falta();
   if (/guia|paraguas|bandera|chaleco|reconoc/.test(m) && !/llevar|calzado|ropa/.test(m))
@@ -3261,8 +3400,19 @@ function respuestaEN(t){
   if (/grupo/.test(m) || /\d+\s*personas/.test(m))
     return v('grupomin') ? 'For groups over 6 (even if you split it across bookings), the guide will ask for a deposit of '
       +v('grupomin')+' per person 🙂' : falta();
-  if (/aforo|plazas|disponib|sitio/.test(m) || /cuantos\s+personas/.test(m))
-    return v('aforo') ? 'Each departure takes up to '+v('aforo')+' people — a manageable group where you can actually hear the guide 🙂' : falta();
+  if (/aforo|plazas|disponib|sitio|lleno/.test(m) || /cuantos\s+personas/.test(m)){
+    var afN=parseInt(v('aforo'),10);
+    if (!afN) return falta();
+    var nomT=normaliza(tourChat().nombre);
+    var salidaQ=(S.agenda[S.agDia].tours||[]).filter(function(x){
+      var titN=normaliza(x.tit);
+      return nomT.indexOf(titN)!==-1 || titN.indexOf(nomT)!==-1; })[0];
+    if (!salidaQ)
+      return 'Each departure takes up to '+afN+' people — a manageable group where you can actually hear the guide 🙂';
+    var paxOk=0; (salidaQ.res||[]).forEach(function(r){ if (r.ok) paxOk+=r.p; });
+    if (paxOk<afN) return 'There\'s room today: '+paxOk+' booked in of '+afN+' 🙂 Want me to save you a spot?';
+    return 'Today\'s departure is full, but I can put you on the waiting list and tell you the moment a place opens up — it checks itself.';
+  }
   if (/visita|ver\b|veremos/.test(m))
     return v('visita') ? 'We\'ll see '+v('visita')+' — no rush, and with the best stories 🙂' : falta();
   if (/camina|distancia/.test(m))
@@ -3330,18 +3480,13 @@ function respuestaEN(t){
 function respuestaGuiaES(t){
   var m=normaliza(t);
   // 1) Lo ENSEÑADO manda — de la empresa entera o de ESTE tour (nunca de otro).
-  for (var i=0;i<S.aprendidas.length;i++){
-    var ap=S.aprendidas[i];
-    if (ap.ambito==='tour' && ap.tourId!==tourChat().id) continue;
-    var hits=ap.palabras.filter(function(w){ return m.indexOf(w)!==-1 }).length;
-    if (hits>=Math.max(1, Math.ceil(ap.palabras.length/2)))
-      return ap.a+'\n\n<i>— Answer taught in the Brain ('+(ap.ambito==='tour'?'solo este tour':'toda la empresa')+').</i>';
-  }
+  var ens=buscaAprendida(t, 'es');
+  if (ens) return ens;
   // 2) CORTAFUEGOS “deriva siempre”: hay temas que GuIA nunca improvisa, aunque
   //    alguna palabra case con otra regla — van a persona sí o sí. (OJO: ni
   //    “empresa”, ni “grupo”, ni “parking” — esos tienen regla propia abajo.)
   if (/factura|reembols|devoluc|devolver (el )?dinero|descuento|cupon|queja|reclamacion|prensa|medios|colabora|influencer|celiaco|alergi|intoleran|no me ha llegado|divisa|moneda|lactancia/.test(m))
-    return derivaSiempre(t);
+    return derivaSiempre(t, 'es');
   // 3) CORTESÍAS PURAS: solo si TODAS las palabras del mensaje son de cortesía
   //    (un saludo CON pregunta —“hola, ¿dónde quedamos?”— sigue bajando a la FAQ).
   //    Nunca derivan ni dejan registro.
@@ -3363,7 +3508,7 @@ function respuestaGuiaES(t){
   }
   // 4) TELÉFONO SUELTO (RGPD): nunca localizamos reservas por teléfono. Y un
   //    código OTW-… jamás se confunde con un número, aunque parezca uno.
-  if (!/blv-[a-z0-9]+/i.test(t) && /^\+?[0-9][0-9 .\-()]{5,}[0-9]$/.test(t.trim()))
+  if (!/otw-[a-z0-9]+/i.test(t) && /^\+?[0-9][0-9 .\-()]{5,}[0-9]$/.test(t.trim()))
     return 'Por privacidad no localizo reservas por teléfono: dime tu código (OTW-…), lo tienes en tu email de confirmación 🙂';
   // 5) DEMASIADO CORTO para clasificar (y no es cortesía ni código): pedir un
   //    poco más de contexto — sin derivar.
@@ -3390,8 +3535,8 @@ function respuestaGuiaES(t){
     var partes=[];
     if (kb('horas')) partes.push(kb('horas'));
     if (kb('punto')) partes.push('en '+kb('punto'));
-    return 'Perfect! Noted ✅ We’ll be expecting you'+(partes.length?': '+partes.join(', '):'')+
-      (kb('senal')?' — busca '+kb('senal'):'')+'.';
+    return '¡Perfecto! Queda anotado ✅ Te esperamos'+(partes.length?': '+partes.join(', '):'')+
+      (kb('senal')?' — busca el '+kb('senal'):'')+'.';
   }
   // “¿Es guiado?” — respuesta fija, no es un dato del formulario.
   if (/es guiad|va guiad|tour guiad|lleva guia|hay guia|va (con )?un guia|con guia local/.test(m))
@@ -3412,7 +3557,7 @@ function respuestaGuiaES(t){
   // “¿Queda sitio?” — aforo del cerebro × reservas confirmadas de la agenda de hoy.
   if (/queda sitio|quedan (plazas|sitio|huecos)|queda (plaza|hueco)|hay (sitio|plazas|hueco)|esta complet[oa]|esta llen[oa]|va llen[oa]/.test(m)){
     var afN=parseInt(kb('aforo'),10);
-    if (!afN) return derivaPorHueco('aforo', t);
+    if (!afN) return derivaPorHueco('aforo', t, 'es');
     var nomT=normaliza(tourChat().nombre);
     var salida=(S.agenda[S.agDia].tours||[]).filter(function(x){
       var titN=normaliza(x.tit);
@@ -3424,22 +3569,22 @@ function respuestaGuiaES(t){
   }
   // Reseña post-tour — dato de EMPRESA (“resena”); vacío → deriva por hueco.
   if (/resena|valoracion|dejar (una )?opinion|review|estrellas/.test(m)){
-    var rs=kbE('resena'); if(!rs) return derivaPorHuecoEmp('resena', t);
+    var rs=kbE('resena'); if(!rs) return derivaPorHuecoEmp('resena', t, 'es');
     return '¡Nos hace el día! ⭐ Déjala aquí: '+rs+'. Mencionar al guía por su nombre ayuda un montón.';
   }
   // Entradas / gastos extra — va ANTES de la regla de pago, que casa “pagar”.
   if (/entrada|gastos? extras?|hay que pagar|se paga (algo|aparte)|cuesta entrar/.test(m)){
-    var ent=kb('entradas'); if(!ent) return derivaPorHueco('entradas', t);
+    var ent=kb('entradas'); if(!ent) return derivaPorHueco('entradas', t, 'es');
     return ent+'. Lo demás, lo que tú consideres al final 💛';
   }
   // Cierre de reservas (“¿hasta cuándo puedo reservar?”).
   if (/hasta cuando (puedo|se puede|puede) reservar|cuanto antes|ultima hora|ultimo momento|puedo reservar|cierran? (las )?reservas|reservar (hoy|ahora|ya|mismo)/.test(m)){
-    var cor=kb('corte'); if(!cor) return derivaPorHueco('corte', t);
+    var cor=kb('corte'); if(!cor) return derivaPorHueco('corte', t, 'es');
     return 'Puedes reservar hasta '+cor+'. Si ya cerró, vente al punto y, si queda hueco, el guía te apunta allí mismo 🙂';
   }
   // Distancia — va ANTES de “ritmo”, que casa “se camina”.
   if (/cuanto se camina|cuantos (km|kilometros)|que distancia|cuanta distancia|cuanto hay que andar|cuanto se anda|se camina mucho/.test(m)){
-    var dis=kb('distancia'); if(!dis) return derivaPorHueco('distancia', t);
+    var dis=kb('distancia'); if(!dis) return derivaPorHueco('distancia', t, 'es');
     var duC=kb('dur');
     return duC ? 'El tour dura '+duC+' y se recorren unos '+dis+', con paradas frecuentes.'
                : 'Se recorren unos '+dis+', con paradas frecuentes.';
@@ -3453,158 +3598,175 @@ function respuestaGuiaES(t){
   }
   // Otras ciudades — dato de EMPRESA (“ciudades”).
   if (/otras ciudades|otra ciudad|tours en (?!ingles|espanol)|haceis.*(barcelona|madrid|florencia|paris|lisboa|venecia|napoles)/.test(m)){
-    var ciu=kbE('ciudades'); if(!ciu) return derivaPorHuecoEmp('ciudades', t);
+    var ciu=kbE('ciudades'); if(!ciu) return derivaPorHuecoEmp('ciudades', t, 'es');
     return ciu;
   }
   if (/sale seguro|seguro que sale|se confirma|somos pocos|seamos pocos|sale aunque|salis aunque|aunque (venga|vaya|seamos|vayamos)|minimo de personas|poca gente|pocas personas|garantizada/.test(m)
       && !/lluev|lluvia|mal tiempo|haga malo|haga (frio|calor)|niev/.test(m)){
-    var mi=kb('minimo'); if(!mi) return derivaPorHueco('minimo', t);
+    var mi=kb('minimo'); if(!mi) return derivaPorHueco('minimo', t, 'es');
     return mi+' 🙂';
   }
+  /* ===== Encargos a medida — como en el motor inglés, y ANTES de /grupo/: sin esto,
+     «grupos escolares» recibía la política de adelanto de 10 £, y «vamos en crucero,
+     ¿da tiempo?» el horario público. Contestar con seguridad a una pregunta que no te
+     han hecho es peor que derivar. ===== */
+  var privE=(S.kbEmpresa && (S.kbEmpresa.privados||'').trim()) ? (kbE('privados')||'') : '';
+  function conPrivadoES(cola){
+    registraDerivada(t);
+    return (privE ? privE+' ' : 'Sí hacemos tours privados. ')+cola;
+  }
+  if (/crucero|escala|embarque|barco/.test(m))
+    return conPrivadoES('Para una escala trabajamos con tu hora de embarque, no con el horario público: dime el barco y la fecha y el encargado te confirma qué encaja.');
+  if (/colegio|escolar|instituto|universida|alumnos|estudiantes/.test(m))
+    return conPrivadoES('Los grupos escolares los presupuestamos aparte, porque los ratios y el papeleo son distintos. Dime el curso y cuántos sois y el encargado te contesta.');
+  if (/recog|hotel/.test(m))
+    return conPrivadoES('En las salidas públicas no recogemos en hoteles: empiezan en el punto de encuentro. En un privado empezamos donde os venga bien — díselo al encargado.');
+  if (/edad|adolescente|anos (tiene|puede)/.test(m))
+    return kb('ninos') ? kb('ninos')+' Si me dices la edad concreta, te lo confirmo.' : derivaPorHueco('ninos', t, 'es');
   if (/grupo|somos \d+|despedida/.test(m)){
-    var af=kb('aforo'); if(!af) return derivaPorHueco('aforo', t);
-    var gm=kb('grupomin'); if(!gm) return derivaPorHueco('grupomin', t);
+    var af=kb('aforo'); if(!af) return derivaPorHueco('aforo', t, 'es');
+    var gm=kb('grupomin'); if(!gm) return derivaPorHueco('grupomin', t, 'es');
     return 'Los grupos son de un máximo de '+af+' por salida, y podéis ir todos juntos 🙂 Eso sí, la política clara: en grupos de más de 6 (aunque lo repartáis en varias reservas), el guía os pedirá un adelanto de '+gm+' por persona COMO MÍNIMO al empezar — nunca menos. Se descuenta de vuestra aportación final, así que no pagáis de más.\n\n<i>— El mínimo sale del formulario del Cerebro: cada empresa pone el suyo.</i>';
   }
   if (/cancel|anul|no puedo ir|no podre|no vamos a poder/.test(m)){
-    var cod=(t.match(/blv-[a-z0-9]+/i)||[])[0];
+    var cod=(t.match(/otw-[a-z0-9]+/i)||[])[0];
     if (cod){
       anotaGuia('Reserva «'+cod+'» cancelada por el chat — plaza liberada; la lista de espera se revisa sola');
       return '¡Hecho! Cancelo tu reserva ✅ Gracias por avisar con tiempo: tu plaza queda libre al instante.\n\n<i>— Al liberarse, la lista de espera se revisa sola: si alguien cabía, ya está avisado (míralo en el Dashboard). Nada de gestionarlo a mano. Y queda apuntado en las observaciones del tour de hoy.</i>';
     }
     if (/guruwalk|civitatis|getyourguide|plataforma/i.test(m))
       return 'Esa reserva la hiciste en la plataforma, así que cancélala desde su email de confirmación — así te aplican <b>su</b> política de devolución 🙂 En cuanto lo hagas, tu plaza se libera sola en nuestra lista: no hace falta que nos avises — así no te cuenta como no presentado.';
-    var pc=kb('cancelar'); if(!pc) return derivaPorHueco('cancelar', t);
+    var pc=kb('cancelar'); if(!pc) return derivaPorHueco('cancelar', t, 'es');
     return pc+'\n\nDos formas, la que te venga mejor: (1) si reservaste en <b>nuestra web</b>, abre tu <b>enlace de gestión</b> (el del email de confirmación) y la cancelas en un clic, o dime tu código (OTW-…) y te la cancelo yo aquí; (2) si fue por una <b>plataforma</b>, cancélala allí y yo actualizo la lista sola.';
   }
   if (/cambiar|cambio de (dia|fecha|hora)|otra fecha|otro dia|persona mas|personas mas|somos (una|dos|uno) menos|menos personas|anadir (una|otra) persona/.test(m)){
-    var cbio=kb('cambios'); if(!cbio) return derivaPorHueco('cambios', t);
+    var cbio=kb('cambios'); if(!cbio) return derivaPorHueco('cambios', t, 'es');
     return cbio+'\n\nDesde tu <b>enlace de gestión</b> cambias fecha o nº de personas en un clic (si reservaste en nuestra web), o dime tu código (OTW-…) y te lo hago yo. Si fue por plataforma y solo cambia el <b>número de personas</b>, dímelo y lo ajusto en el manifiesto del guía para que os espere bien — la reserva en la plataforma la cambias tú allí.';
   }
-  if (/tarde|retraso/.test(m)){
-    var es=kb('espera'); if(!es) return derivaPorHueco('espera', t);
-    var codT=(t.match(/blv-[a-z0-9]+/i)||[])[0];
+  if (/tarde|retraso|cuanto espera|espera el guia|me esperais|nos esperais|me esperan/.test(m)){
+    var es=kb('espera'); if(!es) return derivaPorHueco('espera', t, 'es');
+    var codT=(t.match(/otw-[a-z0-9]+/i)||[])[0];
     if (codT) anotaGuia('«'+codT+'» avisa por el chat de que llega tarde — marcado ⏰ para el guía');
     return '¡Tranquilo! El guía espera por el punto de encuentro unos '+es+', así que unos minutos no son problema 🙂 Si me dices tu código (OTW-…), le aviso ahora mismo — y aparecerás en su manifiesto como «⏰ llega tarde».'+
       (codT ? '\n\n<i>— Aviso registrado: escrito en las observaciones del tour de hoy (míralo en el 📋 Manifest).</i>' : '');
   }
   if (/donde (quedamos|es|empieza|salis)|punto de encuentro|meeting point|donde os (veo|encuentro)/.test(m)){
-    var pu=kb('punto'); if(!pu) return derivaPorHueco('punto', t);
+    var pu=kb('punto'); if(!pu) return derivaPorHueco('punto', t, 'es');
     return 'Quedamos en '+pu+' 📍'+(kb('horas')?' Salimos '+kb('horas')+'.':'')+
       (kb('senal')?' Llega unos minutos antes y busca el '+kb('senal')+'.':'')+
       '\n\n<i>— Dato del cerebro de «'+tourChat().nombre+'» — cambia el tour arriba y verás otra respuesta.</i>';
   }
   if (/donde (acaba|termina)|final del (tour|recorrido)/.test(m)){
-    var fi=kb('fin'); if(!fi) return derivaPorHueco('fin', t);
+    var fi=kb('fin'); if(!fi) return derivaPorHueco('fin', t, 'es');
     return 'El recorrido termina en '+fi+' — desde allí te dejamos bien situado para seguir por tu cuenta 🙂';
   }
   if (/que (se )?visit|que vemos|que veremos|que vamos a ver|recorrido|la ruta|que se ve|monumento|que sitios/.test(m)){
-    var vi=kb('visita'); if(!vi) return derivaPorHueco('visita', t);
+    var vi=kb('visita'); if(!vi) return derivaPorHueco('visita', t, 'es');
     return 'Veremos '+vi+' — sin prisas y con las mejores historias 🙂';
   }
   if (/a que hora|que hora|horario|cuando sal|que dias/.test(m)){
-    var ho=kb('horas'); if(!ho) return derivaPorHueco('horas', t);
+    var ho=kb('horas'); if(!ho) return derivaPorHueco('horas', t, 'es');
     return 'Salimos '+ho+(kb('punto')?' desde '+kb('punto'):'')+' 🙂 ¿Te reservo plaza?';
   }
   if (/cuanto dura|duracion|how long/.test(m)){
-    var du=kb('dur'); if(!du) return derivaPorHueco('dur', t);
+    var du=kb('dur'); if(!du) return derivaPorHueco('dur', t, 'es');
     return 'El tour dura '+du+', a ritmo tranquilo y con paradas para las explicaciones (y alguna foto 📸).';
   }
   if (/idioma|ingles|english|language/.test(m)){
-    var id=kb('idiomas'); if(!id) return derivaPorHueco('idiomas', t);
+    var id=kb('idiomas'); if(!id) return derivaPorHueco('idiomas', t, 'es');
     return 'El tour es en '+id+'. Si necesitáis otro idioma, dímelo y lo consulto con el encargado.';
   }
   if (/reconozc|reconoc|como os veo|como te encuentro|como es el guia|paraguas|bandera|chaleco|farol/.test(m)){
-    var se=kb('senal'); if(!se) return derivaPorHueco('senal', t);
+    var se=kb('senal'); if(!se) return derivaPorHueco('senal', t, 'es');
     return 'Muy fácil: busca el '+se+(kb('punto')?' en '+kb('punto'):'')+'. El guía llega unos minutos antes de la salida 🙂';
   }
   if (/metro|autobus|bus |como (llego|llegar|se llega)|parada de/.test(m)){
-    var ll=kb('llegar'); if(!ll) return derivaPorHueco('llegar', t);
+    var ll=kb('llegar'); if(!ll) return derivaPorHueco('llegar', t, 'es');
     return ll+' 🚇';
   }
   if (/bano|aseo|servicio|wc/.test(m)){
-    var ba=kb('banos'); if(!ba) return derivaPorHueco('banos', t);
+    var ba=kb('banos'); if(!ba) return derivaPorHueco('banos', t, 'es');
     return ba;
   }
   if (/comer|comida|desayun|almuerz|picar|merienda|parada|pausa|descanso/.test(m)){
-    var cmd=kb('comida'); if(!cmd) return derivaPorHueco('comida', t);
+    var cmd=kb('comida'); if(!cmd) return derivaPorHueco('comida', t, 'es');
     return cmd;
   }
   if (/se anda|se camina|caminar|caminata|ritmo|cuestas|desnivel|en forma|andar mucho/.test(m)){
-    var ri=kb('ritmo'); if(!ri) return derivaPorHueco('ritmo', t);
+    var ri=kb('ritmo'); if(!ri) return derivaPorHueco('ritmo', t, 'es');
     return ri;
   }
   if (/silla de ruedas|accesib|movilidad|carrito|cochecito/.test(m)){
-    var ac=kb('acces'); if(!ac) return derivaPorHueco('acces', t);
+    var ac=kb('acces'); if(!ac) return derivaPorHueco('acces', t, 'es');
     return ac;
   }
   if (/nino|bebe|hijos|familia con|pueden venir/.test(m)){
-    var ni=kb('ninos'); if(!ni) return derivaPorHueco('ninos', t);
+    var ni=kb('ninos'); if(!ni) return derivaPorHueco('ninos', t, 'es');
     return ni;
   }
   if (/perro|mascota|gato|dog/.test(m)){
-    var ma=kb('mascotas'); if(!ma) return derivaPorHueco('mascotas', t);
+    var ma=kb('mascotas'); if(!ma) return derivaPorHueco('mascotas', t, 'es');
     return ma;
   }
   if (/que (llevo|llevar|traigo)|hace falta llevar|calzado|agua/.test(m)){
-    var lv=kb('llevar'); if(!lv) return derivaPorHueco('llevar', t);
+    var lv=kb('llevar'); if(!lv) return derivaPorHueco('llevar', t, 'es');
     return lv;
   }
   if (/foto|selfie|camara/.test(m)){
-    var fo=kb('fotos'); if(!fo) return derivaPorHueco('fotos', t);
+    var fo=kb('fotos'); if(!fo) return derivaPorHueco('fotos', t, 'es');
     return fo;
   }
   if (/maleta|equipaje|consigna|mochila/.test(m)){
-    var eq=kb('equipaje'); if(!eq) return derivaPorHueco('equipaje', t);
+    var eq=kb('equipaje'); if(!eq) return derivaPorHueco('equipaje', t, 'es');
     return eq;
   }
   if (/imprimir|mostrar la reserva|ensenar la reserva|voucher|bono/.test(m)){
-    var imr=kb('imprimir'); if(!imr) return derivaPorHueco('imprimir', t);
+    var imr=kb('imprimir'); if(!imr) return derivaPorHueco('imprimir', t, 'es');
     return imr;
   }
   if (/voy sol[oa]|viajo sol[oa]|ir sol[oa]|vengo sol[oa]/.test(m)){
-    var so=kb('solo'); if(!so) return derivaPorHueco('solo', t);
+    var so=kb('solo'); if(!so) return derivaPorHueco('solo', t, 'es');
     return so;
   }
   if (/salir antes|irme antes|irnos antes|marcharme|marcharnos|a mitad/.test(m)){
-    var sa=kb('antes'); if(!sa) return derivaPorHueco('antes', t);
+    var sa=kb('antes'); if(!sa) return derivaPorHueco('antes', t, 'es');
     return sa;
   }
   if (/lluev|lluvia|rain|mal tiempo|haga malo|niev/.test(m)){
-    var lu=kb('lluvia'); if(!lu) return derivaPorHueco('lluvia', t);
+    var lu=kb('lluvia'); if(!lu) return derivaPorHueco('lluvia', t, 'es');
     return lu+' ☔ Si hubiera que cancelar, te avisamos por aquí con antelación.';
   }
   if (/calor|frio|nieve|nieva|clima|temperatura/.test(m)){
-    var cli=kb('clima'); if(!cli) return derivaPorHueco('clima', t);
+    var cli=kb('clima'); if(!cli) return derivaPorHueco('clima', t, 'es');
     return cli;
   }
   if (/penaliz|me cobran|cobran si|cargo si|si no voy|no me presento/.test(m)){
-    var ns=kb('noshow'); if(!ns) return derivaPorHueco('noshow', t);
+    var ns=kb('noshow'); if(!ns) return derivaPorHueco('noshow', t, 'es');
     return ns;
   }
   if (/como se paga|propina.*(tarjeta|efectivo|bizum)|tarjeta|efectivo|bizum|pagar/.test(m)){
-    var pg=kb('pago'); if(!pg) return derivaPorHueco('pago', t);
+    var pg=kb('pago'); if(!pg) return derivaPorHueco('pago', t, 'es');
     return pg;
   }
   // Hechos de EMPRESA (comunes a todos los tours) — bloque 🏢 del Cerebro
   if (/quienes sois|sois una agencia|sois agencia|es un timo|estafa|fiable|de fiar/.test(m)){
-    var qs=kbE('quienes'); if(!qs) return derivaPorHuecoEmp('quienes', t);
+    var qs=kbE('quienes'); if(!qs) return derivaPorHuecoEmp('quienes', t, 'es');
     return qs;
   }
   if (/privado/.test(m)){
-    var pri=kbE('privados'); if(!pri) return derivaPorHuecoEmp('privados', t);
+    var pri=kbE('privados'); if(!pri) return derivaPorHuecoEmp('privados', t, 'es');
     return pri;
   }
   if (/que otros tours|otros tours|que mas teneis|que mas ofreceis|que mas haceis|catalogo|que tours teneis/.test(m)){
-    var ct=kbE('catalogo'); if(!ct) return derivaPorHuecoEmp('catalogo', t);
+    var ct=kbE('catalogo'); if(!ct) return derivaPorHuecoEmp('catalogo', t, 'es');
     return ct;
   }
   if (/carterista|roban|robo|es segur|seguridad/.test(m)){
-    var sg=kbE('seguridad'); if(!sg) return derivaPorHuecoEmp('seguridad', t);
+    var sg=kbE('seguridad'); if(!sg) return derivaPorHuecoEmp('seguridad', t, 'es');
     return sg;
   }
   if (/cuanto|precio|cuesta|gratis|free/.test(m)){
-    var mo=kb('modelo'); if(!mo) return derivaPorHueco('modelo', t);
+    var mo=kb('modelo'); if(!mo) return derivaPorHueco('modelo', t, 'es');
     return 'Funciona así: '+mo+'. Al final aportas lo que tú consideres 💛';
   }
   if (/hola|buenas|hello/.test(m))
@@ -3890,7 +4052,10 @@ function pintaCerebro(){
       g.textContent='💾 Save fact sheet';
       g.onclick=function(){ S.kbAbierto=null; pintaCerebro();
         var ll=campos.filter(conf).length;
-        toast('💾 Saved — '+ll+' of '+campos.length+' facts confirmed on “'+nombre+'”'); };
+        var pre=prewarmTraducciones(valores);
+        toast('💾 Saved — '+ll+' of '+campos.length+' facts confirmed on “'+nombre+'”'+
+          (pre ? ' · '+pre+' translations pre-warmed' : ''));
+        pintaCoste(); };
       f.appendChild(g);
       w.appendChild(f);
     }
@@ -3953,10 +4118,18 @@ function ensenar(){
   var sel=document.getElementById('ens-ambito').value;
   var ambito = sel==='empresa' ? 'empresa' : 'tour';
   var tourId = sel==='empresa' ? tourKb().id : sel.slice(2);
-  var palabras=normaliza(q).replace(/[¿?¡!.,;]/g,' ').split(/\s+/)
-    .filter(function(w){ return w.length>3 && ['para','como','donde','cuando','esta','este','tiene','sois','vais','puedo','durante','sobre'].indexOf(w)===-1 });
+  /* Las palabras clave pasan por normalizaEN — la MISMA función que usa el match — para
+     que una pregunta enseñada en inglés salte también en alemán o español vía los
+     diccionarios. Stopwords de los dos idiomas: sin filtrarlas, «there», «along» o
+     «which» contarían como palabras clave y el umbral de match se rompería. */
+  var STOP=['para','como','donde','cuando','esta','este','tiene','sois','vais','puedo','durante','sobre',
+            'there','where','when','what','which','your','yours','have','does','with','that','this',
+            'from','they','will','should','could','would','about','along','them','then','than'];
+  var palabras=normalizaEN(q).replace(/[¿?¡!.,;]/g,' ').split(/\s+/)
+    .filter(function(w){ return w.length>3 && STOP.indexOf(w)===-1 });
   S.aprendidas.push({ q:q, a:a, ambito:ambito, tourId:tourId,
-                      palabras: palabras.length? palabras : [normaliza(q)] });
+                      palabras: palabras.length? palabras : [normalizaEN(q)],
+                      palN:    palabras.length? palabras : [normalizaEN(q)] });
   registraActiva('apr', tourId, q);
   S.derivadas=S.derivadas.filter(function(x){ return x.q!==q });
   document.getElementById('ens-q').value=''; document.getElementById('ens-a').value='';
