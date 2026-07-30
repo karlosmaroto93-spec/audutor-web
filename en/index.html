@@ -121,30 +121,34 @@
   .btn.sec:hover{ background:var(--acc-soft); box-shadow:none; }
   @media (max-width:720px){ nav .links a:not(.btn){ display:none; } }
 
-  /* ===== Barra oscura =====
+  /* ===== Barra de salvia =====
      Va DESPUÉS de las reglas base del nav a propósito: `nav .links a` tiene la misma
      especificidad arriba y abajo, así que aquí decide el orden, no el peso. Puesto
-     antes, los enlaces se quedaban en --ink2 sobre verde y no se leían.
-     Colores sin alpha: sobre #123f33 el crema da ~10:1 de contraste, y una opacidad
-     de más lo baja sin que se note al escribirlo. */
-  nav{ background:#123f33; border-bottom:1px solid rgba(201,138,45,.45); }
+     antes, los enlaces se quedaban en --ink2 y no se leían.
+     El verde profundo (#123f33) se leía como una losa oscura encima del crema. Esto es
+     el mismo verde de la casa muy rebajado y tirando a cálido, para que la barra sea un
+     tono más de la página y no un bloque aparte — y el coral del botón, que antes
+     competía con el fondo, ahora es lo único intenso de la franja.
+     Colores sin alpha: sobre #e0e8d6 la tinta verde da ~9,9:1, y una opacidad de más
+     lo baja sin que se note al escribirlo. */
+  nav{ background:#e0e8d6; border-bottom:1px solid rgba(201,138,45,.55); }
   @supports (backdrop-filter:blur(8px)){
-    nav{ background:rgba(18,63,51,.97); backdrop-filter:blur(10px) saturate(1.1); }
+    nav{ background:rgba(224,232,214,.95); backdrop-filter:blur(10px) saturate(1.15); }
   }
-  nav .logo{ color:#fdf9ee; }
+  nav .logo{ color:var(--deep); }
   nav .logo .ruta path:first-child{ stroke:var(--gold); }
   nav .logo .ruta .rpin{ fill:var(--coral); }        /* un pin verde sobre verde no se ve */
-  nav .logo .ruta .rhueco{ fill:#123f33; }
-  nav .links a:not(.btn){ color:#f4efe2; font-weight:650; padding:7px 11px;
+  nav .logo .ruta .rhueco{ fill:#e0e8d6; }
+  nav .links a:not(.btn){ color:#26382f; font-weight:650; padding:7px 11px;
     border-radius:9px; transition:background .15s, color .15s; }
-  nav .links a:not(.btn):hover{ color:#fff; background:rgba(253,249,238,.13); }
-  nav .lang-sw{ background:rgba(253,249,238,.12); border-color:rgba(253,249,238,.38);
-    color:#fdf9ee; }
-  nav .lang-sw:hover{ background:rgba(253,249,238,.22); border-color:#fdf9ee; color:#fff; }
+  nav .links a:not(.btn):hover{ color:var(--acc2); background:rgba(18,63,51,.075); }
+  nav .lang-sw{ background:rgba(255,255,255,.55); border-color:rgba(18,63,51,.22);
+    color:#26382f; }
+  nav .lang-sw:hover{ background:#fff; border-color:var(--acc); color:var(--acc2); }
   nav .links a.btn{ color:#fff !important; }
-  nav .links a.btn.sec{ color:#fdf9ee !important; border-color:rgba(253,249,238,.6);
+  nav .links a.btn.sec{ color:var(--deep) !important; border-color:rgba(18,63,51,.32);
     background:transparent; }
-  nav .links a.btn.sec:hover{ background:rgba(253,249,238,.15); border-color:#fdf9ee; }
+  nav .links a.btn.sec:hover{ background:rgba(18,63,51,.07); border-color:var(--deep); }
   /* En móvil el botón se salía por la derecha y el selector de idioma se cortaba: con
      los enlaces ya ocultos, lo que sobra es el padding del botón y el hueco del flex. */
   @media (max-width:560px){
@@ -805,8 +809,8 @@
       <div class="barras" id="barras"></div>
       <div class="calc-ahorro" id="calcAhorro" aria-live="polite"></div>
       <p class="calc-fuente">Taken from each product’s own public pricing page in July 2026 (turitop.com,
-      trekksoft.com, bokun.io, fareharbor.com). The <b>“per-user model” line is not any one product’s price</b>: it models the category of
-      software that charges for every person with an account, at €49 per user per month. Audutor is
+      trekksoft.com, bokun.io, fareharbor.com). The <b>“per-guide software” line is not any one product’s price</b>: it models the category of
+      software that charges for every person with an account, at €49 per account per month. Audutor is
       shown at its base <b>Pro rate (€79, up to 800 travellers a month)</b>; above that it adds €29 per
       extra 500. Always
       check it against the quote you are given. Competitors may add charges we haven’t counted
@@ -980,7 +984,7 @@
     };
     var opciones = [
       { id: 'hito',       nombre: 'Audutor Pro',          calcula: function (r, p) { return 79 + 0.019 * p; } },
-      { id: 'poruser',    nombre: 'Per-user model', calcula: function (r, p, q) { return 49 * q; } },
+      { id: 'poruser',    nombre: 'Per-guide software', calcula: function (r, p, q) { return 49 * q; } },
       { id: 'turitop',    nombre: 'TuriTop Starter',   calcula: function (r, p) { return 29 + 0.02 * r; } },
       { id: 'trekksoft',  nombre: 'TrekkSoft Starter', calcula: function (r, p) { return 49 + 0.03 * r; } },
       { id: 'bokun',      nombre: 'Bókun Start',       calcula: function (r, p) { return 49 + 0.015 * r; } },
