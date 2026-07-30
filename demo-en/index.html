@@ -668,13 +668,13 @@
         <p class="mini" id="mk-nota" style="margin:6px 0 0; font-size:10.5px; line-height:1.45;"></p>
       </div>
       <div class="plan-sel" id="plan-sel">
-        <button data-plan="esencial" onclick="cambiarPlan('esencial')"><b>Essential</b>£0</button>
-        <button data-plan="pro" onclick="cambiarPlan('pro')"><b>Pro</b>£59</button>
-        <button data-plan="premium" onclick="cambiarPlan('premium')"><b>Premium</b>£179</button>
+        <button data-plan="esencial" onclick="cambiarPlan('esencial')"><b>Essential</b>€0</button>
+        <button data-plan="pro" onclick="cambiarPlan('pro')"><b>Pro</b>€79</button>
+        <button data-plan="premium" onclick="cambiarPlan('premium')"><b>Premium</b>€199</button>
       </div>
       <div class="es-plus" id="es-plus">
-        Running out of room? <b>Essential+ · £29/month</b> — up to 3 tours, 3 guides and
-        300 messages a month. No booking fee.
+        Running out of room? <b>Essential+ · €29/month</b> — up to 3 tours, 3 guides, 400 travellers
+        and 300 messages a month (on us). No booking fee.
         <button onclick="ofertaEsencialPlus()">Switch on Essential+</button>
       </div>
       <div style="font-size:10.5px; margin-top:8px; opacity:.85; line-height:1.5;">💳 Tips: <b>0 %</b> when you take it in person (your own SumUp, card reader or Tap to Pay). Only the <b>link or QR</b> carries <b>1.9 % + £0.30</b>.</div>
@@ -1027,11 +1027,11 @@
   <div class="gate-inline" id="gate-noshow" style="display:none;">
     <div class="cerr">🔒</div>
     <h2 style="margin:6px 0 2px;">The smart anti-no-show sequence</h2>
-    <p style="margin:6px 0;"><span class="chip" style="background:rgba(201,138,45,.25); color:var(--amber);">Included in the Pro plan · £59/month</span></p>
+    <p style="margin:6px 0;"><span class="chip" style="background:rgba(201,138,45,.25); color:var(--amber);">Included in the Pro plan · €79/month</span></p>
     <p style="color:var(--ink2); max-width:52ch; margin:8px auto 0;">Your plan includes the <b>basic
       confirmation reminder</b> (one nudge: the text the day before). The smart sequence
       adapts to how risky each booking looks — last month it brought back <b>+34 people ≈ £410</b> in tips.
-      <b>£59/month</b> keeps it.</p>
+      <b>€79/month</b> keeps it.</p>
     <div class="fila" style="gap:8px; justify-content:center; flex-wrap:wrap; margin-top:14px;">
       <button class="btn" onclick="cambiarPlan('pro')">Upgrade to Pro</button>
       <button class="btn sec" onclick="desbloquear('noshowSmart')">🔓 Just try it (demo)</button>
@@ -1309,10 +1309,10 @@ Places held for your group for 48 h 👉 oldtownwalks.co.uk/combo/x3f9
     <div class="gate-inline" id="gate-recon" style="display:none;">
       <div class="cerr">🔒</div>
       <h2 style="margin:6px 0 2px;">Platform reconciliation</h2>
-      <p style="margin:6px 0;"><span class="chip" style="background:rgba(201,138,45,.25); color:var(--amber);">Included in the Pro plan · £59/month</span></p>
+      <p style="margin:6px 0;"><span class="chip" style="background:rgba(201,138,45,.25); color:var(--amber);">Included in the Pro plan · €79/month</span></p>
       <p style="color:var(--ink2); max-width:48ch; margin:8px auto 0;">Reconciliation is Pro’s <b>return on
         investment in black and white</b>: this month it clawed back <b>£70</b> in no-show fees —
-        <b>more than the subscription</b>.</p>
+        <b>nearly the whole subscription, from this one module</b>.</p>
       <div class="fila" style="gap:8px; justify-content:center; flex-wrap:wrap; margin-top:14px;">
         <button class="btn" onclick="cambiarPlan('pro')">Upgrade to Pro</button>
         <button class="btn sec" onclick="desbloquear('conciliacion')">🔓 Just try it (demo)</button>
@@ -2009,8 +2009,8 @@ cerebro:   { n:'GuIA’s brain', plan:'Pro', d:'The per-tour fact sheet that fee
 };
 /* Planes de la demo (precios congruentes con la landing) y qué desbloquea cada uno. */
 var PLANES={ esencial:{orden:0, n:'Essential', precio:'£0'},
-             pro:     {orden:1, n:'Pro',      precio:'£59'},
-             premium: {orden:2, n:'Premium',  precio:'£179'} };
+             pro:     {orden:1, n:'Pro',      precio:'€79'},
+             premium: {orden:2, n:'Premium',  precio:'€199'} };
 function reqOrden(v){ return SUPLEMENTOS[v].plan==='Premium' ? 2 : 1; }   // plan mínimo que lo incluye
 function disponible(v){ if(!SUPLEMENTOS[v]) return true;
   return PLANES[S.plan].orden >= reqOrden(v) || S.desbloqueado[v]; }
@@ -2145,7 +2145,7 @@ function pintaEsPlus(){
   e.style.display = S.plan==='esencial' ? 'block' : 'none';
 }
 function ofertaEsencialPlus(){
-  toast('In the demo, Essential+ (£29) switches on as you grow: when a second tour or the message cap calls for it. It is not a public plan — it only appears as an upgrade from Essential.');
+  toast('In the demo, Essential+ (€29) switches on as you grow: when a second tour or the message cap calls for it. It is not a public plan — it only appears as an upgrade from Essential.');
 }
 function cambiarPlan(p){ S.plan=p; pintaPlanSel(); pintaCandados(); pintaWaTope(); pintaPropinaPlan(); pintaEsPlus();
   ir((location.hash.slice(1))||'operaciones');   // re-evalúa el bloqueo de la vista actual
@@ -4868,6 +4868,12 @@ function modoCoste(m){
   document.getElementById('tab-cost-emp').className='btn mini'+(m==='empresa'?'':' sec');
   document.getElementById('tab-cost-ing').className='btn mini'+(m==='ingreso'?'':' sec');
   pintaLiq();
+}
+function fechaCorta(iso){
+  var M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var p=String(iso||'').split('-');
+  if (p.length<3) return String(iso||'');
+  return String(+p[2])+' '+(M[+p[1]-1]||p[1]);
 }
 function repartoTour(x, pct, fijo){
   var coste = x.plat * COMISION_CANAL;

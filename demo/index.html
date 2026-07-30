@@ -633,12 +633,12 @@
       </div>
       <div class="plan-sel" id="plan-sel">
         <button data-plan="esencial" onclick="cambiarPlan('esencial')"><b>Esencial</b>0 €</button>
-        <button data-plan="pro" onclick="cambiarPlan('pro')"><b>Pro</b>59 €</button>
-        <button data-plan="premium" onclick="cambiarPlan('premium')"><b>Premium</b>179 €</button>
+        <button data-plan="pro" onclick="cambiarPlan('pro')"><b>Pro</b>79 €</button>
+        <button data-plan="premium" onclick="cambiarPlan('premium')"><b>Premium</b>199 €</button>
       </div>
       <div class="es-plus" id="es-plus">
-        ¿Te quedas corto? <b>Esencial+ · 29 €/mes</b> — hasta 3 tours, 3 guías y
-        300 mensajes WhatsApp/mes. Sin fee por reserva.
+        ¿Te quedas corto? <b>Esencial+ · 29 €/mes</b> — hasta 3 tours, 3 guías, 400 viajeros
+        y 300 mensajes WhatsApp/mes (los pagamos nosotros). Sin fee por reserva.
         <button onclick="ofertaEsencialPlus()">Activar Esencial+</button>
       </div>
       <div style="font-size:10.5px; margin-top:8px; opacity:.85; line-height:1.5;">💳 Propina: <b>0 %</b> si cobras en mano. Solo el <b>enlace o QR</b> lleva <b>1,9 % + 0,30 € — todo incluido</b> (la pasarela va dentro, no se suma aparte).</div>
@@ -976,11 +976,11 @@
   <div class="gate-inline" id="gate-noshow" style="display:none;">
     <div class="cerr">🔒</div>
     <h2 style="margin:6px 0 2px;">Cadencia anti-no-show inteligente</h2>
-    <p style="margin:6px 0;"><span class="chip" style="background:rgba(201,138,45,.25); color:var(--amber);">Incluido en el plan Pro · 59 €/mes</span></p>
+    <p style="margin:6px 0;"><span class="chip" style="background:rgba(201,138,45,.25); color:var(--amber);">Incluido en el plan Pro · 79 €/mes</span></p>
     <p style="color:var(--ink2); max-width:52ch; margin:8px auto 0;">Tu plan incluye el <b>recordatorio de
       confirmación básico</b> (1 toque: el WhatsApp de confirmación del día antes). La cadencia inteligente
       se adapta al riesgo de cada reserva — el mes pasado recuperó <b>+34 personas ≈ 410 €</b> en propinas.
-      Por <b>59 €/mes</b> la mantienes.</p>
+      Por <b>79 €/mes</b> la mantienes.</p>
     <div class="fila" style="gap:8px; justify-content:center; flex-wrap:wrap; margin-top:14px;">
       <button class="btn" onclick="cambiarPlan('pro')">Cambiar a Pro</button>
       <button class="btn sec" onclick="desbloquear('noshowSmart')">🔓 Solo probarlo (demo)</button>
@@ -1258,10 +1258,10 @@ Plazas de vuestro grupo guardadas 48 h 👉 luna.tours/combo/x3f9
     <div class="gate-inline" id="gate-recon" style="display:none;">
       <div class="cerr">🔒</div>
       <h2 style="margin:6px 0 2px;">Conciliación con plataformas</h2>
-      <p style="margin:6px 0;"><span class="chip" style="background:rgba(201,138,45,.25); color:var(--amber);">Incluido en el plan Pro · 59 €/mes</span></p>
+      <p style="margin:6px 0;"><span class="chip" style="background:rgba(201,138,45,.25); color:var(--amber);">Incluido en el plan Pro · 79 €/mes</span></p>
       <p style="color:var(--ink2); max-width:48ch; margin:8px auto 0;">La conciliación es el <b>ROI en
         negro sobre blanco</b> de Pro: este mes recuperó <b>70 €</b> en comisiones de no-show —
-        <b>más que la mensualidad</b>.</p>
+        <b>casi la mensualidad entera, solo con este módulo</b>.</p>
       <div class="fila" style="gap:8px; justify-content:center; flex-wrap:wrap; margin-top:14px;">
         <button class="btn" onclick="cambiarPlan('pro')">Cambiar a Pro</button>
         <button class="btn sec" onclick="desbloquear('conciliacion')">🔓 Solo probarlo (demo)</button>
@@ -1935,8 +1935,8 @@ var SUPLEMENTOS={
 };
 /* Planes de la demo (precios congruentes con la landing) y qué desbloquea cada uno. */
 var PLANES={ esencial:{orden:0, n:'Esencial', precio:'0 €'},
-             pro:     {orden:1, n:'Pro',      precio:'59 €'},
-             premium: {orden:2, n:'Premium',  precio:'179 €'} };
+             pro:     {orden:1, n:'Pro',      precio:'79 €'},
+             premium: {orden:2, n:'Premium',  precio:'199 €'} };
 function reqOrden(v){ return SUPLEMENTOS[v].plan==='Premium' ? 2 : 1; }   // plan mínimo que lo incluye
 function disponible(v){ if(!SUPLEMENTOS[v]) return true;
   return PLANES[S.plan].orden >= reqOrden(v) || S.desbloqueado[v]; }
