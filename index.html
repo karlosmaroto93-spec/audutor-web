@@ -121,34 +121,35 @@
   .btn.sec:hover{ background:var(--acc-soft); box-shadow:none; }
   @media (max-width:720px){ nav .links a:not(.btn){ display:none; } }
 
-  /* ===== Barra de salvia =====
+  /* ===== Barra verde bosque =====
      Va DESPUÉS de las reglas base del nav a propósito: `nav .links a` tiene la misma
      especificidad arriba y abajo, así que aquí decide el orden, no el peso. Puesto
-     antes, los enlaces se quedaban en --ink2 y no se leían.
-     El verde profundo (#123f33) se leía como una losa oscura encima del crema. Esto es
-     el mismo verde de la casa muy rebajado y tirando a cálido, para que la barra sea un
-     tono más de la página y no un bloque aparte — y el coral del botón, que antes
-     competía con el fondo, ahora es lo único intenso de la franja.
-     Colores sin alpha: sobre #e0e8d6 la tinta verde da ~9,9:1, y una opacidad de más
-     lo baja sin que se note al escribirlo. */
-  nav{ background:#e0e8d6; border-bottom:1px solid rgba(201,138,45,.55); }
+     antes, los enlaces se quedaban en --ink2 sobre verde y no se leían.
+     Tercera versión, y las dos anteriores explican esta. El #123f33 original era casi
+     negro: pesaba como una losa. La salvia clara arreglaba el peso pero dejaba la
+     página entera en un solo tono. Este verde tiene MÁS croma que el original (66 %
+     frente a 56 %) y a la vez es más claro (23 % de luminosidad frente a 16 %): se lee
+     como verde de verdad, no como una sombra, y sigue dejando respirar al coral.
+     Colores sin alpha: sobre #14634c el crema da 6,8:1, y una opacidad de más lo baja
+     sin que se note al escribirlo. */
+  nav{ background:#14634c; border-bottom:1px solid rgba(201,138,45,.5); }
   @supports (backdrop-filter:blur(8px)){
-    nav{ background:rgba(224,232,214,.95); backdrop-filter:blur(10px) saturate(1.15); }
+    nav{ background:rgba(20,99,76,.96); backdrop-filter:blur(10px) saturate(1.1); }
   }
-  nav .logo{ color:var(--deep); }
+  nav .logo{ color:#fdf9ee; }
   nav .logo .ruta path:first-child{ stroke:var(--gold); }
   nav .logo .ruta .rpin{ fill:var(--coral); }        /* un pin verde sobre verde no se ve */
-  nav .logo .ruta .rhueco{ fill:#e0e8d6; }
-  nav .links a:not(.btn){ color:#26382f; font-weight:650; padding:7px 11px;
+  nav .logo .ruta .rhueco{ fill:#14634c; }
+  nav .links a:not(.btn){ color:#f4efe2; font-weight:650; padding:7px 11px;
     border-radius:9px; transition:background .15s, color .15s; }
-  nav .links a:not(.btn):hover{ color:var(--acc2); background:rgba(18,63,51,.075); }
-  nav .lang-sw{ background:rgba(255,255,255,.55); border-color:rgba(18,63,51,.22);
-    color:#26382f; }
-  nav .lang-sw:hover{ background:#fff; border-color:var(--acc); color:var(--acc2); }
+  nav .links a:not(.btn):hover{ color:#fff; background:rgba(253,249,238,.16); }
+  nav .lang-sw{ background:rgba(253,249,238,.14); border-color:rgba(253,249,238,.42);
+    color:#fdf9ee; }
+  nav .lang-sw:hover{ background:rgba(253,249,238,.24); border-color:#fdf9ee; color:#fff; }
   nav .links a.btn{ color:#fff !important; }
-  nav .links a.btn.sec{ color:var(--deep) !important; border-color:rgba(18,63,51,.32);
+  nav .links a.btn.sec{ color:#fdf9ee !important; border-color:rgba(253,249,238,.62);
     background:transparent; }
-  nav .links a.btn.sec:hover{ background:rgba(18,63,51,.07); border-color:var(--deep); }
+  nav .links a.btn.sec:hover{ background:rgba(253,249,238,.16); border-color:#fdf9ee; }
   /* En móvil el botón se salía por la derecha y el selector de idioma se cortaba: con
      los enlaces ya ocultos, lo que sobra es el padding del botón y el hueco del flex. */
   @media (max-width:560px){
