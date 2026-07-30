@@ -227,6 +227,19 @@
   .celda p{ font-size:14.8px; color:var(--ink2); margin:0; }
   .celda .mini{ font-size:12.5px; color:var(--muted); display:block; margin-top:10px; font-family:var(--mono); }
 
+  /* ---- contacto ---- */
+  .contacto-caja{ background:var(--paper); border:1.5px solid var(--acc); border-radius:16px;
+    padding:34px 38px; max-width:620px; margin:0 auto; text-align:center;
+    box-shadow:0 14px 40px rgba(18,138,107,.10); }
+  .contacto-caja h2{ font-size:clamp(23px,3vw,30px); margin:0 0 10px; }
+  .contacto-caja p{ color:var(--ink2); font-size:16px; margin:0 0 14px; }
+  .contacto-dir{ font-size:19px !important; font-weight:800; margin:18px 0 10px !important; }
+  .contacto-dir a{ color:var(--acc); text-decoration:none; border-bottom:2px solid var(--acc-soft); }
+  .contacto-dir a:hover{ border-bottom-color:var(--acc); }
+  .contacto-caja .mini{ font-size:13px; color:var(--muted); margin:0 !important; }
+  .contacto-pend{ display:inline-block; background:var(--gold-soft); border:1px solid #ecd9b0;
+    border-radius:10px; padding:10px 16px; font-size:14.5px; color:var(--amber); font-weight:700; }
+
   /* ---- un día con Audutor ---- */
   .dia{ position:relative; margin-top:8px; }
   .dia::before{ content:""; position:absolute; left:86px; top:8px; bottom:8px; width:0;
@@ -658,11 +671,11 @@
       <ul>
         <li>Daily brief and the guide’s mobile manifest (check-in, walk-ins)</li>
         <li>Booking inbox: <b>up to 2 channels</b> (e.g. GuruWalk + your site)</li>
-        <li>Confirmation reminder by SMS or WhatsApp the day before — one tap for the customer, and you know who is coming <small>(up to 100 messages a month)</small></li>
+        <li>Confirmation reminder by SMS or WhatsApp the day before — one tap for the customer, and you know who is coming <small>(one reminder per booking)</small></li>
         <li>Split-group detection and rescue for stragglers</li>
         <li>2 guides · <b>150 people/month</b> · 30-day history</li>
         <li>A small “with Audutor” badge shows on the guide page and the tip screen</li>
-        <li>Digital tips: <b>2.5&nbsp;%</b></li>
+        <li>Digital tips: <b>0&nbsp;%</b> taken in person · <b>1.9&nbsp;% + €0.30</b> when we take the payment</li>
       </ul>
       <a class="btn sec" href="#contacto">Start free</a>
     </div>
@@ -675,12 +688,12 @@
         <li>No Audutor branding — your brand on the tip screen and the guide page</li>
         <li><b>The full smart anti-no-show sequence</b>: it adapts to how risky each booking looks — and
           leaves a record of who was contacted, when, and who confirmed</li>
-        <li><b>Unlimited</b> SMS and WhatsApp messages</li>
+        <li>SMS and WhatsApp reminders on <b>fair use</b> <span class="mini">— anything beyond that at cost, and we tell you first</span></li>
         <li><b>Platform reconciliation</b>: claw back the fees you paid on people who never turned up — with a running total of what you have reclaimed this month</li>
         <li><b>GuIA</b>: the assistant that answers your chat and never makes things up</li>
         <li><b>Guide payouts</b>: your own split, worked out tour by tour — and the totals reconcile</li>
         <li><b>Abandoned checkouts and tour bundles</b>: the follow-up sale happens without you</li>
-        <li>Digital tips: <b>1.9&nbsp;%</b></li>
+        <li>Digital tips: <b>0&nbsp;%</b> taken in person · <b>1.9&nbsp;% + €0.30</b> when we take the payment</li>
       </ul>
       <a class="btn" href="#contacto">Book a demo</a>
     </div>
@@ -691,7 +704,7 @@
       <ul>
         <li>Everything in Pro · <b>unlimited tours</b> (no per-tour cost)</li>
         <li><b>Analytics</b>: the numbers by tour, guide, channel and time slot</li>
-        <li><b>Digital tips</b> — 0&nbsp;% when the guide takes the money in person; 1.9&nbsp;% + €0.30 <b>all in</b> when we take the payment</li>
+        <li>Digital tips: <b>0&nbsp;%</b> taken in person · <b>1.9&nbsp;% + €0.30</b> when we take the payment <span class="mini">— the same rate on all three plans</span></li>
         <li>Priority support and hands-on setup</li>
         <li>Coming next: online payments, invoicing and a channel manager for ticketed tours</li>
       </ul>
@@ -791,9 +804,9 @@
       <div class="barras" id="barras"></div>
       <div class="calc-ahorro" id="calcAhorro" aria-live="polite"></div>
       <p class="calc-fuente">Taken from each product’s own public pricing page in July 2026 (turitop.com,
-      trekksoft.com, bokun.io, fareharbor.com). <b>Donicus is an estimate:</b> they do not publish a
-      price, so we use the €49 per user, per month starting figure listed on Capterra — check it
-      against your own quote before you rely on it. Competitors may add charges we haven’t counted
+      trekksoft.com, bokun.io, fareharbor.com). The <b>“per-user model” line is not any one product’s price</b>: it models the category of
+      software that charges for every person with an account, at €49 per user per month. Always
+      check it against the quote you are given. Competitors may add charges we haven’t counted
       here, per ticket or for card processing. These are rough figures, for a walking tour
       company.</p>
     </div>
@@ -865,9 +878,21 @@
   <a class="btn reveal" style="--d:120ms" href="#contacto">Apply as a founding company</a>
 </div>
 
+<!-- CONTACTO: antes el boton principal saltaba a una linea del pie diciendo que no habia
+     email. Para abrirlo, cambiar la constante CONTACTO_EMAIL mas abajo. -->
+<section id="contacto"><div class="wrap">
+  <div class="contacto-caja reveal">
+    <h2>Tell us how you work</h2>
+    <p>Send us your city, how many guides you are and which platforms you sell through. We
+    reply with a demo built <b>around your own tours</b>, not the sample ones.</p>
+    <p class="contacto-dir" id="contacto-dir"></p>
+    <p class="mini">No forms, no sales team, no newsletter: one email, one reply.</p>
+  </div>
+</div></section>
+
 <footer><div class="wrap">
   <span class="logo pie" aria-label="Audutor"><span class="wm">Audutor<svg class="ruta" viewBox="0 0 100 14" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M1 10.5 Q 24 5 46 9 T 86 8"/><path class="rpin" d="M93 1.2c-2.6 0-4.7 2.1-4.7 4.7 0 3.4 4.7 7.5 4.7 7.5s4.7-4.1 4.7-7.5c0-2.6-2.1-4.7-4.7-4.7z"/><circle class="rhueco" cx="93" cy="6" r="1.8"/></svg></span></span>
-  <span id="contacto">© 2026 Audutor · <b>domain and contact email coming soon</b> · Made in Madrid</span>
+  <span>© 2026 Audutor · <b>domain and contact email coming soon</b> · Made in Madrid</span>
   <span>Bookings · Channels · Guides · Groups · Rescue · Tips · GuIA</span>
 </div></footer>
 
@@ -952,7 +977,7 @@
     };
     var opciones = [
       { id: 'hito',       nombre: 'Audutor Pro',          calcula: function (r, p) { return 59 + 0.019 * p; } },
-      { id: 'donicus',    nombre: 'Donicus',           calcula: function (r, p, q) { return 49 * q; } },
+      { id: 'poruser',    nombre: 'Per-user model', calcula: function (r, p, q) { return 49 * q; } },
       { id: 'turitop',    nombre: 'TuriTop Starter',   calcula: function (r, p) { return 29 + 0.02 * r; } },
       { id: 'trekksoft',  nombre: 'TrekkSoft Starter', calcula: function (r, p) { return 49 + 0.03 * r; } },
       { id: 'bokun',      nombre: 'Bókun Start',       calcula: function (r, p) { return 49 + 0.015 * r; } },
@@ -984,9 +1009,9 @@
       var hito = opciones[0];
       var barata = opciones.slice(1).reduce(function (a, b) { return b.coste < a.coste ? b : a; });
       var dif = Math.round(barata.coste - hito.coste);
-      var matiz = '<span class="matiz">Donicus charges <b>per person with an account</b>, and TuriTop ' +
-        'and Bókun add per-user costs too — drag the team slider and watch. Audutor includes ' +
-        'unlimited guides from Pro, so that line stays flat.</span>';
+      var matiz = '<span class="matiz">TuriTop and Bókun add per-user costs as the team grows, and some ' +
+        'software in this sector charges <b>per person with an account</b> — drag the slider and ' +
+        'watch. Audutor includes unlimited guides from Pro, so that line stays flat.</span>';
       if (dif > 0) {
         cajaAhorro.innerHTML = 'Audutor saves you <b>€' + fmt(dif) + '/month — €' +
           fmt(dif * 12) + '/year</b> against ' + barata.nombre + '.' + matiz;
@@ -1022,10 +1047,24 @@ var I18N={
   en:{
     'nav.producto':'Product', 'nav.asistente':'The assistant', 'nav.dia':'A day', 'nav.planes':'Pricing', 'nav.web':'Your site',
     'nav.demo':'Try the demo',
-    'hero.kicker':'Operations software for free walking tour companies with a team of guides',
+    'hero.kicker':'Operations software for walking tour companies with a team of guides — free tours, ticketed walks, food and bike tours',
     'hero.h1':'Your booking system forgets everything that happens after the booking.'
   }
 };
+/* ================= EL ÚNICO SITIO QUE HAY QUE TOCAR PARA ABRIR EL EMBUDO ================= */
+var CONTACTO_EMAIL = '';
+(function(){
+  var d=document.getElementById('contacto-dir'); if(!d) return;
+  if (CONTACTO_EMAIL){
+    d.innerHTML='<a href="mailto:'+CONTACTO_EMAIL+'?subject=Founding%20company%20-%20Audutor">'+
+      CONTACTO_EMAIL+'</a>';
+  } else {
+    d.innerHTML='<span class="contacto-pend">📮 Contact address not published yet</span>';
+    var p=d.nextElementSibling;
+    if(p) p.textContent='We are finishing the domain. If you have got this far and want to be '+
+      'one of the first, come back in a few days: this will be a direct email address.';
+  }
+})();
 var LANG='es', TXT0={};
 function cambiaIdioma(){
   LANG = LANG==='es' ? 'en' : 'es';

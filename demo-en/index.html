@@ -4214,11 +4214,14 @@ function postSet(k,v){
 }
 
 /* ============ vista previa del viajero: propina + reseña en una pantalla ============
-   Flujo ganador de internal docs §4: GuIA envía el enlace
-   post-tour por WhatsApp al hacer check-out del manifiesto; anclas 10/15/20 £/persona
-   (15 preseleccionado) ajustadas al tamaño de la reserva; tarjeta/Apple Pay/Google
-   Pay/Apple Pay; “el 100 % de tu propina va al equipo” (sin surcharge — PSD2); gracias +
-   reseña en Google SIN gating. Escenario ficticio: Marco (5 pax) con Emma. */
+   Flujo de internal docs §4: GuIA manda el enlace post-tour
+   al hacer check-out del manifiesto; tarjeta, Apple Pay o Google Pay; la propina va
+   entera al guía y al viajero no se le recarga nada (prohibido por las Payment Services
+   Regulations 2017 en Reino Unido); reseña en Google después de pagar, sin condicionar.
+   OJO: este comentario decía «anclas 10/15/20 £ con 15 preseleccionado» — eso ya NO es
+   así en el mercado británico, donde el código CAP/ASA prohíbe sugerir importe en algo
+   anunciado como gratis. Lo decide el mercado activo (MK.sinSugerir), no este texto.
+   Escenario ficticio: Marco (5 pax) con Emma. */
 var VJ={ pp:15, pax:5, metodo:'tarjeta', nombre:'Marco', guia:'Emma', tour:'free Old Town walk' };
 var VJ_METODOS=[ ['tarjeta','💳','Card'], ['apple','','Apple Pay'], ['google','G','Google Pay'] ];
 function vjTotal(){ return VJ.libre ? (VJ.otra||0) : VJ.pp*VJ.pax; }

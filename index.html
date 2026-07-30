@@ -227,6 +227,19 @@
   .celda p{ font-size:14.8px; color:var(--ink2); margin:0; }
   .celda .mini{ font-size:12.5px; color:var(--muted); display:block; margin-top:10px; font-family:var(--mono); }
 
+  /* ---- contacto ---- */
+  .contacto-caja{ background:var(--paper); border:1.5px solid var(--acc); border-radius:16px;
+    padding:34px 38px; max-width:620px; margin:0 auto; text-align:center;
+    box-shadow:0 14px 40px rgba(18,138,107,.10); }
+  .contacto-caja h2{ font-size:clamp(23px,3vw,30px); margin:0 0 10px; }
+  .contacto-caja p{ color:var(--ink2); font-size:16px; margin:0 0 14px; }
+  .contacto-dir{ font-size:19px !important; font-weight:800; margin:18px 0 10px !important; }
+  .contacto-dir a{ color:var(--acc); text-decoration:none; border-bottom:2px solid var(--acc-soft); }
+  .contacto-dir a:hover{ border-bottom-color:var(--acc); }
+  .contacto-caja .mini{ font-size:13px; color:var(--muted); margin:0 !important; }
+  .contacto-pend{ display:inline-block; background:var(--gold-soft); border:1px solid #ecd9b0;
+    border-radius:10px; padding:10px 16px; font-size:14.5px; color:var(--amber); font-weight:700; }
+
   /* ---- un día con Audutor ---- */
   .dia{ position:relative; margin-top:8px; }
   .dia::before{ content:""; position:absolute; left:86px; top:8px; bottom:8px; width:0;
@@ -681,11 +694,11 @@
       <ul>
         <li>Parte del día y manifiesto móvil del guía (check-in, walk-ins)</li>
         <li>Buzón de reservas: <b>hasta 2 canales</b> (p. ej. GuruWalk + tu web)</li>
-        <li>Recordatorio de confirmación anti-no-show por WhatsApp — 1 toque, el día antes <small>(hasta 100 mensajes/mes)</small></li>
+        <li>Recordatorio de confirmación anti-no-show por WhatsApp — 1 toque, el día antes <small>(un recordatorio por reserva)</small></li>
         <li>Detección de grupos grandes y rescate de rezagados</li>
         <li>2 guías · <b>150 personas/mes</b> · historial de 30 días</li>
         <li>Página del guía y propina con marca «con Audutor»</li>
-        <li>Propina digital: <b>2,5 %</b></li>
+        <li>Propina digital: <b>0 %</b> cobrando en mano · <b>1,9 % + 0,30 €</b> si el cobro lo hacemos nosotros</li>
       </ul>
       <a class="btn sec" href="#contacto">Empezar gratis</a>
     </div>
@@ -698,13 +711,13 @@
         <li>Sin marca «Audutor» — tu marca en la propina y la página del guía</li>
         <li><b>Cadencia anti-no-show inteligente completa</b>: se adapta al riesgo de cada
           reserva — y deja registrado quién avisó, cuándo y quién confirmó</li>
-        <li>Mensajes WhatsApp <b>sin tope</b></li>
+        <li>Recordatorios por WhatsApp y SMS <b>con uso razonable</b> <span class="mini">— el exceso, a precio de coste y avisando antes</span></li>
         <li><b>Conciliación con plataformas</b>: recupera las comisiones de los no-shows —
           € recuperados este mes, en negro sobre blanco</li>
         <li><b>GuIA</b>: el asistente que atiende tu chat y no inventa</li>
         <li><b>Liquidación a guías</b>: reparto configurable, cuenta cuadrada</li>
         <li><b>Carrito abandonado y combos</b>: la segunda venta, sola</li>
-        <li>Propina digital: <b>1,9 %</b></li>
+        <li>Propina digital: <b>0 %</b> cobrando en mano · <b>1,9 % + 0,30 €</b> si el cobro lo hacemos nosotros</li>
       </ul>
       <a class="btn" href="#contacto">Pedir una demo</a>
     </div>
@@ -715,7 +728,7 @@
       <ul>
         <li>Todo lo del plan Pro · <b>tours ilimitados</b> (sin coste por tour)</li>
         <li><b>Cuadro de mando</b>: analítica por tour, guía, canal y franja</li>
-        <li><b>Propina digital</b> — 0 % si el guía cobra en mano; 1,9 % + 0,30 € <b>todo incluido</b> si el cobro lo hacemos nosotros</li>
+        <li>Propina digital: <b>0 %</b> cobrando en mano · <b>1,9 % + 0,30 €</b> si el cobro lo hacemos nosotros <span class="mini">— la misma tarifa en los tres planes</span></li>
         <li>Soporte prioritario y onboarding dedicado</li>
         <li>Próximamente: cobro online, facturación y channel manager de pago</li>
       </ul>
@@ -817,9 +830,9 @@
       <div class="barras" id="barras"></div>
       <div class="calc-ahorro" id="calcAhorro" aria-live="polite"></div>
       <p class="calc-fuente">Precios públicos de las páginas de tarifas de cada producto a julio de
-      2026 (turitop.com, trekksoft.com, bokun.io, fareharbor.com). <b>Donicus es una estimación:</b>
-      no publica tarifa, así que usamos los 49 € por usuario y mes que figuran como precio de partida
-      en Capterra — contrástalo con tu presupuesto antes de darlo por bueno. Los competidores pueden
+      2026 (turitop.com, trekksoft.com, bokun.io, fareharbor.com). La línea <b>«modelo por usuario» no es el precio de ningún producto concreto</b>: modela la
+      categoría de software que cobra por cada persona con cuenta, a 49 € por usuario y mes.
+      Contrasta siempre con el presupuesto que te den a ti. Los competidores pueden
       aplicar cargos adicionales (por ticket o procesamiento) no incluidos. Cálculo orientativo para
       una empresa de free tours.</p>
     </div>
@@ -891,14 +904,27 @@
   </div>
   <h2 data-split>Lo estamos abriendo a las primeras empresas</h2>
   <p class="reveal">Audutor funciona ya cada día en una operación real de free tours en Madrid.
-  Buscamos un grupo pequeño de empresas fundadoras para probarlo con ventajas de por vida:
+  Buscamos un grupo pequeño de empresas fundadoras para probarlo con ventajas de fundador durante 24 meses:
   cuéntanos cómo trabajas y te lo enseñamos con tus propios tours.</p>
   <a class="btn reveal" style="--d:120ms" href="#contacto">Quiero ser empresa fundadora</a>
 </div>
 
+<!-- CONTACTO. Antes esto era un span en el pie que decia «email en trámite», asi que el
+     boton principal de conversion llevaba a una linea diciendo que no se podia contactar.
+     Para ponerlo en marcha basta cambiar la constante CONTACTO_EMAIL mas abajo. -->
+<section id="contacto"><div class="wrap">
+  <div class="contacto-caja reveal">
+    <h2>Cuéntanos cómo trabajas</h2>
+    <p>Escríbenos con tu ciudad, cuántos guías sois y por qué plataformas vendéis. Te
+    respondemos con una demo montada <b>con tus propios tours</b>, no con los de ejemplo.</p>
+    <p class="contacto-dir" id="contacto-dir"></p>
+    <p class="mini">Sin formularios, sin comerciales y sin newsletter: un correo, una respuesta.</p>
+  </div>
+</div></section>
+
 <footer><div class="wrap">
   <span class="logo pie" aria-label="Audutor"><span class="wm">Audutor<svg class="ruta" viewBox="0 0 100 14" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M1 10.5 Q 24 5 46 9 T 86 8"/><path class="rpin" d="M93 1.2c-2.6 0-4.7 2.1-4.7 4.7 0 3.4 4.7 7.5 4.7 7.5s4.7-4.1 4.7-7.5c0-2.6-2.1-4.7-4.7-4.7z"/><circle class="rhueco" cx="93" cy="6" r="1.8"/></svg></span></span>
-  <span id="contacto">© 2026 Audutor · <b>dominio y email de contacto en trámite</b> · Hecho en Madrid</span>
+  <span>© 2026 Audutor · <b>dominio y email de contacto en trámite</b> · Hecho en Madrid</span>
   <span>Reservas · Canales · Guías · Grupos · Rescate · Propinas · GuIA</span>
 </div></footer>
 
@@ -983,7 +1009,7 @@
     };
     var opciones = [
       { id: 'hito',       nombre: 'Audutor Pro',          calcula: function (r, p) { return 59 + 0.019 * p; } },
-      { id: 'donicus',    nombre: 'Donicus',           calcula: function (r, p, q) { return 49 * q; } },
+      { id: 'poruser',    nombre: 'Modelo por usuario', calcula: function (r, p, q) { return 49 * q; } },
       { id: 'turitop',    nombre: 'TuriTop Starter',   calcula: function (r, p) { return 29 + 0.02 * r; } },
       { id: 'trekksoft',  nombre: 'TrekkSoft Starter', calcula: function (r, p) { return 49 + 0.03 * r; } },
       { id: 'bokun',      nombre: 'Bókun Start',       calcula: function (r, p) { return 49 + 0.015 * r; } },
@@ -1015,9 +1041,9 @@
       var hito = opciones[0];
       var barata = opciones.slice(1).reduce(function (a, b) { return b.coste < a.coste ? b : a; });
       var dif = Math.round(barata.coste - hito.coste);
-      var matiz = '<span class="matiz">Donicus cobra <b>por persona con cuenta</b>, y TuriTop y Bókun ' +
-        'añaden coste por usuario al crecer el equipo — mueve el deslizador del equipo y míralo. ' +
-        'Audutor incluye guías ilimitados desde Pro, así que esa línea no se mueve.</span>';
+      var matiz = '<span class="matiz">TuriTop y Bókun añaden coste por usuario al crecer el equipo, y hay ' +
+        'software del sector que cobra <b>por cada persona con cuenta</b> — mueve el deslizador y ' +
+        'míralo. Audutor incluye guías ilimitados desde Pro, así que esa línea no se mueve.</span>';
       if (dif > 0) {
         cajaAhorro.innerHTML = 'Con Audutor te ahorras <b>' + fmt(dif) + ' €/mes — ' +
           fmt(dif * 12) + ' €/año</b> frente a ' + barata.nombre + '.' + matiz;
@@ -1053,10 +1079,27 @@ var I18N={
   en:{
     'nav.producto':'Product', 'nav.asistente':'The assistant', 'nav.dia':'A day', 'nav.planes':'Pricing', 'nav.web':'Your site',
     'nav.demo':'Try the demo',
-    'hero.kicker':'Operations software for free walking tour companies with a team of guides',
+    'hero.kicker':'Operations software for walking tour companies with a team of guides — free tours, ticketed walks, food and bike tours',
     'hero.h1':'Your booking system forgets everything that happens after the booking.'
   }
 };
+/* ================= EL ÚNICO SITIO QUE HAY QUE TOCAR PARA ABRIR EL EMBUDO =================
+   Pon aquí la dirección de contacto y la web pasa de «no se puede contactar» a un correo
+   que funciona. Mientras esté vacía, la sección lo dice claro en vez de fingir un canal
+   que no existe — que es lo que hacía antes el pie con «email en trámite». */
+var CONTACTO_EMAIL = '';
+(function(){
+  var d=document.getElementById('contacto-dir'); if(!d) return;
+  if (CONTACTO_EMAIL){
+    d.innerHTML='<a href="mailto:'+CONTACTO_EMAIL+'?subject=Empresa%20fundadora%20-%20Audutor">'+
+      CONTACTO_EMAIL+'</a>';
+  } else {
+    d.innerHTML='<span class="contacto-pend">📮 Dirección de contacto pendiente de publicar</span>';
+    var p=d.nextElementSibling;
+    if(p) p.textContent='Estamos cerrando el dominio. Si has llegado hasta aquí y quieres '+
+      'ser de las primeras, vuelve en unos días: esto será un correo directo.';
+  }
+})();
 var LANG='es', TXT0={};
 function cambiaIdioma(){
   LANG = LANG==='es' ? 'en' : 'es';
