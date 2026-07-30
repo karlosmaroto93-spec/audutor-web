@@ -500,6 +500,7 @@
   <a class="logo" href="#" aria-label="Audutor, home"><span class="wm">Audutor<svg class="ruta" viewBox="0 0 100 14" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M1 10.5 Q 24 5 46 9 T 86 8"/><path class="rpin" d="M93 1.2c-2.6 0-4.7 2.1-4.7 4.7 0 3.4 4.7 7.5 4.7 7.5s4.7-4.1 4.7-7.5c0-2.6-2.1-4.7-4.7-4.7z"/><circle class="rhueco" cx="93" cy="6" r="1.8"/></svg></span></a>
   <div class="links">
     <a href="#producto" data-i18n="nav.producto">Product</a>
+    <a href="#asistente" data-i18n="nav.asistente">The assistant</a>
     <a href="#dia" data-i18n="nav.dia">A day in the life</a>
     <a href="#planes" data-i18n="nav.planes">Pricing</a>
     <a href="#web" data-i18n="nav.web">Your site</a>
@@ -536,7 +537,7 @@
       <p class="hero-nota reveal" style="--d:300ms">It runs a real free tour operation in Madrid every day — it wasn’t dreamed up in a boardroom. Setting it up takes an afternoon: forward your booking emails and the inbox fills itself in. Nothing to migrate, nothing to sign.</p>
       <div class="guia-saludo reveal" style="--d:380ms">
         <svg class="guia" aria-hidden="true" focusable="false"><use href="#guia"/></svg>
-        <p class="bocadillo"><b>Hi! I’m GuIA.</b> I look after your customers while you’re out guiding — confirming, reminding and rescuing whoever gets lost. I only come to you when I really need you.</p>
+        <p class="bocadillo"><b>Hi! I’m GuIA.</b> I look after your customers while you’re out guiding. I answer with your facts and nothing else — anything I haven’t been told, I bring to you.</p>
       </div>
     </div>
 
@@ -799,6 +800,35 @@
   </div>
 </div></section>
 
+<section id="asistente"><div class="wrap">
+  <div class="sec-head">
+    <h2 data-split>Every booking system has an assistant now.<br>Ask them what it does when it doesn’t know.</h2>
+    <p class="reveal">That is the whole question. An assistant plugged into a booking engine knows your
+    products, your prices and your availability — and improvises everything else. Most of what a customer
+    actually asks is everything else: are there toilets, is it steep, will the guide wait, can I bring the dog.</p>
+  </div>
+  <div class="grid3">
+    <div class="celda star reveal"><span class="ico">🔒</span><h3>It only says what you confirmed</h3>
+      <p>You write the facts of your tours once. GuIA answers with those and <b>nothing else</b> — no
+      inference, no filling in the gaps. What it hasn’t been told comes to you, with the question logged
+      so you can answer it once and never again.</p>
+      <span class="mini">this lowers our “resolved by AI” number — and we’ll take that trade</span></div>
+    <div class="celda star reveal" style="--d:70ms"><span class="ico">🧭</span><h3>It knows the street, not just the catalogue</h3>
+      <p>It can see who has checked in, where the guide is right now, and that two bookings twenty minutes
+      apart are one group of eleven. So when someone writes <b>“I’ve lost you”</b>, it sends them the live
+      map — without ever giving out the guide’s number.</p>
+      <span class="mini">a booking engine cannot answer this: it hasn’t got the data</span></div>
+    <div class="celda star reveal" style="--d:140ms"><span class="ico">🌍</span><h3>Write it once, answer in their language</h3>
+      <p>One set of facts, however many languages. A German asks in German and gets your meeting point in
+      German — not your marketing translated, the actual fact. And if a fact hasn’t been translated yet, it
+      hands the question over rather than mixing two languages in one sentence.</p>
+      <span class="mini">each fact is translated once and cached, so it costs nothing to repeat</span></div>
+  </div>
+  <p class="reveal" style="text-align:center; color:var(--muted); font-size:14px; margin:20px 0 0;">
+    In the demo you can watch it hand something over: ask GuIA for a discount and see where the question
+    lands. <a href="../demo-en/" style="color:var(--acc); font-weight:700;">Try it →</a></p>
+</div></section>
+
 <section class="alt" id="porque"><div class="wrap">
   <div class="sec-head">
     <h2 data-split>Why Audutor and not the usual software</h2>
@@ -814,7 +844,7 @@
       <div class="bueno">Neutral: we’re not an OTA and we don’t hand your data to one</div></div>
     <div class="vs-row"><div class="malo">Guides, tips and customer messages all end up in a spreadsheet and a WhatsApp group</div>
       <div class="bueno">Real check-in, walk-ins, groups, split bookings and payouts, tour by tour — what happens after the booking is the product</div></div>
-    <div class="vs-row"><div class="malo">A chatbot that invents the meeting point</div>
+    <div class="vs-row"><div class="malo">An assistant that improvises when the catalogue doesn’t cover the question</div>
       <div class="bueno">GuIA answers only with what is actually in your system. Anything it isn’t sure of comes straight to you, every time</div></div>
     <div class="vs-row"><div class="malo">Support on someone else’s clock, three time zones away</div>
       <div class="bueno">Support from the people who built it — and who have stood at the meeting point on a wet Saturday morning</div></div>
@@ -990,7 +1020,7 @@
    propias plataformas, moneda y canal de aviso — no es la misma traducida). */
 var I18N={
   en:{
-    'nav.producto':'Product', 'nav.dia':'A day', 'nav.planes':'Pricing', 'nav.web':'Your site',
+    'nav.producto':'Product', 'nav.asistente':'The assistant', 'nav.dia':'A day', 'nav.planes':'Pricing', 'nav.web':'Your site',
     'nav.demo':'Try the demo',
     'hero.kicker':'Operations software for free walking tour companies with a team of guides',
     'hero.h1':'Your booking system forgets everything that happens after the booking.'

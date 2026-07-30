@@ -500,6 +500,7 @@
   <a class="logo" href="#" aria-label="Audutor, inicio"><span class="wm">Audutor<svg class="ruta" viewBox="0 0 100 14" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M1 10.5 Q 24 5 46 9 T 86 8"/><path class="rpin" d="M93 1.2c-2.6 0-4.7 2.1-4.7 4.7 0 3.4 4.7 7.5 4.7 7.5s4.7-4.1 4.7-7.5c0-2.6-2.1-4.7-4.7-4.7z"/><circle class="rhueco" cx="93" cy="6" r="1.8"/></svg></span></a>
   <div class="links">
     <a href="#producto" data-i18n="nav.producto">Producto</a>
+    <a href="#asistente" data-i18n="nav.asistente">El asistente</a>
     <a href="#dia" data-i18n="nav.dia">Un día</a>
     <a href="#planes" data-i18n="nav.planes">Planes</a>
     <a href="#web" data-i18n="nav.web">Tu web</a>
@@ -540,9 +541,8 @@
       reenvías tus emails de reserva y el buzón monta el resto, sin migraciones ni permanencia.</p>
       <div class="guia-saludo reveal" style="--d:380ms">
         <svg class="guia" aria-hidden="true" focusable="false"><use href="#guia"/></svg>
-        <p class="bocadillo"><b>¡Hola! Soy GuIA.</b> Atiendo a tus clientes por WhatsApp mientras
-        tú guías — confirmo, recuerdo y rescato al que se pierde. Solo te aviso si de verdad me
-        necesitas.</p>
+        <p class="bocadillo"><b>¡Hola! Soy GuIA.</b> Atiendo a tus clientes mientras tú guías.
+        Contesto con tus datos y con ninguno más — lo que no me has dicho, te lo paso a ti.</p>
       </div>
     </div>
 
@@ -826,6 +826,35 @@
   </div>
 </div></section>
 
+<section id="asistente"><div class="wrap">
+  <div class="sec-head">
+    <h2 data-split>Ahora todos los sistemas de reserva tienen asistente.<br>Pregúntales qué hace el suyo cuando no sabe algo.</h2>
+    <p class="reveal">Ahí está toda la diferencia. Un asistente enchufado a un motor de reservas conoce tus
+    productos, tus precios y tu disponibilidad — y lo demás se lo inventa. Y lo demás es casi todo lo que
+    pregunta un cliente: si hay baños, si hay cuestas, cuánto espera el guía, si puede llevar al perro.</p>
+  </div>
+  <div class="grid3">
+    <div class="celda star reveal"><span class="ico">🔒</span><h3>Solo afirma lo que has confirmado tú</h3>
+      <p>Escribes los datos de tus tours una vez. GuIA responde con esos y <b>con ninguno más</b>: no deduce
+      ni rellena huecos. Lo que no le has dicho te llega a ti, con la pregunta anotada para que la
+      contestes una vez y no vuelva.</p>
+      <span class="mini">esto baja nuestro «% resuelto por la IA» — y preferimos que baje</span></div>
+    <div class="celda star reveal" style="--d:70ms"><span class="ico">🧭</span><h3>Sabe lo que pasa en la calle, no solo en el catálogo</h3>
+      <p>Ve quién ha llegado, dónde está el guía ahora mismo y que dos reservas hechas con veinte minutos de
+      diferencia son un grupo de once. Por eso, cuando alguien escribe <b>«me he perdido»</b>, le manda el
+      mapa en vivo — sin dar nunca el teléfono del guía.</p>
+      <span class="mini">un motor de reservas no puede contestar esto: no tiene el dato</span></div>
+    <div class="celda star reveal" style="--d:140ms"><span class="ico">🌍</span><h3>Lo escribes una vez, contesta en el idioma del cliente</h3>
+      <p>Un solo juego de datos, los idiomas que hagan falta. Un alemán pregunta en alemán y recibe tu punto
+      de encuentro en alemán — no tu marketing traducido, el dato. Y si un dato aún no está traducido, deriva
+      la pregunta antes que mezclar dos idiomas en la misma frase.</p>
+      <span class="mini">cada dato se traduce una vez y se guarda, así repetirlo no cuesta nada</span></div>
+  </div>
+  <p class="reveal" style="text-align:center; color:var(--muted); font-size:14px; margin:20px 0 0;">
+    En la demo puedes verlo derivar: pídele un descuento a GuIA y mira dónde acaba la pregunta.
+    <a href="demo/" style="color:var(--acc); font-weight:700;">Probarlo →</a></p>
+</div></section>
+
 <section class="alt" id="porque"><div class="wrap">
   <div class="sec-head">
     <h2 data-split>Por qué Audutor y no el software de siempre</h2>
@@ -844,7 +873,7 @@
       <div class="bueno">Neutral: ni somos una OTA ni le contamos tus datos a ninguna</div></div>
     <div class="vs-row"><div class="malo">La reserva entra… y ahí se acaba: guías, propinas y asistencia real, en Excel</div>
       <div class="bueno">Check-in real, walk-ins, grupos, reparto y liquidación por tour — el después es el producto</div></div>
-    <div class="vs-row"><div class="malo">Chatbot que se inventa el punto de encuentro</div>
+    <div class="vs-row"><div class="malo">Un asistente que improvisa cuando la pregunta se sale del catálogo</div>
       <div class="bueno">GuIA solo afirma datos reales de tu negocio; lo dudoso te lo deriva. Siempre</div></div>
     <div class="vs-row"><div class="malo">Soporte en inglés, en horario de otra costa</div>
       <div class="bueno">En español, por gente que ha estado en el punto de encuentro un sábado a las 12</div></div>
@@ -1022,7 +1051,7 @@
    propias plataformas, moneda y canal de aviso — no es la misma traducida). */
 var I18N={
   en:{
-    'nav.producto':'Product', 'nav.dia':'A day', 'nav.planes':'Pricing', 'nav.web':'Your site',
+    'nav.producto':'Product', 'nav.asistente':'The assistant', 'nav.dia':'A day', 'nav.planes':'Pricing', 'nav.web':'Your site',
     'nav.demo':'Try the demo',
     'hero.kicker':'Operations software for free walking tour companies with a team of guides',
     'hero.h1':'Your booking system forgets everything that happens after the booking.'
