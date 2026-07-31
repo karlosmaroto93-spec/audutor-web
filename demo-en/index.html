@@ -2476,8 +2476,9 @@ function pintaManifiesto(){
           '<a href="#" class="pr-ver" style="color:var(--acc); font-weight:700;">this is what the customer sees →</a></p>'+
         '</div>';
       prop.querySelector('.pr-tap').onclick=function(){
-        toast('📲 (Simulated) The customer holds their card to the phone and the payment closes there and then, with no waiting for anyone to scan anything. '+
-              'With your own SumUp there’s no Audutor fee. Needs an NFC phone (iPhone XS or newer / Android 9+).');
+        toast('📲 COMING NEXT — taking the tip by tapping a card on the guide’s phone. Apple only allows it from a '+
+              'native app with a permission we are applying for. In the meantime: your own SumUp or card reader '+
+              '(0 % from Audutor) and the assistant’s payment link for whoever left without tipping.');
       };
       prop.querySelector('.pr-sumup').onclick=function(){
         toast('💳 (Simulated) Audutor opens your SumUp with the amount already in and logs the payment itself. '+
@@ -4501,7 +4502,7 @@ function pintaGuidePage(nombre){
 function abrirViajero(){
   var nota=document.getElementById('vj-nota');
   if (NOTA_VIAJERO0!==null) nota.innerHTML=NOTA_VIAJERO0;
-  VJ.pp=S.propCfg.pre; VJ.libre=false; VJ.otra=0; VJ.metodo='tarjeta';
+  VJ.pp=null; VJ.libre=false; VJ.otra=0; VJ.metodo='tarjeta';   // nothing preselected
   document.getElementById('viajero-overlay').classList.add('ver');
   document.body.style.overflow='hidden';
   pintaViajero('importe');
@@ -4523,7 +4524,10 @@ function vjOtraCambia(el){
 }
 function vjMetodo(m){ VJ.metodo=m; pintaViajero('importe'); }
 function vjPagar(){
-  if (!vjTotal()){ toast('Put an amount in first 🙂'); return; }
+  // «No tip» is a valid answer, not a mistake. Telling someone off for choosing it is
+  // what turns a voluntary tip into an obligation in disguise.
+  if (VJ.pp === 0 && !VJ.libre){ pintaViajero('gracias'); return; }
+  if (!vjTotal()){ toast('Pick an amount or type your own 🙂'); return; }
   pintaViajero('gracias');
 }
 function pintaViajero(paso){
@@ -4536,9 +4540,13 @@ function pintaViajero(paso){
     pant.innerHTML=cab+
       '<div class="vj-cuerpo vj-gracias">'+
       '<div class="vj-check">🧡</div>'+
-      '<h3>Thank you, '+VJ.nombre+'!</h3>'+
-      '<p class="vj-total">'+dinero(vjTotal())+'</p>'+
-      '<p class="mini muted">received by '+vjMetodoNombre()+' — it reaches '+VJ.guia+' in full.</p>'+
+      // Whoever leaves nothing gets exactly the same thank-you. No guilt trip, no sad
+      // face: that is what proves the tip was genuinely optional.
+      (vjTotal() ? '<h3>Thank you, '+VJ.nombre+'!</h3>'+
+        '<p class="vj-total">'+dinero(vjTotal())+'</p>'+
+        '<p class="mini muted">received by '+vjMetodoNombre()+' — it reaches '+VJ.guia+' in full.</p>'
+       : '<h3>Thanks for coming, '+VJ.nombre+'!</h3>'+
+        '<p class="mini muted">We hope you enjoyed it. The tour is free — tipping was always your call.</p>')+
       '<div class="vj-resena">'+
       '<p><b>Would you leave us a Google review?</b><br>'+
       '<span class="mini muted">It’s optional and separate from your tip — takes a minute.</span></p>'+
@@ -4559,6 +4567,9 @@ function pintaViajero(paso){
   var libre = S.propCfg.libre
     ? '<button class="vj-imp vj-imp-libre'+(VJ.libre?' on':'')+'" onclick="vjLibre()"><b>✏️ Other</b><span>your own amount</span></button>'
     : '';
+  var nada = '<button class="vj-imp'+(VJ.pp===0?' on':'')+'" onclick="vjSel(0)" '+
+    'style="grid-column:1/-1; padding:9px;"><b style="font-size:14px;">No tip</b>'+
+    '<span>the tour really is free</span></button>';
   var libreInput = (S.propCfg.libre && VJ.libre)
     ? '<div class="fila" style="gap:8px; margin-top:8px; align-items:center;">'+
       '<b style="font-size:17px;">'+MK.moneda.sim+'</b>'+
@@ -4578,11 +4589,14 @@ function pintaViajero(paso){
     '<span class="vj-hora">12:47 ✓✓</span></div>'+
     '<div class="vj-transp" style="margin-bottom:10px;">🇬🇧 <b>Tips only, no set amount.</b> Your guide works on a tips-only basis — give whatever you feel it was worth, or nothing at all.</div>'+
     '<p class="vj-tit">How much would you like to leave? <span class="mini muted" style="font-weight:400;">· booking for '+VJ.pax+' people</span></p>'+
-    '<div class="vj-importes'+(libre?' con-libre':'')+'">'+importes+libre+'</div>'+libreInput+
+    '<div class="vj-importes'+(libre?' con-libre':'')+'">'+importes+libre+nada+'</div>'+libreInput+
     '<p class="vj-tit">How would you like to pay?</p>'+
     '<div class="vj-metodos">'+metodos+'</div>'+
     '<div class="vj-transp">✨ <b>Your tip goes straight to '+VJ.guia+'</b> — with no surcharge to you.</div>'+
-    '<button class="vj-cta" id="vj-cta-btn" onclick="vjPagar()">Leave a tip · '+dinero(vjTotal())+'</button>'+
+    '<button class="vj-cta" id="vj-cta-btn" onclick="vjPagar()">'+
+      (VJ.pp === null && !VJ.libre ? 'Pick an amount'
+        : (VJ.pp === 0 && !VJ.libre ? 'Continue without tipping'
+          : 'Leave a tip · '+dinero(vjTotal())))+'</button>'+
     '<p class="vj-legal">Payment processed securely. We use your details only to handle this tip (GDPR).<br>'+
     'Demo with made-up data — no payment is taken.</p>'+
     '</div>';

@@ -1586,8 +1586,10 @@ Plazas de vuestro grupo guardadas 48 h 👉 luna.tours/combo/x3f9
     <ul>
       <li>📲 <b>GuIA envía el enlace por WhatsApp</b> cuando el guía hace check-out del manifiesto — es el cierre
         formal del tour, no spam.</li>
-      <li>⚓ <b>Importes anclados 10 / 15 / 20 € por persona</b>, con 15 € preseleccionado y ajustados al tamaño
-        de la reserva (aquí, 5 personas: el total se calcula solo).</li>
+      <li>⚓ <b>Importes anclados 10 / 15 / 20 € por persona</b>, ajustados al tamaño de la reserva
+        (aquí, 5 personas: el total se calcula solo). <b>Ninguno viene preseleccionado</b> y «sin propina»
+        está siempre a la vista: si la app elige por el viajero, la propina deja de ser voluntaria — y con
+        ella se cae la no sujeción a IVA (DGT V1808-22).</li>
       <li>✨ <b>La propina va directa a la cuenta del guía</b> — la comisión (%+0,30 €) se descuenta de su lado.
         Sin «cubro la comisión»: el surcharge al viajero está prohibido (PSD2).</li>
       <li>⭐ La <b>reseña en Google</b> se ofrece después de pagar, <b>sin condicionar</b> (política de Google).</li>
@@ -2412,8 +2414,9 @@ function pintaManifiesto(){
           '<a href="#" class="pr-ver" style="color:var(--acc); font-weight:700;">así la ve el viajero →</a></p>'+
         '</div>';
       prop.querySelector('.pr-tap').onclick=function(){
-        toast('📲 (Simulado) El cliente acerca su tarjeta y el cobro se cierra ahí mismo, sin esperar a que escanee nada. '+
-              'Con tu SumUp no llevas comisión de Audutor. Requiere móvil con NFC (iPhone XS+ / Android 9+).');
+        toast('📲 PRÓXIMAMENTE — cobrar acercando la tarjeta al móvil del guía. Apple lo permite solo desde una '+
+              'app nativa con un permiso que estamos tramitando. Mientras tanto: tu SumUp o datáfono (0 % de Audutor) '+
+              'y el enlace de GuIA para quien se fue sin pagar.');
       };
       prop.querySelector('.pr-sumup').onclick=function(){
         toast('💳 (Simulado) Audutor abre tu SumUp con el importe puesto y anota el cobro solo. '+
@@ -3567,7 +3570,7 @@ function abrirViajero(salida){
   VJ.salida = salida || null; VJ.res = null;
   var nota=document.getElementById('vj-nota');
   if (NOTA_VIAJERO0!==null) nota.innerHTML=NOTA_VIAJERO0;
-  VJ.pp=S.propCfg.pre; VJ.libre=false; VJ.otra=0; VJ.metodo='tarjeta';
+  VJ.pp=null; VJ.libre=false; VJ.otra=0; VJ.metodo='tarjeta';   // nada preseleccionado
   document.getElementById('viajero-overlay').classList.add('ver');
   document.body.style.overflow='hidden';
   pintaViajero(VJ.salida ? 'quien' : 'importe');
@@ -3602,7 +3605,11 @@ function vjOtraCambia(el){
 }
 function vjMetodo(m){ VJ.metodo=m; pintaViajero('importe'); }
 function vjPagar(){
-  if (!vjTotal()){ toast('Escribe primero una cantidad 🙂'); return; }
+  // «Sin propina» (pp===0) es una respuesta válida, no un error. Regañar a quien la
+  // elige es exactamente lo que convierte una propina voluntaria en una obligación
+  // encubierta, y es lo que hay que evitar para que siga sin llevar IVA.
+  if (VJ.pp === 0 && !VJ.libre){ pintaViajero('gracias'); return; }
+  if (!vjTotal()){ toast('Elige un importe o escribe el tuyo 🙂'); return; }
   pintaViajero('gracias');
 }
 function pintaViajero(paso){
@@ -3635,9 +3642,13 @@ function pintaViajero(paso){
     pant.innerHTML=cab+
       '<div class="vj-cuerpo vj-gracias">'+
       '<div class="vj-check">🧡</div>'+
-      '<h3>¡Gracias, '+VJ.nombre+'!</h3>'+
-      '<p class="vj-total">'+vjTotal()+' €</p>'+
-      '<p class="mini muted">recibidos con '+vjMetodoNombre()+' — llegan íntegros al equipo de Bella Vita.</p>'+
+      // Quien no deja propina recibe el MISMO agradecimiento. Sin reproche, sin cara
+      // triste y sin insistir: es la prueba de que era voluntaria de verdad.
+      (vjTotal() ? '<h3>¡Gracias, '+VJ.nombre+'!</h3>'+
+        '<p class="vj-total">'+vjTotal()+' €</p>'+
+        '<p class="mini muted">recibidos con '+vjMetodoNombre()+' — llegan íntegros al equipo de Bella Vita.</p>'
+       : '<h3>¡Gracias por venir, '+VJ.nombre+'!</h3>'+
+        '<p class="mini muted">Esperamos que lo hayas disfrutado. El tour es gratis: la propina siempre fue cosa tuya.</p>')+
       '<div class="vj-resena">'+
       '<p><b>¿Nos ayudas con una reseña en Google?</b><br>'+
       '<span class="mini muted">Es voluntaria e independiente de tu propina — se tarda un minuto.</span></p>'+
@@ -3658,6 +3669,11 @@ function pintaViajero(paso){
   var libre = S.propCfg.libre
     ? '<button class="vj-imp vj-imp-libre'+(VJ.libre?' on':'')+'" onclick="vjLibre()"><b>✏️ Otra</b><span>cantidad libre</span></button>'
     : '';
+  // «Sin propina», siempre visible y al mismo nivel que el resto. Esconderlo es lo que
+  // convierte una propina voluntaria en un cargo, y con ello en base imponible.
+  var nada = '<button class="vj-imp'+(VJ.pp===0?' on':'')+'" onclick="vjSel(0)" '+
+    'style="grid-column:1/-1; padding:9px;"><b style="font-size:14px;">Sin propina</b>'+
+    '<span>el tour es gratis de verdad</span></button>';
   var libreInput = (S.propCfg.libre && VJ.libre)
     ? '<div class="fila" style="gap:8px; margin-top:8px; align-items:center;">'+
       '<input id="vj-otra" inputmode="decimal" placeholder="¿Cuánto en total?" value="'+(VJ.otra||'')+'"'+
@@ -3675,11 +3691,14 @@ function pintaViajero(paso){
     '<b>'+VJ.guia+'</b>. Si te ha gustado, aquí puedes agradecérselo 🧡'+
     '<span class="vj-hora">12:47 ✓✓</span></div>'+
     '<p class="vj-tit">¿Cuánto quieres dejar? <span class="mini muted" style="font-weight:400;">· reserva de '+VJ.pax+' personas</span></p>'+
-    '<div class="vj-importes'+(libre?' con-libre':'')+'">'+importes+libre+'</div>'+libreInput+
+    '<div class="vj-importes'+(libre?' con-libre':'')+'">'+importes+libre+nada+'</div>'+libreInput+
     '<p class="vj-tit">¿Cómo prefieres pagar?</p>'+
     '<div class="vj-metodos">'+metodos+'</div>'+
     '<div class="vj-transp">✨ <b>Tu propina llega directa a '+VJ.guia+'</b> — sin recargos para ti.</div>'+
-    '<button class="vj-cta" id="vj-cta-btn" onclick="vjPagar()">Dejar propina · '+vjTotal()+' €</button>'+
+    '<button class="vj-cta" id="vj-cta-btn" onclick="vjPagar()">'+
+      (VJ.pp === null && !VJ.libre ? 'Elige un importe'
+        : (VJ.pp === 0 && !VJ.libre ? 'Continuar sin propina'
+          : 'Dejar propina · '+vjTotal()+' €'))+'</button>'+
     '<p class="vj-legal">Pago procesado de forma segura. Usamos tus datos solo para gestionar esta propina (RGPD).<br>'+
     'Demo con datos ficticios — no se realiza ningún cobro.</p>'+
     '</div>';
