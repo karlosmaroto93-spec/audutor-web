@@ -712,7 +712,7 @@
       <div class="fact-nota" data-nota hidden>facturado anualmente · 790 €/año (2 meses gratis)</div>
       <div class="para">Para la empresa con equipo · <b>hasta 800 viajeros/mes</b> · tours y guías ilimitados</div>
       <ul>
-        <li>Todo lo de Esencial · <b>tours, guías y canales ilimitados</b> —sin bandas ni saltos de precio al crecer el equipo— · historial completo · <b>+29 €/mes</b> por cada 500 viajeros de más</li>
+        <li>Todo lo de Esencial · <b>tours, guías y canales ilimitados</b> —sin bandas ni saltos de precio al crecer el equipo— · historial completo · <b>+29 €/mes</b> por cada 500 viajeros de más, <b>hasta 2.500</b></li>
         <li>Sin marca «Audutor» — tu marca en la propina y la página del guía</li>
         <li><b>Cadencia anti-no-show inteligente completa</b>: se adapta al riesgo de cada
           reserva — y deja registrado quién avisó, cuándo y quién confirmó</li>
@@ -729,7 +729,7 @@
     <div class="plan premium reveal" style="--d:220ms">
       <h3>Premium</h3><div class="precio"><span class="imp" data-mensual="199" data-anual="166">199</span> €<small>/mes</small></div>
       <div class="fact-nota" data-nota hidden>facturado anualmente · 1.990 €/año (2 meses gratis)</div>
-      <div class="para">Todo Audutor · <b>hasta 2.500 viajeros/mes</b> — para operadores que escalan</div>
+      <div class="para">Todo Audutor · <b>desde 2.500 viajeros/mes</b> — para operadores que escalan</div>
       <ul>
         <li>Todo lo del plan Pro · <b>+25 €/mes</b> por cada 500 viajeros de más — el tramo más barato del catálogo</li>
         <li><b>Cuadro de mando</b>: analítica por tour, guía, canal y franja</li>
@@ -826,10 +826,10 @@
         <div class="calc-escala" aria-hidden="true"><span>0 €</span><span>10.000 €</span></div>
       </div>
       <div class="calc-campo">
-        <label for="inPropinas">Propinas digitales al mes</label>
-        <output id="outPropinas" for="inPropinas">2.000 €</output>
-        <input type="range" id="inPropinas" min="0" max="8000" step="100" value="2000">
-        <div class="calc-escala" aria-hidden="true"><span>0 €</span><span>8.000 €</span></div>
+        <label for="inPropinas">Viajeros al mes</label>
+        <output id="outPropinas" for="inPropinas">1.300</output>
+        <input type="range" id="inPropinas" min="100" max="5000" step="100" value="1300">
+        <div class="calc-escala" aria-hidden="true"><span>100</span><span>5.000</span></div>
       </div>
       <div class="calc-campo">
         <label for="inEquipo">Personas del equipo que necesitan cuenta</label>
@@ -844,8 +844,9 @@
       <p class="calc-fuente">Precios públicos de las páginas de tarifas de cada producto a julio de
       2026 (turitop.com, trekksoft.com, bokun.io, fareharbor.com). La línea <b>«software por guía» no es el precio de ningún producto concreto</b>: modela la
       categoría de software que cobra por cada persona con cuenta, a 49 € por cuenta y mes.
-      Audutor aparece en su cuota base de <b>Pro (79 €, hasta 800 viajeros al mes)</b>; por encima
-      se suman 29 € por cada 500 viajeros. Contrasta siempre con el presupuesto que te den a ti. Los competidores pueden
+      Audutor sale de su tabla de tramos por viajeros, y <b>no cobra nada sobre tus reservas ni
+      sobre las propinas</b>: por eso su barra no se mueve cuando subes la facturación. Contrasta
+      siempre con el presupuesto que te den a ti. Los competidores pueden
       aplicar cargos adicionales (por ticket o procesamiento) no incluidos. Cálculo orientativo para
       una empresa de free tours.</p>
     </div>
@@ -1021,7 +1022,13 @@
       return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     };
     var opciones = [
-      { id: 'hito',       nombre: 'Audutor Pro',          calcula: function (r, p) { return 79 + 0.019 * p; } },
+      // Audutor no cobra sobre reservas NI sobre propinas: solo la cuota por tramo de
+      // viajeros. Es la única fila que no depende de lo que factures.
+      { id: 'hito',       nombre: 'Audutor',               calcula: function (r, p) {
+          return p <= 150 ? 0
+            : p <= 2500 ? 79 + Math.max(0, Math.ceil((p - 800) / 500)) * 29
+            : 199 + Math.ceil((p - 2500) / 500) * 25;
+        } },
       { id: 'poruser',    nombre: 'Software por guía',  calcula: function (r, p, q) { return 49 * q; } },
       { id: 'turitop',    nombre: 'TuriTop Starter',   calcula: function (r, p) { return 29 + 0.02 * r; } },
       { id: 'trekksoft',  nombre: 'TrekkSoft Starter', calcula: function (r, p) { return 49 + 0.03 * r; } },
@@ -1042,7 +1049,7 @@
     var recalcula = function () {
       var r = +inR.value, p = +inP.value, q = +inQ.value;
       outR.textContent = fmt(r) + ' €';
-      outP.textContent = fmt(p) + ' €';
+      outP.textContent = fmt(p);
       outQ.textContent = q + (q === 1 ? ' persona' : ' personas');
       opciones.forEach(function (o) { o.coste = o.calcula(r, p, q); });
       var max = Math.max.apply(null, opciones.map(function (o) { return o.coste; }).concat([1]));

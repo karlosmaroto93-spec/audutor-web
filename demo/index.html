@@ -3494,7 +3494,8 @@ function postSet(k,v){
    Flujo ganador de nota interna: GuIA envía el enlace
    post-tour por WhatsApp al hacer check-out del manifiesto; anclas 10/15/20 €/persona
    (15 preseleccionado) ajustadas al tamaño de la reserva; tarjeta/Apple Pay/Google
-   Pay/Bizum; «el 100 % de tu propina va al equipo» (sin surcharge — PSD2); gracias +
+   Pay/Bizum; la propina va DIRECTA a la cuenta del guía y el viajero paga exactamente
+   lo que elige (sin recargo — art. 35.3 RDL 19/2018); gracias +
    reseña en Google SIN gating. Escenario ficticio: Marco (5 pax) con Elena. */
 /* El QR de propina codifica la SALIDA (tour + hora + guía), no al guía en abstracto:
    así el cobro se atribuye solo al tour correcto. Lo que el QR no puede saber es
@@ -3646,7 +3647,7 @@ function pintaViajero(paso){
       // triste y sin insistir: es la prueba de que era voluntaria de verdad.
       (vjTotal() ? '<h3>¡Gracias, '+VJ.nombre+'!</h3>'+
         '<p class="vj-total">'+vjTotal()+' €</p>'+
-        '<p class="mini muted">recibidos con '+vjMetodoNombre()+' — llegan íntegros al equipo de Bella Vita.</p>'
+        '<p class="mini muted">recibidos con '+vjMetodoNombre()+' — van directos a Elena, sin pasar por nadie más.</p>'
        : '<h3>¡Gracias por venir, '+VJ.nombre+'!</h3>'+
         '<p class="mini muted">Esperamos que lo hayas disfrutado. El tour es gratis: la propina siempre fue cosa tuya.</p>')+
       '<div class="vj-resena">'+
