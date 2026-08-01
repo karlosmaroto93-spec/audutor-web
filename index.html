@@ -712,7 +712,7 @@
       <div class="fact-nota" data-nota hidden>facturado anualmente · 790 €/año (2 meses gratis)</div>
       <div class="para">Para la empresa con equipo · <b>hasta 800 viajeros/mes</b> · tours y guías ilimitados</div>
       <ul>
-        <li>Todo lo de Esencial · <b>tours, guías y canales ilimitados</b> —sin bandas ni saltos de precio al crecer el equipo— · historial completo · <b>+29 €/mes</b> por cada 500 viajeros de más, <b>hasta 2.500</b></li>
+        <li>Todo lo de Esencial · <b>tours, guías y canales ilimitados</b> —sin bandas ni saltos de precio al crecer el equipo— · historial completo · <b>+6 €/mes</b> por cada 100 viajeros de más, <b>hasta 2.500</b></li>
         <li>Sin marca «Audutor» — tu marca en la propina y la página del guía</li>
         <li><b>Cadencia anti-no-show inteligente completa</b>: se adapta al riesgo de cada
           reserva — y deja registrado quién avisó, cuándo y quién confirmó</li>
@@ -729,9 +729,9 @@
     <div class="plan premium reveal" style="--d:220ms">
       <h3>Premium</h3><div class="precio"><span class="imp" data-mensual="199" data-anual="166">199</span> €<small>/mes</small></div>
       <div class="fact-nota" data-nota hidden>facturado anualmente · 1.990 €/año (2 meses gratis)</div>
-      <div class="para">Todo Audutor · <b>desde 2.500 viajeros/mes</b> — para operadores que escalan</div>
+      <div class="para">Todo Audutor · <b>hasta 3.000 viajeros/mes</b> — para operadores que escalan</div>
       <ul>
-        <li>Todo lo del plan Pro · <b>+25 €/mes</b> por cada 500 viajeros de más — el tramo más barato del catálogo</li>
+        <li>Todo lo del plan Pro · incluye <b>3.000 viajeros</b> · <b>+5 €/mes</b> por cada 100 de más — el tramo más barato del catálogo</li>
         <li><b>Cuadro de mando</b>: analítica por tour, guía, canal y franja</li>
         <li>Propina digital: <b>0 %</b> cobrando en mano · <b>1,9 % + 0,30 €</b> si el cobro lo hacemos nosotros <span class="mini">— la misma tarifa en los tres planes</span></li>
         <li>Soporte prioritario y onboarding dedicado</li>
@@ -741,8 +741,9 @@
     </div>
   </div>
   <p class="reveal" style="text-align:center; color:var(--muted); font-size:14px; margin:16px 0 0;">
-    Ejemplo: 1.300 viajeros al mes con los tours y el equipo que necesites → <b>Pro 108 €/mes</b>
-    (79 € + un tramo). Un software que cobra por usuario te costaría el triple con 5 guías, y aquí
+    Ejemplo: 1.300 viajeros al mes con los tours y el equipo que necesites → <b>Pro 109 €/mes</b>.
+    Son <b>8 céntimos por viajero</b>, cuando a la plataforma que te lo trajo ya le pagas unos 2,50 €
+    por esa misma persona. Un software que cobra por usuario te costaría el triple con 5 guías, y aquí
     da igual cuántos seáis.</p>
   <div class="addon reveal">
     <div class="t">
@@ -1026,8 +1027,8 @@
       // viajeros. Es la única fila que no depende de lo que factures.
       { id: 'hito',       nombre: 'Audutor',               calcula: function (r, p) {
           return p <= 150 ? 0
-            : p <= 2500 ? 79 + Math.max(0, Math.ceil((p - 800) / 500)) * 29
-            : 199 + Math.ceil((p - 2500) / 500) * 25;
+            : p <= 2500 ? 79 + Math.max(0, Math.ceil((p - 800) / 100)) * 6
+            : 199 + Math.max(0, Math.ceil((p - 3000) / 100)) * 5;
         } },
       { id: 'poruser',    nombre: 'Software por guía',  calcula: function (r, p, q) { return 49 * q; } },
       { id: 'turitop',    nombre: 'TuriTop Starter',   calcula: function (r, p) { return 29 + 0.02 * r; } },

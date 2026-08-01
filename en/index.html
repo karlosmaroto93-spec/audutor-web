@@ -689,7 +689,7 @@
       <div class="fact-nota" data-nota hidden>billed annually · €790/year (2 months free)</div>
       <div class="para">For companies running a team of guides · <b>up to 800 travellers a month</b> · unlimited tours and guides</div>
       <ul>
-        <li>Everything in Essential · <b>unlimited tours, guides and channels</b> — no bands, no price jumps as the team grows — · full history · <b>+€29/month</b> per extra 500 travellers, <b>up to 2,500</b></li>
+        <li>Everything in Essential · <b>unlimited tours, guides and channels</b> — no bands, no price jumps as the team grows — · full history · <b>+€6/month</b> per extra 100 travellers, <b>up to 2,500</b></li>
         <li>No Audutor branding — your brand on the tip screen and the guide page</li>
         <li><b>The full smart anti-no-show sequence</b>: it adapts to how risky each booking looks — and
           leaves a record of who was contacted, when, and who confirmed</li>
@@ -705,9 +705,9 @@
     <div class="plan premium reveal" style="--d:220ms">
       <h3>Premium</h3><div class="precio">€<span class="imp" data-mensual="199" data-anual="166">199</span><small>/month</small></div>
       <div class="fact-nota" data-nota hidden>billed annually · €1,990/year (2 months free)</div>
-      <div class="para">Everything Audutor does · <b>from 2,500 travellers a month</b> — for operators running several tours a day</div>
+      <div class="para">Everything Audutor does · <b>up to 3,000 travellers a month</b> — for operators running several tours a day</div>
       <ul>
-        <li>Everything in Pro · <b>+€25/month</b> per extra 500 travellers — the cheapest rate we charge</li>
+        <li>Everything in Pro · <b>3,000 travellers included</b> · <b>+€5/month</b> per extra 100 — the cheapest rate we charge</li>
         <li><b>Analytics</b>: the numbers by tour, guide, channel and time slot</li>
         <li>Digital tips: <b>0&nbsp;%</b> taken in person · <b>1.9&nbsp;% + €0.30</b> when we take the payment <span class="mini">— the same rate on all three plans</span></li>
         <li>Priority support and hands-on setup</li>
@@ -717,9 +717,10 @@
     </div>
   </div>
   <p class="reveal" style="text-align:center; color:var(--muted); font-size:14px; margin:16px 0 0;">
-    Example: 1,300 travellers a month, with as many tours and guides as you need → <b>Pro at €108/month</b>
-    (€79 plus one step). Software priced per guide jumps to €175/month the moment you take on a tenth guide —
-    and here it makes no difference how many of you there are.
+    Example: 1,300 travellers a month, with as many tours and guides as you need → <b>Pro at €109/month</b>.
+    That is <b>8 cents a traveller</b>, when the platform that sent you that same person already charges you
+    around €2.50 for them. Software priced per guide jumps to €175/month the moment you take on a tenth
+    guide — and here it makes no difference how many of you there are.
     <br><small>We bill in euros, in the UK as everywhere else. Your bank converts at its own rate and we add no currency fee on top.</small></p>
   <div class="addon reveal">
     <div class="t">
@@ -992,8 +993,8 @@
       // travellers. It's the one row that doesn't move with what you turn over.
       { id: 'hito',       nombre: 'Audutor',               calcula: function (r, p) {
           return p <= 150 ? 0
-            : p <= 2500 ? 79 + Math.max(0, Math.ceil((p - 800) / 500)) * 29
-            : 199 + Math.ceil((p - 2500) / 500) * 25;
+            : p <= 2500 ? 79 + Math.max(0, Math.ceil((p - 800) / 100)) * 6
+            : 199 + Math.max(0, Math.ceil((p - 3000) / 100)) * 5;
         } },
       { id: 'poruser',    nombre: 'Per-guide software', calcula: function (r, p, q) { return 49 * q; } },
       { id: 'turitop',    nombre: 'TuriTop Starter',   calcula: function (r, p) { return 29 + 0.02 * r; } },
