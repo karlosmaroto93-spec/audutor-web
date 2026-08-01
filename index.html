@@ -729,9 +729,9 @@
     <div class="plan premium reveal" style="--d:220ms">
       <h3>Premium</h3><div class="precio"><span class="imp" data-mensual="199" data-anual="166">199</span> €<small>/mes</small></div>
       <div class="fact-nota" data-nota hidden>facturado anualmente · 1.990 €/año (2 meses gratis)</div>
-      <div class="para">Todo Audutor · <b>hasta 3.000 viajeros/mes</b> — para operadores que escalan</div>
+      <div class="para">Todo Audutor · <b>hasta 5.000 viajeros/mes</b> — para operadores que escalan</div>
       <ul>
-        <li>Todo lo del plan Pro · incluye <b>3.000 viajeros</b> · <b>+5 €/mes</b> por cada 100 de más — el tramo más barato del catálogo</li>
+        <li>Todo lo del plan Pro · <b>5.000 viajeros incluidos, sin tramos</b> — a ese volumen sale a <b>4 céntimos por viajero</b></li>
         <li><b>Cuadro de mando</b>: analítica por tour, guía, canal y franja</li>
         <li>Propina digital: <b>0 %</b> cobrando en mano · <b>1,9 % + 0,30 €</b> si el cobro lo hacemos nosotros <span class="mini">— la misma tarifa en los tres planes</span></li>
         <li>Soporte prioritario y onboarding dedicado</li>
@@ -742,9 +742,9 @@
   </div>
   <p class="reveal" style="text-align:center; color:var(--muted); font-size:14px; margin:16px 0 0;">
     Ejemplo: 1.300 viajeros al mes con los tours y el equipo que necesites → <b>Pro 109 €/mes</b>.
-    Son <b>8 céntimos por viajero</b>, cuando a la plataforma que te lo trajo ya le pagas unos 2,50 €
-    por esa misma persona. Un software que cobra por usuario te costaría el triple con 5 guías, y aquí
-    da igual cuántos seáis.</p>
+    Son <b>8 céntimos por viajero</b>. Un software que cobra por usuario —hay uno del sector a 49 € por
+    usuario y mes— te costaría <b>245 € con cinco guías</b>, y aquí da igual cuántos seáis.
+    <br>¿Más de 5.000 viajeros al mes? Escríbenos: a ese tamaño el precio se habla, no se saca de una tabla.</p>
   <div class="addon reveal">
     <div class="t">
       <h3>💳 Propina digital — la cobres como la cobres, cuadrada sola</h3>
@@ -1026,9 +1026,12 @@
       // Audutor no cobra sobre reservas NI sobre propinas: solo la cuota por tramo de
       // viajeros. Es la única fila que no depende de lo que factures.
       { id: 'hito',       nombre: 'Audutor',               calcula: function (r, p) {
+          // Por encima de 5.000 el precio se negocia: la tabla se queda en Premium
+          // para no enseñar una cifra que no es la que se acabaría cobrando.
           return p <= 150 ? 0
-            : p <= 2500 ? 79 + Math.max(0, Math.ceil((p - 800) / 100)) * 6
-            : 199 + Math.max(0, Math.ceil((p - 3000) / 100)) * 5;
+            : p <= 800 ? 79
+            : p <= 2500 ? 79 + Math.ceil((p - 800) / 100) * 6
+            : 199;
         } },
       { id: 'poruser',    nombre: 'Software por guía',  calcula: function (r, p, q) { return 49 * q; } },
       { id: 'turitop',    nombre: 'TuriTop Starter',   calcula: function (r, p) { return 29 + 0.02 * r; } },
