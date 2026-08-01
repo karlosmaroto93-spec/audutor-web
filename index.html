@@ -731,7 +731,7 @@
       <div class="fact-nota" data-nota hidden>facturado anualmente · 1.990 €/año (2 meses gratis)</div>
       <div class="para">Todo Audutor · <b>hasta 5.000 viajeros/mes</b> — para operadores que escalan</div>
       <ul>
-        <li>Todo lo del plan Pro · <b>5.000 viajeros incluidos, sin tramos</b> — a ese volumen sale a <b>4 céntimos por viajero</b></li>
+        <li>Todo lo del plan Pro · <b>5.000 viajeros incluidos, sin tramos</b> — a ese volumen sale a <b>4 céntimos por viajero</b> · por encima, <b>+3 €/mes por cada 100</b></li>
         <li><b>Cuadro de mando</b>: analítica por tour, guía, canal y franja</li>
         <li>Propina digital: <b>0 %</b> cobrando en mano · <b>1,9 % + 0,30 €</b> si el cobro lo hacemos nosotros <span class="mini">— la misma tarifa en los tres planes</span></li>
         <li>Soporte prioritario y onboarding dedicado</li>
@@ -744,7 +744,16 @@
     Ejemplo: 1.300 viajeros al mes con los tours y el equipo que necesites → <b>Pro 109 €/mes</b>.
     Son <b>8 céntimos por viajero</b>. Un software que cobra por usuario —hay uno del sector a 49 € por
     usuario y mes— te costaría <b>245 € con cinco guías</b>, y aquí da igual cuántos seáis.
-    <br>¿Más de 5.000 viajeros al mes? Escríbenos: a ese tamaño el precio se habla, no se saca de una tabla.</p>
+    <br>Con 10.000 viajeros al mes son <b>349 €</b>: 3,5 céntimos por persona. No hay letra pequeña
+    por arriba.</p>
+  <p class="reveal" style="text-align:center; color:var(--muted); font-size:14px; margin:10px 0 0; max-width:70ch; margin-inline:auto;">
+    <b>Y la cuota no es lo que más te va a costar.</b> Los recordatorios los factura Meta a tu cuenta,
+    los mande quien los mande — nosotros no ponemos recargo. La diferencia está en <b>a cuántos se los
+    mandas</b>: escribir a todo el mundo sale a unos 10 céntimos por viajero; hacerlo solo donde hay
+    riesgo real, a <b>2,3</b>. Con 3.000 viajeros al mes eso son <b>300 € frente a 69 €</b>. La cuota
+    de Premium cuesta menos que lo que te ahorra la cadencia.
+    <br><small>Y <b>GuIA no tiene coste por mensaje</b>: contesta con reglas y su caché de traducciones
+    converge — 14 llamadas al modelo tanto con 10 mensajes como con 200.</small></p>
   <div class="addon reveal">
     <div class="t">
       <h3>💳 Propina digital — la cobres como la cobres, cuadrada sola</h3>
@@ -1026,12 +1035,11 @@
       // Audutor no cobra sobre reservas NI sobre propinas: solo la cuota por tramo de
       // viajeros. Es la única fila que no depende de lo que factures.
       { id: 'hito',       nombre: 'Audutor',               calcula: function (r, p) {
-          // Por encima de 5.000 el precio se negocia: la tabla se queda en Premium
-          // para no enseñar una cifra que no es la que se acabaría cobrando.
           return p <= 150 ? 0
             : p <= 800 ? 79
             : p <= 2500 ? 79 + Math.ceil((p - 800) / 100) * 6
-            : 199;
+            : p <= 5000 ? 199
+            : 199 + Math.ceil((p - 5000) / 100) * 3;
         } },
       { id: 'poruser',    nombre: 'Software por guía',  calcula: function (r, p, q) { return 49 * q; } },
       { id: 'turitop',    nombre: 'TuriTop Starter',   calcula: function (r, p) { return 29 + 0.02 * r; } },

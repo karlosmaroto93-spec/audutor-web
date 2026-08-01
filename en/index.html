@@ -707,7 +707,7 @@
       <div class="fact-nota" data-nota hidden>billed annually · €1,990/year (2 months free)</div>
       <div class="para">Everything Audutor does · <b>up to 5,000 travellers a month</b> — for operators running several tours a day</div>
       <ul>
-        <li>Everything in Pro · <b>5,000 travellers included, no steps</b> — at that volume it works out at <b>4 cents a traveller</b></li>
+        <li>Everything in Pro · <b>5,000 travellers included, no steps</b> — at that volume it works out at <b>4 cents a traveller</b> · beyond that, <b>+€3/month per 100</b></li>
         <li><b>Analytics</b>: the numbers by tour, guide, channel and time slot</li>
         <li>Digital tips: <b>0&nbsp;%</b> taken in person · <b>1.9&nbsp;% + €0.30</b> when we take the payment <span class="mini">— the same rate on all three plans</span></li>
         <li>Priority support and hands-on setup</li>
@@ -721,7 +721,15 @@
     That is <b>8 cents a traveller</b>. Software priced per user — and there is one in this sector at €49
     per user per month — would cost you <b>€245 with five guides</b>, and here it makes no difference how
     many of you there are.
-    <br>More than 5,000 travellers a month? Get in touch: at that size the price is a conversation, not a table.
+    <br>At 10,000 travellers a month that's <b>€349</b> — 3.5 cents a head. No small print at the top end.</p>
+  <p class="reveal" style="text-align:center; color:var(--muted); font-size:14px; margin:10px 0 0; max-width:70ch; margin-inline:auto;">
+    <b>And the subscription won't be your biggest line.</b> Reminders are billed by Meta to your own
+    account, whoever sends them — we add nothing on top. The difference is <b>how many people you send
+    them to</b>: messaging everyone runs at about 10 cents a traveller; messaging only where there's real
+    risk, at <b>2.3</b>. On 3,000 travellers a month that's <b>€300 against €69</b>. The Premium
+    subscription costs less than the cadence saves you.
+    <br><small>And <b>GuIA has no per-message cost</b>: it answers from rules, and its translation cache
+    converges — 14 model calls whether you send 10 messages or 200.</small>
     <br><small>We bill in euros, in the UK as everywhere else. Your bank converts at its own rate and we add no currency fee on top.</small></p>
   <div class="addon reveal">
     <div class="t">
@@ -993,12 +1001,11 @@
       // Audutor charges nothing on your bookings and nothing on tips: only the tier by
       // travellers. It's the one row that doesn't move with what you turn over.
       { id: 'hito',       nombre: 'Audutor',               calcula: function (r, p) {
-          // Por encima de 5.000 el precio se negocia: la tabla se queda en Premium
-          // para no enseñar una cifra que no es la que se acabaría cobrando.
           return p <= 150 ? 0
             : p <= 800 ? 79
             : p <= 2500 ? 79 + Math.ceil((p - 800) / 100) * 6
-            : 199;
+            : p <= 5000 ? 199
+            : 199 + Math.ceil((p - 5000) / 100) * 3;
         } },
       { id: 'poruser',    nombre: 'Per-guide software', calcula: function (r, p, q) { return 49 * q; } },
       { id: 'turitop',    nombre: 'TuriTop Starter',   calcula: function (r, p) { return 29 + 0.02 * r; } },
