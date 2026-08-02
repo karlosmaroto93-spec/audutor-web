@@ -333,6 +333,16 @@
   .barra-fila{ display:grid; grid-template-columns:140px 1fr 96px; gap:12px; align-items:center; }
   .barra-nombre{ font-size:14px; font-weight:700; color:var(--ink2); }
   .barra-fila.marca .barra-nombre{ color:var(--acc); }
+  .barra-nombre{ display:flex; flex-direction:column; gap:1px; }
+  .calc-presets{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:0 0 14px; }
+  .calc-presets-lab{ font-size:12.5px; color:var(--muted); font-weight:600; }
+  .calc-preset{ font:inherit; font-size:12.5px; font-weight:600; padding:5px 11px; cursor:pointer;
+    border:1px solid var(--linea,#e6e0d0); border-radius:999px; background:transparent; color:inherit; }
+  .calc-preset:hover, .calc-preset:focus-visible{ border-color:var(--acc); color:var(--acc); }
+  .calc-aviso{ font-size:13px; line-height:1.5; margin:10px 0 0; padding:10px 12px;
+    border-left:3px solid var(--acc); background:rgba(0,0,0,.03); border-radius:0 8px 8px 0; }
+
+  .barra-nota{ font-size:11px; line-height:1.25; color:var(--muted); font-weight:400; }
   .barra-pista{ background:var(--bg); border:1px solid var(--line); border-radius:99px;
     height:22px; overflow:hidden; }
   .barra-fill{ display:block; height:100%; width:0; background:#b3c2ba; border-radius:99px;
@@ -627,7 +637,16 @@
     <div class="celda reveal" style="--d:70ms"><span class="ico">📥</span><h3>Reservas multicanal, solas</h3>
       <p>Las reservas de GuruWalk, Civitatis, Freetour y tu web entran y se actualizan solas —
       altas, cambios de día y cancelaciones. Sin API, sin copiar a mano: leemos los emails de las
-      plataformas por ti.</p><span class="mini">módulo: canales</span></div>
+      plataformas por ti.</p>
+      <p><b>Y te decimos exactamente cuánto nos fiamos de eso.</b> Esas tres están verificadas contra
+      correos reales —nueve: alta, cambio y cancelación de cada una—, y cada trampa que nos
+      encontramos tiene su prueba. Un ejemplo de las que no se ven venir: <b>GuruWalk cambia el
+      código de reserva cuando el viajero modifica</b>, así que sin saberlo te habríamos duplicado
+      esa reserva en el manifiesto.<br>
+      ¿Y las demás plataformas? No las damos por buenas: sacamos lo que podemos, te lo enseñamos con
+      los datos ya rellenos y lo metes de un toque — <b>una reserva que no hayamos probado nunca
+      entra sin que tú la mires</b>. Y si una plataforma cambia su plantilla, la tasa de lectura baja
+      y lo ves ahí; no te enteras el domingo en la plaza.</p><span class="mini">módulo: canales</span></div>
   </div>
 </div></section>
 
@@ -731,7 +750,7 @@
       <div class="fact-nota" data-nota hidden>facturado anualmente · 1.990 €/año (2 meses gratis)</div>
       <div class="para">Todo Audutor · <b>hasta 5.000 viajeros/mes</b> — para operadores que escalan</div>
       <ul>
-        <li>Todo lo del plan Pro · <b>5.000 viajeros incluidos, sin tramos</b> — a ese volumen sale a <b>4 céntimos por viajero</b> · por encima, <b>+3 €/mes por cada 100</b></li>
+        <li>Todo lo del plan Pro · <b>5.000 viajeros incluidos, sin tramos</b> — a ese volumen sale a <b>4 céntimos por viajero</b> · por encima, <b>+3 €/mes por cada 100</b> hasta 20.000, y <b>+19 €/mes por cada 1.000</b> a partir de ahí (190 € por cada diez mil)</li>
         <li><b>Cuadro de mando</b>: analítica por tour, guía, canal y franja</li>
         <li>Propina digital: <b>0 %</b> cobrando en mano · <b>1,9 % + 0,30 €</b> si el cobro lo hacemos nosotros <span class="mini">— la misma tarifa en los tres planes</span></li>
         <li>Soporte prioritario y onboarding dedicado</li>
@@ -742,10 +761,13 @@
   </div>
   <p class="reveal" style="text-align:center; color:var(--muted); font-size:14px; margin:16px 0 0;">
     Ejemplo: 1.300 viajeros al mes con los tours y el equipo que necesites → <b>Pro 109 €/mes</b>.
-    Son <b>8 céntimos por viajero</b>. Un software que cobra por usuario —hay uno del sector a 49 € por
-    usuario y mes— te costaría <b>245 € con cinco guías</b>, y aquí da igual cuántos seáis.
-    <br>Con 10.000 viajeros al mes son <b>349 €</b>: 3,5 céntimos por persona. No hay letra pequeña
-    por arriba.</p>
+    Son <b>8 céntimos por viajero</b>. Un software que cobra por usuario —los hay a 49 € por usuario y mes, con tarifa pública en julio de 2026— te costaría <b>245 € con cinco guías</b>, y aquí da igual cuántos seáis.
+    <br>Con 10.000 viajeros al mes son <b>349 €</b> —3,5 céntimos por persona— y con 50.000,
+    <b>1.219 €</b>: 2,4 céntimos. Cuanto más creces, más barato te sale cada viajero, y la
+    fórmula está publicada hasta arriba del todo. No hay letra pequeña.</p>
+  <p class="reveal" style="text-align:center; color:var(--muted); font-size:13px; margin:14px 0 0;">
+    Precios <b>sin IVA</b>. Si tienes NIF español te facturamos con el 21 % y te lo deduces;
+    si estás en otro país de la UE con VAT, la factura va con inversión del sujeto pasivo.</p>
   <p class="reveal" style="text-align:center; color:var(--muted); font-size:14px; margin:10px 0 0; max-width:70ch; margin-inline:auto;">
     <b>Y la cuota no es lo que más te va a costar.</b> Los recordatorios los factura Meta a tu cuenta,
     los mande quien los mande — nosotros no ponemos recargo. La diferencia está en <b>a cuántos se los
@@ -757,23 +779,21 @@
   <div class="addon reveal">
     <div class="t">
       <h3>💳 Propina digital — la cobres como la cobres, cuadrada sola</h3>
-      <p><b>Cobres como cobres, Audutor lo anota y lo liquida.</b> Efectivo, SumUp, tu propio datáfono,
-      Bizum: sigue con lo tuyo, <b>no cobramos nada por esos cobros</b> y aun así cada propina queda
-      registrada, repartida entre los guías y cuadrada al céntimo. Eso es lo que hoy no hace nadie más:
-      todos agregan el canal del free tour, ninguno contabiliza el ingreso real del free tour.</p>
-      <p>Solo hay comisión cuando el cobro lo hace Audutor: el <b>enlace que GuIA manda por WhatsApp</b> al
-      que se fue sin pagar y el <b>QR para grupos</b>. La propina va siempre <b>directa a la cuenta del
-      guía</b>, con la reseña en el mismo gesto.
-      <br><span class="mini">Y no cobramos por mover dinero que ya estaba en la mano del guía: para eso ya
-      tiene su datáfono, y más barato. Cobramos por la propina que <b>no habría existido</b>.</span></p>
+      <p><b>Cobres como cobres, Audutor lo anota y lo liquida.</b> Efectivo, SumUp, tu propio
+      datáfono: sigue con lo tuyo y cada propina queda registrada, repartida entre los guías y cuadrada al
+      céntimo. Eso hoy no lo hace nadie más: todos agregan el canal del free tour, ninguno contabiliza el
+      ingreso real del free tour.</p>
+      <p>Solo hay comisión cuando el cobro lo hace Audutor —el <b>enlace que GuIA manda por WhatsApp</b> al
+      que se fue sin pagar, y el <b>QR para grupos</b>—, y va siempre <b>directa a la cuenta del guía</b>,
+      con la reseña en el mismo gesto. No cobramos por mover dinero que ya estaba en su mano: para eso ya
+      tiene su datáfono, y más barato. <b>Cobramos por la propina que no habría existido.</b></p>
     </div>
     <div class="tramos">
-      <div class="tramo"><span class="p">0 %</span><span class="n">en mano, datáfono, SumUp o Bizum</span></div>
+      <div class="tramo"><span class="p">0 %</span><span class="n">en mano, con tu datáfono o SumUp</span></div>
       <div class="tramo"><span class="p">1,9 %</span><span class="n">+ 0,30 € por enlace o QR</span></div>
-      <span class="nota"><b>Todo incluido: la pasarela va dentro del 1,9 %, no se suma aparte.</b> Y cobrando
-      en mano —SumUp, datáfono, Bizum— no te cobramos nada: solo hay comisión cuando el cobro lo hacemos
-      nosotros. <b>El viajero paga exactamente lo que decide dejar</b>: la ley española prohíbe cargarle
-      ningún importe extra por pagar con tarjeta, y no lo hacemos.</span>
+      <span class="nota"><b>Todo incluido: la pasarela va dentro del 1,9 %, no se suma aparte.</b> Y
+      <b>el viajero paga exactamente lo que decide dejar</b>: la ley española prohíbe cargarle ningún
+      importe extra por pagar con tarjeta, y no lo hacemos.</span>
     </div>
   </div>
 </div></section>
@@ -801,7 +821,7 @@
       </div>
       <p class="web-comp"><b>Web, reservas y asistente por lo que cuesta un constructor de webs a secas.</b>
       Con Wix o Squarespace pagas parecido, más el plugin de reservas, y el trabajo lo haces tú;
-      FareHarbor cobra 499 $/mes por la suya. Aquí nace hecha, porque tus datos ya estaban dentro.</p>
+      y hay software del sector cuya web se cobra aparte. Aquí nace hecha, porque tus datos ya estaban dentro.</p>
     </div>
     <div>
       <div class="webmock" aria-hidden="true">
@@ -828,6 +848,12 @@
     total al mes.</p>
   </div>
   <div class="calc reveal">
+      <div class="calc-presets">
+        <span class="calc-presets-lab">Empieza por tu caso:</span>
+        <button type="button" class="calc-preset" data-r="0" data-p="1300">Free tour puro</button>
+        <button type="button" class="calc-preset" data-r="6000" data-p="1300">Free tour + tours de pago</button>
+        <button type="button" class="calc-preset" data-r="10000" data-p="3000">Operador grande</button>
+      </div>
     <div class="calc-panel">
       <div class="calc-campo">
         <label for="inReservas">Facturación mensual en reservas online</label>
@@ -838,27 +864,42 @@
       <div class="calc-campo">
         <label for="inPropinas">Viajeros al mes</label>
         <output id="outPropinas" for="inPropinas">1.300</output>
-        <input type="range" id="inPropinas" min="100" max="5000" step="100" value="1300">
-        <div class="calc-escala" aria-hidden="true"><span>100</span><span>5.000</span></div>
-      </div>
-      <div class="calc-campo">
-        <label for="inEquipo">Personas del equipo que necesitan cuenta</label>
-        <output id="outEquipo" for="inEquipo">4</output>
-        <input type="range" id="inEquipo" min="1" max="20" step="1" value="4">
-        <div class="calc-escala" aria-hidden="true"><span>1</span><span>20</span></div>
+        <input type="range" id="inPropinas" min="100" max="20000" step="100" value="1300">
+        <div class="calc-escala" aria-hidden="true"><span>100</span><span>20.000</span></div>
       </div>
     </div>
     <div>
       <div class="barras" id="barras"></div>
       <div class="calc-ahorro" id="calcAhorro" aria-live="polite"></div>
-      <p class="calc-fuente">Precios públicos de las páginas de tarifas de cada producto a julio de
-      2026 (turitop.com, trekksoft.com, bokun.io, fareharbor.com). La línea <b>«software por guía» no es el precio de ningún producto concreto</b>: modela la
-      categoría de software que cobra por cada persona con cuenta, a 49 € por cuenta y mes.
-      Audutor sale de su tabla de tramos por viajeros, y <b>no cobra nada sobre tus reservas ni
-      sobre las propinas</b>: por eso su barra no se mueve cuando subes la facturación. Contrasta
-      siempre con el presupuesto que te den a ti. Los competidores pueden
-      aplicar cargos adicionales (por ticket o procesamiento) no incluidos. Cálculo orientativo para
-      una empresa de free tours.</p>
+      <p class="calc-aviso"><b>Si tus reservas son a 0 €, esta comparación cambia de
+      sentido y conviene que lo veas:</b> una comisión del 2 % o del 3 % sobre 0 € es 0 €, así que
+      con free tours puros los demás se quedan en su cuota fija y <b>Audutor sale más caro</b> —
+      109 € frente a 29-49 €. Nuestra tarifa va por viajeros atendidos, no por dinero cobrado, y
+      eso se nota cuando no cobras en la reserva. Lo que compras a cambio no es precio: es que el
+      asistente, la app del guía y las propinas ya vienen dentro. Pruébalo con el botón de arriba.</p>
+      <p class="calc-fuente"><b>Aquí solo está quien publica TODO lo que hace falta para
+      comparar.</b> Es más corta que antes a propósito: preferimos una comparación de dos que una
+      de cinco con tres cifras deducidas por nosotros.
+      <br><br>
+      <b>TuriTop</b> (<a href="https://www.turitop.com/precios/" rel="nofollow noopener" target="_blank">tarifa
+      pública</a>, comprobada el 2 de agosto de 2026) está porque lo publica todo, incluido el único
+      dato que de verdad decide en un free tour: qué pasa con una reserva de 0 €. Lo dice con todas
+      las letras — se cobra el mínimo por reserva aunque el importe sea cero.
+      <br><br>
+      <b>Quién no está, y por qué.</b> <b>FareHarbor</b>: no publica precios en ninguna parte, y su
+      tarifa se configura por cuenta como porcentaje <i>o</i> importe fijo — no hay nada que comparar.
+      (Lo que sí es público: <b>su comisión la paga tu viajero en el checkout</b>, no tú.)
+      <b>TrekkSoft</b> y <b>Bókun</b>: publican su cuota y su porcentaje, pero <b>ninguno de los dos
+      dice qué hace con una reserva de 0 €</b> — y como es justo el caso de un free tour, poner su
+      barra ahí sería una suposición nuestra disfrazada de dato. Y <b>el software que cobra por
+      guía</b>: es una categoría real y un coste real, pero la cifra que teníamos no está contrastada,
+      así que lo contamos con palabras y no con una barra.
+      <br><br>
+      Se suponen <b>2,5 personas por reserva</b> para calcular el mínimo por reserva de TuriTop — esa
+      sí es una suposición nuestra, y con tu media real cambia.
+      Audutor sale de su tabla de tramos por viajeros y no cobra nada sobre tus reservas ni sobre las
+      propinas: por eso su barra no se mueve cuando subes la facturación, y por eso da igual cuántos
+      guías seáis. Contrasta siempre con el presupuesto que te den a ti.</p>
     </div>
   </div>
 </div></section>
@@ -1021,9 +1062,7 @@
   // Calculadora de coste total: cuota + % sobre reservas (o sobre propinas, en Audutor).
   var inR = document.getElementById('inReservas'), inP = document.getElementById('inPropinas');
   if (inR && inP) {
-    var inQ  = document.getElementById('inEquipo'),
-        outQ = document.getElementById('outEquipo'),
-        outR = document.getElementById('outReservas'),
+    var outR = document.getElementById('outReservas'),
         outP = document.getElementById('outPropinas'),
         cajaBarras = document.getElementById('barras'),
         cajaAhorro = document.getElementById('calcAhorro');
@@ -1039,18 +1078,32 @@
             : p <= 800 ? 79
             : p <= 2500 ? 79 + Math.ceil((p - 800) / 100) * 6
             : p <= 5000 ? 199
-            : 199 + Math.ceil((p - 5000) / 100) * 3;
+            // Dos tramos por encima de 5.000, y el segundo por cada 1.000 y no por cada
+            // 10.000 aunque la cifra sea la misma: por bloques de diez mil, quien tiene
+            // 20.100 viajeros pagaría el bloque entero — 190 € de salto por cien personas.
+            : p <= 20000 ? 199 + Math.ceil((p - 5000) / 100) * 3
+            : 649 + Math.ceil((p - 20000) / 1000) * 19;
         } },
-      { id: 'poruser',    nombre: 'Software por guía',  calcula: function (r, p, q) { return 49 * q; } },
-      { id: 'turitop',    nombre: 'TuriTop Starter',   calcula: function (r, p) { return 29 + 0.02 * r; } },
-      { id: 'trekksoft',  nombre: 'TrekkSoft Starter', calcula: function (r, p) { return 49 + 0.03 * r; } },
-      { id: 'bokun',      nombre: 'Bókun Start',       calcula: function (r, p) { return 49 + 0.015 * r; } },
-      { id: 'fareharbor', nombre: 'FareHarbor',        calcula: function (r, p) { return 0.06 * r; } }
+      /* ── Verificado el 2-ago-2026 contra las páginas de tarifas oficiales ──────────
+         Cada fórmula lleva su base, porque la base es donde estaba el error: tratar
+         «comisión %» como una columna homogénea escondía que TuriTop tiene un SUELO por
+         reserva y TrekkSoft cobra una CUOTA FIJA por reserva en las de mostrador. Y ahí
+         es justo donde se rompe el modelo de free tour. */
+      { id: 'turitop',    nombre: 'TuriTop Starter',
+        /* 29 €/mes + «2 % o 0,10 € por reserva, lo que sea más alto». Y su documentación
+           lo dice con todas las letras: una reserva online de 0 € SÍ genera comisión —
+           no el porcentaje, pero sí el mínimo. Es el único de los tres que publica qué
+           pasa con las reservas gratuitas, y por eso es el dato más fiable de la tabla. */
+        nota: '2 % o 0,10 € por reserva, lo que sea más alto — el mínimo se cobra también sobre reservas de 0 €',
+        calcula: function (r, p) { return 29 + Math.max(0.02 * r, 0.10 * reservasDe(p)); } }
     ];
     opciones.forEach(function (o) {
       var fila = document.createElement('div');
       fila.className = 'barra-fila' + (o.id === 'hito' ? ' marca' : '');
-      fila.innerHTML = '<span class="barra-nombre">' + o.nombre + '</span>' +
+      /* La nota va PEGADA a su barra y no en el pie: un matiz que cambia el sentido
+         del numero ("esto lo paga tu viajero, no tu") al pie no lo lee nadie. */
+      fila.innerHTML = '<span class="barra-nombre">' + o.nombre +
+        (o.nota ? '<small class="barra-nota">' + o.nota + '</small>' : '') + '</span>' +
         '<span class="barra-pista"><span class="barra-fill"></span></span>' +
         '<span class="barra-imp"><span class="v">0</span> <small>€/mes</small></span>';
       cajaBarras.appendChild(fila);
@@ -1058,12 +1111,17 @@
       o.fill = fila.querySelector('.barra-fill');
       o.imp = fila.querySelector('.v');
     });
+    /* Las reservas no son los viajeros: una reserva trae a varias personas. Hace falta
+       porque dos de los tres cobran un MÍNIMO POR RESERVA, y sobre un free tour a 0 € ese
+       mínimo es todo el coste. Se supone 2,5 personas por reserva —lo típico de un free
+       tour— y se dice abajo, porque es una suposición nuestra y no un dato de nadie. */
+    var reservasDe = function (viajeros) { return Math.round(viajeros / 2.5); };
+
     var recalcula = function () {
-      var r = +inR.value, p = +inP.value, q = +inQ.value;
+      var r = +inR.value, p = +inP.value;
       outR.textContent = fmt(r) + ' €';
       outP.textContent = fmt(p);
-      outQ.textContent = q + (q === 1 ? ' persona' : ' personas');
-      opciones.forEach(function (o) { o.coste = o.calcula(r, p, q); });
+      opciones.forEach(function (o) { o.coste = o.calcula(r, p); });
       var max = Math.max.apply(null, opciones.map(function (o) { return o.coste; }).concat([1]));
       opciones.slice().sort(function (a, b) { return a.coste - b.coste; }).forEach(function (o) {
         cajaBarras.appendChild(o.fila); // reordena de menor a mayor coste
@@ -1073,9 +1131,10 @@
       var hito = opciones[0];
       var barata = opciones.slice(1).reduce(function (a, b) { return b.coste < a.coste ? b : a; });
       var dif = Math.round(barata.coste - hito.coste);
-      var matiz = '<span class="matiz">TuriTop y Bókun añaden coste por usuario al crecer el equipo, y hay ' +
-        'software del sector que cobra <b>por cada persona con cuenta</b> — mueve el deslizador y ' +
-        'míralo. Audutor incluye guías ilimitados desde Pro, así que esa línea no se mueve.</span>';
+      /* Reescrito el 2-ago-2026: decia que «TuriTop y Bokun anaden coste por usuario»,
+         y no es cierto —TuriTop no publica ninguno y Bokun los incluye por tramos—. El
+         argumento real es el de la categoria que cobra por cuenta, y va con palabras. */
+      var matiz = '<span class="matiz">Hay software del sector que cobra <b>por cada persona con cuenta</b>: con cinco guías eso multiplica la cuota por cinco. Audutor incluye guías ilimitados desde Pro, así que crecer de equipo no te cuesta nada aquí.</span>';
       if (dif > 0) {
         cajaAhorro.innerHTML = 'Con Audutor te ahorras <b>' + fmt(dif) + ' €/mes — ' +
           fmt(dif * 12) + ' €/año</b> frente a ' + barata.nombre + '.' + matiz;
@@ -1089,7 +1148,16 @@
     };
     inR.addEventListener('input', recalcula);
     inP.addEventListener('input', recalcula);
-    inQ.addEventListener('input', recalcula);
+    /* Los escenarios. El de free tour puro (0 EUR de reserva) existe porque es EL caso
+       de nuestro cliente y es donde salimos peor: una comision del 2 % sobre 0 EUR es 0,
+       asi que los demas se quedan en su cuota fija. Arrancar solo en el escenario mixto
+       -donde ganamos- era ensenar la parte de la verdad que nos conviene. */
+    Array.prototype.forEach.call(document.querySelectorAll('.calc-preset'), function (b) {
+      b.addEventListener('click', function () {
+        inR.value = b.dataset.r; inP.value = b.dataset.p; 
+        recalcula();
+      });
+    });
     recalcula();
   }
 
