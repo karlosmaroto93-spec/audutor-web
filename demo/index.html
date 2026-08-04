@@ -970,7 +970,7 @@
         <label><input type="checkbox" id="c-cuentas" onchange="compTog('cuentas',this)"><span>Las cuentas de cada tour</span><b>+9 €</b></label>
         <div class="comp-total">Tu tarifa: <b id="comp-tot">39 €</b><span id="comp-desglose"></span></div>
       </div>
-      <div style="font-size:10.5px; margin-top:8px; opacity:.85; line-height:1.5;">💳 Propina: <b>0 %</b> si cobras en mano. Solo el <b>enlace o QR</b> lleva <b>1,9 % + 0,30 € — todo incluido</b> (la pasarela va dentro, no se suma aparte).</div>
+      <div style="font-size:10.5px; margin-top:8px; opacity:.85; line-height:1.5;">💶 La propina: <b>0 %</b>. Audutor no la cobra ni se lleva nada de ella — la anota y la cuadra.</div>
     </div>
     Todo lo que ves es interactivo y simulado en tu navegador.
     Nada se guarda ni se envía.<br><button onclick="location.reload()">↺ Reiniciar demo</button></div>
@@ -1254,11 +1254,6 @@
     <div id="post-prev" style="display:none;"></div>
     <div style="margin-top:14px; padding-top:12px; border-top:1px dashed var(--line);">
       <div class="fila" style="justify-content:space-between; gap:12px;">
-        <p class="mini muted" style="margin:0; max-width:56ch;">El enlace que lleva este mensaje abre, en el móvil
-          del viajero, la pantalla de <b>propina + reseña</b> — importes anclados, pago con tarjeta, Apple Pay o
-          Google Pay (por Stripe, de verdad: los botones de cartera salen solos en el móvil) y la
-          reseña en Google después, sin condicionar.</p>
-        <button class="btn mini" onclick="abrirViajero()">📱 Vista previa del viajero</button>
       </div>
       <!-- Importes de la pantalla de propina: los decide la empresa -->
       <div style="margin-top:12px; background:var(--acc-soft); border:1px solid var(--line); border-radius:10px; padding:11px 14px;">
@@ -1746,9 +1741,7 @@ Plazas de vuestro grupo guardadas 48 h 👉 patioycompas.example/combo/x3f9
   <div class="card">
     <h2>Lo que ha entrado</h2>
     <div class="kpi-fila">
-      <div class="kpi"><span class="v" id="kpi-propina" style="color:var(--coral-deep);" data-dinero="318" data-dec="0">318 €</span><span class="l">propina digital cobrada esta semana</span>
-        <span class="l" id="kpi-propina-plan" style="display:block; margin-top:3px; font-weight:800; color:var(--acc);">tu plan: 2,5 %</span>
-        <button class="btn mini sec" style="margin-top:7px;" onclick="abrirViajero()">📱 vista del viajero</button></div>
+      <div class="kpi"><span class="v" id="kpi-propina" style="color:var(--coral-deep);" data-dinero="318" data-dec="0">318 €</span><span class="l">propina anotada esta semana</span></div>
       <div class="kpi"><span class="v" data-dinero="70" data-dec="0">70 €</span><span class="l">comisiones de no-show recuperadas este mes (conciliación)</span></div>
     </div>
   </div>
@@ -2036,8 +2029,6 @@ Plazas de vuestro grupo guardadas 48 h 👉 patioycompas.example/combo/x3f9
         (aquí, 5 personas: el total se calcula solo). <b>Ninguno viene preseleccionado</b> y «sin propina»
         está siempre a la vista: si la app elige por el viajero, la propina deja de ser voluntaria — y con
         ella se cae la no sujeción a IVA (DGT V1808-22).</li>
-      <li>✨ <b>La propina va directa a la cuenta del guía</b> — la comisión (%+0,30 €) se descuenta de su lado.
-        Sin «cubro la comisión»: el surcharge al viajero está prohibido (PSD2).</li>
       <li>⭐ La <b>reseña en Google</b> se ofrece después de pagar, <b>sin condicionar</b> (política de Google).</li>
     </ul>
     <p class="mini">Pulsa los importes y «Dejar propina»: es interactivo. Escenario ficticio — Marco (5 pax),
@@ -5177,8 +5168,6 @@ function pintaWaTope(){
 /* Propina: el cobro PRESENCIAL (SumUp o TPV del guía) no lleva comisión de Audutor.
    Solo el DIFERIDO (enlace de WhatsApp o QR de Audutor) tiene tarifa, igual en todos
    los planes. */
-var PROPINA_PLAN={ esencial:'1,9 %', pro:'1,9 %', premium:'1,9 %' };
-function pctPropinaPlan(){ return PROPINA_PLAN[S.plan]; }
 /* QR de demo: patrón determinista con aspecto de QR (buscadores + módulos por hash).
    No codifica de verdad — en producción sería un QR real al enlace de propina del tour. */
 function qrSvg(txt){
@@ -5200,10 +5189,6 @@ function qrSvg(txt){
     ' style="background:#fff; border:1px solid var(--line); border-radius:10px; padding:6px;">'+
     mods+finder(0,0)+finder(N-7,0)+finder(0,N-7)+'</svg>';
 }
-function pintaPropinaPlan(){
-  var e=document.getElementById('kpi-propina-plan');
-  if (e) e.textContent='tu plan: '+PROPINA_PLAN[S.plan];
-}
 function desbloquear(v){ S.desbloqueado[v]=true; pintaCandados();
   ir(document.getElementById('v-'+v) ? v : ((location.hash.slice(1))||'operaciones'));   // las claves inline no tienen vista propia: repinta la actual
   toast('🔓 «'+SUPLEMENTOS[v].n+'» desbloqueado para probarlo en la demo'); }
@@ -5213,7 +5198,7 @@ function pintaEsPlus(){
   e.style.display = S.plan==='esencial' ? 'block' : 'none';
 }
 function ofertaEsencialPlus(){}   /* oferta no pública: fuera del build */
-function cambiarPlan(p){ S.plan=p; pintaPlanSel(); pintaComplementos(); pintaCandados(); pintaWaTope(); pintaPropinaPlan(); pintaEsPlus();
+function cambiarPlan(p){ S.plan=p; pintaPlanSel(); pintaComplementos(); pintaCandados(); pintaWaTope(); pintaEsPlus();
   ir((location.hash.slice(1))||'operaciones');   // re-evalúa el bloqueo de la vista actual
   toast('Plan '+PLANES[p].n+' activo — se desbloquean los módulos incluidos'); }
 var TXT_MENU = 'Menú', TXT_CERRAR = 'Cerrar';
@@ -5319,7 +5304,7 @@ function pintaGuiaDispo(nombre){
   h += '</table></div>'+
     '<div class="g-dispo"><h2>💳 Mi propina digital</h2>'+
     (g2 && g2.propinaOk
-      ? '<p class="mini muted" style="margin:0 0 8px;">✅ <b>Activa.</b> Cada propina llega a TU cuenta (payout semanal). Cobrando en mano, <b>sin comisión nuestra</b>; solo el enlace o el QR llevan 1,9 % + 0,30 €.</p>'+
+      ? '<p class="mini muted" style="margin:0 0 8px;">✅ <b>Activa.</b> Cóbrala como quieras: Audutor no la toca. Aquí queda anotada y cuadrada, tour a tour.</p>'+
         '<div class="fila" style="gap:6px; flex-wrap:wrap;">'+
         '<button class="btn mini" onclick="toast(\'📲 (Simulado) Acerca la tarjeta del cliente al móvil: cobro cerrado en el momento, sin depender de que escanee nada.\')">📲 Cobrar ahora</button>'+
         '<button class="btn mini sec" onclick="toast(\'💳 (Simulado) Se abre tu SumUp con el importe puesto y Audutor anota el cobro solo.\')">💳 Con mi SumUp</button>'+
@@ -5945,7 +5930,7 @@ function pintaManifiestoReal(){
       prop.innerHTML='<strong>💳 Cobrar la propina <span class="chip turq" style="margin-left:4px;">va a tu cuenta</span></strong>'+
         '<p class="mini muted" style="margin:6px 0 8px;">Lo primero, <b>cobrar en el momento</b> con tu SumUp o datáfono: '+
         '<b>sin comisión de Audutor</b> — da igual el método. El enlace y el QR son para <b>quien ya se fue</b> '+
-        'o para grupos: ahí sí, '+pctPropinaPlan()+' + 0,30 €.</p>'+
+        'o para grupos.</p>'+
         '<div class="fila" style="gap:8px; margin-top:8px; align-items:center; flex-wrap:wrap;">'+
           '<button class="btn mini pr-tap">📲 Cobrar ahora (acercar tarjeta)</button>'+
           '<button class="btn mini sec pr-sumup">💳 Cobrar con SumUp</button>'+
@@ -5976,7 +5961,6 @@ function pintaManifiestoReal(){
         if (abre && !c.querySelector('svg')) c.querySelector('.pr-qr-svg').innerHTML=qrSvg('propina/PYC-'+t.hora.replace(':','')+'-'+ti);
         c.style.display = abre ? 'block' : 'none';
       };
-      prop.querySelector('.pr-ver').onclick=function(e){ e.preventDefault(); abrirViajero(t); };
       prop.querySelector('.pr-send').onclick=function(){
         var ai=+prop.querySelector('.pr-sel').value;
         if (ai<0){ toast('Elige primero a quién enviárselo 🙂'); return; }
@@ -6781,28 +6765,17 @@ function postSet(k,v){
    QUIÉN escanea — por eso el primer paso de la pantalla es identificarse tocando su
    nombre en la lista de esa salida (2 toques, sin escribir códigos). Al hacerlo,
    Audutor ya sabe cuántas personas eran y calcula el total sin preguntar nada. */
-var VJ={ pp:15, pax:5, metodo:'tarjeta', nombre:'Javier', guia:'Elena', tour:'free tour del centro histórico', salida:null, res:null };
 /* Solo lo que el enlace puede COBRAR de verdad por Stripe: tarjeta y las dos carteras,
    que enciende automatic_payment_methods en el PaymentIntent (app/servidor/stripe.js,
    propinaRemota) — no son decorado. */
 /* La config de propina del tour que está viendo el viajero — y si no casa por nombre,
    la del tour activo del Cerebro. La global ya no existe. */
 function cfgPropina(){
-  var t=S.tours.filter(function(x){ return x.nombre===VJ.tour })[0] || tourKb();
+  /* Miraba el tour que veía el viajero; ese flujo ya no existe. */
+  var t=tourKb();
   return (t && t.propCfg) || S.propCfgDefecto;
 }
-var VJ_METODOS=[ ['tarjeta','💳','Tarjeta'], ['apple','','Apple Pay'], ['google','G','Google Pay'] ];
-function vjTotal(){ return VJ.libre ? (VJ.otra||0) : VJ.pp*VJ.pax; }
-function vjMetodoNombre(){
-  for (var i=0;i<VJ_METODOS.length;i++) if (VJ_METODOS[i][0]===VJ.metodo) return VJ_METODOS[i][2];
-  return '';
-}
 
-function activarPropinaGuia(){
-  var g=S.equipo.guias.filter(function(x){return x.n===S.guiaVista})[0]; if(!g) return;
-  g.propinaOk=true; pintaGuiaDispo(S.guiaVista);
-  toast('💳 (Simulado) En producción esto abre el alta verificada de pagos: identidad + IBAN, ~10 min, y tus propinas llegan solas cada semana.');
-}
 /* ===== Página del guía (reserva directa): QR por guía + vista previa en el móvil ===== */
 function gpSlug(n){ return n.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
 function pintaGpLista(){
@@ -6859,15 +6832,6 @@ function pintaGuidePage(nombre){
   pant.scrollTop=0;
 }
 
-function abrirViajero(salida){
-  VJ.salida = salida || null; VJ.res = null;
-  var nota=document.getElementById('vj-nota');
-  if (NOTA_VIAJERO0!==null) nota.innerHTML=NOTA_VIAJERO0;
-  VJ.pp=null; VJ.libre=false; VJ.otra=0; VJ.metodo='tarjeta';   // nada preseleccionado
-  document.getElementById('viajero-overlay').classList.add('ver');
-  document.body.style.overflow='hidden';
-  pintaViajero(VJ.salida ? 'quien' : 'importe');
-}
 function cerrarViajero(){
   var ov=document.getElementById('viajero-overlay');
   if (ov) ov.classList.remove('ver');
@@ -6878,139 +6842,7 @@ document.addEventListener('keydown', function(e){ if (e.key==='Escape') cerrarVi
 /* Paso 1 del QR: identificarse. Sin códigos: la lista es corta (las reservas de ESA
    salida) y basta con tocar su nombre. Si no está —walk-in o reserva de otro— hay
    salida digna: dice cuántos son y el cobro queda como propina del tour sin asignar. */
-function vjElige(i){
-  var r = VJ.salida.res[i];
-  VJ.res = r; VJ.nombre = r.n.split(' ')[0]; VJ.pax = r.p;
-  pintaViajero('importe');
-}
-function vjSinReserva(n){
-  VJ.res = null; VJ.nombre = 'amigo'; VJ.pax = n || 1;
-  pintaViajero('importe');
-}
-function vjSel(v){ VJ.pp=v; VJ.libre=false; pintaViajero('importe'); }
 /* «Otra cantidad»: el viajero escribe el TOTAL que quiera — no toca los importes fijos. */
-function vjLibre(){ VJ.libre=true; pintaViajero('importe');
-  var i=document.getElementById('vj-otra'); if(i){ i.focus(); } }
-function vjOtraCambia(el){
-  VJ.otra=Math.max(0, Math.round((parseFloat(String(el.value).replace(',','.'))||0)*100)/100);
-  var b=document.getElementById('vj-cta-btn');
-  if(b) b.textContent='Dejar propina · '+vjTotal()+' €';
-}
-function vjMetodo(m){ VJ.metodo=m; pintaViajero('importe'); }
-function vjPagar(){
-  // «Sin propina» (pp===0) es una respuesta válida, no un error. Regañar a quien la
-  // elige es exactamente lo que convierte una propina voluntaria en una obligación
-  // encubierta, y es lo que hay que evitar para que siga sin llevar IVA.
-  if (VJ.pp === 0 && !VJ.libre){ pintaViajero('gracias'); return; }
-  if (!vjTotal()){ toast('Elige un importe o escribe el tuyo 🙂'); return; }
-  pintaViajero('gracias');
-}
-function pintaViajero(paso){
-  var pant=document.getElementById('viajero-pantalla');
-  var cab='<div class="vj-estado"><span>12:47</span><span>📶&nbsp;&nbsp;🔋</span></div>'+
-    '<div class="vj-cab"><span class="dot"></span><b>Patio y Compás · Sevilla</b>'+
-    '<span class="vj-seguro">🔒 pago seguro</span></div>';
-  if (paso==='quien'){
-    var t=VJ.salida;
-    var lista=t.res.map(function(r,i){
-      return '<button class="vj-imp" style="text-align:left; padding:11px 13px;" onclick="vjElige('+i+')">'+
-        '<b style="font-size:14px;">'+r.n+'</b><span>'+r.p+(r.p===1?' persona':' personas')+' · '+r.canal+'</span></button>';
-    }).join('');
-    pant.innerHTML=cab+
-      '<div class="vj-cuerpo">'+
-      '<div class="vj-burbuja"><div class="vj-de">🤖 GuIA</div>'+
-      '¡Gracias por venir al <b>'+t.tit+'</b> de las '+t.hora+' con <b>'+t.guia+'</b> 🧡<br>Para empezar, dime quién eres:'+
-      '<span class="vj-hora">'+t.hora+' ✓✓</span></div>'+
-      '<p class="vj-tit">¿Cuál es tu reserva?</p>'+
-      '<div style="display:grid; gap:8px;">'+lista+'</div>'+
-      '<button class="vj-volver" style="margin-top:12px;" onclick="vjSinReserva(prompt(\'¿Cuántos sois?\',2)|0)">No estoy en la lista (walk-in)</button>'+
-      '<p class="vj-legal">Al tocar tu nombre sabemos cuántos erais y calculamos el total solo — sin escribir códigos. '+
-      'Demo con datos ficticios.</p>'+
-      '</div>';
-    pant.scrollTop=0;
-    return;
-  }
-  if (paso==='gracias'){
-    var url=(S.post && S.post.resenaUrl) ? S.post.resenaUrl : 'g.page/patio-y-compas-sevilla/review';
-    pant.innerHTML=cab+
-      '<div class="vj-cuerpo vj-gracias">'+
-      '<div class="vj-check">🧡</div>'+
-      // Quien no deja propina recibe el MISMO agradecimiento. Sin reproche, sin cara
-      // triste y sin insistir: es la prueba de que era voluntaria de verdad.
-      (vjTotal() ? '<h3>¡Gracias, '+VJ.nombre+'!</h3>'+
-        '<p class="vj-total">'+vjTotal()+' €</p>'+
-        '<p class="mini muted">recibidos con '+vjMetodoNombre()+' — van directos a Elena, sin pasar por nadie más.</p>'
-       : '<h3>¡Gracias por venir, '+VJ.nombre+'!</h3>'+
-        '<p class="mini muted">'+(cfgPropina().graciasTxt||'Esperamos que lo hayas disfrutado.')+'</p>')+
-      '<div class="vj-resena">'+
-      '<p><b>¿Nos ayudas con una reseña en Google?</b><br>'+
-      '<span class="mini muted">Es voluntaria e independiente de tu propina — se tarda un minuto.</span></p>'+
-      '<button class="vj-cta vj-cta-g" onclick="toast(\'Se abriría la ficha de Google ('+url+') — simulado\')">⭐ Dejar reseña en Google</button>'+
-      '<p class="mini" style="margin-top:9px;">💡 Mencionar a <b>'+VJ.guia+'</b> ayuda un montón.</p>'+
-      '</div>'+
-      '<button class="vj-volver" onclick="pintaViajero(\'importe\')">← cambiar el importe</button>'+
-      '</div>';
-    pant.scrollTop=0;
-    return;
-  }
-  var cfgP=cfgPropina();
-  var importes=cfgP.imp.map(function(v){
-    return '<button class="vj-imp'+(!VJ.libre&&VJ.pp===v?' on':'')+'" onclick="vjSel('+v+')">'+
-      (v===cfgP.pre?'<span class="vj-tag">el más habitual</span>':'')+
-      '<b>'+v+' €</b><span>por persona</span></button>';
-  }).join('');
-  // «Otra cantidad»: casilla libre — el total que el viajero quiera, fuera de los fijos
-  var libre = cfgP.libre
-    ? '<button class="vj-imp vj-imp-libre'+(VJ.libre?' on':'')+'" onclick="vjLibre()"><b>✏️ Otra</b><span>cantidad libre</span></button>'
-    : '';
-  /* «Sin propina» YA NO es una opción del mismo tamaño que los importes.
-     ── El porqué del cambio ───────────────────────────────────────────────────
-     Lo que aquí se cobra es el pago de un servicio que ya se ha dado, y ponerle a la
-     misma altura una casilla grande que dice «Sin propina · también está bien» hace dos
-     cosas malas a la vez: ancla la decisión hacia abajo, y le sugiere a quien acaba de
-     hacer el tour que era gratis. Quien de verdad no quiere dejar nada no necesita un
-     botón grande para no hacerlo.
-
-     ── Lo que NO se puede perder ──────────────────────────────────────────────
-     La salida tiene que existir. Si no se puede declinar, la propina deja de ser
-     voluntaria y pasa a ser un cargo — con lo que eso arrastra en base imponible y en
-     lo que se le puede decir al viajero. Así que se queda, pero como un enlace de texto
-     debajo del botón de pagar: presente y sin competir. */
-  var nada = '';
-  var libreInput = (cfgP.libre && VJ.libre)
-    ? '<div class="fila" style="gap:8px; margin-top:8px; align-items:center;">'+
-      '<input id="vj-otra" inputmode="decimal" placeholder="¿Cuánto en total?" value="'+(VJ.otra||'')+'"'+
-      ' oninput="vjOtraCambia(this)" style="flex:1; border:1.5px solid var(--acc); border-radius:10px; padding:10px 12px; font-size:16px; font-family:inherit;"> €'+
-      '<span class="mini muted">en total, lo que tú quieras</span></div>'
-    : '';
-  var metodos=VJ_METODOS.map(function(m){
-    return '<button class="vj-met'+(VJ.metodo===m[0]?' on':'')+'" onclick="vjMetodo(\''+m[0]+'\')">'+
-      m[1]+' '+m[2]+'</button>';
-  }).join('');
-  pant.innerHTML=cab+
-    '<div class="vj-cuerpo">'+
-    '<div class="vj-burbuja"><div class="vj-de">🤖 GuIA · WhatsApp post-tour</div>'+
-    'Hola, '+VJ.nombre+' 👋 Gracias por venir con Sofía y los peques al <b>'+VJ.tour+'</b> de hoy con '+
-    '<b>'+VJ.guia+'</b>. Si te ha gustado, aquí puedes agradecérselo 🧡'+
-    '<span class="vj-hora">12:47 ✓✓</span></div>'+
-    '<p class="vj-tit">¿Cuánto quieres dejar? <span class="mini muted" style="font-weight:400;">· reserva de '+VJ.pax+' personas</span></p>'+
-    '<div class="vj-importes'+(libre?' con-libre':'')+'">'+importes+libre+'</div>'+libreInput+
-    '<p class="vj-tit">¿Cómo prefieres pagar?</p>'+
-    '<div class="vj-metodos">'+metodos+'</div>'+
-    '<div class="vj-transp">✨ <b>Tu propina llega directa a '+VJ.guia+'</b> — sin recargos para ti.</div>'+
-    '<button class="vj-cta" id="vj-cta-btn" onclick="vjPagar()">'+
-      (VJ.pp === null && !VJ.libre ? 'Elige un importe'
-        : (VJ.pp === 0 && !VJ.libre ? 'Continuar sin propina'
-          : 'Dejar propina · '+vjTotal()+' €'))+'</button>'+
-    /* La salida, en texto y debajo del botón: quien no quiere dejar nada la encuentra,
-       y quien sí venía a pagar no la lee. */
-    '<p class="vj-nada"><button type="button" onclick="vjSel(0)">'+
-      (cfgP.nadaTxt||'Prefiero no dejar nada ahora')+'</button></p>'+
-    '<p class="vj-legal">Pago procesado de forma segura. Usamos tus datos solo para gestionar esta propina (RGPD).<br>'+
-    'Demo con datos ficticios — no se realiza ningún cobro.</p>'+
-    '</div>';
-  pant.scrollTop=0;
-}
 
 /* Guarda la config de importes de propina (Cerebro → Mensaje post-tour) y
    actualiza el desplegable de preseleccionado con los fijos que haya. */
@@ -7837,7 +7669,7 @@ S.tours.forEach(function(t){ CAMPOS_KB.forEach(function(c){ if ((t.kb[c.k]||'').
   S.recientes.push({ tipo:'kb', tourId:t.id, k:c.k, seed:true }); }); });
 seedDispo(); seedCobertura();
 pintaManifiesto(); pintaNoshowCfg(); pintaNoshow(); pintaLiq(); pintaCerebro(); pintaCombosDestinatarios(); pintaPost(); calcProy(); pintaEquipo(); pintaCanales(); pintaOperaciones();
-pintaGatesInline(); pintaWaTope(); pintaPropinaPlan(); pintaCanalChat();
+pintaGatesInline(); pintaWaTope(); pintaCanalChat();
 msg('bot','¡Hola! 👋 Soy GuIA, el asistente automático que atiende este chat. Ahora respondo sobre «'+tourChat().nombre+'» — prueba los ejemplos, o crea otro tour en el 🧠 Cerebro y verás que cada uno tiene su cerebro, sin mezclas.');
 
 /* Y lo último: si la dirección trae los datos de quien la comparte, se aplican encima de

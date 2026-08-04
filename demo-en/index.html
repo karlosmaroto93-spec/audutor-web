@@ -823,7 +823,7 @@
         <label><input type="checkbox" id="c-cuentas" onchange="compTog('cuentas',this)"><span>The books, tour by tour</span><b>+€9</b></label>
         <div class="comp-total">Your plan: <b id="comp-tot">€39</b><span id="comp-desglose"></span></div>
       </div>
-      <div style="font-size:10.5px; margin-top:8px; opacity:.85; line-height:1.5;">💳 Tips: <b>0 %</b> when you take it in person (your own SumUp, card reader or Tap to Pay). Only the <b>link or QR</b> carries <b>1.9 % + £0.30</b>.</div>
+      <div style="font-size:10.5px; margin-top:8px; opacity:.85; line-height:1.5;">💶 Tips: <b>0 %</b>. Audutor does not take the tip nor a penny of it — it records it and squares it.</div>
     </div>
     Everything here is interactive and simulated in your browser.
     Nothing is saved and nothing is sent.<br><button onclick="location.reload()">↺ Reset demo</button></div>
@@ -866,9 +866,7 @@
       <div class="kpi"><span class="v">4</span><span class="l">tours today (1 live)</span></div>
       <div class="kpi"><span class="v">36</span><span class="l">people booked · 9 channels→1 system</span></div>
       <div class="kpi"><span class="v" style="color:var(--turq-deep);">91 %</span><span class="l">confirmed after the reminder</span></div>
-      <div class="kpi"><span class="v" id="kpi-propina" style="color:var(--coral-deep);">£318</span><span class="l">digital tips collected this week</span>
-        <span class="l" id="kpi-propina-plan" style="display:block; margin-top:3px; font-weight:800; color:var(--acc);">your plan: 1.9 %</span>
-        <button class="btn mini sec" style="margin-top:7px;" onclick="abrirViajero()">📱 traveller view</button></div>
+      <div class="kpi"><span class="v" id="kpi-propina" style="color:var(--coral-deep);">£318</span><span class="l">digital tips collected this week</span></div>
       <div class="kpi"><span class="v">£70</span><span class="l">no-show fees recovered this month (reconciliation)</span></div>
       <div class="kpi"><span class="v">2</span><span class="l">no-shows marked automatically when yesterday’s 10:00 AM tour closed — no message sent to anyone</span></div>
     </div>
@@ -1125,10 +1123,7 @@
     <div id="post-prev" style="display:none;"></div>
     <div style="margin-top:14px; padding-top:12px; border-top:1px dashed var(--line);">
       <div class="fila" style="justify-content:space-between; gap:12px;">
-        <p class="mini muted" style="margin:0; max-width:56ch;">The link in that message opens, on the customer’s
-          phone, the <b>tip + review</b> screen — card, Apple Pay or Google Pay, and the Google review offered
-          afterwards, never as a condition.</p>
-        <button class="btn mini" onclick="abrirViajero()">📱 Customer preview</button>
+        <p class="mini muted" style="margin:0; max-width:56ch;">The link in that message opens, on the customer’s</p>
       </div>
       <!-- Importes de la pantalla de propina: los decide la empresa -->
       <div style="margin-top:12px; background:var(--acc-soft); border:1px solid var(--line); border-radius:10px; padding:11px 14px;">
@@ -1808,8 +1803,6 @@ Places held for your group for 48 h 👉 oldtownwalks.co.uk/combo/x3f9
       <li>⚖️ <b>No suggested amount in this market.</b> The CAP/ASA code treats a pre-set figure as a price on
         something advertised as free, so the screen offers a free amount only. Switch the market in the sidebar to
         one where anchors are allowed and the 10 / 15 / 20 buttons come back.</li>
-      <li>✨ <b>The tip goes straight into the guide’s account</b> — the fee (% + £0.30) comes off their side.
-        No “I’ll cover the fee” option: surcharging the customer is banned (Payment Services Regulations 2017).</li>
       <li>⭐ The <b>Google review</b> is offered after paying, <b>never as a condition</b> (Google’s own policy).</li>
     </ul>
     <p class="mini">Type an amount and press the button: it’s interactive. Made-up scenario — Marco (5 pax),
@@ -4793,8 +4786,6 @@ function pintaWaTope(){
 /* Propina: el cobro PRESENCIAL (SumUp o Tap to Pay del guía) no lleva comisión de
    Audutor. Solo el DIFERIDO (enlace o QR de Audutor) tiene tarifa, igual en todos los
    planes. */
-var PROPINA_PLAN={ esencial:'1.9 %', pro:'1.9 %', premium:'1.9 %' };
-function pctPropinaPlan(){ return PROPINA_PLAN[S.plan]; }
 /* QR de demo: patrón determinista con aspecto de QR (buscadores + módulos por hash).
    No codifica de verdad — en producción sería un QR real al enlace de propina del tour. */
 function qrSvg(txt){
@@ -4816,10 +4807,6 @@ function qrSvg(txt){
     ' style="background:#fff; border:1px solid var(--line); border-radius:10px; padding:6px;">'+
     mods+finder(0,0)+finder(N-7,0)+finder(0,N-7)+'</svg>';
 }
-function pintaPropinaPlan(){
-  var e=document.getElementById('kpi-propina-plan');
-  if (e) e.textContent='your plan: '+PROPINA_PLAN[S.plan];
-}
 function desbloquear(v){ S.desbloqueado[v]=true; pintaCandados();
   ir(document.getElementById('v-'+v) ? v : ((location.hash.slice(1))||'operaciones'));   // las claves inline no tienen vista propia: repinta la actual
   toast('🔓 “'+SUPLEMENTOS[v].n+'” unlocked so you can try it in the demo'); }
@@ -4829,7 +4816,7 @@ function pintaEsPlus(){
   e.style.display = S.plan==='esencial' ? 'block' : 'none';
 }
 function ofertaEsencialPlus(){}   /* oferta no pública: fuera del build */
-function cambiarPlan(p){ S.plan=p; pintaPlanSel(); pintaComplementos(); pintaCandados(); pintaWaTope(); pintaPropinaPlan(); pintaEsPlus();
+function cambiarPlan(p){ S.plan=p; pintaPlanSel(); pintaComplementos(); pintaCandados(); pintaWaTope(); pintaEsPlus();
   ir((location.hash.slice(1))||'operaciones');   // re-evalúa el bloqueo de la vista actual
   toast('Plan '+PLANES[p].n+' active — the modules it includes are unlocked'); }
 var TXT_MENU = 'Menu', TXT_CERRAR = 'Close';
@@ -4934,7 +4921,7 @@ function pintaGuiaDispo(nombre){
   h += '</table></div>'+
     '<div class="g-dispo"><h2>💳 My digital tips</h2>'+
     (g2 && g2.propinaOk
-      ? '<p class="mini muted" style="margin:0 0 8px;">✅ <b>Active.</b> Every tip lands in YOUR account (weekly payout). Taken in person, <b>we charge nothing</b>; only the link or the QR carries 1.9% + £0.30.</p>'+
+      ? '<p class="mini muted" style="margin:0 0 8px;">✅ <b>Active.</b> Take it however you like: Audutor never touches it. It lands here recorded and squared, tour by tour.</p>'+
         '<div class="fila" style="gap:6px; flex-wrap:wrap;">'+
         '<button class="btn mini" onclick="toast(\'📲 (Simulated) Hold the customer’s card to the phone: payment done on the spot, with nobody having to scan anything.\')">📲 Charge now</button>'+
         '<button class="btn mini sec" onclick="toast(\'💳 (Simulated) Your SumUp opens with the amount already in, and Audutor logs the payment itself.\')">💳 Use my SumUp</button>'+
@@ -5244,7 +5231,7 @@ function pintaManifiestoReal(){
       prop.innerHTML='<strong>💳 Collect tips <span class="chip turq" style="margin-left:4px;">goes to your account</span></strong>'+
         '<p class="mini muted" style="margin:6px 0 8px;">First, <b>charge on the spot</b> with your SumUp or card reader: '+
         '<b>no Audutor fee</b>, whatever the method. The link and QR are for <b>whoever already left</b> '+
-        'or for groups: there it is '+pctPropinaPlan()+' + £0.30.</p>'+
+        'or for groups.</p>'+
         '<div class="fila" style="gap:8px; margin-top:8px; align-items:center; flex-wrap:wrap;">'+
           '<button class="btn mini pr-tap">📲 Charge now (tap card)</button>'+
           '<button class="btn mini sec pr-sumup">💳 Charge with SumUp</button>'+
@@ -5275,7 +5262,6 @@ function pintaManifiestoReal(){
         if (abre && !c.querySelector('svg')) c.querySelector('.pr-qr-svg').innerHTML=qrSvg('propina/OTW-'+t.hora.replace(':','')+'-'+ti);
         c.style.display = abre ? 'block' : 'none';
       };
-      prop.querySelector('.pr-ver').onclick=function(e){ e.preventDefault(); abrirViajero(); };
       prop.querySelector('.pr-send').onclick=function(){
         var ai=+prop.querySelector('.pr-sel').value;
         if (ai<0){ toast('Pick who it goes to first 🙂'); return; }
@@ -6319,23 +6305,12 @@ function postSet(k,v){
    así en el mercado británico, donde el código CAP/ASA prohíbe sugerir importe en algo
    anunciado como gratis. Lo decide el mercado activo (MK.sinSugerir), no este texto.
    Escenario ficticio: Marco (5 pax) con Emma. */
-var VJ={ pp:15, pax:5, metodo:'tarjeta', nombre:'Marco', guia:'Emma', tour:'free Old Town walk' };
 function cfgPropina(){
-  var t=S.tours.filter(function(x){ return x.nombre===VJ.tour })[0] || tourKb();
+  /* Miraba el tour que veía el viajero; ese flujo ya no existe. */
+  var t=tourKb();
   return (t && t.propCfg) || S.propCfgDefecto;
 }
-var VJ_METODOS=[ ['tarjeta','💳','Card'], ['apple','','Apple Pay'], ['google','G','Google Pay'] ];
-function vjTotal(){ return VJ.libre ? (VJ.otra||0) : VJ.pp*VJ.pax; }
-function vjMetodoNombre(){
-  for (var i=0;i<VJ_METODOS.length;i++) if (VJ_METODOS[i][0]===VJ.metodo) return VJ_METODOS[i][2];
-  return '';
-}
 
-function activarPropinaGuia(){
-  var g=S.equipo.guias.filter(function(x){return x.n===S.guiaVista})[0]; if(!g) return;
-  g.propinaOk=true; pintaGuiaDispo(S.guiaVista);
-  toast('💳 (Simulated) In production this opens verified payment sign-up: ID and bank details, about 10 minutes, and your tips arrive on their own every week.');
-}
 /* ===== Guide page (reserva directa): QR por guía + vista previa en el móvil ===== */
 function gpSlug(n){ return n.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
 function pintaGpLista(){
@@ -6549,120 +6524,13 @@ function pintaGuidePage(nombre){
   pant.scrollTop=0;
 }
 
-function abrirViajero(){
-  var nota=document.getElementById('vj-nota');
-  if (NOTA_VIAJERO0!==null) nota.innerHTML=NOTA_VIAJERO0;
-  VJ.pp=null; VJ.libre=false; VJ.otra=0; VJ.metodo='tarjeta';   // nothing preselected
-  document.getElementById('viajero-overlay').classList.add('ver');
-  document.body.style.overflow='hidden';
-  pintaViajero('importe');
-}
 function cerrarViajero(){
   var ov=document.getElementById('viajero-overlay');
   if (ov) ov.classList.remove('ver');
   document.body.style.overflow='';
 }
 document.addEventListener('keydown', function(e){ if (e.key==='Escape') cerrarViajero(); });
-function vjSel(v){ VJ.pp=v; VJ.libre=false; pintaViajero('importe'); }
 /* “Otra cantidad”: el viajero escribe el TOTAL que quiera — no toca los importes fijos. */
-function vjLibre(){ VJ.libre=true; pintaViajero('importe');
-  var i=document.getElementById('vj-otra'); if(i){ i.focus(); } }
-function vjOtraCambia(el){
-  VJ.otra=Math.max(0, Math.round((parseFloat(String(el.value).replace(',','.'))||0)*100)/100);
-  var b=document.getElementById('vj-cta-btn');
-  if(b) b.textContent='Leave a tip · '+dinero(vjTotal());
-}
-function vjMetodo(m){ VJ.metodo=m; pintaViajero('importe'); }
-function vjPagar(){
-  // «No tip» is a valid answer, not a mistake. Telling someone off for choosing it is
-  // what turns a voluntary tip into an obligation in disguise.
-  if (VJ.pp === 0 && !VJ.libre){ pintaViajero('gracias'); return; }
-  if (!vjTotal()){ toast('Pick an amount or type your own 🙂'); return; }
-  pintaViajero('gracias');
-}
-function pintaViajero(paso){
-  var pant=document.getElementById('viajero-pantalla');
-  var cab='<div class="vj-estado"><span>12:47</span><span>📶&nbsp;&nbsp;🔋</span></div>'+
-    '<div class="vj-cab"><span class="dot"></span><b>Old Town Walks · Edinburgh</b>'+
-    '<span class="vj-seguro">🔒 secure payment</span></div>';
-  if (paso==='gracias'){
-    var url=(S.post && S.post.resenaUrl) ? S.post.resenaUrl : 'g.page/oldtownwalks/review';
-    pant.innerHTML=cab+
-      '<div class="vj-cuerpo vj-gracias">'+
-      '<div class="vj-check">🧡</div>'+
-      // Whoever leaves nothing gets exactly the same thank-you. No guilt trip, no sad
-      // face: that is what proves the tip was genuinely optional.
-      (vjTotal() ? '<h3>Thank you, '+VJ.nombre+'!</h3>'+
-        '<p class="vj-total">'+dinero(vjTotal())+'</p>'+
-        '<p class="mini muted">received by '+vjMetodoNombre()+' — it goes straight to '+VJ.guia+', through nobody else.</p>'
-       : '<h3>Thanks for coming, '+VJ.nombre+'!</h3>'+
-        '<p class="mini muted">'+(cfgPropina().graciasTxt||'We hope you had a great time!')+'</p>')+
-      '<div class="vj-resena">'+
-      '<p><b>Would you leave us a Google review?</b><br>'+
-      '<span class="mini muted">It’s optional and separate from your tip — takes a minute.</span></p>'+
-      '<button class="vj-cta vj-cta-g" onclick="toast(\'This would open the Google listing ('+url+') — simulated\')">⭐ Leave a Google review</button>'+
-      '<p class="mini" style="margin-top:9px;">💡 Mentioning <b>'+VJ.guia+'</b> by name helps enormously.</p>'+
-      '</div>'+
-      '<button class="vj-volver" onclick="pintaViajero(\'importe\')">← change the amount</button>'+
-      '</div>';
-    pant.scrollTop=0;
-    return;
-  }
-  var cfgP=cfgPropina();
-  var importes=cfgP.imp.map(function(v){
-    return '<button class="vj-imp'+(!VJ.libre&&VJ.pp===v?' on':'')+'" onclick="vjSel('+v+')">'+
-      (v===cfgP.pre?'<span class="vj-tag">most common</span>':'')+
-      '<b>'+v+'</b><span>per person</span></button>';
-  }).join('');
-  // “Otra cantidad”: casilla libre — el total que el viajero quiera, fuera de los fijos
-  var libre = cfgP.libre
-    ? '<button class="vj-imp vj-imp-libre'+(VJ.libre?' on':'')+'" onclick="vjLibre()"><b>✏️ Other</b><span>your own amount</span></button>'
-    : '';
-  /* «No tip» is no longer an option the same size as the amounts. What is being paid
-     here is a service already delivered, and a large box saying «No tip · that's
-     absolutely fine» does two bad things at once: it anchors the decision downwards and
-     it suggests to someone who has just done the tour that it was free. Whoever really
-     does not want to leave anything does not need a big button in order not to.
-
-     The way out has to exist, though: if it cannot be declined, the tip stops being
-     voluntary and becomes a charge. So it stays — as a text link under the pay button,
-     present and not competing. */
-  var nada = '';
-  var libreInput = (cfgP.libre && VJ.libre)
-    ? '<div class="fila" style="gap:8px; margin-top:8px; align-items:center;">'+
-      '<b style="font-size:17px;">'+MK.moneda.sim+'</b>'+
-      '<input id="vj-otra" inputmode="decimal" placeholder="How much in total?" value="'+(VJ.otra||'')+'"'+
-      ' oninput="vjOtraCambia(this)" style="flex:1; border:1.5px solid var(--acc); border-radius:10px; padding:10px 12px; font-size:16px; font-family:inherit;">'+
-      '<span class="mini muted">in total — whatever you like</span></div>'
-    : '';
-  var metodos=VJ_METODOS.map(function(m){
-    return '<button class="vj-met'+(VJ.metodo===m[0]?' on':'')+'" onclick="vjMetodo(\''+m[0]+'\')">'+
-      m[1]+' '+m[2]+'</button>';
-  }).join('');
-  pant.innerHTML=cab+
-    '<div class="vj-cuerpo">'+
-    '<div class="vj-burbuja"><div class="vj-de">🤖 GuIA · WhatsApp post-tour</div>'+
-    'Hi '+VJ.nombre+' 👋 Thanks for coming along with Sofía and the little ones on today’s <b>'+VJ.tour+'</b> with '+
-    '<b>'+VJ.guia+'</b>. If you enjoyed it, this is where you can say thanks 🧡'+
-    '<span class="vj-hora">12:47 ✓✓</span></div>'+
-    '<div class="vj-transp" style="margin-bottom:10px;">🇬🇧 <b>Tips only, no set amount.</b> Your guide works on a tips-only basis — give whatever you feel it was worth, or nothing at all.</div>'+
-    '<p class="vj-tit">How much would you like to leave? <span class="mini muted" style="font-weight:400;">· booking for '+VJ.pax+' people</span></p>'+
-    '<div class="vj-importes'+(libre?' con-libre':'')+'">'+importes+libre+'</div>'+libreInput+
-    '<p class="vj-tit">How would you like to pay?</p>'+
-    '<div class="vj-metodos">'+metodos+'</div>'+
-    '<div class="vj-transp">✨ <b>Your tip goes straight to '+VJ.guia+'</b> — with no surcharge to you.</div>'+
-    '<button class="vj-cta" id="vj-cta-btn" onclick="vjPagar()">'+
-      (VJ.pp === null && !VJ.libre ? 'Pick an amount'
-        : (VJ.pp === 0 && !VJ.libre ? 'Continue without tipping'
-          : 'Leave a tip · '+dinero(vjTotal())))+'</button>'+
-    /* The way out, in text and under the button. */
-    '<p class="vj-nada"><button type="button" onclick="vjSel(0)">'+
-      (cfgP.nadaTxt||'I would rather not leave anything now')+'</button></p>'+
-    '<p class="vj-legal">Payment processed securely. We use your details only to handle this tip (GDPR).<br>'+
-    'Demo with made-up data — no payment is taken.</p>'+
-    '</div>';
-  pant.scrollTop=0;
-}
 
 /* Guarda la config de importes de propina (Cerebro → Mensaje post-tour) y
    actualiza el desplegable de preseleccionado con los fijos que haya. */
@@ -7580,7 +7448,7 @@ S.tours.forEach(function(t){ CAMPOS_KB.forEach(function(c){ if ((t.kb[c.k]||'').
   S.recientes.push({ tipo:'kb', tourId:t.id, k:c.k, seed:true }); }); });
 seedDispo(); seedCobertura();
 pintaManifiesto(); pintaNoshowCfg(); pintaNoshow(); pintaLiq(); pintaCerebro(); pintaCombosDestinatarios(); pintaPost(); calcProy(); pintaEquipo(); pintaCanales(); pintaOperaciones();
-pintaGatesInline(); pintaWaTope(); pintaPropinaPlan(); pintaCanalChat(); pintaPropCfg(); pintaCoste();
+pintaGatesInline(); pintaWaTope(); pintaCanalChat(); pintaPropCfg(); pintaCoste();
 msg('bot','Hi! 👋 I’m GuIA, the automated assistant answering this chat. Right now I answer about “'+tourChat().nombre+'” — try the examples, or create another tour under 🧠 Brain and you’ll see each one has its own brain, with nothing mixed in.');
 </script>
 </body>
