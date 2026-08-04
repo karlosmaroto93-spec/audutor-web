@@ -7,12 +7,16 @@
 <meta name="description" content="La capa operativa para empresas de tours y free tours: reservas multicanal, guías, no-shows, grupos, propinas y un asistente IA que no inventa. Modulable según tu tarifa y tu intensidad.">
 <style>
   :root{
-    --ink:#1f2a25; --ink2:#4a5d54; --muted:#74857d; --bg:#faf6ec; --paper:#fffdf7;
+    --ink:#1f2a25; --ink2:#4a5d54; --muted:#5c6b64; --bg:#faf6ec; --paper:#fffdf7;
     --acc:#128a6b; --acc2:#0b6b52; --deep:#123f33; --acc-soft:#e4f2ea;
     --coral:#f4653a; --coral2:#d94e24; --coral-soft:#ffece3;
     --teal:#2bb3a3; --teal-ink:#1e8f82; --teal-soft:#e3f4f1;
     --gold:#c98a2d; --gold-soft:#faf0da; --amber:#a36a10;
     --line:#e6dcc8;
+    /* El pin del mapa, en un solo sitio: lo usan el remate de las listas de plan y
+       cualquier otro cierre de ruta. Se pinta con `mask`, así que hereda el color de
+       quien lo use en vez de traer el suyo. */
+    --pin:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 16'%3E%3Cpath d='M6 0C2.7 0 0 2.7 0 6c0 4.4 6 10 6 10s6-5.6 6-10c0-3.3-2.7-6-6-6z' fill='%23000'/%3E%3C/svg%3E");
     --sans:Seravek,"Avenir Next",Avenir,system-ui,-apple-system,"Segoe UI",sans-serif;
     --serif:"Iowan Old Style",Palatino,"Palatino Linotype",Georgia,serif;
     --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
@@ -22,7 +26,11 @@
   body{ margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans);
         font-size:16.5px; line-height:1.6; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
   .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
-  h1,h2,h3{ font-family:var(--serif); line-height:1.16; text-wrap:balance; margin:0; }
+  /* Un solo interlineado para tres tamaños muy distintos: 1,16 es correcto a 50 px y
+     asfixiante a 18,5. Cada nivel el suyo. */
+  h1,h2,h3{ font-family:var(--serif); text-wrap:balance; margin:0; }
+  h2{ line-height:1.14; letter-spacing:-.006em; }
+  h3{ line-height:1.32; }
   a{ color:var(--acc); }
 
   /* ================= animaciones (solo con JS: sin JS todo es visible) ===== */
@@ -41,8 +49,6 @@
     .mock-pop, .mock, .guia{ animation:none !important; }
     .precio .imp, .fact-toggle button, .barra-fill{ transition:none !important; }
   }
-  #progreso{ position:fixed; top:0; left:0; height:3px; background:var(--coral);
-    width:0; z-index:99; transition:width .1s linear; }
 
   /* ================= adornos SVG (rutas, pins, contornos, brújula) ========= */
   .adorno{ position:absolute; pointer-events:none; }
@@ -113,6 +119,11 @@
   nav .links{ margin-left:auto; display:flex; gap:20px; align-items:center; }
   nav .links a{ text-decoration:none; color:var(--ink2); font-size:14.5px; font-weight:600; }
   nav .links a:hover{ color:var(--acc); }
+  /* `hidden` lo pone el navegador con `display:none`, que es CSS de USUARIO: cualquier
+     regla nuestra que fije `display` lo pisa. El «Entrar» del menú es `.btn`, así que
+     salía igual estando oculto — y con `href="#"`, o sea visible y muerto. Un `hidden`
+     que no oculta es peor que no tenerlo, porque se confía en él. */
+  [hidden]{ display:none !important; }
   .btn{ display:inline-block; background:var(--coral); color:#fff !important; text-decoration:none;
         padding:12px 24px; border-radius:10px; font-weight:700; font-size:15px; border:0;
         cursor:pointer; transition:transform .15s ease, box-shadow .15s ease; }
@@ -140,13 +151,21 @@
   nav .logo .ruta path:first-child{ stroke:var(--gold); }
   nav .logo .ruta .rpin{ fill:var(--coral); }        /* un pin verde sobre verde no se ve */
   nav .logo .ruta .rhueco{ fill:#14634c; }
-  nav .links a:not(.btn){ color:#f4efe2; font-weight:650; padding:7px 11px;
+  nav .links a:not(.btn){ color:#f4efe2; font-weight:700; padding:7px 11px;
     border-radius:9px; transition:background .15s, color .15s; }
   nav .links a:not(.btn):hover{ color:#fff; background:rgba(253,249,238,.16); }
   nav .lang-sw{ background:rgba(253,249,238,.14); border-color:rgba(253,249,238,.42);
     color:#fdf9ee; }
   nav .lang-sw:hover{ background:rgba(253,249,238,.24); border-color:#fdf9ee; color:#fff; }
   nav .links a.btn{ color:#fff !important; }
+  /* El «Entrar» tiene que pesar. Con el contorno de `.btn.sec` sobre verde se leía como
+     un enlace más y la demo se lo comía; relleno en crema sobre la barra verde es el
+     contraste más alto que hay aquí, y no compite con el coral porque no es coral: son
+     dos acciones distintas para dos personas distintas —el que vuelve y el que llega. */
+  nav .links a.btn.entrar{
+    background:#fdf9ee; color:#0e4a3a !important; border:0; font-weight:700;
+  }
+  nav .links a.btn.entrar:hover{ background:#fff; box-shadow:0 6px 18px rgba(0,0,0,.16); }
   nav .links a.btn.sec{ color:#fdf9ee !important; border-color:rgba(253,249,238,.62);
     background:transparent; }
   nav .links a.btn.sec:hover{ background:rgba(253,249,238,.16); border-color:#fdf9ee; }
@@ -170,7 +189,15 @@
   @media (max-width:900px){ .hero-grid{ grid-template-columns:1fr; } }
   .kicker{ font-size:12.5px; letter-spacing:.14em; text-transform:uppercase; font-weight:800;
            color:var(--acc); margin-bottom:14px; }
-  h1{ font-size:clamp(33px,4.6vw,50px); font-weight:600; max-width:20ch; }
+  /* PESO 400, no 600. Iowan Old Style tiene Roman, Bold y Black: no hay un 600, así
+     que el navegador redondeaba a Bold y salía un titular de 50 px en negrita donde se
+     pedía un intermedio que no existe. A ese cuerpo la autoridad la da el tamaño.
+     Y el clamp: 4,6vw no alcanza los 33 px hasta un viewport de 717, así que en TODOS
+     los móviles el h1 medía 33 y el h2 medía 28 — cinco píxeles de jerarquía entre el
+     título de la página y el de una sección. Anclado en rem+vw, en un móvil de 375 sube
+     a ~37 y la distancia se nota. */
+  h1{ font-size:clamp(2.125rem, 1.4rem + 3.1vw, 3.125rem); font-weight:400;
+      line-height:1.06; letter-spacing:-.012em; max-width:20ch; }
   .lede{ font-size:19px; color:var(--ink2); max-width:54ch; margin:20px 0 28px; }
   .lede b{ color:var(--ink); }
   .hero-ctas{ display:flex; gap:14px; flex-wrap:wrap; align-items:center; }
@@ -228,13 +255,13 @@
   section.alt .celda{ background:var(--bg); }
   .celda.star{ border-color:var(--acc); box-shadow:0 6px 22px rgba(18,138,107,.12); }
   .celda .ico{ font-size:24px; }
-  .celda h3{ font-size:18.5px; margin:10px 0 6px; font-family:var(--sans); font-weight:750; }
+  .celda h3{ font-size:18.5px; margin:10px 0 6px; font-family:var(--sans); font-weight:700; }
   .celda p{ font-size:14.8px; color:var(--ink2); margin:0; }
   .celda .mini{ font-size:12.5px; color:var(--muted); display:block; margin-top:10px; font-family:var(--mono); }
 
   /* ---- contacto ---- */
   .contacto-caja{ background:var(--paper); border:1.5px solid var(--acc); border-radius:16px;
-    padding:34px 38px; max-width:620px; margin:0 auto; text-align:center;
+    padding:38px; max-width:620px; margin:0 auto; text-align:center;
     box-shadow:0 14px 40px rgba(18,138,107,.10); }
   .contacto-caja h2{ font-size:clamp(23px,3vw,30px); margin:0 0 10px; }
   .contacto-caja p{ color:var(--ink2); font-size:16px; margin:0 0 14px; }
@@ -246,19 +273,30 @@
     border-radius:10px; padding:10px 16px; font-size:14.5px; color:var(--amber); font-weight:700; }
 
   /* ---- un día con Audutor ---- */
-  .dia{ position:relative; margin-top:8px; }
-  .dia::before{ content:""; position:absolute; left:86px; top:8px; bottom:8px; width:0;
+  /* La línea de la ruta y los puntos salen del MISMO cálculo. Estaban a ojo: el centro
+     del punto caía en x=101 y la línea en x=87,25 — 13,75 px de desviación. Y en móvil,
+     exactamente los mismos 13,75: se ajustó una vez mirando y se copió al breakpoint.
+     Ahora se deriva de las columnas: cambiar un ancho ya no la descoloca. */
+  .dia{ position:relative; margin-top:8px; --c1:70px; --cpunto:34px; --hgap:14px; }
+  .dia::before{ content:""; position:absolute; top:8px; bottom:8px; width:0;
+    left:calc(var(--c1) + var(--hgap) + var(--cpunto)/2); transform:translateX(-50%);
     border-left:2.5px dashed #b3d6c6; }
-  .hito{ display:grid; grid-template-columns:70px 34px 1fr; gap:0 14px; padding:14px 0; align-items:start; }
+  .hito{ display:grid; grid-template-columns:var(--c1) var(--cpunto) 1fr;
+    gap:0 var(--hgap); padding:14px 0; align-items:start; }
   .hito .hora{ font-family:var(--mono); font-size:13px; color:var(--muted); text-align:right; padding-top:6px; }
   .hito .punto{ width:13px; height:13px; border-radius:50%; background:var(--paper);
     border:3px solid var(--acc); margin:8px auto 0; position:relative; z-index:1; }
-  .hito:nth-child(even) .punto{ border-color:var(--coral); }
+  /* El coral es la marca del mapa: significa «aquí» y «ahora». Estaba alternando por
+     `nth-child(even)`, pintando los hitos 2 y 4 e insinuando dos categorías que no
+     existen — el lector busca el patrón y no lo hay. Se reserva al hito que ES el
+     producto: el turista perdido. Cada píxel de coral que no señala un sitio devalúa
+     el que sí. */
+  .hito.clave .punto{ border-color:var(--coral); box-shadow:0 0 0 4px var(--coral-soft); }
   .hito .que{ background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:13px 17px;
     font-size:14.8px; color:var(--ink2); }
   .hito .que b{ color:var(--ink); }
   section.alt .hito .que{ background:var(--bg); }
-  @media (max-width:640px){ .dia::before{ left:64px; } .hito{ grid-template-columns:48px 34px 1fr; } }
+  @media (max-width:640px){ .dia{ --c1:48px; } }
 
   /* ================= pricing ================= */
   .planes{ display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:18px; align-items:stretch; }
@@ -295,9 +333,57 @@
   .plan .precio small{ font-size:15px; color:var(--muted); font-family:var(--sans); font-weight:600; }
   .plan .para{ color:var(--muted); font-size:13.5px; margin-bottom:14px; }
   .plan ul{ margin:0 0 20px; padding:0; list-style:none; font-size:14.5px; color:var(--ink2); flex:1; }
+  /* Una lista con punteado no puede acabar cortada al aire. El remate no es otro filete:
+     es el pin. Es la misma frase que ya lleva dentro el icono de la app — toda ruta
+     acaba en un sitio donde alguien te espera. Va como máscara sobre un fondo verde: si
+     el navegador no soporta `mask`, queda un rectángulo pequeño en verde. Feo, pero
+     presente; nunca un hueco. */
+  .plan ul::after{ content:""; display:block; width:9px; height:12px; margin:14px 0 2px 3px;
+    background:var(--acc); opacity:.5;
+    -webkit-mask:var(--pin) center/contain no-repeat; mask:var(--pin) center/contain no-repeat; }
   .plan li{ padding:6px 0 6px 26px; position:relative; border-top:1px dashed var(--line); }
   .plan li:first-child{ border-top:0; }
   .plan li::before{ content:"✓"; position:absolute; left:2px; color:var(--acc); font-weight:800; }
+  /* ---- propina digital: la tarjeta de tarifas ----------------------------------------
+     Este bloque existía en el HTML desde el principio SIN una sola regla de CSS. No se
+     notaba leyendo el código —el marcado es correcto— pero en pantalla salía desnudo: sin
+     fondo, sin borde y sin padding, a todo el ancho, y los dos spans de cada tramo pegados
+     («0 %en mano»). Es el bloque donde se dice cuánto cobras, o sea el único de la página
+     donde un número mal leído cuesta una venta.
+     Todas las clases cuelgan de `.addon` a propósito: `.t`, `.p` y `.n` son nombres de una
+     letra y sueltas serían una colisión esperando a que alguien añada otra sección. */
+  .addon{ display:grid; grid-template-columns:1.35fr 1fr; gap:28px; align-items:start;
+    background:var(--paper); border:1.5px solid var(--gold); border-radius:16px;
+    padding:26px; margin-top:34px;
+    box-shadow:0 10px 34px rgba(201,138,45,.10); }
+  .addon .t h3{ font-size:19px; font-family:var(--sans); font-weight:800; color:var(--deep);
+    margin:0 0 12px; line-height:1.3; }
+  .addon .t p{ font-size:14.5px; color:var(--ink2); margin:0 0 12px; line-height:1.62; }
+  .addon .t p:last-child{ margin-bottom:0; }
+  /* La rejilla se declara UNA vez aquí y las filas la heredan con `subgrid`. No es un
+     refinamiento: con una rejilla por fila, la primera columna se dimensiona con el
+     contenido de SU fila, así que «0 %» y «1,9 %» dan anchos distintos y las dos
+     explicaciones arrancan en verticales distintas —medido: 806 px y 830 px—. Con subgrid
+     es literalmente el mismo juego de pistas, no dos que casualmente coinciden hasta que
+     alguien cambie un porcentaje. Es el mismo fallo que tenía el formulario de umbrales
+     de la app, y se arregla igual. */
+  .addon .tramos{ display:grid; grid-template-columns:auto 1fr;
+    background:var(--gold-soft); border-radius:12px; padding:18px 20px; }
+  .addon .tramo{ display:grid; grid-column:1 / -1; grid-template-columns:auto 1fr;
+    align-items:baseline; column-gap:12px; padding:10px 0;
+    border-bottom:1px dashed rgba(163,106,16,.28); }
+  @supports (grid-template-columns: subgrid){
+    .addon .tramo{ grid-template-columns:subgrid; }
+  }
+  .addon .tramo:first-child{ padding-top:0; }
+  .addon .tramo .p{ font-family:var(--serif); font-size:27px; font-weight:600;
+    color:var(--amber); font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .addon .tramo .n{ font-size:13.5px; color:#6b5a35; line-height:1.45; }
+  .addon .nota{ grid-column:1 / -1; display:block; margin-top:14px; font-size:12.5px; color:#6b5a35; line-height:1.55; }
+  .addon .nota b{ color:var(--amber); }
+  @media (max-width:820px){
+    .addon{ grid-template-columns:1fr; gap:20px; padding:22px; }
+  }
   /* ---- facturación mensual / anual ---- */
   .fact-toggle-wrap{ text-align:center; margin:-8px 0 32px; }
   .fact-toggle{ display:inline-flex; background:var(--paper); border:1.5px solid var(--line);
@@ -318,68 +404,15 @@
   .fact-nota[hidden]{ display:none; }
   .plan.premium .fact-nota{ color:var(--amber); }
 
-  /* ---- calculadora de coste total ---- */
-  .calc{ display:grid; grid-template-columns:minmax(280px,380px) 1fr; gap:34px; align-items:start; }
-  @media (max-width:900px){ .calc{ grid-template-columns:1fr; } }
-  .calc-panel{ background:var(--paper); border:1px solid var(--line); border-radius:16px; padding:24px 26px; }
-  .calc-campo{ margin-bottom:24px; }
-  .calc-campo:last-child{ margin-bottom:0; }
-  .calc-campo label{ display:block; font-weight:750; font-size:14.5px; margin-bottom:2px; }
-  .calc-campo output{ display:block; font-family:var(--serif); font-size:25px; font-weight:600;
-    color:var(--acc); font-variant-numeric:tabular-nums; margin-bottom:4px; }
-  .calc-campo input[type="range"]{ width:100%; accent-color:var(--acc); height:30px; cursor:pointer; }
-  .calc-escala{ display:flex; justify-content:space-between; font-size:11.5px; color:var(--muted); }
-  .barras{ display:flex; flex-direction:column; gap:10px; }
-  .barra-fila{ display:grid; grid-template-columns:140px 1fr 96px; gap:12px; align-items:center; }
-  .barra-nombre{ font-size:14px; font-weight:700; color:var(--ink2); }
-  .barra-fila.marca .barra-nombre{ color:var(--acc); }
-  .barra-nombre{ display:flex; flex-direction:column; gap:1px; }
-  .calc-presets{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:0 0 14px; }
-  .calc-presets-lab{ font-size:12.5px; color:var(--muted); font-weight:600; }
-  .calc-preset{ font:inherit; font-size:12.5px; font-weight:600; padding:5px 11px; cursor:pointer;
-    border:1px solid var(--linea,#e6e0d0); border-radius:999px; background:transparent; color:inherit; }
-  .calc-preset:hover, .calc-preset:focus-visible{ border-color:var(--acc); color:var(--acc); }
-  .calc-aviso{ font-size:13px; line-height:1.5; margin:10px 0 0; padding:10px 12px;
-    border-left:3px solid var(--acc); background:rgba(0,0,0,.03); border-radius:0 8px 8px 0; }
-
-  .barra-nota{ font-size:11px; line-height:1.25; color:var(--muted); font-weight:400; }
-  .barra-pista{ background:var(--bg); border:1px solid var(--line); border-radius:99px;
-    height:22px; overflow:hidden; }
-  .barra-fill{ display:block; height:100%; width:0; background:#b3c2ba; border-radius:99px;
-    transition:width .5s cubic-bezier(.16,.7,.22,1); }
-  .barra-fila.marca .barra-fill{ background:var(--acc); }
-  .barra-imp{ font-family:var(--serif); font-size:17.5px; font-weight:600; text-align:right;
-    font-variant-numeric:tabular-nums; white-space:nowrap; }
-  .barra-imp small{ font-family:var(--sans); font-size:11.5px; color:var(--muted); font-weight:600; }
-  .calc-ahorro{ margin-top:20px; background:var(--acc-soft); border:1.5px solid var(--acc);
-    border-radius:14px; padding:15px 20px; font-size:15.5px; }
-  .calc-ahorro b{ color:var(--acc2); }
-  .calc-ahorro .matiz{ display:block; font-size:12.5px; color:var(--ink2); margin-top:6px; }
-  .calc-fuente{ font-size:11.5px; color:var(--muted); margin-top:14px; line-height:1.55; }
-  @media (max-width:640px){
-    .barra-fila{ grid-template-columns:98px 1fr 82px; gap:8px; }
-    .barra-nombre{ font-size:12.5px; }
-    .barra-imp{ font-size:14.5px; }
-  }
-
-  .addon{ margin-top:22px; background:linear-gradient(100deg,var(--acc-soft),var(--gold-soft));
-    border:1.5px solid var(--acc); border-radius:16px; padding:22px 26px; display:flex; gap:18px;
-    align-items:center; flex-wrap:wrap; }
-  .addon .t{ flex:1; min-width:260px; }
-  .addon h3{ font-family:var(--sans); font-weight:800; font-size:18px; }
-  .addon p{ margin:6px 0 0; font-size:14.5px; color:var(--ink2); }
-  .addon .tramos{ display:flex; gap:10px; flex-wrap:wrap; align-content:flex-start; max-width:340px; }
-  .addon .tramo{ background:var(--paper); border:1px solid var(--line); border-radius:12px;
-    padding:9px 16px; text-align:center; }
-  .addon .tramo .p{ font-family:var(--serif); font-size:25px; font-weight:600; color:var(--acc);
-    display:block; line-height:1.15; }
-  .addon .tramo .n{ font-size:10.5px; font-weight:800; letter-spacing:.07em; text-transform:uppercase;
-    color:var(--muted); }
-  .addon .nota{ flex-basis:100%; font-size:12.5px; color:var(--muted); }
-
-  /* ---- complemento: web generada con IA ---- */
+    /* ---- complemento: web generada con IA ---- */
+  /* ── Las tarjetas comparten escala ─────────────────────────────────────────
+     Había tres rellenos —26, 34/38 y 38/40— y dos radios —16 y 20—, todos a ojo. Con
+     valores arbitrarios el texto de cada tarjeta arranca a una distancia distinta del
+     borde, y apiladas en una misma página eso se lee como descuido aunque cada una por
+     separado esté bien. Dos pasos y un radio: 26 para las que van de tres en fila y 38
+     para las grandes, radio 16 en todas. */
   .webcard{ background:linear-gradient(160deg,#fffdf4 0%,#fbf1da 100%); color:var(--ink);
-    border:1.5px solid var(--gold); border-radius:20px; padding:38px 40px;
+    border:1.5px solid var(--gold); border-radius:16px; padding:38px;
     display:grid; grid-template-columns:1.05fr .95fr; gap:40px; align-items:center;
     box-shadow:0 20px 46px rgba(163,106,16,.16); position:relative; overflow:hidden; }
   .webcard::before{ content:""; position:absolute; inset:0; pointer-events:none;
@@ -405,7 +438,8 @@
   .web-comp{ font-size:13.5px; color:var(--muted); border-top:1px solid rgba(163,106,16,.22);
     padding-top:12px; margin:0; }
   .web-comp b{ color:var(--ink); }
-  /* mockup del navegador (CSS puro, empresa ficticia Bella Vita) */
+  /* mockup del navegador (CSS puro). La sección que lo usaba está retirada hasta
+     que el módulo exista; el estilo se conserva para cuando vuelva. */
   .webmock{ background:var(--paper); color:var(--ink); border-radius:14px; overflow:hidden;
     box-shadow:0 18px 40px rgba(84,62,20,.20); font-size:13px; }
   .wbar{ display:flex; align-items:center; gap:5px; background:var(--bg);
@@ -430,7 +464,7 @@
   .ruta{ display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:14px; }
   .paso{ background:var(--paper); border:1px dashed var(--line); border-radius:14px; padding:18px 20px; }
   section.alt .paso{ background:var(--bg); }
-  .paso h3{ font-family:var(--sans); font-weight:750; font-size:16px; margin:0 0 4px; }
+  .paso h3{ font-family:var(--sans); font-weight:700; font-size:16px; margin:0 0 4px; }
   .paso p{ font-size:13.8px; color:var(--ink2); margin:0; }
   .fase{ display:inline-block; font-family:var(--mono); font-size:10.5px; font-weight:700;
     letter-spacing:.06em; padding:2px 9px; border-radius:99px; margin-bottom:9px;
@@ -522,7 +556,6 @@
   </defs>
 </svg>
 
-<div id="progreso"></div>
 
 <nav><div class="wrap">
   <a class="logo" href="#" aria-label="Audutor, inicio"><span class="wm">Audutor<svg class="ruta" viewBox="0 0 100 14" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M1 10.5 Q 24 5 46 9 T 86 8"/><path class="rpin" d="M93 1.2c-2.6 0-4.7 2.1-4.7 4.7 0 3.4 4.7 7.5 4.7 7.5s4.7-4.1 4.7-7.5c0-2.6-2.1-4.7-4.7-4.7z"/><circle class="rhueco" cx="93" cy="6" r="1.8"/></svg></span></a>
@@ -531,7 +564,10 @@
     <a href="#asistente" data-i18n="nav.asistente">El asistente</a>
     <a href="#dia" data-i18n="nav.dia">Un día</a>
     <a href="#planes" data-i18n="nav.planes">Planes</a>
-    <a href="#web" data-i18n="nav.web">Tu web</a>
+    <!-- El cliente que YA es cliente. Sale antes que la demo porque el que vuelve no
+         viene a probar nada: viene a entrar. Nace oculto y solo aparece si APP_URL
+         tiene valor — un «Entrar» que lleva a un 404 es peor que no tener «Entrar». -->
+    <a class="btn entrar" href="entrar/" data-i18n="nav.entrar">Entrar</a>
     <a class="btn" href="demo/" data-demo data-i18n="nav.demo">Probar la demo</a>
     <button id="lang-sw" class="lang-sw" onclick="location.href='en/'" aria-label="Change language / Cambiar idioma">
       <span class="bandera">🇬🇧</span><span class="lbl">EN</span></button>
@@ -564,9 +600,9 @@
         <a class="btn" href="demo/" data-demo>🖱️ Probar la demo interactiva</a>
         <a class="btn sec" href="#contacto">Pedir una demo guiada</a>
       </div>
-      <p class="hero-nota reveal" style="--d:300ms">Funciona cada día en una operación real de free
-      tours en Madrid — no nació en una sala de reuniones. Y arrancar es cosa de una tarde:
-      reenvías tus emails de reserva y el buzón monta el resto, sin migraciones ni permanencia.</p>
+      <p class="hero-nota reveal" style="--d:300ms">Está construido operando, no en una sala de
+      reuniones. Y arrancar es cosa de una tarde: reenvías tus emails de reserva y el buzón monta
+      el resto, sin migraciones ni permanencia.</p>
       <div class="guia-saludo reveal" style="--d:380ms">
         <svg class="guia" aria-hidden="true" focusable="false"><use href="#guia"/></svg>
         <p class="bocadillo"><b>¡Hola! Soy GuIA.</b> Atiendo a tus clientes mientras tú guías.
@@ -672,7 +708,7 @@
     <div class="hito reveal"><span class="hora">09:15</span><span class="punto"></span>
       <div class="que"><b>Recordatorios de mañana enviados por WhatsApp.</b> Una clienta responde
       «al final somos 5»: su reserva se actualiza sola y el guía lo ve en su manifiesto.</div></div>
-    <div class="hito reveal"><span class="hora">10:58</span><span class="punto"></span>
+    <div class="hito clave reveal"><span class="hora">10:58</span><span class="punto"></span>
       <div class="que"><b>«Me he perdido, no encuentro al grupo».</b> GuIA verifica su código, le
       manda el mapa con la ubicación que el guía compartió en la parada, y deja nota en el tour.
       Nadie llamó a nadie.</div></div>
@@ -699,7 +735,7 @@
   <div class="wrap">
   <div class="sec-head">
     <h2 data-split>Pagas por lo que operas, no por tu equipo</h2>
-    <p class="reveal"><b>Sin comisión por reserva</b> y <b>guías ilimitados desde Pro</b> — Esencial empieza con 1 tour y 1 guía. El precio sube
+    <p class="reveal"><b>Sin comisión por reserva</b> y <b>guías ilimitados desde Pro</b> — Esencial empieza con 1 tour y 2 guías. El precio sube
     solo si creces en <b>tours</b> — no te penalizamos por tener más gente en el equipo (al revés que el
     software que cobra por usuario). Sin permanencia.</p>
   </div>
@@ -717,7 +753,7 @@
       <div class="para">Para probar operando · <b>1 tour · 2 guías · 150 viajeros/mes</b></div>
       <ul>
         <li>Parte del día y manifiesto móvil del guía (check-in, walk-ins)</li>
-        <li>Buzón de reservas: <b>hasta 2 canales</b> (p. ej. GuruWalk + tu web)</li>
+        <li>Buzón de reservas: <b>hasta 2 canales</b> (p. ej. tu plataforma principal + tu web)</li>
         <li>Recordatorio de confirmación anti-no-show por WhatsApp — 1 toque, el día antes <small>(un recordatorio por reserva)</small></li>
         <li>Detección de grupos grandes y rescate de rezagados</li>
         <li>2 guías · <b>150 viajeros/mes</b> · historial de 30 días</li>
@@ -731,11 +767,11 @@
       <div class="fact-nota" data-nota hidden>facturado anualmente · 790 €/año (2 meses gratis)</div>
       <div class="para">Para la empresa con equipo · <b>hasta 800 viajeros/mes</b> · tours y guías ilimitados</div>
       <ul>
-        <li>Todo lo de Esencial · <b>tours, guías y canales ilimitados</b> —sin bandas ni saltos de precio al crecer el equipo— · historial completo · <b>+6 €/mes</b> por cada 100 viajeros de más, <b>hasta 2.500</b></li>
+        <li>Todo lo de Esencial · <b>tours, guías y canales ilimitados</b> —sin saltos de precio al crecer el equipo— · historial completo</li>
         <li>Sin marca «Audutor» — tu marca en la propina y la página del guía</li>
         <li><b>Cadencia anti-no-show inteligente completa</b>: se adapta al riesgo de cada
           reserva — y deja registrado quién avisó, cuándo y quién confirmó</li>
-        <li>Recordatorios por WhatsApp y SMS <b>sin límite por nuestra parte</b> <span class="mini">— Meta te los factura a ti a su tarifa, sin recargo nuestro, y la cadencia inteligente solo gasta donde hay riesgo real</span></li>
+        <li>Recordatorios por WhatsApp y SMS <b>sin límite por nuestra parte</b></li>
         <li><b>Conciliación con plataformas</b>: recupera las comisiones de los no-shows —
           € recuperados este mes, en negro sobre blanco</li>
         <li><b>GuIA</b>: el asistente que atiende tu chat y no inventa</li>
@@ -750,7 +786,7 @@
       <div class="fact-nota" data-nota hidden>facturado anualmente · 1.990 €/año (2 meses gratis)</div>
       <div class="para">Todo Audutor · <b>hasta 5.000 viajeros/mes</b> — para operadores que escalan</div>
       <ul>
-        <li>Todo lo del plan Pro · <b>5.000 viajeros incluidos, sin tramos</b> — a ese volumen sale a <b>4 céntimos por viajero</b> · por encima, <b>+3 €/mes por cada 100</b> hasta 20.000, y <b>+19 €/mes por cada 1.000</b> a partir de ahí (190 € por cada diez mil)</li>
+        <li>Todo lo del plan Pro · <b>5.000 viajeros incluidos, sin tramos</b> — y si creces por encima, el precio sigue bajando por viajero</li>
         <li><b>Cuadro de mando</b>: analítica por tour, guía, canal y franja</li>
         <li>Propina digital: <b>0 %</b> cobrando en mano · <b>1,9 % + 0,30 €</b> si el cobro lo hacemos nosotros <span class="mini">— la misma tarifa en los tres planes</span></li>
         <li>Soporte prioritario y onboarding dedicado</li>
@@ -760,36 +796,31 @@
     </div>
   </div>
   <p class="reveal" style="text-align:center; color:var(--muted); font-size:14px; margin:16px 0 0;">
-    Ejemplo: 1.300 viajeros al mes con los tours y el equipo que necesites → <b>Pro 109 €/mes</b>.
-    Son <b>8 céntimos por viajero</b>. Un software que cobra por usuario —los hay a 49 € por usuario y mes, con tarifa pública en julio de 2026— te costaría <b>245 € con cinco guías</b>, y aquí da igual cuántos seáis.
-    <br>Con 10.000 viajeros al mes son <b>349 €</b> —3,5 céntimos por persona— y con 50.000,
-    <b>1.219 €</b>: 2,4 céntimos. Cuanto más creces, más barato te sale cada viajero, y la
-    fórmula está publicada hasta arriba del todo. No hay letra pequeña.</p>
+    El precio sube con los <b>viajeros</b>, nunca con el tamaño de tu equipo: el software que cobra
+    por usuario te penaliza justo cuando contratas. Cuanto más creces, más barato te sale cada
+    viajero, y la fórmula está publicada aquí arriba. No hay letra pequeña.</p>
   <p class="reveal" style="text-align:center; color:var(--muted); font-size:13px; margin:14px 0 0;">
     Precios <b>sin IVA</b>. Si tienes NIF español te facturamos con el 21 % y te lo deduces;
     si estás en otro país de la UE con VAT, la factura va con inversión del sujeto pasivo.</p>
   <p class="reveal" style="text-align:center; color:var(--muted); font-size:14px; margin:10px 0 0; max-width:70ch; margin-inline:auto;">
-    <b>Y la cuota no es lo que más te va a costar.</b> Los recordatorios los factura Meta a tu cuenta,
-    los mande quien los mande — nosotros no ponemos recargo. La diferencia está en <b>a cuántos se los
-    mandas</b>: escribir a todo el mundo sale a unos 10 céntimos por viajero; hacerlo solo donde hay
-    riesgo real, a <b>2,3</b>. Con 3.000 viajeros al mes eso son <b>300 € frente a 69 €</b>. La cuota
-    de Premium cuesta menos que lo que te ahorra la cadencia.
-    <br><small>Y <b>GuIA no tiene coste por mensaje</b>: contesta con reglas y su caché de traducciones
-    converge — 14 llamadas al modelo tanto con 10 mensajes como con 200.</small></p>
+    <b>Los recordatorios los factura Meta a tu cuenta</b>, los mande quien los mande, y nosotros no
+    ponemos recargo encima. Lo que sí hacemos es mandarlos <b>solo donde hay riesgo real</b> de que
+    te fallen, en vez de escribir a todo el mundo — que es donde se va la factura.
+    <br><small><b>Y GuIA no cuesta por mensaje</b>: contesta con reglas, no por conversación.</small></p>
   <div class="addon reveal">
     <div class="t">
       <h3>💳 Propina digital — la cobres como la cobres, cuadrada sola</h3>
-      <p><b>Cobres como cobres, Audutor lo anota y lo liquida.</b> Efectivo, SumUp, tu propio
-      datáfono: sigue con lo tuyo y cada propina queda registrada, repartida entre los guías y cuadrada al
-      céntimo. Eso hoy no lo hace nadie más: todos agregan el canal del free tour, ninguno contabiliza el
-      ingreso real del free tour.</p>
+      <p><b>Cobres como cobres, Audutor lo anota y lo liquida.</b> Efectivo o tu propio datáfono:
+      sigue con lo tuyo y cada propina queda registrada, repartida entre los guías y cuadrada al
+      céntimo. El resto del sector te agrega el canal de venta; el ingreso real del free tour
+      —que es la propina— se sigue cuadrando a mano.</p>
       <p>Solo hay comisión cuando el cobro lo hace Audutor —el <b>enlace que GuIA manda por WhatsApp</b> al
       que se fue sin pagar, y el <b>QR para grupos</b>—, y va siempre <b>directa a la cuenta del guía</b>,
       con la reseña en el mismo gesto. No cobramos por mover dinero que ya estaba en su mano: para eso ya
       tiene su datáfono, y más barato. <b>Cobramos por la propina que no habría existido.</b></p>
     </div>
     <div class="tramos">
-      <div class="tramo"><span class="p">0 %</span><span class="n">en mano, con tu datáfono o SumUp</span></div>
+      <div class="tramo"><span class="p">0 %</span><span class="n">en mano o con tu propio datáfono</span></div>
       <div class="tramo"><span class="p">1,9 %</span><span class="n">+ 0,30 € por enlace o QR</span></div>
       <span class="nota"><b>Todo incluido: la pasarela va dentro del 1,9 %, no se suma aparte.</b> Y
       <b>el viajero paga exactamente lo que decide dejar</b>: la ley española prohíbe cargarle ningún
@@ -798,111 +829,15 @@
   </div>
 </div></section>
 
-<section id="web"><div class="wrap">
-  <div class="webcard reveal">
-    <div>
-      <span class="web-chip">✨ Complemento · tu web incluida</span>
-      <h2>Tu web, ya hecha. Tú ya tenías los datos.</h2>
-      <p class="lead">Audutor genera con IA la web de tu empresa <b>desde el cerebro de tu
-      asistente</b>: tours, punto de encuentro con su señal, horarios, idiomas, políticas y
-      reseñas. Publicada en minutos en <b>tunombre.tudominio</b> — o en tu dominio propio, si
-      prefieres. Cambias un horario o añades un tour y la web se actualiza sola.</p>
-      <ul>
-        <li><b>Reserva real integrada</b>: disponibilidad por idioma y horario con confirmación
-          inmediata — sin plugins, sin iframes, sin fee por reserva</li>
-        <li><b>GuIA en un botón de WhatsApp</b>: las dudas de antes de reservar las atiende tu
-          asistente, no tu bolsillo</li>
-        <li><b>Multilingüe y RGPD de serie</b>: avisos legales conformes y datos en la UE sin
-          tocar nada</li>
-      </ul>
-      <div class="web-precio">
-        <span class="wp">19 €<small>/mes</small></span>
-        <span class="wn">add-on en <b>Esencial</b> y <b>Pro</b> · <b>incluida en Premium</b></span>
-      </div>
-      <p class="web-comp"><b>Web, reservas y asistente por lo que cuesta un constructor de webs a secas.</b>
-      Con Wix o Squarespace pagas parecido, más el plugin de reservas, y el trabajo lo haces tú;
-      y hay software del sector cuya web se cobra aparte. Aquí nace hecha, porque tus datos ya estaban dentro.</p>
-    </div>
-    <div>
-      <div class="webmock" aria-hidden="true">
-        <div class="wbar"><span class="wdot"></span><span class="wdot"></span><span class="wdot"></span><span class="wurl">bellavita.tudominio</span></div>
-        <div class="whero"><b>Bella Vita · Roma</b><span>Free tours que se reservan en un minuto</span><span class="wbtn">Reservar plaza</span></div>
-        <div class="wrow"><span>🕒 Coliseo y Foro · 10:30</span><b>quedan 4 plazas</b></div>
-        <div class="wrow"><span>🕒 Trastevere al atardecer · 18:00</span><b>ES · EN · IT</b></div>
-        <div class="wrow ok"><span>★ 4,9 · 312 reseñas verificadas</span><span class="wwa">💬 WhatsApp</span></div>
-      </div>
-      <div class="guia-web" aria-hidden="true">
-        <svg class="guia" focusable="false"><use href="#guia"/></svg>
-        <p class="bocadillo">Ese botón de WhatsApp soy yo: respondo al momento, con los datos
-        reales de tu negocio.</p>
-      </div>
-    </div>
-  </div>
-</div></section>
+<!-- La sección «Tu web, ya hecha» vivía aquí, con su precio mensual. Retirada el
+     4-ago-2026: el módulo NO está construido —búsqueda en todo el repo: cero
+     implementación— y se anunciaba en presente y con tarifa. Anunciar con precio algo que
+     no existe atrae preguntas que hoy no se pueden contestar, y en B2B la Ley de
+     Competencia Desleal legitima a un competidor a reclamar por ello.
+     El marcado y el CSS (.webcard, .web-chip, .webmock, .web-precio, .web-comp, .guia-web)
+     se conservan intactos más arriba: cuando el módulo exista, esto vuelve pegando la
+     sección, sin rehacer el diseño. -->
 
-<section id="calculadora"><div class="wrap">
-  <div class="sec-head">
-    <h2 data-split>¿Cuánto te cuesta de verdad?</h2>
-    <p class="reveal">La cuota mensual es solo una parte: la mayoría del software de reservas cobra
-    además un porcentaje de cada reserva. Mueve los controles a tus números y compara el coste
-    total al mes.</p>
-  </div>
-  <div class="calc reveal">
-      <div class="calc-presets">
-        <span class="calc-presets-lab">Empieza por tu caso:</span>
-        <button type="button" class="calc-preset" data-r="0" data-p="1300">Free tour puro</button>
-        <button type="button" class="calc-preset" data-r="6000" data-p="1300">Free tour + tours de pago</button>
-        <button type="button" class="calc-preset" data-r="10000" data-p="3000">Operador grande</button>
-      </div>
-    <div class="calc-panel">
-      <div class="calc-campo">
-        <label for="inReservas">Facturación mensual en reservas online</label>
-        <output id="outReservas" for="inReservas">6.000 €</output>
-        <input type="range" id="inReservas" min="0" max="10000" step="100" value="6000">
-        <div class="calc-escala" aria-hidden="true"><span>0 €</span><span>10.000 €</span></div>
-      </div>
-      <div class="calc-campo">
-        <label for="inPropinas">Viajeros al mes</label>
-        <output id="outPropinas" for="inPropinas">1.300</output>
-        <input type="range" id="inPropinas" min="100" max="20000" step="100" value="1300">
-        <div class="calc-escala" aria-hidden="true"><span>100</span><span>20.000</span></div>
-      </div>
-    </div>
-    <div>
-      <div class="barras" id="barras"></div>
-      <div class="calc-ahorro" id="calcAhorro" aria-live="polite"></div>
-      <p class="calc-aviso"><b>Si tus reservas son a 0 €, esta comparación cambia de
-      sentido y conviene que lo veas:</b> una comisión del 2 % o del 3 % sobre 0 € es 0 €, así que
-      con free tours puros los demás se quedan en su cuota fija y <b>Audutor sale más caro</b> —
-      109 € frente a 29-49 €. Nuestra tarifa va por viajeros atendidos, no por dinero cobrado, y
-      eso se nota cuando no cobras en la reserva. Lo que compras a cambio no es precio: es que el
-      asistente, la app del guía y las propinas ya vienen dentro. Pruébalo con el botón de arriba.</p>
-      <p class="calc-fuente"><b>Aquí solo está quien publica TODO lo que hace falta para
-      comparar.</b> Es más corta que antes a propósito: preferimos una comparación de dos que una
-      de cinco con tres cifras deducidas por nosotros.
-      <br><br>
-      <b>TuriTop</b> (<a href="https://www.turitop.com/precios/" rel="nofollow noopener" target="_blank">tarifa
-      pública</a>, comprobada el 2 de agosto de 2026) está porque lo publica todo, incluido el único
-      dato que de verdad decide en un free tour: qué pasa con una reserva de 0 €. Lo dice con todas
-      las letras — se cobra el mínimo por reserva aunque el importe sea cero.
-      <br><br>
-      <b>Quién no está, y por qué.</b> <b>FareHarbor</b>: no publica precios en ninguna parte, y su
-      tarifa se configura por cuenta como porcentaje <i>o</i> importe fijo — no hay nada que comparar.
-      (Lo que sí es público: <b>su comisión la paga tu viajero en el checkout</b>, no tú.)
-      <b>TrekkSoft</b> y <b>Bókun</b>: publican su cuota y su porcentaje, pero <b>ninguno de los dos
-      dice qué hace con una reserva de 0 €</b> — y como es justo el caso de un free tour, poner su
-      barra ahí sería una suposición nuestra disfrazada de dato. Y <b>el software que cobra por
-      guía</b>: es una categoría real y un coste real, pero la cifra que teníamos no está contrastada,
-      así que lo contamos con palabras y no con una barra.
-      <br><br>
-      Se suponen <b>2,5 personas por reserva</b> para calcular el mínimo por reserva de TuriTop — esa
-      sí es una suposición nuestra, y con tu media real cambia.
-      Audutor sale de su tabla de tramos por viajeros y no cobra nada sobre tus reservas ni sobre las
-      propinas: por eso su barra no se mueve cuando subes la facturación, y por eso da igual cuántos
-      guías seáis. Contrasta siempre con el presupuesto que te den a ti.</p>
-    </div>
-  </div>
-</div></section>
 
 <section id="asistente"><div class="wrap">
   <div class="sec-head">
@@ -926,7 +861,7 @@
       <p>Un solo juego de datos, los idiomas que hagan falta. Un alemán pregunta en alemán y recibe tu punto
       de encuentro en alemán — no tu marketing traducido, el dato. Y si un dato aún no está traducido, deriva
       la pregunta antes que mezclar dos idiomas en la misma frase.</p>
-      <span class="mini">cada dato se traduce una vez y se guarda, así repetirlo no cuesta nada</span></div>
+      </div>
   </div>
   <p class="reveal" style="text-align:center; color:var(--muted); font-size:14px; margin:20px 0 0;">
     En la demo puedes verlo derivar: pídele un descuento a GuIA y mira dónde acaba la pregunta.
@@ -968,9 +903,8 @@
     <p class="bocadillo"><b>¿Empezamos?</b> Yo estaré dentro, atendiendo a tus clientes.</p>
   </div>
   <h2 data-split>Lo estamos abriendo a las primeras empresas</h2>
-  <p class="reveal">Audutor funciona ya cada día en una operación real de free tours en Madrid.
-  Buscamos un grupo pequeño de empresas fundadoras para probarlo con ventajas de fundador durante 24 meses:
-  cuéntanos cómo trabajas y te lo enseñamos con tus propios tours.</p>
+  <p class="reveal">Buscamos un grupo pequeño de empresas fundadoras para probarlo, con ventajas de
+  fundador durante 24 meses: cuéntanos cómo trabajas y te lo enseñamos con tus propios tours.</p>
   <a class="btn reveal" style="--d:120ms" href="#contacto">Quiero ser empresa fundadora</a>
 </div>
 
@@ -989,7 +923,7 @@
 
 <footer><div class="wrap">
   <span class="logo pie" aria-label="Audutor"><span class="wm">Audutor<svg class="ruta" viewBox="0 0 100 14" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M1 10.5 Q 24 5 46 9 T 86 8"/><path class="rpin" d="M93 1.2c-2.6 0-4.7 2.1-4.7 4.7 0 3.4 4.7 7.5 4.7 7.5s4.7-4.1 4.7-7.5c0-2.6-2.1-4.7-4.7-4.7z"/><circle class="rhueco" cx="93" cy="6" r="1.8"/></svg></span></span>
-  <span>© 2026 Audutor · <b>dominio y email de contacto en trámite</b> · Hecho en Madrid</span>
+  <span>© 2026 Audutor · <a href="aviso-legal/">Aviso legal y privacidad</a> · Hecho en Madrid</span>
   <span>Reservas · Canales · Guías · Grupos · Rescate · Propinas · GuIA</span>
 </div></footer>
 
@@ -1059,135 +993,44 @@
     });
   }
 
-  // Calculadora de coste total: cuota + % sobre reservas (o sobre propinas, en Audutor).
-  var inR = document.getElementById('inReservas'), inP = document.getElementById('inPropinas');
-  if (inR && inP) {
-    var outR = document.getElementById('outReservas'),
-        outP = document.getElementById('outPropinas'),
-        cajaBarras = document.getElementById('barras'),
-        cajaAhorro = document.getElementById('calcAhorro');
-    var fmt = function (n) {
-      // Formato es-ES manual: no depende de la ICU del navegador.
-      return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-    };
-    var opciones = [
-      // Audutor no cobra sobre reservas NI sobre propinas: solo la cuota por tramo de
-      // viajeros. Es la única fila que no depende de lo que factures.
-      { id: 'hito',       nombre: 'Audutor',               calcula: function (r, p) {
-          return p <= 150 ? 0
-            : p <= 800 ? 79
-            : p <= 2500 ? 79 + Math.ceil((p - 800) / 100) * 6
-            : p <= 5000 ? 199
-            // Dos tramos por encima de 5.000, y el segundo por cada 1.000 y no por cada
-            // 10.000 aunque la cifra sea la misma: por bloques de diez mil, quien tiene
-            // 20.100 viajeros pagaría el bloque entero — 190 € de salto por cien personas.
-            : p <= 20000 ? 199 + Math.ceil((p - 5000) / 100) * 3
-            : 649 + Math.ceil((p - 20000) / 1000) * 19;
-        } },
-      /* ── Verificado el 2-ago-2026 contra las páginas de tarifas oficiales ──────────
-         Cada fórmula lleva su base, porque la base es donde estaba el error: tratar
-         «comisión %» como una columna homogénea escondía que TuriTop tiene un SUELO por
-         reserva y TrekkSoft cobra una CUOTA FIJA por reserva en las de mostrador. Y ahí
-         es justo donde se rompe el modelo de free tour. */
-      { id: 'turitop',    nombre: 'TuriTop Starter',
-        /* 29 €/mes + «2 % o 0,10 € por reserva, lo que sea más alto». Y su documentación
-           lo dice con todas las letras: una reserva online de 0 € SÍ genera comisión —
-           no el porcentaje, pero sí el mínimo. Es el único de los tres que publica qué
-           pasa con las reservas gratuitas, y por eso es el dato más fiable de la tabla. */
-        nota: '2 % o 0,10 € por reserva, lo que sea más alto — el mínimo se cobra también sobre reservas de 0 €',
-        calcula: function (r, p) { return 29 + Math.max(0.02 * r, 0.10 * reservasDe(p)); } }
-    ];
-    opciones.forEach(function (o) {
-      var fila = document.createElement('div');
-      fila.className = 'barra-fila' + (o.id === 'hito' ? ' marca' : '');
-      /* La nota va PEGADA a su barra y no en el pie: un matiz que cambia el sentido
-         del numero ("esto lo paga tu viajero, no tu") al pie no lo lee nadie. */
-      fila.innerHTML = '<span class="barra-nombre">' + o.nombre +
-        (o.nota ? '<small class="barra-nota">' + o.nota + '</small>' : '') + '</span>' +
-        '<span class="barra-pista"><span class="barra-fill"></span></span>' +
-        '<span class="barra-imp"><span class="v">0</span> <small>€/mes</small></span>';
-      cajaBarras.appendChild(fila);
-      o.fila = fila;
-      o.fill = fila.querySelector('.barra-fill');
-      o.imp = fila.querySelector('.v');
-    });
-    /* Las reservas no son los viajeros: una reserva trae a varias personas. Hace falta
-       porque dos de los tres cobran un MÍNIMO POR RESERVA, y sobre un free tour a 0 € ese
-       mínimo es todo el coste. Se supone 2,5 personas por reserva —lo típico de un free
-       tour— y se dice abajo, porque es una suposición nuestra y no un dato de nadie. */
-    var reservasDe = function (viajeros) { return Math.round(viajeros / 2.5); };
-
-    var recalcula = function () {
-      var r = +inR.value, p = +inP.value;
-      outR.textContent = fmt(r) + ' €';
-      outP.textContent = fmt(p);
-      opciones.forEach(function (o) { o.coste = o.calcula(r, p); });
-      var max = Math.max.apply(null, opciones.map(function (o) { return o.coste; }).concat([1]));
-      opciones.slice().sort(function (a, b) { return a.coste - b.coste; }).forEach(function (o) {
-        cajaBarras.appendChild(o.fila); // reordena de menor a mayor coste
-        o.imp.textContent = fmt(o.coste);
-        o.fill.style.width = (o.coste / max * 100).toFixed(1) + '%';
-      });
-      var hito = opciones[0];
-      var barata = opciones.slice(1).reduce(function (a, b) { return b.coste < a.coste ? b : a; });
-      var dif = Math.round(barata.coste - hito.coste);
-      /* Reescrito el 2-ago-2026: decia que «TuriTop y Bokun anaden coste por usuario»,
-         y no es cierto —TuriTop no publica ninguno y Bokun los incluye por tramos—. El
-         argumento real es el de la categoria que cobra por cuenta, y va con palabras. */
-      var matiz = '<span class="matiz">Hay software del sector que cobra <b>por cada persona con cuenta</b>: con cinco guías eso multiplica la cuota por cinco. Audutor incluye guías ilimitados desde Pro, así que crecer de equipo no te cuesta nada aquí.</span>';
-      if (dif > 0) {
-        cajaAhorro.innerHTML = 'Con Audutor te ahorras <b>' + fmt(dif) + ' €/mes — ' +
-          fmt(dif * 12) + ' €/año</b> frente a ' + barata.nombre + '.' + matiz;
-      } else if (dif < 0) {
-        cajaAhorro.innerHTML = barata.nombre + ' sale <b>' + fmt(-dif) +
-          ' €/mes más barata</b> con estos números — sobre el papel.' + matiz;
-      } else {
-        cajaAhorro.innerHTML = 'Empate con ' + barata.nombre +
-          ' en precio — <b>la diferencia está en lo que pasa después de la reserva</b>.' + matiz;
-      }
-    };
-    inR.addEventListener('input', recalcula);
-    inP.addEventListener('input', recalcula);
-    /* Los escenarios. El de free tour puro (0 EUR de reserva) existe porque es EL caso
-       de nuestro cliente y es donde salimos peor: una comision del 2 % sobre 0 EUR es 0,
-       asi que los demas se quedan en su cuota fija. Arrancar solo en el escenario mixto
-       -donde ganamos- era ensenar la parte de la verdad que nos conviene. */
-    Array.prototype.forEach.call(document.querySelectorAll('.calc-preset'), function (b) {
-      b.addEventListener('click', function () {
-        inR.value = b.dataset.r; inP.value = b.dataset.p; 
-        recalcula();
-      });
-    });
-    recalcula();
-  }
-
-  // Barra de progreso de lectura.
-  var barra = document.getElementById('progreso');
-  addEventListener('scroll', function () {
-    var h = document.documentElement;
-    var p = h.scrollTop / (h.scrollHeight - h.clientHeight || 1);
-    barra.style.width = (p * 100).toFixed(2) + '%';
-  }, { passive: true });
 })();
 
 /* ============ Selector de idioma (ES ⇄ EN) ============
    La bandera muestra el idioma AL QUE se cambia. Traduce los textos marcados con
    data-i18n y apunta los enlaces de demo a la demo del idioma correspondiente
-   (demo ES = Bella Vita · Roma; demo EN = Old Town Walks · Edinburgh, con sus
+   (demo ES = Patio y Compás · Sevilla; demo EN = Old Town Walks · Edinburgh, con sus
    propias plataformas, moneda y canal de aviso — no es la misma traducida). */
 var I18N={
   en:{
     'nav.producto':'Product', 'nav.asistente':'The assistant', 'nav.dia':'A day', 'nav.planes':'Pricing', 'nav.web':'Your site',
     'nav.demo':'Try the demo',
+    'nav.entrar':'Log in',
     'hero.kicker':'Operations software for walking tour companies with a team of guides — free tours, ticketed walks, food and bike tours',
     'hero.h1':'Your booking system forgets everything that happens after the booking.'
   }
 };
+/* ================= EL OTRO SITIO QUE HAY QUE TOCAR: DÓNDE VIVE LA APP =================
+   La web es estática (GitHub Pages) y la app es un proceso de Node: no pueden vivir en
+   el mismo sitio. Aquí va la dirección donde esté corriendo la app, y con eso aparece
+   «Entrar» en el menú. Mientras esté vacía NO se enseña el enlace: un «Entrar» que
+   lleva a un 404 hace más daño que no tener «Entrar», porque el que lo pulsa ya era
+   cliente y acaba de descubrir que su cuenta no está en ninguna parte.
+
+   NO hace falta el dominio para rellenar esto. Vale cualquier host que corra Node —el
+   dominio solo cambia la dirección después—, y ese es justo el orden correcto: primero
+   que la app exista en algún sitio, luego cómo se llama ese sitio. */
+var APP_URL = '';
+/* Ya no oculta nada: «Entrar» apunta SIEMPRE a `entrar/`, que es una página de este
+   mismo sitio y por tanto siempre existe. Quien decide si esa página puede pedir el
+   enlace de verdad es su propia copia de APP_URL. Antes el enlace nacía oculto y con
+   `href="#"`, y el `hidden` no ocultaba nada porque `.btn` fija `display` — o sea que
+   se veía, flojo, y no llevaba a ninguna parte. */
+
 /* ================= EL ÚNICO SITIO QUE HAY QUE TOCAR PARA ABRIR EL EMBUDO =================
    Pon aquí la dirección de contacto y la web pasa de «no se puede contactar» a un correo
    que funciona. Mientras esté vacía, la sección lo dice claro en vez de fingir un canal
    que no existe — que es lo que hacía antes el pie con «email en trámite». */
-var CONTACTO_EMAIL = '';
+var CONTACTO_EMAIL = 'hola@audutor.com';
 (function(){
   var d=document.getElementById('contacto-dir'); if(!d) return;
   if (CONTACTO_EMAIL){

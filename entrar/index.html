@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Entrar · Audutor</title>
+<meta name="robots" content="noindex">
+<style>
+/* ── Por qué esta página existe ──────────────────────────────────────────────
+   El «Entrar» del menú apuntaba a `#`: se veía y no llevaba a ninguna parte. Y no podía
+   llevar a la app, porque la app es un proceso de Node que vive en otro sitio y todavía
+   no está alojada.
+
+   Así que el destino es esto: una página del propio sitio que SIEMPRE funciona y que se
+   vuelve operativa sola en cuanto `APP_URL` tenga valor. Sin `APP_URL` no finge un
+   formulario que no puede cumplir — lo dice y ofrece la demo. Con `APP_URL`, pide el
+   enlace de verdad contra la app.
+
+   Es la misma regla de `CONTACTO_EMAIL` en la portada: un solo sitio que tocar, y
+   mientras esté vacío se dice en vez de simularlo. */
+:root{
+  --ink:#22302b; --ink2:#3d4f47; --muted:#5c6b64; --paper:#fffdf7; --bg:#f4f1e8;
+  --acc:#14634c; --acc-deep:#0e4a3a; --coral:#f4653a; --line:#e2dccc; --gold:#c98a2d;
+}
+*{ box-sizing:border-box; }
+html,body{ margin:0; }
+body{
+  min-height:100vh; background:var(--bg); color:var(--ink);
+  font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:28px 18px; position:relative; overflow-x:hidden;
+}
+/* El mismo fondo con relieve que la portada, para que no se sienta otra web. */
+body::before{
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(760px 420px at 12% -8%, rgba(20,99,76,.07), transparent 62%),
+    radial-gradient(680px 380px at 108% 8%, rgba(244,101,58,.06), transparent 60%);
+}
+.caja{
+  position:relative; z-index:1; width:100%; max-width:392px; background:var(--paper);
+  border:1px solid var(--line); border-radius:18px; padding:30px 26px 26px;
+  box-shadow:0 1px 2px rgba(34,48,43,.05), 0 12px 34px -12px rgba(34,48,43,.16);
+}
+.caja::before{
+  content:""; display:block; height:3px; margin:-30px -26px 22px; border-radius:18px 18px 0 0;
+  background:linear-gradient(90deg,var(--acc),var(--gold) 55%,var(--coral));
+}
+.wm{ font:400 27px/1 Iowan Old Style,Palatino,Georgia,serif; color:var(--acc); display:block; }
+.wm svg{ display:block; width:96px; height:12px; margin:5px 0 0; }
+.pie{ display:block; margin-top:9px; font-size:12.5px; color:var(--muted); }
+h1{ font:600 19px/1.25 inherit; margin:22px 0 6px; }
+.lead{ margin:0 0 20px; font-size:14px; color:var(--ink2); }
+label{ display:block; font-size:12px; font-weight:600; letter-spacing:.02em;
+  text-transform:uppercase; color:var(--muted); margin:0 0 5px; }
+input{
+  width:100%; min-height:48px; padding:11px 13px; font:inherit; font-size:16px;
+  color:var(--ink); background:#faf7ef; border:1.5px solid var(--line); border-radius:11px;
+}
+input:focus{ outline:none; border-color:var(--acc);
+  box-shadow:0 0 0 3.5px rgba(20,99,76,.15); }
+button{
+  width:100%; min-height:50px; margin-top:14px; border:0; border-radius:11px;
+  background:var(--acc); color:#fff; font:inherit; font-weight:700; font-size:15px;
+  cursor:pointer; transition:background .15s;
+}
+button:hover{ background:var(--acc-deep); }
+button:disabled{ background:var(--line); color:var(--muted); cursor:default; }
+.aviso{ margin:16px 0 0; font-size:13.5px; line-height:1.45; }
+.aviso.malo{ color:var(--coral); }
+.aviso.bueno{ color:var(--acc); }
+.cerrado{ margin:0; padding:14px 15px; border-radius:12px; background:#faf7ef;
+  border:1px solid var(--line); border-left:3px solid var(--gold);
+  font-size:13.5px; line-height:1.45; color:var(--ink2); }
+.abajo{ margin:20px 0 0; padding-top:16px; border-top:1px dashed var(--line);
+  font-size:13px; color:var(--muted); }
+.abajo a{ color:var(--acc); font-weight:600; }
+.volver{ position:relative; z-index:1; margin:16px 0 0; font-size:13px; }
+.volver a{ color:var(--muted); text-decoration:none; }
+.volver a:hover{ color:var(--acc); }
+@media (prefers-reduced-motion:no-preference){
+  .caja{ animation:sube .45s cubic-bezier(.16,.7,.22,1) both; }
+  @keyframes sube{ from{ opacity:0; transform:translateY(10px); } }
+}
+</style>
+</head>
+<body>
+
+<main class="caja">
+  <span class="wm">Audutor<svg viewBox="0 0 96 14" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M2 10 C 20 4, 36 12, 52 7 S 78 5, 84 8" fill="none" stroke="#8fb0a6"
+      stroke-width="1.7" stroke-dasharray="0.1 5.2" stroke-linecap="round"/>
+    <path d="M90 1.4c-2.4 0-4.4 2-4.4 4.4 0 3.2 4.4 7 4.4 7s4.4-3.8 4.4-7c0-2.4-2-4.4-4.4-4.4z"
+      fill="#f4653a"/><circle cx="90" cy="5.9" r="1.7" fill="#fffdf7"/></svg>
+    <span class="pie">la agenda del guía</span></span>
+
+  <h1>Entra en Audutor</h1>
+  <p class="lead">No hay contraseña. Escribe tu correo y te mandamos un enlace.</p>
+
+  <form id="f" hidden>
+    <label for="e">Tu correo</label>
+    <input id="e" type="email" inputmode="email" autocomplete="email" required
+           placeholder="tu@empresa.com">
+    <button type="submit" id="b">Mandarme el enlace</button>
+    <p class="aviso" id="msg" role="status" aria-live="polite"></p>
+  </form>
+
+  <p class="cerrado" id="cerrado" hidden>
+    El acceso todavía no está abierto: la app se publica estos días. Si ya eres cliente y
+    necesitas entrar, escríbenos y te mandamos el enlace a mano.
+  </p>
+
+  <p class="abajo">¿Todavía no tienes cuenta? <a href="../demo/">Probar la demo</a></p>
+</main>
+
+<p class="volver"><a href="../">← Volver a la web</a> · <a href="../aviso-legal/">Aviso legal</a></p>
+
+<script>
+/* La MISMA constante que la portada. Un solo sitio que tocar por idioma. */
+var APP_URL = '';
+
+(function(){
+  var f = document.getElementById('f');
+  var cerrado = document.getElementById('cerrado');
+  if (!APP_URL){ cerrado.hidden = false; return; }
+  f.hidden = false;
+
+  var msg = document.getElementById('msg');
+  var b = document.getElementById('b');
+  f.addEventListener('submit', function(ev){
+    ev.preventDefault();
+    var correo = document.getElementById('e').value.trim();
+    if (!correo) return;
+    b.disabled = true; b.textContent = 'Enviando…'; msg.className = 'aviso'; msg.textContent = '';
+    fetch(APP_URL.replace(/\/+$/, '') + '/api/auth/enlace', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: correo }),
+    }).then(function(r){
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      msg.className = 'aviso bueno';
+      /* La MISMA frase exista o no ese correo: si cambiara, esta página sería un
+         comprobador de quién es cliente de Audutor, y ese dato no es nuestro. */
+      msg.textContent = 'Listo. Mira tu correo: el enlace caduca en un rato y solo sirve una vez.';
+      b.textContent = 'Enlace enviado';
+    }).catch(function(){
+      b.disabled = false; b.textContent = 'Mandarme el enlace';
+      msg.className = 'aviso malo';
+      msg.textContent = 'No hemos podido pedirlo ahora mismo. Inténtalo en un minuto o escríbenos.';
+    });
+  });
+})();
+</script>
+</body>
+</html>

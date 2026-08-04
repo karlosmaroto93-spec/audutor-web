@@ -10,7 +10,7 @@
     /* Paleta aligerada: fondos crema cálidos, verde más luminoso (el verde
        profundo solo para texto/elementos pequeños) y dos acentos moderados:
        coral para destacados puntuales y turquesa como acento fresco. */
-    --ink:#1c2b25; --ink2:#40554c; --muted:#6d7f77; --bg:#f7f2e8; --paper:#fffefa;
+    --ink:#1c2b25; --ink2:#40554c; --muted:#5c6b64; --bg:#f7f2e8; --paper:#fffefa;
     --acc:#12805f; --acc2:#0c6b56; --acc-deep:#0a5847; --acc-soft:#e2f1e9;
     --gold:#d99a33; --gold-soft:#fbf3e1; --amber:#96690f;
     --coral:#f4653a; --coral-deep:#cf3d18; --coral-ink:#a63614; --coral-soft:#ffeee6;
@@ -58,6 +58,9 @@
   .marca .wm-ruta{ width:100%; height:.62em; margin-top:.1em; display:block; overflow:visible; }
   .demo-chip{ font-size:10px; font-weight:800; letter-spacing:.08em; background:var(--coral-deep);
               color:#fff; border-radius:6px; padding:2px 7px; margin-left:auto; }
+  .legal-lat{ display:block; margin:6px 0 0; font-size:10.5px; letter-spacing:.02em;
+    color:var(--muted); text-decoration:none; opacity:.75; }
+  .legal-lat:hover{ opacity:1; text-decoration:underline; }
   .tenant{ font-size:12px; color:#8a7f63; padding:0 10px 16px; border-bottom:1px solid #e0d3b4;
            margin-bottom:12px; }
   .tenant b{ color:#33514a; display:block; font-size:13.5px; }
@@ -114,9 +117,29 @@
   .g-dispo th{ font-size:11px; color:var(--muted); font-weight:800; padding:2px; text-align:center; }
   .g-dispo td{ padding:3px 2px; font-size:12.5px; }
   .g-dispo .g-tb{ border:0; width:30px; height:28px; border-radius:8px; font-weight:800; cursor:pointer; }
-  main{ padding:26px 30px 60px; max-width:1060px; position:relative;
-        /* curvas de nivel muy suaves de fondo — evocan rutas y territorio sin recargar */
-        background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280' viewBox='0 0 280 280'%3E%3Cg fill='none' stroke='%23e9dfca' stroke-width='1.3'%3E%3Cpath d='M-20 70 Q 60 20 140 55 T 300 60'/%3E%3Cpath d='M-20 105 Q 65 55 145 88 T 300 95'/%3E%3Cpath d='M-20 145 Q 70 95 150 125 T 300 132'/%3E%3Cpath d='M-20 190 Q 65 140 145 168 T 300 175'/%3E%3Cpath d='M-20 235 Q 70 185 150 212 T 300 218'/%3E%3C/g%3E%3C/svg%3E"); }
+  main{ padding:26px 30px 60px; max-width:1060px; position:relative; }
+  /* ── Contour lines, FIXED to the viewport ──────────────────────────────────
+     They used to live on `main`, so they scrolled WITH the cards: background and
+     content moving at the same speed, which made the pattern read as printed on the
+     cards themselves. What makes something read as «on top of» is not the shadow — it
+     is moving at a different speed.
+
+     `html::before` and not `background-attachment:fixed` because iOS ignores that value
+     and treats it as `scroll`, precisely where it shows most.
+
+     The tile is the corrected one from the Spanish demo: the old paths ran from x=-20 to
+     x=300 inside a 280 tile, so every repetition cut the curve dead and left a visible
+     vertical seam down the page. These are symmetric within the tile — same tangent in
+     and out — so the mosaic has no join. The stroke is also computed AGAINST the
+     background: the old #e9dfca stood eight points off it and all but vanished. */
+  html::before{
+    content:''; position:fixed; inset:0; z-index:-2; pointer-events:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280' viewBox='0 0 280 280'%3E%3Cg fill='none' stroke='%23d9cbad' stroke-width='1.4' stroke-linecap='round'%3E%3Cpath d='M0 28 C46.7 10, 93.3 10, 140 28 S233.3 46, 280 28'/%3E%3Cpath d='M0 84 C46.7 70, 93.3 70, 140 84 S233.3 98, 280 84'/%3E%3Cpath d='M0 140 C46.7 120, 93.3 120, 140 140 S233.3 160, 280 140'/%3E%3Cpath d='M0 196 C46.7 181, 93.3 181, 140 196 S233.3 211, 280 196'/%3E%3Cpath d='M0 252 C46.7 235, 93.3 235, 140 252 S233.3 269, 280 252'/%3E%3C/g%3E%3C/svg%3E");
+  }
+  .vj-nada{ margin:10px 0 0; text-align:center; }
+  .vj-nada button{ background:none; border:0; padding:6px 8px; font:inherit;
+    font-size:13px; color:var(--muted); text-decoration:underline; cursor:pointer; }
+  .vj-nada button:hover{ color:var(--ink2); }
   .cab{ display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:4px; }
   .cab h1{ font-family:var(--serif); font-size:26px; margin:0; }
   .cab .sub{ color:var(--muted); font-size:13.5px; }
@@ -126,7 +149,7 @@
 
   .card{ background:var(--paper); border:1px solid var(--line); border-radius:14px;
          padding:18px 20px; margin:14px 0; }
-  .card h2{ font-size:16px; margin:0 0 10px; font-weight:750; }
+  .card h2{ font-size:16px; margin:0 0 10px; font-weight:700; }
   .fila{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
   .chip{ display:inline-block; font-size:11px; font-weight:800; letter-spacing:.04em;
     padding:3px 10px; border-radius:99px; background:var(--acc-soft); color:var(--acc2); }
@@ -149,9 +172,21 @@
   .num{ font-family:var(--mono); font-size:12.5px; }
 
   /* operaciones */
-  .exc{ border-left:4px solid var(--gold); }
-  .exc.rojo{ border-left-color:var(--rojo); }
-  .exc.ok-borde{ border-left-color:var(--acc); }
+  /* El filo de color va con `box-shadow: inset` y NO con `border-left`.
+     Un borde entra en la caja: las siete tarjetas de aviso tenían su texto 4 px a la
+     derecha del de las tarjetas normales, y apiladas una debajo de otra ese escalón se
+     ve — cada aviso parecía ligeramente desplazado sin que se supiera por qué.
+     Con la sombra interior el filo se dibuja encima del relleno, así que ocupa cero y
+     todas las tarjetas comparten el mismo margen izquierdo. Medido: 275 px en todas. */
+  .exc{ box-shadow:inset 4px 0 0 var(--gold),
+        0 1px 1px rgba(74,61,32,.05), 0 4px 10px -4px rgba(74,61,32,.10),
+        0 22px 44px -22px rgba(74,61,32,.28); }
+  .exc.rojo{ box-shadow:inset 4px 0 0 var(--rojo),
+        0 1px 1px rgba(74,61,32,.05), 0 4px 10px -4px rgba(74,61,32,.10),
+        0 22px 44px -22px rgba(74,61,32,.28); }
+  .exc.ok-borde{ box-shadow:inset 4px 0 0 var(--acc),
+        0 1px 1px rgba(74,61,32,.05), 0 4px 10px -4px rgba(74,61,32,.10),
+        0 22px 44px -22px rgba(74,61,32,.28); }
   .exc .fila{ justify-content:space-between; }
   .todo-ok{ text-align:center; padding:34px; color:var(--acc); font-weight:700; display:none; }
 
@@ -295,12 +330,22 @@
   .pos-guia{ color:var(--acc); font-weight:700; }
   .switch-linea{ display:flex; align-items:center; gap:10px; font-size:13.5px; }
   /* centro de operaciones: seguimiento en vivo del tour (de Madrid Latido) */
+  #cd-cifras .n{
+    font-size:32px; font-weight:800; line-height:1; font-variant-numeric:tabular-nums;
+    color:var(--acc-deep); text-shadow:0 2px 3px rgba(18,63,51,.16);
+  }
+  #cd-cifras .e{ font-size:12.5px; color:var(--ink2); margin-top:3px; }
   .estado-banner{ border-radius:12px; padding:12px 16px; margin-bottom:14px; display:flex; align-items:center;
     gap:12px; font-weight:700; font-size:14px; }
   .estado-banner.revisar{ background:var(--gold-soft); border:1px solid var(--gold); color:var(--amber); }
   .estado-banner.ok{ background:#ecf7ef; border:1px solid #a7d8bb; color:#146c43; }
   .estado-banner .big{ font-size:26px; line-height:1; }
-  .seg-card{ border:2px solid var(--acc); }
+  /* 2 px de borde y no 1 empujaban el contenido 1 px hacia dentro respecto al resto de
+     tarjetas —`.card` tiene borde de 1— y con la tarjeta de seguimiento arriba del todo
+     ese píxel se nota en la primera línea que se lee. Se marca con un anillo dibujado
+     por sombra, que no ocupa caja: mismo peso visual, misma alineación que las demás. */
+  .seg-card{ box-shadow:0 0 0 2px var(--acc), 0 1px 1px rgba(74,61,32,.05),
+             0 4px 10px -4px rgba(74,61,32,.10), 0 22px 44px -22px rgba(74,61,32,.28); }
   .seg-vivo{ display:inline-block; width:9px; height:9px; border-radius:50%; background:var(--rojo);
     margin-right:6px; vertical-align:1px; animation:seg-late 1.4s ease-in-out infinite; }
   @keyframes seg-late{ 0%,100%{ opacity:1; } 50%{ opacity:.25; } }
@@ -385,7 +430,7 @@
     font-size:13px; opacity:0; transition:all .25s ease; z-index:99; pointer-events:none; }
   #toast.ver{ opacity:1; transform:translateX(-50%) translateY(0); }
 
-  /* oferta oculta “Esencial+”: solo se pinta con el plan Esencial activo (ver pintaEsPlus) */
+  
   .es-plus{ display:none; margin-top:9px; border:1px dashed var(--gold); border-radius:9px;
     background:rgba(217,154,51,.10); padding:9px 11px; font-size:11.5px; line-height:1.5; color:#5c6653; }
   .es-plus b{ color:#2f443b; }
@@ -433,7 +478,7 @@
   .vj-burbuja .vj-de{ font-size:10px; font-weight:800; color:var(--acc); text-transform:uppercase;
     letter-spacing:.05em; margin-bottom:5px; }
   .vj-burbuja .vj-hora{ display:block; text-align:right; font-size:9.5px; color:var(--muted); margin-top:3px; }
-  .vj-tit{ font-size:13.5px; font-weight:750; margin:15px 2px 8px; }
+  .vj-tit{ font-size:13.5px; font-weight:700; margin:15px 2px 8px; }
   .vj-importes{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
   .vj-importes.con-libre{ grid-template-columns:repeat(4,1fr); }
   .vj-imp-libre b{ font-size:15px; padding-top:2px; }
@@ -574,7 +619,7 @@
     .btn, .card, .bloq-inline, #toast, .nav-g-cab .flecha{ transition:none !important; }
   }
 </style>
-<style>#es-plus{display:none!important}</style></head>
+</head>
 <body>
 <!-- Mascota GuIA (pin de mapa sonriente con paraguas de free tour) — misma que la landing, inline y reutilizable -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -622,6 +667,7 @@
   <div style="background:#e7f0fb; border:1px solid #9dbfe0; border-radius:9px; padding:9px 11px; margin:0 0 10px; font-size:11px; color:#24506e; line-height:1.45;">⚖️ <b>UK advertising rules built in.</b> No suggested tip amounts and no “pay what you want” wording — the CAP/ASA guidance on free walking tours forbids both. If the company takes a cut of the tip, that must be disclosed to the customer.</div>
   <div class="marca"><a class="marca-link" href="../" title="Go to the Audutor website"><span class="wm"><span class="wm-palabra">Audutor</span><svg class="wm-ruta" viewBox="0 0 96 14" preserveAspectRatio="none" aria-hidden="true"><path d="M2 10 C 20 4, 36 12, 52 7 S 78 5, 84 8" fill="none" stroke="#8fb0a6" stroke-width="1.7" stroke-dasharray="0.1 5.2" stroke-linecap="round"/><path d="M90 1.4c-2.4 0-4.4 2-4.4 4.4 0 3.2 4.4 7 4.4 7s4.4-3.8 4.4-7c0-2.4-2-4.4-4.4-4.4z" fill="#12805f"/><circle cx="90" cy="5.9" r="1.7" fill="#f3ecdb"/></svg></span></a> <span class="demo-chip">DEMO</span></div>
   <div class="tenant"><b>Old Town Walks · Edinburgh</b>fictional company — made-up data</div>
+  <a class="legal-lat" href="../en/legal-notice/">Legal notice and privacy</a>
   <nav>
     <a href="#operaciones" data-v="operaciones" class="act destacada">🗞️ Dashboard <span class="n" id="n-exc">6</span></a>
     <div class="nav-g" id="ng-dia">
@@ -672,11 +718,6 @@
         <button data-plan="pro" onclick="cambiarPlan('pro')"><b>Pro</b>€79</button>
         <button data-plan="premium" onclick="cambiarPlan('premium')"><b>Premium</b>€199</button>
       </div>
-      <div class="es-plus" id="es-plus">
-        Running out of room? <b>Essential+ · €29/month</b> — up to 3 tours, 3 guides, 400 travellers
-        and 300 messages a month (on us). No booking fee.
-        <button onclick="ofertaEsencialPlus()">Switch on Essential+</button>
-      </div>
       <div style="font-size:10.5px; margin-top:8px; opacity:.85; line-height:1.5;">💳 Tips: <b>0 %</b> when you take it in person (your own SumUp, card reader or Tap to Pay). Only the <b>link or QR</b> carries <b>1.9 % + £0.30</b>.</div>
     </div>
     Everything here is interactive and simulated in your browser.
@@ -695,19 +736,23 @@
 <section class="vista act" id="v-operaciones">
   <div class="cab"><h1>Dashboard</h1><span class="sub">Sat 18 · what needs your attention today, plus the walk that is out right now</span></div>
 
-  <div class="card" style="background:linear-gradient(120deg,var(--acc),var(--acc2)); border:0; color:#fff;">
-    <div class="fila" style="justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
-      <div>
-        <div style="font-size:12px; letter-spacing:.06em; text-transform:uppercase; opacity:.85; font-weight:800;">What Audutor has recovered for you this month</div>
-        <div style="font-family:var(--serif); font-size:38px; font-weight:700; line-height:1.1; margin-top:2px;"><span data-dinero="1640" data-dec="0">+£1,640</span></div>
-        <div class="mini" style="opacity:.9;">≈ 142 people saved from no-shows (38 % → 17 %) · average tip £11.60</div>
-      </div>
-      <div style="text-align:right;">
-        <div style="font-size:26px; font-weight:800;">21 %</div>
-        <div class="mini" style="opacity:.9;">fewer no-shows<br>than before Audutor</div>
-      </div>
-    </div>
-    <div style="font-size:11px; opacity:.8; margin-top:12px;">Estimate based on sample data — Old Town Walks is a fictional company, not a promise of results.</div>
+  <!-- THE DAY'S PANEL.
+       There used to be a "what Audutor has recovered for you this month" headline here, in
+       pounds, with a percentage of no-shows avoided. Out: it was an estimate built on
+       invented data, and the box itself had to carry a disclaimer underneath saying so. A
+       number that needs a disclaimer in order not to mislead is a number you don't show —
+       the same rule that took the identical card out of the Spanish demo. The figure is not
+       repeated here either: this file is served to the public, comments included.
+       What goes in its place is what a manager opens this to find out: what is on today.
+       It all comes from S.agenda, so it cannot drift out of step with the rest. -->
+  <div class="card" id="cuadro-dia">
+    <div style="font-size:12px; letter-spacing:.07em; text-transform:uppercase; color:var(--acc2); font-weight:800;">
+      <span data-empresa>Old Town Walks</span> · today</div>
+    <div style="font-family:var(--serif); font-size:30px; font-weight:700; line-height:1.15; margin-top:2px;" id="cd-fecha">—</div>
+    <div class="fila" id="cd-cifras" style="gap:30px; margin-top:16px; flex-wrap:wrap;"></div>
+    <div id="cd-atencion" style="margin-top:15px; font-size:14.5px; line-height:1.5;"></div>
+    <div id="cd-menores" style="margin-top:14px; padding-top:12px; border-top:1px solid var(--line);
+      display:flex; gap:22px; flex-wrap:wrap; font-size:13px; color:var(--ink2);"></div>
   </div>
 
   <div class="card">
@@ -746,7 +791,7 @@
   <div class="card exc" id="exc-grupo">
     <div class="fila">
       <div><b>👥 Large group detected — the 10:00 AM tour</b><br>
-      <span class="mini muted">“Sofía Romano (6p)” + “Marco Romano (5p)” = <b>11 people</b> · same surname,
+      <span class="mini muted">“Sophie Maclean (6p)” + “Mark Maclean (5p)” = <b>11 people</b> · same surname,
       booked 3 minutes apart (GuruWalk). The deposit policy went out on their confirmation, and
       the guide has the note.</span></div>
       <div><button class="btn mini sec" onclick="ir('manifiesto')">See in the manifest</button>
@@ -856,7 +901,7 @@
     <div id="der-chat-lista"></div>
   </div>
 
-  <div class="card" id="coste-panel" style="border-left:4px solid var(--acc);">
+  <div class="card" id="coste-panel" style="box-shadow:inset 4px 0 0 var(--acc);">
     <div class="fila" style="justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:8px;">
       <b style="font-size:14px;">🌍 One set of facts, any language</b>
       <span class="mini muted">write each fact once — GuIA answers in the customer’s language</span>
@@ -985,7 +1030,7 @@
             <input id="pc-libre" type="checkbox" checked> allow “✏️ Other amount” (free, leaves the anchors alone)</label>
         </div>
         <div class="fila" style="gap:10px; margin-top:8px; align-items:center; flex-wrap:wrap;">
-          <label class="mini" style="flex:1; min-width:230px;">“No tip” box text
+          <label class="mini" style="flex:1; min-width:230px;">Text of the “leave nothing” link
             <input id="pc-nada" value="that's absolutely fine 🙂" style="width:100%;"></label>
           <label class="mini" style="flex:1; min-width:230px;">Thanks when nothing is left
             <input id="pc-gracias" value="We hope you had a great time — see you on the next one!" style="width:100%;"></label>
@@ -1045,11 +1090,11 @@
     </div>
   </div>
 
-  <div class="card" id="ns-basico-activo" style="display:none; border-left:4px solid var(--acc);">
+  <div class="card" id="ns-basico-activo" style="display:none; box-shadow:inset 4px 0 0 var(--acc);">
     ✓ <b>Live on your plan:</b> the basic confirmation reminder (one nudge by text, the day before the tour)
   </div>
 
-  <div class="card" id="ns-franja" style="border-left:4px solid var(--acc);">
+  <div class="card" id="ns-franja" style="box-shadow:inset 4px 0 0 var(--acc);">
     🌙 <b>Quiet hours: messages only go out between 8:00 AM and 9:00 PM.</b>
     Anything that would fall outside that window waits until 8:00 — <b>nobody gets a text at 11:40 PM</b>.
     And a post-tour message that would land at night (after the 9:00 PM night walk, say) goes out the next morning.
@@ -1181,7 +1226,7 @@ Places held for your group for 48 h 👉 oldtownwalks.co.uk/combo/x3f9
       at sign-up: auto-forward the confirmation email to the alias — 2 minutes per channel.</span></details></div>
   </div>
 
-  <div class="card" style="border-left:4px solid var(--acc);">
+  <div class="card" style="box-shadow:inset 4px 0 0 var(--acc);">
     <h2>🛡️ Inbox safety net — for when a platform changes its template</h2>
     <p class="mini muted" style="margin:0 0 12px;">Reading emails is convenient, but platforms change
       their templates without warning. So the inbox doesn’t just read: it <b>watches itself</b>, so
@@ -1784,8 +1829,8 @@ var CAMPOS_EMPRESA = [
 ];
 /* Perfiles de ejemplo con la estructura real de cada plataforma — el "entrenamiento"
    del parser se hizo contra estos formatos (GuruWalk y Viator). */
-var PERFIL_GURUWALK = 'Essential Edinburgh Old Town Free Tour\n⭐ 4.9 (2,140 reviews) · GuruWalk\nLanguages: English, Español\n\nSee the heart of the Old Town: the Royal Mile, St Giles’ Cathedral, the Grassmarket, Greyfriars Kirkyard and the hidden closes.\n\nTimes: every day, departures at 10:00 AM and 5:00 PM\nMeeting point: Mercat Cross, outside St Giles’ Cathedral on the Royal Mile. Look for the yellow umbrella.\nDuration: 2 h 30 min\nGroups: max. 25 people. The tour runs even if only a few people book.\nThis is a tip-based tour — booking is free.\nFree cancellation up to the start time.\nStep-free route available on request. Dogs welcome on a lead.\nThe tour finishes on the Castle Esplanade.';
-var PERFIL_CIVITATIS = 'Leith Food &amp; Whisky Walk\n8.9 / 10 · 1,560 reviews · Viator\nFree — book now!\n\nWe walk Leith: The Shore, the old docks, Leith Links and the backstreets of Edinburgh’s port, with a stop for haggis and a dram.\n\nDuration: 2 hours\nLanguage: the tour is run in English\nTimes: Thursday to Saturday at 6:30 PM\nMeeting point: The Shore, by the Water of Leith footbridge. The guide wears an orange vest.\nMaximum 20 people per group.\nChildren are welcome; under-12s are not expected to tip.\nThe walk finishes at a whisky bar on The Shore.\nFree cancellation up to 24 hours before.';
+var PERFIL_GURUWALK = 'Essential Edinburgh Old Town Free Tour\nPublished on GuruWalk\nLanguages: English, Español\n\nSee the heart of the Old Town: the Royal Mile, St Giles’ Cathedral, the Grassmarket, Greyfriars Kirkyard and the hidden closes.\n\nTimes: every day, departures at 10:00 AM and 5:00 PM\nMeeting point: Mercat Cross, outside St Giles’ Cathedral on the Royal Mile. Look for the yellow umbrella.\nDuration: 2 h 30 min\nGroups: max. 25 people. The tour runs even if only a few people book.\nThis is a tip-based tour — booking is free.\nFree cancellation up to the start time.\nStep-free route available on request. Dogs welcome on a lead.\nThe tour finishes on the Castle Esplanade.';
+var PERFIL_CIVITATIS = 'Leith Food &amp; Whisky Walk\nPublished on Viator\nFree — book now!\n\nWe walk Leith: The Shore, the old docks, Leith Links and the backstreets of Edinburgh’s port, with a stop for haggis and a dram.\n\nDuration: 2 hours\nLanguage: the tour is run in English\nTimes: Thursday to Saturday at 6:30 PM\nMeeting point: The Shore, by the Water of Leith footbridge. The guide wears an orange vest.\nMaximum 20 people per group.\nChildren are welcome; under-12s are not expected to tip.\nThe walk finishes at a whisky bar on The Shore.\nFree cancellation up to 24 hours before.';
 
 /* ===== Tour de pago: los hechos se derivan del mercado activo =====
    El preset trae precioTicket, así que el mismo walk vale £24 en Edimburgo, €25 en
@@ -1831,10 +1876,10 @@ var S = {
      En UK la guía CAP/ASA prohíbe sugerir importes, así que el defecto viene sin fijos
      — y como es por tour, un mismo operador podría llevar distinto en otro mercado. */
   propCfgDefecto:{ imp:[], pre:0, libre:true, ukCompliance:true,
-    nadaTxt:'that\'s absolutely fine 🙂', graciasTxt:'We hope you had a great time — see you on the next one!' },
+    nadaTxt:'I would rather not leave anything now', graciasTxt:'We hope you had a great time — see you on the next one!' },
   att:[
-    { n:"Sofía Romano",  p:6, canal:"GuruWalk",  ok:false, grupo:true, conf:true },
-    { n:"Marco Romano",  p:5, canal:"GuruWalk",  ok:false, grupo:true, conf:true },
+    { n:"Sophie Maclean",  p:6, canal:"GuruWalk",  ok:false, grupo:true, conf:true },
+    { n:"Mark Maclean",  p:5, canal:"GuruWalk",  ok:false, grupo:true, conf:true },
     { n:"Julia Keller",  p:2, canal:"Own site", ok:true },
     { n:"Dubois family",   p:4, canal:"Viator", ok:true  },
     { n:"Iker Ortiz",    p:2, canal:"Own site", ok:false, tarde:true },
@@ -2042,7 +2087,7 @@ var PG={cod:'OTW', emer:'999', idioma:'en'};   /* Edimburgo · 999 (el 112 tambi
    La prueba de oro: ./tests/guia-es.sh y ./tests/guia-en.sh en verde.
 
    LO QUE ESPERA DEL ENTORNO (el «perfil» de cada demo o del servidor):
-     PG            { cod:'BLV'|'OTW' } — prefijo de los códigos de reserva en los textos
+     PG            { cod:'PYC'|'OTW'|'AUD'|… } — prefijo de los códigos de reserva de ESA empresa
      S             estado: tours, kbEmpresa, aprendidas, derivadas, agenda, agDia, ubi…
      tourChat()    el tour del chat activo
      kb(k)/kbE(k)  hechos de tour y empresa (cada entorno con su capa de traducción)
@@ -2210,6 +2255,22 @@ var YA_EN=('hi hello hey good morning afternoon evening night bye goodbye cheers
 
    Medido sobre 36 faltas de oído y 31 palabras inglesas trampa: 13 aciertos, 0 falsos
    positivos, 0 palabras inglesas tocadas, 0 claves ambiguas en el léxico. */
+
+/* ── El código de reserva se reconoce por el prefijo de LA EMPRESA ────────────────────
+   Antes esto era una lista fija con las iniciales de las dos empresas de las demos, en
+   once sitios. Funcionaba en las demos y NO funcionaba para nadie más: el servidor
+   arranca con `PG.cod = datos.cod || 'AUD'`, así que a todo cliente real GuIA le pedía el
+   código de reserva que el viajero acababa de darle, una y otra vez.
+   No se veía porque el único test que lo tocaba probaba el prefijo de una demo contra el
+   motor del servidor: verde, y comprobando un código que ningún cliente tiene.
+   El prefijo se escapa porque viene de datos del operador: si alguien pusiera «A.B» como
+   código, sin escapar el punto casaría con cualquier letra. */
+function reCod(){
+  var c = String((typeof PG!=='undefined' && PG && PG.cod) || 'AUD').replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  return new RegExp(c + '-[a-z0-9]+', 'i');
+}
+function codDe(t){ return (String(t||'').match(reCod()) || [])[0]; }
+
 function fon(w){
   return String(w)
     .replace(/h/g,'')                 // la h no suena: «orario» = «horario»
@@ -2463,15 +2524,107 @@ function hablaDeOtroDia(m){
    si el mensaje habla de una hora que no está en el parte, de un día que no es hoy o de
    un grupo que no cabe, se pasa a una persona. */
 function salidasDeHoy(){
-  var nomT=normaliza(tourChat().nombre);
-  return (S.agenda[S.agDia].tours||[]).filter(function(x){
-    var titN=normaliza(x.tit);
-    return nomT.indexOf(titN)!==-1 || titN.indexOf(nomT)!==-1;
-  });
+  /* Sin parte del dia no hay salidas, y eso NO es un caso raro: es el estado de toda
+     empresa que acaba de crear su primer tour y todavia no tiene salidas generadas para
+     hoy. Sin esta guarda, `S.agenda[S.agDia].tours` es un TypeError — o sea un 500 en la
+     cara de un viajero que pregunto por WhatsApp. Estaba latente en los dos motores y
+     solo hacia falta que coincidieran dos cosas: agenda vacia Y pregunta de horario. De
+     los que no salen probando a mano y salen el primer dia con un cliente de verdad. */
+  var dia = (S.agenda || [])[S.agDia];
+  if (!dia) return [];
+  var lista = dia.tours || [];
+  var yo = tourChat();
+  /* 1) Por IDENTIDAD. Es lo único que no se puede confundir, y el servidor la manda
+        (`plantillaId` en cada entrada del parte). Si alguna entrada la trae, mandan las
+        identidades y se acabó: no se cae al nombre «por si acaso». */
+  var conId = lista.filter(function(x){ return x.plantillaId || x.tourId; });
+  if (conId.length && yo.id) {
+    return lista.filter(function(x){ return x.plantillaId===yo.id || x.tourId===yo.id; });
+  }
+
+  /* 2) Sin identidad (la demo, que monta el parte a mano), por nombre. Exacto primero.
+        La comparación por SUBCADENA que había aquí era el fallo: «Free Tour Centro de
+        Noche» contiene «Free Tour Centro», así que el chat del tour de día —que hoy no
+        tenía salida— contestaba «vais 24 de 25 en la de las 20:00», afirmando una cifra
+        sobre una salida que no era la suya. Dos tours cuyo nombre contiene al otro es un
+        catálogo normal, no un caso rebuscado. */
+  var nomT=normaliza(yo.nombre);
+  var exactas = lista.filter(function(x){ return normaliza(x.tit)===nomT; });
+  if (exactas.length) return exactas;
+
+  /* 3) Y si ninguna casa exacta, se admite la subcadena EN UN SOLO SENTIDO: el título
+        del parte dentro del nombre del tour, nunca al revés. La asimetría es lo que
+        distingue los dos casos, y los dos son normales:
+
+          «Free tour centro histórico» ⊃ «Centro histórico»      → el mismo, abreviado ✓
+          «Free Tour Centro»           ⊂ «Free Tour Centro de Noche» → OTRO tour ✗
+
+        Un título que dice MÁS que el nombre del tour es un tour más específico; uno que
+        dice MENOS es el mismo escrito corto, que es como se escriben los partes.
+        Y si aun así casan varias, es ambiguo: se devuelve vacío y contesta la frase
+        honesta que ya existe, «hoy no hay salida de este tour». Elegir la más probable
+        es exactamente lo que este motor no hace. */
+  var sueltas = lista.filter(function(x){ return nomT.indexOf(normaliza(x.tit))!==-1; });
+  return sueltas.length ? sueltas : [];
 }
 /* «paxDeSalida» y no «paxDe»: la interfaz ya tenía un paxDeSalida(lista) propio y el del motor
    lo pisaba — salió en la prueba de oro de la extracción, no leyendo el código. */
 function paxDeSalida(s){ var p=0; (s.res||[]).forEach(function(r){ if (r.ok) p+=r.p; }); return p; }
+
+/**
+ * ¿Hay alguna salida de hoy cuyo recuento sepamos que está corto?
+ *
+ * `faltan` lo pone el agente externo: entra en el panel de la plataforma, cuenta cuánta
+ * gente le consta y la resta de la nuestra. Cuando sale positivo sabemos dos cosas y las
+ * dos importan — que nuestro recuento está corto, y que NO sabemos por cuánto.
+ *
+ * Vive aquí y no dentro de una regla porque lo necesitan dos: la de plazas y la de grupos.
+ * En la de grupos era menos evidente y más cara: «sois 8 y podéis ir todos juntos» es una
+ * afirmación de plazas con otro nombre, sobre ocho personas a la vez.
+ */
+/**
+ * ¿El precio de este tour lo pone el viajero al final?
+ *
+ * Se decide LEYENDO lo que el operador escribió en su modelo, no suponiéndolo. Y es una
+ * pregunta que había que hacerse y no se hacía: la regla del modelo pegaba «Al final
+ * aportas lo que tú consideres 💛» a cualquier cosa, y la de la propina contestaba «es
+ * totalmente libre» cuando el campo estaba vacío.
+ *
+ * A un operador que cobra 18 € por persona, eso es GuIA diciéndole a sus viajeros que
+ * pueden pagar lo que quieran. Es inventarse la política de precios de otro, sobre dinero,
+ * y con la seguridad de siempre.
+ *
+ * Ante la duda dice que NO. Un free tour cuyo modelo no lo diga con estas palabras pierde
+ * una coletilla; un tour de precio fijo mal clasificado pierde dinero en cada mensaje.
+ */
+var RE_LIBRE = /free ?tour|precio libre|pago libre|lo que (tu |usted )?(consideres?|quieras?|creas?|te parezca|valga|haya valido)|lo que crea[s]? justo|a voluntad|la voluntad|aporta(s|r|cion|ción)?\b|donativo|propina al final|no se paga (nada )?(por adelantado|entrada|al empezar)|sin precio fijo|gratis/i;
+/* Y lo que lo desmiente aunque aparezca alguna de las de arriba: «el tour cuesta 18 €»
+   lleva «cuesta» y un importe, y eso manda sobre cualquier palabra suelta. */
+var RE_FIJO = /\bcuesta\b|\bprecio de\b|\btarifa\b|\bson \d+\s*€|\d+\s*€\s*(por persona|\/persona|pp\b)|se paga al reservar|pago por adelantado/i;
+function precioLibre(){
+  var mo = kb('modelo') || '';
+  if (!mo) return false;
+  if (RE_FIJO.test(mo) && !/free ?tour|precio libre/i.test(mo)) return false;
+  return RE_LIBRE.test(mo);
+}
+
+function hayDescuadre(salidas){
+  return (salidas||[]).some(function(s){ return (+s.faltan||0)>0 });
+}
+/* La respuesta, una sola vez para las dos reglas: si se escribe dos veces, el día que
+   alguien mejore una frase la otra se queda vieja diciendo algo distinto sobre lo mismo. */
+function calloPorDescuadre(t){
+  registraDerivada(t, 'persona');
+  var hsD=kb('horas'), coD=kb('corte');
+  return 'Las plazas de hoy no te las puedo asegurar yo ahora mismo: nuestro recuento y '+
+    'el de la plataforma no cuadran. Se lo paso al encargado y te lo confirma en un '+
+    'momento 🙂'+
+    (hsD ? '\n\nLo que sí te digo: salimos '+sinPuntoFinal(hsD)+'.' : '')+
+    (coD ? ' Se puede reservar hasta '+sinPuntoFinal(coD)+'.' : '')+
+    '\n\n<i>— A la plataforma le constan más reservas de las que han llegado a tu buzón, '+
+    'así que el número de plazas que GuIA tiene delante está corto. Míralo en el panel '+
+    'antes de confirmar nada.</i>';
+}
 /* «a las 17», «17:00», «10h», «5 pm», «a las diez». Devuelve la hora 0-23, o null. */
 function horaDelMensaje(m){
   var x=m.match(/\b([01]?\d|2[0-3])[:.]([0-5]\d)\b/);
@@ -2622,7 +2775,7 @@ function conEn(txt, prep){
   var t=sinPuntoFinal(String(txt||'').trim());
   if (!t) return '';
   var ya=/^(en|a|al|junto|delante|detras|detrás|frente|enfrente|cerca|dentro|fuera|sobre|bajo|debajo|encima|entre|desde|por|hacia|arriba|abajo|justo|nada más|nada mas|saliendo|subiendo|bajando)\b/i.test(t);
-  return (ya ? '' : (prep||'en')+' ') + t;
+  return (ya ? '' : (prep||'en')+' ') + enMedio(t);
 }
 /* «el» + «un paraguas verde» → «un paraguas verde». También calla el artículo si el hecho
    empieza por un posesivo o por un número («2 banderas azules»). */
@@ -2630,7 +2783,7 @@ function conArt(txt, art){
   var t=sinPuntoFinal(String(txt||'').trim());
   if (!t) return '';
   var ya=/^(el|la|los|las|un|una|unos|unas|mi|mis|tu|tus|su|sus|nuestro|nuestra|nuestros|nuestras)\b|^\d/i.test(t);
-  return (ya ? '' : (art||'el')+' ') + t;
+  return (ya ? '' : (art||'el')+' ') + enMedio(t);
 }
 /* Lo mismo en inglés: «Look for the » + «a big green umbrella» → «Look for the a big
    green umbrella», y «We meet at » + «next to the Powder Gate» → «at next to». El inglés
@@ -2650,11 +2803,38 @@ function conAt(txt, prep){
 /* «unos» + «unos minutos» → «unos minutos». Un número SÍ quiere el «unos» («unos 10-15
    minutos»), así que las cifras no entran en la lista. Y la concordancia: «unas 2 horas»,
    no «unos 2 horas» — es de las cosas que un guía nota enseguida en el chat de su cliente. */
+/* ── La mayúscula que delata la plantilla ───────────────────────────────────────────
+   Los helpers de arriba arreglan la preposición y el artículo, y dejaban pasar el roce
+   que más se ve, porque no es un error de sentido:
+
+     «Quedamos En la Plaza Mayor…»      «El tour dura Unas 2 horas y media.»
+     «busca Un paraguas rojo»           «Salimos Todos los días a las 11:00»
+
+   El operador escribe sus hechos empezando por mayúscula porque es como se escribe, y
+   con la carga automática —que lee frases de una web— es la norma. El viajero lo recibe
+   así por WhatsApp y lo que se le nota es que hay una plantilla debajo.
+
+   La lista es CERRADA y solo de palabras funcionales, a propósito: a media frase «en
+   Plaza Mayor», «desde Sol» o «con Ana» llevan mayúscula porque son nombres propios, y
+   tienen que seguir llevándola. Bajar la primera letra «si no parece nombre propio»
+   sería adivinar, y adivinar en el texto que lee el viajero es justo lo que no hacemos.
+   Si un hecho empieza por algo que no está en la lista, se deja tal cual. */
+var MINUS_MEDIO = /^(En|Un|Una|Unos|Unas|El|La|Los|Las|Todos|Todas|Cada|Desde|Junto|Sobre|Entre|Hasta|Alrededor|Aproximadamente|Delante|Detras|Detrás|Frente|Enfrente|Cerca|Dentro|Fuera|Al|A|De|Con|Sin|Por|Para|Hay|Se|No|Si|Sí|Mas|Más|Menos|Solo|Sólo|Mínimo|Minimo|Máximo|Maximo|Aprox)(\s)/;
+function enMedio(txt){
+  var t=String(txt||'');
+  return t.replace(MINUS_MEDIO, function(_,p,sp){ return p.toLowerCase()+sp });
+}
+
 function conAprox(txt){
   var t=sinPuntoFinal(String(txt||'').trim());
   if (!t) return '';
-  if (/^(unos|unas|alrededor|aproximadamente|sobre|entre|casi|más de|mas de|menos de|hasta|un|una)\b/i.test(t)) return t;
-  return (/\d+\s*h(ora)?s?\b/i.test(t.split(/\s+/).slice(0,2).join(' ')) ? 'unas ' : 'unos ') + t;
+  if (/^(unos|unas|alrededor|aproximadamente|sobre|entre|casi|más de|mas de|menos de|hasta|un|una)\b/i.test(t)) return enMedio(t);
+  /* Y si el hecho ya es una FRASE («Esperamos 10 minutos desde la hora de salida»), no se
+     le antepone «unos»: salía «el guía espera unos Esperamos 10 minutos», que no es
+     español. `esFrase()` existe para esto desde la vuelta de los clientes reales; el fallo
+     era no llamarla aquí. */
+  if (esFrase(t)) return t;
+  return (/\d+\s*h(ora)?s?\b/i.test(t.split(/\s+/).slice(0,2).join(' ')) ? 'unas ' : 'unos ') + enMedio(t);
 }
 
 /* ── ¿el hecho es una FRASE ENTERA o un complemento? ────────────────────────────────
@@ -2672,7 +2852,12 @@ function conAprox(txt){
    El verbo se cierra con un `(?=\s|…)` y no con `\b` a propósito: en JavaScript `\b` se
    define sobre [A-Za-z0-9_], así que detrás de la «á» de «está» NO hay límite de
    palabra y la comprobación no saltaría nunca. */
-var RE_VERBO = /(?:^|\s)(?:es|son|era|eran|est[aá]|est[aá]n|hay|puede|pueden|podr[aá]|var[ií]a|var[ií]an|depende|dependen|tiene|tienen|suele|suelen|hacemos|salimos|empezamos|terminamos|acabamos|quedamos|llega|llegan|incluye|incluyen|admite|admiten|debe|deben|conviene|recomendamos|realiza|realizan)(?=\s|[,.;:]|$)/i;
+/* La lista de verbos creció al probar GuIA con hechos escritos por una persona: faltaban
+   justo las primeras personas del plural con las que un operador describe LO SUYO
+   —«Esperamos 10 minutos», «Aceptamos perros», «Cerramos reservas una hora antes»—, que
+   es la forma más natural de escribir un hecho propio. Sin ellas, `esFrase()` decía que
+   no y la plantilla empalmaba: «el guía espera unos Esperamos 10 minutos». */
+var RE_VERBO = /(?:^|\s)(?:es|son|era|eran|est[aá]|est[aá]n|hay|puede|pueden|podr[aá]|var[ií]a|var[ií]an|depende|dependen|tiene|tienen|suele|suelen|hacemos|salimos|empezamos|terminamos|acabamos|quedamos|esperamos|aceptamos|admitimos|cerramos|paramos|damos|ofrecemos|llevamos|pedimos|cobramos|reservamos|llega|llegan|incluye|incluyen|admite|admiten|debe|deben|conviene|recomendamos|realiza|realizan|dura|duran|sale|salen|empieza|empiezan|termina|terminan|acaba|acaban)(?=\s|[,.;:]|$)/i;
 var RE_VERBO_EN = /(?:^|\s)(?:is|are|was|were|can|could|may|might|will|would|varies|vary|depends|depend|has|have|starts|ends|includes|must|should)(?=\s|[,.;:]|$)/i;
 /* El mismo guardarraíl en los dos idiomas, que es la razón de ser del motor único: el
    fallo no es del español, es de empalmar plantilla y hecho. El primer operador inglés
@@ -2859,12 +3044,48 @@ function normCritica(t){
    porque ese chip invita a ENSEÑAR una respuesta — y una emergencia no se automatiza. */
 var RE_URGENCIA = new RegExp(
   /* español */
-  'ambulancia|urgencia medica|desmay|infarto|me duele el pecho|se ha caido|herid[oa]\\b|' +
+  /* «me duele el pecho» era literal, asi que «me duele MUCHO el pecho» —como lo dice
+     cualquiera— no casaba. Un adverbio en medio no puede decidir si alguien recibe el
+     numero de emergencias. */
+  'ambulancia|urgencia medica|desmay|infarto|duele[^.]{0,15}pecho|se ha caido|herid[oa]\\b|' +
   'torcido el tobillo|no puede respirar|no respira|convulsion|me mareo|marea(d[oa]|ndo)|lipotimia|' +
+  /* La mitad espanola se habia quedado CORTA frente a la inglesa, y eso es peor que un
+     hueco: «Creo que a mi padre le esta dando un ataque al corazon» no casaba aqui, caia
+     en la regla medica y recibia «no doy consejo medico ni decido por ti» — sin el 112,
+     sin avisar al guia y tipada como pregunta de permiso. La misma frase en ingles SI
+     daba el numero. El idioma en el que alguien tiene una emergencia no puede decidir si
+     se le da el numero de emergencias. */
+  'sangr(a|ando|e mucho)|hemorragia|atragant|se (ahoga|asfixia)|inconscient|no responde|' +
+  'ictus|derrame cerebral|ataque al corazon|angina de pecho|dolor en el pecho|se ha desplomado|' +
+  'ataque epileptic|le ha dado algo|' +
   /* inglés */
   'ambulance|emergency|chest pain|faint(ed|ing)|passed out|heart attack|stroke\\b|' +
   'can ?n?o?t breathe|not breathing|struggling to breathe|unconscious|bleeding|seizure|' +
   'choking|anaphyla|fell (down|over)|has fallen|(is|got|badly) hurt|is injured|dizzy|' +
+  /* Los DEMAS idiomas que idiomaDe() distingue. No se sirven —GuIA no contesta en
+     frances ni en aleman— pero una urgencia no espera a que tengamos plantillas: la
+     RESPUESTA ya sale bilingue con idioma desconocido, y lo unico que faltaba era
+     DETECTARLA. Un frances escribiendo «ma mere s'est evanouie» recibia «Sorry, I can't
+     answer in your language yet», que es exactamente lo que el comentario de arriba
+     llama el peor momento posible para ser literal.
+
+     Vocabulario de alta precision a proposito, y sin las palabras de auxilio genericas
+     («help», «hilfe», «aiuto», «ayuda»): son de las mas comunes de cualquier chat y
+     convertirlas en emergencia haria que «can you help me with the meeting point?»
+     sacara el 112. Un falso positivo aqui cuesta derivar a una persona con el numero
+     delante —inofensivo—; un falso negativo cuesta lo otro. */
+  /* frances */
+  'evanoui|crise cardiaque|malaise|blesse|saigne|ne respire pas|etouffe|au secours|inconscient|urgences|' +
+  /* aleman */
+  'krankenwagen|notarzt|notfall|ohnmachtig|herzinfarkt|bewusstlos|atmet nicht|verletzt|blutet|' +
+  /* italiano */
+  'ambulanza|emergenza|svenut|non respira|ferit[oa]\\b|sanguina|soccorso|incosciente|' +
+  /* portugues */
+  'ambulancia|emergencia|desmaiou|enfarte|nao respira|ferido|sangrar|sangrando|socorro|' +
+  /* neerlandes */
+  'noodgeval|flauwgevallen|hartaanval|ademt niet|gewond|bloedt|ambulance|' +
+  /* polaco */
+  'pogotowie|karetka|zawal|zemdla|nie oddycha|ranny|krwawi|ratunku|' +
   /* los números, en cualquier idioma */
   '\\b112\\b|\\b911\\b|\\b999\\b');
 
@@ -2956,7 +3177,14 @@ function respuestaGuiaES(t){
   var DESP=['adios','chao','ciao','agur','bye','hasta','luego','pronto','vista','la','nos','vemos'];
   /* Despedidas de frase hecha. El token «manana» NO puede ir en las listas — «¿mañana?»
      a secas es una pregunta —, así que van como frase entera. */
-  if (/^\s*(hasta manana|nos vemos( alli| manana)?|hasta luego|hasta pronto)[\s!.🙂👍]*$/.test(m))
+  /* El prefijo de cortesía va DENTRO del ancla, no fuera de ella. Anclado a la frase
+     entera, «perfecto, hasta mañana» —que es como se despide la gente— caía en «no la
+     entendí», y eso pasa en el ÚLTIMO turno de la conversación: justo donde se juegan la
+     propina y la reseña, y donde una derivada le llega al encargado como una duda viva
+     que en realidad ya está cerrada.
+     Sigue anclado por los dos extremos a propósito: quitar el ancla haría que «¿hay tour
+     mañana? nos vemos» se despidiera en vez de contestar. */
+  if (/^\s*((ok|okey|vale|genial|perfecto|perfecta|estupendo|fenomenal|guay|bien|muy bien|de acuerdo|entendido|listo|gracias|muchas gracias|muchisimas gracias|mil gracias)[\s,.!]+)*(hasta manana|nos vemos( alli| manana| luego)?|hasta luego|hasta pronto|hasta ahora)([\s,.!]+(gracias|muchas gracias|entonces|pues))*[\s!.,🙂👍]*$/.test(m))
     return '¡Hasta ahora! Cualquier cosa, por aquí estamos 🙂';
   /* «ya llegamos», «ya estamos aquí»: el cierre feliz del rescate. Derivarlo ensuciaba
      la bandeja con la mejor noticia del día. */
@@ -2977,8 +3205,8 @@ function respuestaGuiaES(t){
     return '¡A ti! Cualquier otra cosa, por aquí estamos 🙂';
   }
   // 4) TELÉFONO SUELTO (RGPD): nunca localizamos reservas por teléfono. Y un
-  //    código BLV-… jamás se confunde con un número, aunque parezca uno.
-  if (!/(blv|otw)-[a-z0-9]+/i.test(t) && /^\+?[0-9][0-9 .\-()]{5,}[0-9]$/.test(t.trim()))
+  //    el código de reserva jamás se confunde con un número, aunque parezca uno.
+  if (!reCod().test(t) && /^\+?[0-9][0-9 .\-()]{5,}[0-9]$/.test(t.trim()))
     return 'Por privacidad no localizo reservas por teléfono: dime tu código ('+PG.cod+'-…), lo tienes en tu email de confirmación 🙂';
   // 5) DEMASIADO CORTO para clasificar (y no es cortesía ni código): pedir un
   //    poco más de contexto — sin derivar.
@@ -3045,7 +3273,14 @@ function respuestaGuiaES(t){
   }
   // Confirmación de asistencia — nunca si lleva «?»: una pregunta no confirma.
   // Faltan datos → se omite esa parte, no se deriva.
-  if (/\bconfirmo\b|si voy|alli estare|ahi estare|cuenta conmigo|contad conmigo/.test(m) && m.indexOf('?')===-1 && m.indexOf('¿')===-1){
+  /* «si voy» va ANCLADO y con guarda de negacion. Sin lo primero casaba como subcadena
+     dentro de «aun no se si voy a poder ir», y con el codigo de reserva delante marcaba
+     ✅ en el manifiesto y avisaba al guia de que esa persona viene — justo lo contrario
+     de lo que acababa de decir. No deja un hueco: deja un dato FALSO, y encima uno que
+     el operador no tiene forma de sospechar hasta que cuenta cabezas en la plaza. */
+  if (/\bconfirmo\b|(?:^|[,.;:¡!]\s*)si voy(?=\s|[,.;:]|$)|alli estare|ahi estare|cuenta conmigo|contad conmigo/.test(m)
+      && !/no se si|no estoy segur|creo que no|puede que no|a lo mejor|quiza|todavia no|aun no|depende/.test(m)
+      && m.indexOf('?')===-1 && m.indexOf('¿')===-1){
     var partes=[];
     if (kb('horas')) partes.push(kb('horas'));
     if (kb('punto')) partes.push('en '+kb('punto'));
@@ -3053,7 +3288,7 @@ function respuestaGuiaES(t){
        reserva a la que apuntar nada: se pide, en vez de afirmar una acción que —medido con
        la agenda delante— no había ocurrido. Con código, se anota con el mismo mecanismo
        que ya usa la regla de retrasos, que está verificado. */
-    var codC=(t.match(/(blv|otw)-[a-z0-9]+/i)||t.match(/otw-[a-z0-9]+/i)||[])[0];
+    var codC=codDe(t);
     if (!codC)
       return '¡Genial! Para dejarlo apuntado de verdad, dime tu código de reserva ('+PG.cod+'-…) y lo marco ahora mismo. '+
         'Te esperamos'+(partes.length?': '+partes.join(', '):'')+(kb('senal')?' — busca '+conArt(kb('senal')):'')+'.';
@@ -3099,7 +3334,28 @@ function respuestaGuiaES(t){
     }
     var q=salidaDelMensaje(m);
     if (q.ninguna) return 'Hoy no hay salida de este tour — dime tu código ('+PG.cod+'-…) y te digo la próxima al momento 🙂';
-    /* Hora que no está en el parte: ni se inventa la salida ni se contesta con otra. */
+
+    /* ── LA MORDAZA POR DESCUADRE ──────────────────────────────────────────────
+       No es que la cifra sea dudosa: es que ya está DESMENTIDA por otra fuente.
+
+       Todo lo que sabemos entra por el buzón, y esa lectura se cae en silencio cuando una
+       plataforma cambia su plantilla de correo — para eso existe `correo.salud()`. El
+       agente externo entra en su panel y cuenta: cuando trae 18 y a nosotros nos constan
+       14, nuestro recuento está corto y no sabemos por cuánto.
+
+       Justo en ese momento, esta regla contestaba «vais 14 de un máximo de 25 — quedan
+       plazas 🙂» con toda la seguridad del mundo. Si quien pregunta es un grupo de ocho,
+       GuIA acaba de vender ocho plazas sobre una cuenta que el propio sistema ya sabe que
+       está mal, y esa gente se planta en la plaza y no cabe.
+
+       Solo puede hacer que GuIA diga MENOS, nunca más: es el único lado seguro de esta
+       integración y por eso es la única que entra en vivo. Lo que sí sabe —el horario y
+       hasta cuándo se reserva— lo sigue diciendo: callar de más también engaña. */
+    if (hayDescuadre(q.salida?[q.salida]:(q.varias||[]))) return calloPorDescuadre(t);
+
+    /* Hora que no está en el parte: ni se inventa la salida ni se contesta con otra.
+       Va DESPUÉS de la mordaza y antes que nada más — y estuvo a punto de perderse al
+       meter la mordaza aquí en medio: el banco lo cazó en la vuelta siguiente. */
     if (q.fueraDeHora){
       registraDerivada(t, 'persona');
       return 'A las '+q.hora+':00 no tengo salida en el parte de hoy — salimos '+(kb('horas')||'a las horas publicadas')+'. '+
@@ -3143,22 +3399,37 @@ function respuestaGuiaES(t){
     /* «¿Lo puedo reservar para el jueves?»: el corte es política y vale cualquier día,
        pero sin los horarios delante la respuesta parecía hablar solo de hoy. */
     if (hablaDeOtroDia(m) && kb('horas'))
-      return 'Salimos '+sinPuntoFinal(kb('horas'))+' y puedes reservar hasta '+cor+' 🙂';
+      return 'Salimos '+enMedio(sinPuntoFinal(kb('horas')))+' y puedes reservar hasta '+cor+' 🙂';
     return 'Puedes reservar hasta '+cor+'. Si ya cerró, vente al punto y, si queda hueco, el guía te apunta allí mismo 🙂';
   }
   // Distancia — va ANTES de «ritmo», que casa «se camina».
   if (/cuanto se camina|cuantos (km|kilometros)|que distancia|cuanta distancia|cuanto hay que andar|cuanto se anda|se camin\w* mucho/.test(m)){
     var dis=kb('distancia'); if(!dis) return derivaPorHueco('distancia', t);
     var duC=kb('dur');
-    return duC ? 'El tour dura '+duC.replace(/^(el tour |la ruta )?dura /i,'')+' y se recorren '+conAprox(dis)+', con paradas frecuentes.'
+    return duC ? 'El tour dura '+sinPuntoFinal(enMedio(duC.replace(/^(el tour |la ruta )?dura /i,'')))+' y se recorren '+conAprox(dis)+', con paradas frecuentes.'
                : 'Se recorren '+conAprox(dis)+', con paradas frecuentes.';
   }
   // Propina orientativa — campo OPCIONAL: vacío NO deriva, responde la versión
   // libre. Si pregunta por tarjeta/efectivo, manda la regla de pago (abajo).
   if (/propina|cuanto se suele (dar|aportar|dejar)|cuanta plata|\bplata\b|cuanto se deja|bote|cuanto es lo normal/.test(m) && !/tarjeta|efectivo|bizum/.test(m)){
     var pro=kb('propina');
-    if (pro) return 'Es libre, de verdad. Como orientación, la mayoría suele dar '+pro+'.';
-    return 'Es totalmente libre: cada uno aporta lo que le parece al final 💛';
+    /* Budapest publica su orientación como frase entera —«La mayoría deja entre 10 y 20 €
+       por persona»— y salía «la mayoría suele dar La mayoría deja entre 10 y 20 €». En la
+       cifra de la propina, que es el número más delicado del producto, la plantilla se
+       calla y se suelta el hecho tal cual: es además lo más fiel a lo que el operador
+       escribió. */
+    if (pro) return esFrase(pro)
+      ? 'Es libre, de verdad. '+pro+(/[.!?]$/.test(pro.trim()) ? '' : '.')
+      : 'Es libre, de verdad. Como orientación, la mayoría suele dar '+enMedio(pro)+'.';
+    /* Sin cifra orientativa, lo que se puede decir depende de SU modelo. Antes salía «es
+       totalmente libre: cada uno aporta lo que le parece» pasara lo que pasara — o sea que
+       a un operador de precio fijo le estábamos inventando la política de precios, que es
+       de las pocas cosas que un viajero se cree del todo y no vuelve a preguntar. */
+    if (precioLibre()) return 'Es totalmente libre: cada uno aporta lo que le parece al final 💛';
+    var moP=kb('modelo');
+    if (moP) return esFrase(moP) ? moP+(/[.!?]$/.test(moP.trim()) ? '' : '.')
+                                 : 'Funciona así: '+sinPuntoFinal(enMedio(moP))+'.';
+    return derivaPorHueco('modelo', t);
   }
   // Otras ciudades — dato de EMPRESA («ciudades»).
   if (/otras ciudades|otra ciudad|tours en (?!ingles|espanol)|haceis.*(barcelona|madrid|florencia|paris|lisboa|venecia|napoles)/.test(m)){
@@ -3175,9 +3446,22 @@ function respuestaGuiaES(t){
      «somos un colegio» o a «¿recogéis en el hotel?» era responder a otra pregunta. El hecho
      de empresa (privados) es real; el detalle concreto va SIEMPRE a una persona. */
   var privE=(S.kbEmpresa && (S.kbEmpresa.privados||'').trim()) ? (kbE('privados')||'') : '';
+  /* Si la empresa NO ha escrito nada sobre privados, se deriva por hueco y no se dice
+     nada más. Antes había aquí una cadena fija —«Sí hacemos tours privados. »— y con
+     ella cualquier empresa recién dada de alta le prometía privados a sus viajeros sin
+     haberlo dicho jamás. Es exactamente lo que este motor no puede hacer.
+
+     Lo insidioso era por dónde salía: la pregunta DIRECTA («¿hacéis privados?») ya
+     derivaba bien, así que la promesa solo aparecía por la puerta de atrás —el hotel,
+     el colegio— donde nadie la busca. Un operador que no hace privados se enteraba el
+     día que alguien se presentaba esperando uno.
+
+     `derivaPorHuecoEmp` y no `derivaSiempre`: además de pasar la pregunta a una persona,
+     nombra el hecho que falta, y eso es lo que hace que el encargado lo rellene. */
   function conPrivadoES(cola){
+    if (!privE) return derivaPorHuecoEmp('privados', t);
     registraDerivada(t, 'persona');
-    return (privE ? privE+' ' : 'Sí hacemos tours privados. ')+cola;
+    return privE+' '+cola;
   }
   if (/colegio|escolar|instituto|universida|alumnos|estudiantes/.test(m))
     return conPrivadoES('Los grupos escolares los presupuestamos aparte, porque los ratios y el papeleo son distintos. Dime el curso y cuántos sois y el encargado te contesta.');
@@ -3186,17 +3470,21 @@ function respuestaGuiaES(t){
   if (/edad|adolescente|anos (tiene|puede)/.test(m))
     return kb('ninos') ? kb('ninos')+' Si me dices la edad concreta, te lo confirmo.' : derivaPorHueco('ninos', t);
 
-  /* «somos 2 y queremos cancelar BLV-8842» caía aquí y recibía la política de grupos —
+  /* «somos 2 y queremos cancelar PYC-8842» caía aquí y recibía la política de grupos —
      la reserva seguía viva y el viajero contaba luego como no presentado. Un mensaje con
      código de reserva NUNCA se resuelve con una FAQ genérica; el retraso y la cancelación
      ganan siempre; y «somos 2» a secas no es un grupo. También «no encontramos al grupo»
      es un rezagado, no una pregunta de tarifas. */
   if (/\bgrupo (de|grande|numeroso)\b|en grupo|somos (?:[7-9]|\d\d)\b|reserva de grupo|despedida|grupo escolar|¿?podemos ir en grupo/.test(m)
-      && !/blv-[a-z0-9]+|otw-[a-z0-9]+/i.test(t) && !/cancel|anul/.test(m) && !RE_RETRASO.test(m)
+      && !reCod().test(t) && !/cancel|anul/.test(m) && !RE_RETRASO.test(m)
       && !/encontramos al grupo|encuentro al grupo|separado del grupo|perdido/.test(m)){
     var af=kb('aforo'); if(!af) return derivaPorHueco('aforo', t);
     var gm=kb('grupomin'); if(!gm) return derivaPorHueco('grupomin', t);
     var NG=sizeDelMensaje(m), afNum=parseInt(af,10);
+    /* La misma mordaza. «Sois 8 y podéis ir todos juntos» es una afirmación de plazas con
+       otro nombre, y encima sobre ocho personas de golpe: es donde más caro sale decirlo
+       sobre un recuento que sabemos corto. */
+    if (NG && hayDescuadre(salidasDeHoy())) return calloPorDescuadre(t);
     /* «somos 30, ¿cabemos?» con aforo 25 no puede llevarse un «podéis ir todos juntos». */
     if (NG && afNum && NG>afNum){
       registraDerivada(t, 'persona');
@@ -3206,7 +3494,7 @@ function respuestaGuiaES(t){
     return 'Los grupos son de un máximo de '+af+' por salida, y podéis ir todos juntos 🙂 Eso sí, la política clara: en grupos de más de 6 (aunque lo repartáis en varias reservas), el guía os pedirá un adelanto de '+gm.replace(/ por persona\.?$/i,'')+' por persona COMO MÍNIMO al empezar — nunca menos. Se descuenta de vuestra aportación final, así que no pagáis de más.\n\n<i>— El mínimo sale del formulario del Cerebro: cada empresa pone el suyo.</i>';
   }
   if (/cancel|anul|no puedo ir|no podre|no vamos a poder/.test(m)){
-    var cod=(t.match(/(blv|otw)-[a-z0-9]+/i)||[])[0];
+    var cod=codDe(t);
     if (cod){
       anotaGuia('Reserva «'+cod+'» cancelada por el chat — plaza liberada; la lista de espera se revisa sola');
       return '¡Hecho! Cancelo tu reserva ✅ Gracias por avisar con tiempo: tu plaza queda libre al instante.\n\n<i>— Al liberarse, la lista de espera se revisa sola: si alguien cabía, ya está avisado (míralo en Operaciones). Nada de gestionarlo a mano. Y queda apuntado en las observaciones del tour de hoy.</i>';
@@ -3231,9 +3519,16 @@ function respuestaGuiaES(t){
   if (RE_RETRASO.test(m) || /cuanto espera|espera el guia|espera al grupo|me esperais|nos esperais|me esperan|nos esperan/.test(m) ||
       (/tarde/.test(m) && !RE_FRANJA_TARDE.test(m))){
     var es=kb('espera'); if(!es) return derivaPorHueco('espera', t);
-    var codT=(t.match(/(blv|otw)-[a-z0-9]+/i)||[])[0];
+    var codT=codDe(t);
     if (codT) anotaGuia('«'+codT+'» avisa por el chat de que llega tarde — marcado ⏰ para el guía');
-    return '¡Tranquilo! El guía espera en el punto de encuentro '+conAprox(es)+', así que unos minutos no son problema 🙂 Si me dices tu código ('+PG.cod+'-…), le aviso ahora mismo — y aparecerás en su manifiesto como «⏰ llega tarde».'+
+    /* Si el hecho ya es una frase —«Esperamos 10 minutos desde la hora de salida»—, no se
+       mete detrás de «el guía espera en el punto de encuentro»: salía repetido el verbo y
+       en tercera persona sobre una frase en primera. Se suelta la frase del operador y se
+       encadena el resto. */
+    return (esFrase(es)
+      ? '¡Tranquilo! '+sinPuntoFinal(es)+', así que unos minutos no son problema 🙂'
+      : '¡Tranquilo! El guía espera en el punto de encuentro '+conAprox(es)+', así que unos minutos no son problema 🙂')+
+      ' Si me dices tu código ('+PG.cod+'-…), le aviso ahora mismo — y aparecerás en su manifiesto como «⏰ llega tarde».'+
       (codT ? '\n\n<i>— Aviso registrado: escrito en las observaciones del tour de hoy (míralo en el 📋 Manifiesto).</i>' : '');
   }
   /* «¿El punto de encuentro tiene sombra/rampa/wifi?» no pregunta DÓNDE es: la sola
@@ -3245,9 +3540,14 @@ function respuestaGuiaES(t){
   if (/donde (quedamos|es|empieza|salis|nos vemos|nos encontramos)|punto de encuentro|meeting point|donde os (veo|encuentro)/.test(m)
       && !/sombra|wifi|internet|bano|aseo|lavabo|aparca|parking|taquilla|consigna|sentar|banco|taxi|cuanto cuesta|accesib|silla de ruedas|carrito|rampa|escalon|segur|carterista|nadie|ninguno|no veo/.test(m)){
     var pu=kb('punto'); if(!pu) return derivaPorHueco('punto', t);
-    return 'Quedamos '+conEn(pu)+' 📍'+(kb('horas')?' Salimos '+sinPuntoFinal(kb('horas'))+'.':'')+
+    return 'Quedamos '+conEn(pu)+' 📍'+(kb('horas')?' Salimos '+enMedio(sinPuntoFinal(kb('horas')))+'.':'')+
       (kb('senal')?' Llega unos minutos antes y busca '+conArt(kb('senal'))+'.':'')+
-      '\n\n<i>— Dato del cerebro de «'+tourChat().nombre+'» — cambia el tour arriba y verás otra respuesta.</i>';
+      /* «cambia el tour arriba» era una instrucción de la DEMO, donde hay un selector de
+         tour encima del chat. Desde que el encargado prueba a GuIA en su propio panel, esa
+         frase le manda a un sitio que en su pantalla no existe. Lo que valía de la nota
+         —de QUÉ tour salió el dato, porque cada tour tiene su punto de encuentro— vale en
+         los dos sitios; la instrucción no. */
+      '\n\n<i>— Dato del cerebro de «'+tourChat().nombre+'»: cada tour tiene el suyo.</i>';
   }
   if (/donde (acaba|termina)|final del (tour|recorrido)/.test(m)){
     var fi=kb('fin'); if(!fi) return derivaPorHueco('fin', t);
@@ -3279,15 +3579,19 @@ function respuestaGuiaES(t){
        daba «…con reserva desde la Puerta del Sol». Un horario con excepciones ya dice
        bastante solo. */
     var puH=kb('punto');
-    return 'Salimos '+sinPuntoFinal(ho)+
+    return 'Salimos '+enMedio(sinPuntoFinal(ho))+
       (esSimple(ho,60)&&esSimple(puH,85) ? ' '+conEn(puH,'desde') : '')+' 🙂 ¿Te reservo plaza?';
   }
   /* «tarda» va aquí y no en la de precio, donde caía por el «cuánto». Va antes que la
      de precio, así que la regla de la casa obliga a probarlo contra «¿cuánto cuesta?»:
      no contiene «tarda», así que no se la come. */
-  if (/cuanto dura|cuanto tarda|cuanto tardan|duracion|how long/.test(m)){
+  /* «cuanto dura» iba pegado, así que «¿cuánto TIEMPO dura?» —como lo dice medio
+     mundo— no casaba, caía en la regla de precio (que sí casa «cuanto») y contestaba el
+     modelo de propina. Contestar con seguridad a una pregunta que no te han hecho es
+     peor que derivar: el viajero se queda creyendo que le han respondido. */
+  if (/cuanto (tiempo )?(dura|tarda|tardan|se tarda|estaremos|estamos|lleva)|cuantas horas (dura|es|son)|duracion|how long/.test(m)){
     var du=kb('dur'); if(!du) return derivaPorHueco('dur', t);
-    return 'El tour dura '+du.replace(/^(el tour |la ruta )?dura /i,'')+', a ritmo tranquilo y con paradas para las explicaciones (y alguna foto 📸).';
+    return 'El tour dura '+sinPuntoFinal(enMedio(du.replace(/^(el tour |la ruta )?dura /i,'')))+', a ritmo tranquilo y con paradas para las explicaciones (y alguna foto 📸).';
   }
   if (/idioma|ingles|english|language|frances|aleman|italiano|portugues|espanol|castellano|catalan/.test(m)){
     var id=kb('idiomas'); if(!id) return derivaPorHueco('idiomas', t);
@@ -3420,7 +3724,17 @@ function respuestaGuiaES(t){
     return pg;
   }
   // Hechos de EMPRESA (comunes a todos los tours) — bloque 🏢 del Cerebro
-  if (/quienes sois|sois una agencia|sois agencia|es un timo|estafa|fiable|de fiar/.test(m)){
+  /* «oficial», «titulad», «licencia», «profesional» entran aquí porque en España ser guía
+     oficial está REGULADO por comunidad autónoma, y esa es la forma en que el viajero
+     pregunta si puede fiarse — más que «¿quiénes sois?». Sin ellas, un operador que tenía
+     el hecho escrito recibía la pregunta en la bandeja como «no la entendí», que le pide
+     enseñar a mano una respuesta que ya tenía guardada.
+     La guarda de idioma es necesaria: «¿en qué idioma es el tour?» y «¿el guía habla
+     español?» llevan «guia» y preguntan por el hecho de TOUR «Idiomas», no por la
+     titulación de la empresa. */
+  if ((/quienes sois|sois una agencia|sois agencia|es un timo|estafa|fiable|de fiar/.test(m) ||
+       (/oficial|titulad|licencia|acreditad|homologad|profesional|voluntario|certificad/.test(m)
+        && !/idioma|habla|ingles|espanol|frances|aleman|italiano|entrada|museo|palacio|web|pagina/.test(m)))){
     var qs=kbE('quienes'); if(!qs) return derivaPorHuecoEmp('quienes', t);
     return qs;
   }
@@ -3438,7 +3752,20 @@ function respuestaGuiaES(t){
   }
   if (/\bcuanto\b|precio|cuesta|gratis|gratuito|\bcosto\b|cobran|free/.test(m)){
     var mo=kb('modelo'); if(!mo) return derivaPorHueco('modelo', t);
-    return 'Funciona así: '+mo+'. Al final aportas lo que tú consideres 💛';
+    /* «Funciona así: Es un free tour: no se paga entrada. Al final cada uno aporta lo que
+       crea justo.. Al final aportas lo que tú consideres» — el operador ya lo explicó
+       entero, con su propia coletilla, y la plantilla repetía la idea y doblaba el punto.
+       Cuando el hecho es una frase, se suelta tal cual: aquí se juega la aportación, y la
+       frase del operador siempre va a ser mejor que nuestra glosa. */
+    /* La coletilla SOLO si el modelo es de precio libre. Iba pegada a cualquiera, así que
+       a un tour de 18 € GuIA le añadía «Al final aportas lo que tú consideres 💛».
+       Y `sinPuntoFinal` porque el operador termina su frase con punto y la plantilla añadía
+       el suyo: «…se paga al reservar.. Al final…» se lee tal cual en el WhatsApp. */
+    var libre = precioLibre();
+    return esFrase(mo)
+      ? mo + (/[.!?]$/.test(mo.trim()) ? '' : '.') + (libre ? ' 💛' : '')
+      : 'Funciona así: '+sinPuntoFinal(enMedio(mo))+'.' +
+        (libre ? ' Al final aportas lo que tú consideres 💛' : '');
   }
   /* ── Huecos que salían derivados y no tenían por qué ── */
 
@@ -3750,16 +4077,16 @@ function respuestaEN(t){
     return /[👍🙏👌😊🙂❤♥🎉🥰😍💛🧡]/.test(t)
       ? 'Anytime! I\'m here if you need anything else 🙂'
       : 'Tell me a bit more and I\'ll help you right away 🙂';
-  if (m.replace(/[^a-z0-9]/gi,'').length<4 && !/otw-/i.test(t))
+  if (m.replace(/[^a-z0-9]/gi,'').length<4 && !reCod().test(t))
     return 'Tell me a bit more and I\'ll help you right away 🙂';
   /* Solo un código de reserva: preguntar qué hacer con él, no derivar. */
-  var soloCod=t.trim().match(/^otw-[a-z0-9]+$/i);
+  var soloCod=t.trim().match(new RegExp('^' + reCod().source + '$', 'i'));
   if (soloCod)
     return 'Got it — what would you like me to do with booking '+soloCod[0].toUpperCase()+
       '? I can cancel it, change it, or flag that you\'re running late 🙂';
   /* Teléfono suelto (RGPD): nunca localizamos reservas por teléfono — mismo criterio
      que el motor español, que ya lo tenía. */
-  if (!/otw-[a-z0-9]+/i.test(t) && /^\+?[0-9][0-9 .\-()]{5,}[0-9]$/.test(t.trim()))
+  if (!reCod().test(t) && /^\+?[0-9][0-9 .\-()]{5,}[0-9]$/.test(t.trim()))
     return 'For privacy I don\'t look bookings up by phone number: give me your code ('+PG.cod+'-…), it\'s in your confirmation email 🙂';
   // cortafuegos: lo delicado va a una persona, también en inglés
   if (RE_CORTAFUEGOS.test(m))
@@ -3773,10 +4100,14 @@ function respuestaEN(t){
      una pregunta que no te han hecho. */
   var priv = (S.kbEmpresa && (S.kbEmpresa.privados||'').trim()) || '';
   /* Deriva a una persona pero devolviendo lo que SÍ sabemos, en vez del texto genérico:
-     el hecho de empresa es real, y solo el detalle concreto se pasa al encargado. */
+     el hecho de empresa es real, y solo el detalle concreto se pasa al encargado.
+     Si NO lo sabemos, se deriva por hueco y ya está. El «We do run private walks. » que
+     había aquí era la misma promesa inventada que su gemela española: paridad en el
+     fallo, así que paridad también en el arreglo. */
   function conPrivado(cola){
+    if (!priv) return derivaPorHuecoEmp('privados', t);
     registraDerivada(t, 'persona');
-    return (priv ? priv+' ' : 'We do run private walks. ')+cola;
+    return priv+' '+cola;
   }
   // cruceros: la pregunta nunca es la hora, es si llegan a tiempo al barco
   if (/crucero/.test(m))
@@ -3889,7 +4220,7 @@ function respuestaEN(t){
   if (/cancelar|cancelacion/.test(m)){
     /* Si el código YA viene en el mensaje, se cancela — pedirle el código que acaba de
        mandar es obligarle a un segundo mensaje, que es justo el coste a evitar. */
-    var codC=(t.match(/otw-[a-z0-9]+/i)||[])[0];
+    var codC=codDe(t);
     if (codC){
       anotaGuia('Booking “'+codC+'” cancelled over chat — place released; the waiting list checks itself');
       return 'Done! Your booking is cancelled ✅ Thanks for letting us know in good time: your place is free again straight away.\n\n<i>— Once released, the waiting list checks itself: if somebody fitted, they have already been told (see it on the dashboard). And it is written into today\'s tour notes.</i>';
@@ -3903,7 +4234,7 @@ function respuestaEN(t){
   /* Misma separación que en el motor español: «tarde» es hora del día o es retraso. */
   if (/retraso|espera/.test(m) || (/tarde/.test(m) && !RE_FRANJA_TARDE.test(m))){
     if (!v('espera')) return falta();
-    var codL=(t.match(/otw-[a-z0-9]+/i)||[])[0];
+    var codL=codDe(t);
     if (codL) anotaGuia('“'+codL+'” messaged to say they\'re running late — flagged ⏰ for the guide');
     return 'Don\'t worry! The guide waits around '+v('espera')+' at the meeting point, so a few minutes are fine 🙂'+
       (codL ? '\n\n<i>— Logged: written into today\'s tour notes, and they show on the manifest as “⏰ running late”.</i>'
@@ -4216,16 +4547,12 @@ function pintaPropinaPlan(){
 function desbloquear(v){ S.desbloqueado[v]=true; pintaCandados();
   ir(document.getElementById('v-'+v) ? v : ((location.hash.slice(1))||'operaciones'));   // las claves inline no tienen vista propia: repinta la actual
   toast('🔓 “'+SUPLEMENTOS[v].n+'” unlocked so you can try it in the demo'); }
-/* Oferta oculta “Esencial+ · 29 £/mes” (ver internal docs): NO es un
-   plan público ni funcional — solo aparece como tarjetita de upgrade con Esencial activo.
-   No toca cambiarPlan/disponible/bloqueado ni SUPLEMENTOS: pulsarla solo explica. */
+
 function pintaEsPlus(){
   var e=document.getElementById('es-plus'); if(!e) return;
   e.style.display = S.plan==='esencial' ? 'block' : 'none';
 }
-function ofertaEsencialPlus(){
-  toast('In the demo, Essential+ (€29) switches on as you grow: when a second tour or the message cap calls for it. It is not a public plan — it only appears as an upgrade from Essential.');
-}
+function ofertaEsencialPlus(){}   /* oferta no pública: fuera del build */
 function cambiarPlan(p){ S.plan=p; pintaPlanSel(); pintaCandados(); pintaWaTope(); pintaPropinaPlan(); pintaEsPlus();
   ir((location.hash.slice(1))||'operaciones');   // re-evalúa el bloqueo de la vista actual
   toast('Plan '+PLANES[p].n+' active — the modules it includes are unlocked'); }
@@ -4341,7 +4668,70 @@ function resolver(id, msj){
   pintaEstadoBanner();
   toast(msj || 'Marked as reviewed');
 }
+function pintaCuadroDia(){
+  var dia = S.agenda[S.agDia]; if(!dia) return;
+  var tours = dia.tours || [];
+  var pax = 0, enMarcha = 0, sinGuia = 0;
+  tours.forEach(function(t){
+    (t.res||[]).forEach(function(r){ pax += (r.p||0); });
+    if (t.live) enMarcha++;
+    if (!t.guia) sinGuia++;
+  });
+
+  var f = document.getElementById('cd-fecha');
+  if (f) f.textContent = String(dia.fecha||'').replace(/\s*·\s*TODAY$/i,'');
+
+  var cifras = document.getElementById('cd-cifras');
+  if (cifras) cifras.innerHTML = [
+    [tours.length, tours.length===1?'departure':'departures'],
+    [pax, pax===1?'person':'people'],
+    [enMarcha, enMarcha===1?'tour running':'tours running']
+  ].map(function(c){
+    return '<div><div class="n">'+c[0]+'</div><div class="e">'+c[1]+'</div></div>';
+  }).join('');
+
+  /* What needs a person, in plain words. If there is nothing, say so: "nothing pending" is
+     information, and staying quiet only leaves the doubt of whether anyone looked. */
+  var at = document.getElementById('cd-atencion');
+  if (at) {
+    var pend = [];
+    if (S.excs>0) pend.push('<b>'+S.excs+' thing'+(S.excs===1?'':'s')+'</b> to review');
+    if (sinGuia>0) pend.push('<b>'+sinGuia+'</b> with no guide assigned');
+    at.innerHTML = pend.length
+      ? '&#9888;&#65039; ' + pend.join(' &middot; ') + ' &mdash; it is all down below.'
+      : '&#9989; Nothing pending. The rest of the day runs itself.';
+  }
+
+  /* Second row: what has already happened today without anyone touching it. It sits below
+     and smaller because it asks you to decide nothing — but it IS shown, because it is the
+     work the system did on its own and hiding it would be hiding the work.
+     The reminder only went out for the tour that is RUNNING, so the confirmed count can
+     only be said of that one. Saying it of the whole day would be two different things
+     under the same name, which is worse than not showing the number at all. */
+  var men = document.getElementById('cd-menores');
+  if (men) {
+    var vivo = tours.filter(function(t){ return t.live; })[0];
+    var trozos = [];
+    if (vivo && (vivo.res||[]).length) {
+      var conf = vivo.res.filter(function(r){ return r.ok || r.conf; }).length;
+      trozos.push(['<b>'+conf+' of '+vivo.res.length+'</b>',
+        'confirmed on the '+vivo.hora+' tour']);
+    }
+    var nsAuto = 0;
+    tours.forEach(function(t){ (t.res||[]).forEach(function(r){ if (r.nsAuto) nsAuto++; }); });
+    if (nsAuto) trozos.push(['<b>'+nsAuto+'</b>',
+      'no-show'+(nsAuto===1?'':'s')+' flagged on its own']);
+    var avisos = (dia.tours||[]).reduce(function(a2,t){ return a2 + (t.obs||[]).length; }, 0);
+    if (avisos) trozos.push(['<b>'+avisos+'</b>',
+      'GuIA alert'+(avisos===1?'':'s')+' on your departures']);
+    men.innerHTML = trozos.map(function(c){
+      return '<span>'+c[0]+' <span style="color:var(--muted)">'+c[1]+'</span></span>';
+    }).join('');
+    men.style.display = trozos.length ? 'flex' : 'none';
+  }
+}
 function pintaEstadoBanner(){
+  pintaCuadroDia();
   var b=document.getElementById('estado-banner'), t=document.getElementById('estado-txt');
   if(!b||!t) return;
   if(S.excs>0){ b.className='estado-banner revisar'; b.querySelector('.big').textContent='⚠️';
@@ -4448,7 +4838,7 @@ function pintaManifiesto(){
           : ' · '+(pax-pres)+' still to come')+
         (descu!==0?' · <b style="color:'+(descu>0?'var(--rojo)':'var(--acc)')+';">out by '+(descu>0?'−':'+')+Math.abs(descu)+'</b>':'')+'</div>';
     mov.innerHTML=h;
-    // aviso de grupo (solo tour live, con el grupo Romano si está)
+    // aviso de grupo (solo tour live, con el grupo Maclean si está)
     if (t.live && t.res.some(function(r){return r.grupo})){
       var av=document.createElement('div'); av.className='aviso-grupo';
       av.innerHTML='👥 <b>Possible large group:</b> bookings under the same surname, minutes apart. '+
@@ -5962,9 +6352,16 @@ function pintaViajero(paso){
   var libre = cfgP.libre
     ? '<button class="vj-imp vj-imp-libre'+(VJ.libre?' on':'')+'" onclick="vjLibre()"><b>✏️ Other</b><span>your own amount</span></button>'
     : '';
-  var nada = '<button class="vj-imp'+(VJ.pp===0?' on':'')+'" onclick="vjSel(0)" '+
-    'style="grid-column:1/-1; padding:9px;"><b style="font-size:14px;">No tip</b>'+
-    '<span>'+(cfgP.nadaTxt||'that\'s absolutely fine 🙂')+'</span></button>';
+  /* «No tip» is no longer an option the same size as the amounts. What is being paid
+     here is a service already delivered, and a large box saying «No tip · that's
+     absolutely fine» does two bad things at once: it anchors the decision downwards and
+     it suggests to someone who has just done the tour that it was free. Whoever really
+     does not want to leave anything does not need a big button in order not to.
+
+     The way out has to exist, though: if it cannot be declined, the tip stops being
+     voluntary and becomes a charge. So it stays — as a text link under the pay button,
+     present and not competing. */
+  var nada = '';
   var libreInput = (cfgP.libre && VJ.libre)
     ? '<div class="fila" style="gap:8px; margin-top:8px; align-items:center;">'+
       '<b style="font-size:17px;">'+MK.moneda.sim+'</b>'+
@@ -5984,7 +6381,7 @@ function pintaViajero(paso){
     '<span class="vj-hora">12:47 ✓✓</span></div>'+
     '<div class="vj-transp" style="margin-bottom:10px;">🇬🇧 <b>Tips only, no set amount.</b> Your guide works on a tips-only basis — give whatever you feel it was worth, or nothing at all.</div>'+
     '<p class="vj-tit">How much would you like to leave? <span class="mini muted" style="font-weight:400;">· booking for '+VJ.pax+' people</span></p>'+
-    '<div class="vj-importes'+(libre?' con-libre':'')+'">'+importes+libre+nada+'</div>'+libreInput+
+    '<div class="vj-importes'+(libre?' con-libre':'')+'">'+importes+libre+'</div>'+libreInput+
     '<p class="vj-tit">How would you like to pay?</p>'+
     '<div class="vj-metodos">'+metodos+'</div>'+
     '<div class="vj-transp">✨ <b>Your tip goes straight to '+VJ.guia+'</b> — with no surcharge to you.</div>'+
@@ -5992,6 +6389,9 @@ function pintaViajero(paso){
       (VJ.pp === null && !VJ.libre ? 'Pick an amount'
         : (VJ.pp === 0 && !VJ.libre ? 'Continue without tipping'
           : 'Leave a tip · '+dinero(vjTotal())))+'</button>'+
+    /* The way out, in text and under the button. */
+    '<p class="vj-nada"><button type="button" onclick="vjSel(0)">'+
+      (cfgP.nadaTxt||'I would rather not leave anything now')+'</button></p>'+
     '<p class="vj-legal">Payment processed securely. We use your details only to handle this tip (GDPR).<br>'+
     'Demo with made-up data — no payment is taken.</p>'+
     '</div>';
@@ -6169,8 +6569,8 @@ var FACTORES_NS=[
   { k:'confirmo',   l:'Replied “coming” (lowers the risk)',    corto:'already confirmed ✓',        max:40, def:30, resta:true },
 ];
 var RESERVAS_NS = [
-  { n:"Sofía Romano · 6p", canal:"GuruWalk",   f:{plataforma:1, grande:1, antelacion:1} },
-  { n:"Marco Romano · 5p", canal:"GuruWalk",   f:{plataforma:1, grande:1, silencio:1} },
+  { n:"Sophie Maclean · 6p", canal:"GuruWalk",   f:{plataforma:1, grande:1, antelacion:1} },
+  { n:"Mark Maclean · 5p", canal:"GuruWalk",   f:{plataforma:1, grande:1, silencio:1} },
   { n:"Julia Keller · 2p", canal:"Own site", f:{confirmo:1} },
   { n:"Dubois family · 4p", canal:"Viator", f:{plataforma:1} },
   { n:"Iker Ortiz · 2p",   canal:"Own site", f:{silencio:1, historial:1} },

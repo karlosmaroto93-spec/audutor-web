@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Aviso legal y privacidad · Audutor</title>
+<style>
+/* ── Por qué esta página existe ──────────────────────────────────────────────────────
+   El artículo 10.1 de la Ley 34/2002 (LSSI-CE) obliga a todo prestador de servicios de la
+   sociedad de la información establecido en España a publicar, de forma permanente y
+   accesible, sus datos identificativos. No es un adorno de confianza: omitir el NIF es
+   infracción leve (hasta 30.000 €) y omitir de forma significativa nombre y domicilio es
+   GRAVE (30.001–150.000 €).
+
+   Y el artículo enumera nombre, domicilio y correo en una sola letra, de forma acumulativa:
+   poner solo un correo de contacto NO cumple, que es lo que había hasta hoy.
+
+   Dos decisiones que conviene dejar escritas para que nadie las «arregle» luego:
+
+   · NO se publica dato de Registro Mercantil. Para el empresario individual la inscripción
+     es POTESTATIVA (art. 19.1 del Código de Comercio). Si no está inscrito no hay dato que
+     publicar, y copiarlo de una plantilla de sociedad sería una manifestación falsa.
+
+   · NO hay banner de cookies, y es a propósito. Este sitio no escribe ninguna cookie ni usa
+     `localStorage`, analítica, píxeles ni tipografías remotas. Sin almacenamiento en el
+     equipo del visitante no se activa el art. 22.2 LSSI. Poner un banner «por si acaso»
+     sería peor: pediría un consentimiento que no hace falta y obligaría a mantener una
+     política que no describe nada.
+
+   La política de privacidad va DENTRO de esta misma página en vez de en otra aparte. Hoy el
+   sitio no trata ningún dato —no hay formulario activo—, así que dos documentos separados
+   serían dos sitios donde quedarse desactualizado en lugar de uno. */
+:root{
+  --ink:#22302b; --ink2:#3d4f47; --muted:#5c6b64; --paper:#fffdf7; --bg:#f4f1e8;
+  --acc:#14634c; --acc-deep:#0e4a3a; --coral:#f4653a; --line:#e2dccc; --gold:#c98a2d;
+}
+*{ box-sizing:border-box; }
+html,body{ margin:0; }
+body{
+  background:var(--bg); color:var(--ink);
+  font:16px/1.62 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  padding:34px 18px 60px; position:relative; overflow-x:hidden;
+}
+body::before{
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(760px 420px at 12% -8%, rgba(20,99,76,.07), transparent 62%),
+    radial-gradient(680px 380px at 108% 8%, rgba(244,101,58,.06), transparent 60%);
+}
+.doc{
+  position:relative; z-index:1; width:100%; max-width:640px; margin:0 auto;
+  background:var(--paper); border:1px solid var(--line); border-radius:18px;
+  padding:34px 30px 30px;
+  box-shadow:0 1px 2px rgba(34,48,43,.05), 0 12px 34px -12px rgba(34,48,43,.16);
+}
+.doc::before{
+  content:""; display:block; height:3px; margin:-34px -30px 24px; border-radius:18px 18px 0 0;
+  background:linear-gradient(90deg,var(--acc),var(--gold) 55%,var(--coral));
+}
+.wm{ font:400 27px/1 Iowan Old Style,Palatino,Georgia,serif; color:var(--acc); display:block; }
+h1{ font:600 23px/1.25 inherit; margin:20px 0 4px; }
+.sub{ margin:0 0 26px; font-size:13.5px; color:var(--muted); }
+h2{ font:700 15px/1.3 inherit; margin:30px 0 9px; color:var(--acc-deep);
+  letter-spacing:.01em; }
+p{ margin:0 0 13px; font-size:15px; color:var(--ink2); }
+ul{ margin:0 0 13px; padding-left:20px; font-size:15px; color:var(--ink2); }
+li{ margin-bottom:6px; }
+a{ color:var(--acc); }
+b,strong{ color:var(--ink); }
+/* La ficha del art. 10: es el motivo de la página, así que se lee sin buscarla.
+   Rejilla de dos columnas para que los valores compartan eje vertical; en móvil se apila,
+   porque a 360 px una etiqueta y un domicilio no caben en la misma línea sin partirse mal. */
+.ficha{
+  display:grid; grid-template-columns:auto 1fr; gap:9px 18px;
+  background:#faf7ef; border:1px solid var(--line); border-radius:12px;
+  padding:18px 20px; margin:0 0 6px; font-size:15px;
+}
+.ficha dt{ font-weight:700; color:var(--muted); font-size:13px; text-transform:uppercase;
+  letter-spacing:.03em; padding-top:2px; }
+.ficha dd{ margin:0; color:var(--ink); }
+@media (max-width:520px){
+  .ficha{ grid-template-columns:1fr; gap:2px 0; }
+  .ficha dd{ margin-bottom:10px; }
+  .doc{ padding:28px 20px 24px; }
+  .doc::before{ margin:-28px -20px 20px; }
+}
+.volver{ margin-top:30px; padding-top:18px; border-top:1px solid var(--line); font-size:14px; }
+</style>
+</head>
+<body>
+<div class="doc">
+  <span class="wm">Audutor</span>
+  <h1>Aviso legal y privacidad</h1>
+  <p class="sub">Última actualización: 4 de agosto de 2026</p>
+
+  <h2>Quién está detrás de este sitio</h2>
+  <dl class="ficha">
+    <dt>Titular</dt><dd>Carlos Maroto Martín</dd>
+    <dt>NIF</dt><dd>70822527F</dd>
+    <dt>Domicilio</dt><dd>Calle Bolívar 1, 1.º — 28045 Madrid (España)</dd>
+    <dt>Correo</dt><dd><a href="mailto:hola@audutor.com">hola@audutor.com</a></dd>
+    <dt>Actividad</dt><dd>Desarrollo y explotación de software de gestión para empresas de tours</dd>
+  </dl>
+  <p><b>Audutor</b> es el nombre comercial bajo el que se presta el servicio. El titular es
+  un empresario individual: la inscripción en el Registro Mercantil es potestativa en ese
+  caso y no consta inscripción, por lo que no hay dato registral que publicar.</p>
+
+  <h2>Qué es este sitio</h2>
+  <p>Una página de presentación de un producto que aún no está abierto al público, con una
+  demo que funciona <b>entera dentro de tu navegador</b>: los datos que ves son ficticios,
+  nada de lo que hagas en ella se envía a ningún servidor y nada se guarda al cerrarla.</p>
+  <p>Los precios que aparecen no incluyen IVA. Ninguno de ellos constituye una oferta
+  contractual: el servicio todavía no se comercializa.</p>
+
+  <h2>Tus datos</h2>
+  <p><b>Hoy este sitio no recoge ningún dato personal.</b> No hay formularios activos, no
+  hay registro y no se envía nada a ningún servidor. Si escribes a la dirección de arriba,
+  se trata tu correo únicamente para responderte.</p>
+  <ul>
+    <li><b>Responsable:</b> el titular indicado más arriba.</li>
+    <li><b>Finalidad:</b> responder tu consulta y, si hay interés por ambas partes,
+      enseñarte el producto.</li>
+    <li><b>Base jurídica:</b> la aplicación de medidas precontractuales a petición tuya
+      (art. 6.1.b del RGPD).</li>
+    <li><b>Conservación:</b> doce meses desde el último contacto, si no llega a haber
+      contrato.</li>
+    <li><b>Destinatarios:</b> ninguno. No se ceden datos a terceros ni se usan para
+      enviarte comunicaciones comerciales que no hayas pedido.</li>
+  </ul>
+  <p>Puedes ejercer los derechos de <b>acceso, rectificación, supresión, limitación del
+  tratamiento, portabilidad y oposición</b>, así como a no ser objeto de decisiones
+  automatizadas, escribiendo a la dirección de arriba. Si crees que no se han atendido,
+  puedes reclamar ante la <a href="https://www.aepd.es/" rel="noopener">Agencia Española de
+  Protección de Datos</a>.</p>
+
+  <h2>Cookies: no hay</h2>
+  <p>Este sitio <b>no instala ninguna cookie</b> ni usa almacenamiento local, analítica,
+  píxeles de seguimiento ni tipografías cargadas desde servidores de terceros. Por eso no
+  verás un aviso pidiéndote permiso: no hay nada que permitir.</p>
+
+  <h2>Propiedad intelectual</h2>
+  <p>Los textos, el diseño, el código y las marcas de este sitio pertenecen a su titular,
+  salvo lo que se indique de otro modo. Puedes citarlo y enlazarlo libremente; para
+  reproducirlo o reutilizarlo, escribe antes.</p>
+  <p>Las marcas de terceros que se nombran —plataformas de reserva y proveedores de
+  pago— pertenecen a sus respectivos titulares y se citan solo para indicar con qué
+  servicios funciona el producto. Mencionarlas no implica ninguna relación con ellos.</p>
+
+  <h2>Responsabilidad</h2>
+  <p>Se procura que la información esté al día, pero puede contener errores o quedarse
+  desactualizada. El sitio puede dejar de estar disponible temporalmente por mantenimiento
+  o por causas ajenas. Si encuentras algo incorrecto, escribe y se corrige.</p>
+
+  <h2>Ley aplicable</h2>
+  <p>Se aplica la legislación española. Para cualquier controversia, y salvo que una norma
+  imperativa disponga otro fuero, las partes se someten a los juzgados y tribunales del
+  domicilio del titular.</p>
+
+  <p class="volver"><a href="../">← Volver a la web</a> · <a href="../en/legal-notice/">English version</a></p>
+</div>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Legal notice and privacy · Audutor</title>
+<style>
+/* ── Por qué esta página existe ──────────────────────────────────────────────────────
+   El artículo 10.1 de la Ley 34/2002 (LSSI-CE) obliga a todo prestador de servicios de la
+   sociedad de la información establecido en España a publicar, de forma permanente y
+   accesible, sus datos identificativos. No es un adorno de confianza: omitir el NIF es
+   infracción leve (hasta 30.000 €) y omitir de forma significativa nombre y domicilio es
+   GRAVE (30.001–150.000 €).
+
+   Y el artículo enumera nombre, domicilio y correo en una sola letra, de forma acumulativa:
+   poner solo un correo de contacto NO cumple, que es lo que había hasta hoy.
+
+   Dos decisiones que conviene dejar escritas para que nadie las «arregle» luego:
+
+   · NO se publica dato de Registro Mercantil. Para el empresario individual la inscripción
+     es POTESTATIVA (art. 19.1 del Código de Comercio). Si no está inscrito no hay dato que
+     publicar, y copiarlo de una plantilla de sociedad sería una manifestación falsa.
+
+   · NO hay banner de cookies, y es a propósito. Este sitio no escribe ninguna cookie ni usa
+     `localStorage`, analítica, píxeles ni tipografías remotas. Sin almacenamiento en el
+     equipo del visitante no se activa el art. 22.2 LSSI. Poner un banner «por si acaso»
+     sería peor: pediría un consentimiento que no hace falta y obligaría a mantener una
+     política que no describe nada.
+
+   La política de privacidad va DENTRO de esta misma página en vez de en otra aparte. Hoy el
+   sitio no trata ningún dato —no hay formulario activo—, así que dos documentos separados
+   serían dos sitios donde quedarse desactualizado en lugar de uno. */
+:root{
+  --ink:#22302b; --ink2:#3d4f47; --muted:#5c6b64; --paper:#fffdf7; --bg:#f4f1e8;
+  --acc:#14634c; --acc-deep:#0e4a3a; --coral:#f4653a; --line:#e2dccc; --gold:#c98a2d;
+}
+*{ box-sizing:border-box; }
+html,body{ margin:0; }
+body{
+  background:var(--bg); color:var(--ink);
+  font:16px/1.62 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  padding:34px 18px 60px; position:relative; overflow-x:hidden;
+}
+body::before{
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(760px 420px at 12% -8%, rgba(20,99,76,.07), transparent 62%),
+    radial-gradient(680px 380px at 108% 8%, rgba(244,101,58,.06), transparent 60%);
+}
+.doc{
+  position:relative; z-index:1; width:100%; max-width:640px; margin:0 auto;
+  background:var(--paper); border:1px solid var(--line); border-radius:18px;
+  padding:34px 30px 30px;
+  box-shadow:0 1px 2px rgba(34,48,43,.05), 0 12px 34px -12px rgba(34,48,43,.16);
+}
+.doc::before{
+  content:""; display:block; height:3px; margin:-34px -30px 24px; border-radius:18px 18px 0 0;
+  background:linear-gradient(90deg,var(--acc),var(--gold) 55%,var(--coral));
+}
+.wm{ font:400 27px/1 Iowan Old Style,Palatino,Georgia,serif; color:var(--acc); display:block; }
+h1{ font:600 23px/1.25 inherit; margin:20px 0 4px; }
+.sub{ margin:0 0 26px; font-size:13.5px; color:var(--muted); }
+h2{ font:700 15px/1.3 inherit; margin:30px 0 9px; color:var(--acc-deep);
+  letter-spacing:.01em; }
+p{ margin:0 0 13px; font-size:15px; color:var(--ink2); }
+ul{ margin:0 0 13px; padding-left:20px; font-size:15px; color:var(--ink2); }
+li{ margin-bottom:6px; }
+a{ color:var(--acc); }
+b,strong{ color:var(--ink); }
+/* La ficha del art. 10: es el motivo de la página, así que se lee sin buscarla.
+   Rejilla de dos columnas para que los valores compartan eje vertical; en móvil se apila,
+   porque a 360 px una etiqueta y un domicilio no caben en la misma línea sin partirse mal. */
+.ficha{
+  display:grid; grid-template-columns:auto 1fr; gap:9px 18px;
+  background:#faf7ef; border:1px solid var(--line); border-radius:12px;
+  padding:18px 20px; margin:0 0 6px; font-size:15px;
+}
+.ficha dt{ font-weight:700; color:var(--muted); font-size:13px; text-transform:uppercase;
+  letter-spacing:.03em; padding-top:2px; }
+.ficha dd{ margin:0; color:var(--ink); }
+@media (max-width:520px){
+  .ficha{ grid-template-columns:1fr; gap:2px 0; }
+  .ficha dd{ margin-bottom:10px; }
+  .doc{ padding:28px 20px 24px; }
+  .doc::before{ margin:-28px -20px 20px; }
+}
+.volver{ margin-top:30px; padding-top:18px; border-top:1px solid var(--line); font-size:14px; }
+</style>
+</head>
+<body>
+<div class="doc">
+  <span class="wm">Audutor</span>
+  <h1>Legal notice and privacy</h1>
+  <p class="sub">Last updated: 4 August 2026</p>
+
+  <h2>Who is behind this site</h2>
+  <dl class="ficha">
+    <dt>Owner</dt><dd>Carlos Maroto Mart&iacute;n</dd>
+    <dt>Tax ID</dt><dd>NIF 70822527F (Spain)</dd>
+    <dt>Address</dt><dd>Calle Bol&iacute;var 1, 1.&ordm; &mdash; 28045 Madrid, Spain</dd>
+    <dt>Email</dt><dd><a href="mailto:hola@audutor.com">hola@audutor.com</a></dd>
+    <dt>Activity</dt><dd>Development and operation of management software for tour companies</dd>
+  </dl>
+  <p><b>Audutor</b> is the trading name under which the service is provided. The owner is a
+  sole trader; registration with the Spanish Commercial Registry is optional in that case and
+  no such registration exists, so there is no registry number to publish.</p>
+
+  <h2>What this site is</h2>
+  <p>A presentation page for a product that is not yet open to the public, with a demo that
+  runs <b>entirely inside your browser</b>: the data you see is fictional, nothing you do in
+  it is sent to any server, and nothing is kept once you close it.</p>
+  <p>Prices shown exclude VAT. None of them is a contractual offer: the service is not on
+  sale yet.</p>
+
+  <h2>Your data</h2>
+  <p><b>This site collects no personal data today.</b> There are no active forms, no sign-up
+  and nothing is sent to any server. If you write to the address above, your email address is
+  used solely to reply to you.</p>
+  <ul>
+    <li><b>Controller:</b> the owner named above.</li>
+    <li><b>Purpose:</b> to answer your enquiry and, if there is interest on both sides, to
+      show you the product.</li>
+    <li><b>Legal basis:</b> steps taken at your request prior to entering into a contract
+      (Art. 6(1)(b) UK&nbsp;GDPR / EU&nbsp;GDPR).</li>
+    <li><b>Retention:</b> twelve months from the last contact, if no contract follows.</li>
+    <li><b>Recipients:</b> none. Your data is not shared with third parties and is not used
+      to send you marketing you did not ask for.</li>
+  </ul>
+  <p>You can exercise your rights of <b>access, rectification, erasure, restriction of
+  processing, portability and objection</b>, and not to be subject to automated
+  decision-making, by writing to the address above. Data is processed in Spain. If you are in
+  the UK you may complain to the <a href="https://ico.org.uk/" rel="noopener">Information
+  Commissioner&rsquo;s Office</a>; if you are in the EU, to your national authority or to the
+  <a href="https://www.aepd.es/" rel="noopener">Spanish Data Protection Agency</a>.</p>
+
+  <h2>Cookies: there are none</h2>
+  <p>This site <b>sets no cookies</b> and uses no local storage, analytics, tracking pixels
+  or fonts loaded from third-party servers. That is why you will not see a banner asking for
+  your permission: there is nothing to permit.</p>
+
+  <h2>Intellectual property</h2>
+  <p>The text, design, code and trade marks on this site belong to its owner unless stated
+  otherwise. You are welcome to quote and link to it; to reproduce or reuse it, write first.</p>
+  <p>Third-party trade marks named here &mdash; booking platforms and payment providers &mdash;
+  belong to their respective owners and are cited only to indicate which services the product
+  works with. Naming them implies no relationship with them.</p>
+
+  <h2>Liability</h2>
+  <p>Every effort is made to keep this information current, but it may contain errors or fall
+  out of date. The site may be unavailable from time to time for maintenance or for reasons
+  outside our control. If you spot something wrong, write and it gets fixed.</p>
+
+  <h2>Governing law</h2>
+  <p>Spanish law applies. For any dispute, and unless a mandatory rule provides otherwise,
+  the parties submit to the courts of the owner&rsquo;s domicile. Nothing here affects rights
+  you may have as a consumer under the mandatory law of your country of residence.</p>
+
+  <p class="volver"><a href="../">&larr; Back to the site</a> &middot; <a href="../../aviso-legal/">Versi&oacute;n en espa&ntilde;ol</a></p>
+</div>
+</body>
+</html>
