@@ -69,9 +69,25 @@
   .marca .wm-ruta{ width:100%; height:.62em; margin-top:.1em; display:block; overflow:visible; }
   .demo-chip{ font-size:10px; font-weight:800; letter-spacing:.08em; background:var(--coral-deep);
               color:#fff; border-radius:6px; padding:2px 7px; margin-left:auto; }
-  .tenant{ font-size:12px; color:#93b3a7; padding:0 10px 16px;
-           border-bottom:1px solid rgba(255,255,255,.13); margin-bottom:12px; }
-  .tenant b{ color:#eaf4ef; display:block; font-size:13.5px; }
+  /* ── DE QUIÉN ES ESTA OPERACIÓN ───────────────────────────────────────────────────
+     Era una línea de 13,5 px en gris claro debajo del logotipo, y a un palmo del ojo
+     desaparecía: quien abre la demo veía «Audutor» y no llegaba a leer de quién es el día
+     que está mirando. En un producto que va a ser multi-empresa, el nombre del inquilino no
+     es un subtítulo — es la respuesta a «¿dónde estoy?».
+
+     Se convierte en una tarjeta con iniciales, sobre un fondo propio para que se despegue
+     del verde de la barra. El «empresa ficticia» se queda pequeño DEBAJO, que es lo que es:
+     un descargo, no un dato. */
+  .tenant{ display:flex; gap:9px; align-items:center; margin:0 8px 12px; padding:9px 10px;
+           background:rgba(255,255,255,.11); border:1px solid rgba(255,255,255,.16);
+           border-radius:11px; }
+  .tenant .ini-emp{ flex:0 0 auto; width:30px; height:30px; border-radius:9px;
+           background:var(--acc); color:#fff; font-weight:800; font-size:12.5px;
+           display:flex; align-items:center; justify-content:center; letter-spacing:-.02em; }
+  .tenant .txt{ min-width:0; }
+  .tenant b{ color:#fff; display:block; font-size:15px; font-weight:800; line-height:1.2;
+           letter-spacing:-.01em; }
+  .tenant small{ display:block; color:#93b3a7; font-size:11px; margin-top:2px; }
   aside nav a{ display:flex; gap:10px; align-items:center; color:#cfe3da; text-decoration:none;
     padding:9px 10px; border-radius:9px; font-size:14px; font-weight:600; margin-bottom:2px;
     transition:background .14s, color .14s; }
@@ -584,6 +600,24 @@
   .recarga-demo{ margin:0 0 10px; }
   .recarga-demo .btn{ width:100%; min-height:48px; font-weight:700; }
   .recarga-demo p{ margin:5px 0 0; text-align:center; }
+
+  #td-banda{ background:#123f33; color:#eaf4ef; font-size:13px; line-height:1.5;
+    padding:9px 14px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  #td-banda b{ color:#ffd490; }
+  #td-banda .btn{ padding:4px 9px; font-size:12px; }
+  /* Las reglas del velo van por ID en esta demo (`#viajero-overlay`), no por clase, así que
+     copiar la clase no bastaba: el formulario salía en el flujo de la página, empujando el
+     panel hacia abajo, en vez de encima. Visto en una captura, no leyendo. */
+  #td-overlay{ position:fixed; inset:0; z-index:90; display:none; align-items:center;
+    justify-content:center; background:rgba(18,36,32,.58); padding:22px; }
+  #td-overlay.ver{ display:flex; animation:aparece .25s ease; }
+  .td-caja{ background:var(--paper); border-radius:14px; box-shadow:0 24px 60px rgba(0,0,0,.3); padding:20px; max-width:460px;
+    width:calc(100vw - 32px); max-height:88vh; overflow:auto; }
+  .td-caja h3{ margin:0 0 4px; font-size:19px; }
+  .td-c{ display:block; margin:10px 0; }
+  .td-c span{ display:block; font-size:12.5px; font-weight:700; color:var(--ink2); margin-bottom:3px; }
+  .td-c input{ width:100%; font:inherit; font-size:14px; padding:9px 10px; border-radius:9px;
+    border:1.5px solid var(--line); background:#fff; color:inherit; }
   .comp-sel{ background:#f3ecdb; border:1px solid #e0d3b4; border-radius:10px;
     padding:9px 11px; margin-top:8px; font-size:11.5px; color:#5c6653; }
   .comp-tit{ font-weight:800; font-size:10px; letter-spacing:.07em; text-transform:uppercase;
@@ -814,10 +848,31 @@
     <circle cx="103" cy="83" r="4.6" fill="#0c6b56"/>
   </symbol>
 </svg>
+
+<!-- La banda de «estás viendo TU demo». Va arriba del todo y no se puede cerrar: quien
+     comparte el enlace tiene que ver, en todo momento, que lo que hay en pantalla son sus
+     datos y no los de ejemplo. -->
+<div id="td-banda" style="display:none"></div>
+
+<div class="vj-overlay" id="td-overlay" role="dialog" aria-modal="true" aria-label="Monta tu demo">
+  <div class="td-caja">
+    <h3>Móntala con tus tours</h3>
+    <p class="mini muted">Seis datos y verás esta misma pantalla con lo tuyo. <b>No se envía a
+      ninguna parte</b>: se queda en tu navegador y viaja en la dirección — puedes desconectar
+      el wifi antes de darle y comprobarlo.</p>
+    <div id="td-campos"></div>
+    <p class="mini muted">Lo que no escribas se queda <b>vacío</b>, no se rellena con lo de
+      Sevilla. Es lo que te deja ver qué hace GuIA cuando no sabe algo.</p>
+    <div class="fila" style="gap:8px; justify-content:flex-end; flex-wrap:wrap;">
+      <button class="btn sec" onclick="tdCierra()">Ahora no</button>
+      <button class="btn" onclick="tdGuarda()">Ver mi demo</button>
+    </div>
+  </div>
+</div>
 <div class="app">
 <aside>
   <div class="marca"><a class="marca-link" href="../" title="Ir a la web de Audutor"><span class="wm"><span class="wm-palabra">Audutor</span><svg class="wm-ruta" viewBox="0 0 96 14" preserveAspectRatio="none" aria-hidden="true"><path d="M2 10 C 20 4, 36 12, 52 7 S 78 5, 84 8" fill="none" stroke="#8fb0a6" stroke-width="1.7" stroke-dasharray="0.1 5.2" stroke-linecap="round"/><path d="M90 1.4c-2.4 0-4.4 2-4.4 4.4 0 3.2 4.4 7 4.4 7s4.4-3.8 4.4-7c0-2.4-2-4.4-4.4-4.4z" fill="#12805f"/><circle cx="90" cy="5.9" r="1.7" fill="#f3ecdb"/></svg></span></a> <span class="demo-chip">DEMO</span></div>
-  <div class="tenant"><b>Patio y Compás · Sevilla</b>empresa ficticia — datos inventados</div>
+  <div class="tenant"><span class="ini-emp" aria-hidden="true">PC</span><span class="txt"><b>Patio y Compás</b><small>Sevilla · empresa ficticia</small></span></div>
   <button class="nav-hamb" onclick="menuMovil()" aria-expanded="false" aria-controls="nav-princ"><span aria-hidden="true">☰</span><span class="hamb-txt">Menú</span></button>
 <nav id="nav-princ">
     <!-- Los grupos van ABIERTOS de entrada. Estaban plegados y el «Manifiesto del guía»
@@ -4740,6 +4795,142 @@ function recargaManifiesto(){
   }, 700);
 }
 
+
+/* ══ TU DEMO: LA MISMA PANTALLA, CON TUS TOURS ═══════════════════════════════════════
+   ── La regla que decide si esto vale o no ─────────────────────────────────────
+
+   **Lo que escribes es tuyo. Lo que no escribes se queda VACÍO.**
+
+   Una demo medio tuya y medio de Sevilla afirma cosas falsas sobre TU tour: escribes tu
+   punto de encuentro y GuIA contesta con los baños del Archivo de Indias. Es exactamente
+   la acusación que este producto le hace a los asistentes de la competencia, y hacerlo
+   nosotros para que la demo luzca sería el peor cambio posible.
+
+   Y ahí está la gracia: con seis campos GuIA deriva casi todo. Parece una demo pobre y es
+   la tesis funcionando delante de quien la mira — por eso el contador de al lado no se
+   esconde, se enseña.
+
+   ── Y es ANÓNIMA de verdad, no «anónima» de marketing ─────────────────────────
+
+   Los datos viajan en el FRAGMENTO de la dirección —lo de detrás de `#`— y el fragmento,
+   por definición del protocolo, **no se manda al servidor**: ni en la petición, ni en la
+   cabecera `Referer`. Nada de lo que se escriba aquí llega a Audutor. Se puede comprobar
+   desconectando el wifi antes de pulsar, y la pantalla lo dice.
+
+   Eso tiene un precio y conviene saberlo: no sabremos quién la probó ni qué escribió, que
+   es el dato más valioso que hay ahora mismo. */
+
+var TD_CAMPOS = [
+  { k:'empresa', l:'Tu empresa', ph:'Patio y Compás' },
+  { k:'titulo',  l:'Tu tour',    ph:'Free tour del centro' },
+  { k:'visita',  l:'Qué se visita', ph:'la Catedral, el barrio de Santa Cruz…' },
+  { k:'horas',   l:'Días y horarios', ph:'todos los días a las 11:00' },
+  { k:'punto',   l:'Punto de encuentro', ph:'la Plaza Nueva, junto a la estatua' },
+  { k:'dur',     l:'Duración', ph:'2 h 30 min' },
+];
+var TD = null;          // lo que ha escrito quien mira; null = la demo de ejemplo
+
+/* Base64 que aguanta acentos y viaja en una URL. `btoa` solo traga latin-1, así que hay
+   que pasar por UTF-8 antes — sin esto, «Compás» rompe el enlace compartido. */
+function tdCodifica(o){
+  return btoa(String.fromCharCode.apply(null, new TextEncoder().encode(JSON.stringify(o))))
+    .replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+}
+function tdDescodifica(s){
+  try {
+    var b = atob(String(s).replace(/-/g,'+').replace(/_/g,'/'));
+    var u = new Uint8Array(b.length);
+    for (var i=0;i<b.length;i++) u[i]=b.charCodeAt(i);
+    return JSON.parse(new TextDecoder().decode(u));
+  } catch(e){ return null; }
+}
+
+/* Aplicar lo suyo. Se VACÍA todo lo demás a propósito — ver la regla de arriba. */
+function tdAplica(datos){
+  TD = datos;
+  MK = JSON.parse(JSON.stringify(MK));      // copia: no se toca el preset del mercado
+  MK.empresa = datos.empresa || 'Tu empresa';
+  for (var k in S.kbEmpresa) S.kbEmpresa[k] = '';
+  var t = tourNuevo(datos.titulo || 'Tu tour', 'tuyo', {
+    titulo: datos.titulo || '', visita: datos.visita || '',
+    horas: datos.horas || '', punto: datos.punto || '', dur: datos.dur || '' });
+  S.tours = [t]; S.tourChat = 0; S.tourKb = 0;
+  S.derivadas = []; S.aprendidas = [];
+  pintaTenant();
+  try { location.replace('#' + (location.hash.slice(1).split('&')[0] || 'operaciones') +
+    '&tu=' + tdCodifica(datos)); } catch(e){}
+  tdPintaBanda();
+  ir((location.hash.slice(1).split('&')[0]) || 'operaciones');
+}
+
+/* Cuántos de los 49 campos tiene puestos, que es el número honesto que hay que enseñar. */
+function tdLlenos(){
+  var kb = S.tours[0] ? S.tours[0].kb : {};
+  return CAMPOS_KB.filter(function(c){ return String(kb[c.k]||'').trim(); }).length;
+}
+
+function tdPintaBanda(){
+  var b = document.getElementById('td-banda');
+  if (!b) return;
+  if (!TD) { b.style.display='none'; return; }
+  b.style.display='';
+  b.innerHTML = '<b>Estás viendo TU demo</b> · ' + tdLlenos() + ' de ' + CAMPOS_KB.length +
+    ' datos de tu tour puestos. <b>Lo que no le has dicho, GuIA no se lo inventa: te lo ' +
+    'pasa a ti.</b> ' +
+    '<button class="btn mini sec" onclick="tdAbre()">Cambiar mis datos</button> ' +
+    '<button class="btn mini sec" onclick="tdCopia(this)">Copiar el enlace</button> ' +
+    '<button class="btn mini sec" onclick="tdVuelve()">Volver a la de ejemplo</button>';
+}
+
+function tdCopia(btn){
+  var url = location.href;
+  var fin = function(){ btn.textContent='Copiado ✓'; setTimeout(function(){ btn.textContent='Copiar el enlace'; },1800); };
+  if (navigator.clipboard) navigator.clipboard.writeText(url).then(fin, fin); else fin();
+}
+
+function tdVuelve(){ location.href = location.pathname + '#operaciones'; location.reload(); }
+
+function tdAbre(){
+  var ov = document.getElementById('td-overlay');
+  document.getElementById('td-campos').innerHTML = TD_CAMPOS.map(function(c){
+    return '<label class="td-c"><span>' + c.l + '</span>' +
+      '<input id="td-' + c.k + '" maxlength="160" placeholder="' + c.ph + '" value="' +
+      String((TD && TD[c.k]) || '').replace(/"/g,'&quot;') + '"></label>';
+  }).join('');
+  ov.classList.add('ver');
+  document.body.style.overflow='hidden';
+  var p = document.getElementById('td-' + TD_CAMPOS[0].k); if (p) p.focus();
+}
+function tdCierra(){
+  document.getElementById('td-overlay').classList.remove('ver');
+  document.body.style.overflow='';
+}
+function tdGuarda(){
+  var datos = {};
+  TD_CAMPOS.forEach(function(c){
+    var e = document.getElementById('td-' + c.k);
+    datos[c.k] = e ? e.value.trim().slice(0,160) : '';
+  });
+  if (!datos.empresa && !datos.titulo){
+    toast('Pon al menos el nombre de tu empresa o el de tu tour');
+    return;
+  }
+  tdCierra();
+  tdAplica(datos);
+}
+
+/* Al abrir: si la dirección trae datos, se aplican antes de pintar nada. */
+function tdArranca(){
+  /* `#...&tu=` a secas —sin datos— es como entra quien viene del enlace de la web: abre el
+     formulario directamente. Es la diferencia entre «te invito a montarla» y «búscate el
+     botón», y ese botón está dentro de una demo con doce pantallas. */
+  if (/(?:^|&)tu=(?:&|$)/.test(location.hash.slice(1))) { tdPintaBanda(); tdAbre(); return; }
+  var m = /(?:^|&)tu=([^&]+)/.exec(location.hash.slice(1));
+  if (!m) { tdPintaBanda(); return; }
+  var datos = tdDescodifica(m[1]);
+  if (datos && typeof datos === 'object') tdAplica(datos);
+}
+
 /* ============ navegación ============ */
 /* Módulos: la BASE va en todo plan; los SUPLEMENTOS se desbloquean por plan.
    Base = operaciones, manifiesto, equipo, canales y el recordatorio anti no-show
@@ -4853,9 +5044,25 @@ function pintaMkSel(){
 /* Cambiar de mercado reconfigura el producto: empresa, moneda, canales, canal de
    aviso y modelo de negocio. No re-siembra los datos operativos (sería otra demo):
    demuestra que la MISMA operación se expresa en otra moneda y otro modelo. */
+var LEYENDA_TENANT = 'empresa ficticia';
+/* La tarjeta de la empresa: iniciales, nombre y ciudad, los tres a la vez.
+   Antes esto era una línea (`.tenant b`) y `cambiaMercado` le metía «Empresa · Ciudad»
+   entera. Con la tarjeta hay TRES trozos, y escribir solo el del medio dejaba las iniciales
+   de la empresa anterior al lado del nombre de la nueva — que es peor que no tener
+   iniciales. */
+function pintaTenant(){
+  var partes = String(MK.empresa).split('·').map(function(s){ return s.trim(); });
+  var nombre = partes[0] || MK.empresa, ciudad = partes[1] || '';
+  var ini = nombre.split(/\s+/).filter(Boolean).slice(0,2)
+    .map(function(p){ return p[0]; }).join('').toUpperCase();
+  var b = document.querySelector('.tenant b'); if (b) b.textContent = nombre;
+  var s = document.querySelector('.tenant small');
+  if (s) s.textContent = (ciudad ? ciudad + ' · ' : '') + LEYENDA_TENANT;
+  var e = document.querySelector('.tenant .ini-emp'); if (e) e.textContent = ini;
+}
 function cambiaMercado(k){
   MK = MERCADOS[k];
-  document.querySelector('.tenant b').textContent = MK.empresa;
+  pintaTenant();
   pintaMkSel(); pintaDineroEstatico();
   // repintar todo lo que muestra dinero o canales
   ['operaciones','manifiesto','equipo','canales','liquidacion','cuadro','ahorro'].forEach(function(v){
@@ -7579,6 +7786,11 @@ seedDispo(); seedCobertura();
 pintaManifiesto(); pintaNoshowCfg(); pintaNoshow(); pintaLiq(); pintaCerebro(); pintaCombosDestinatarios(); pintaPost(); calcProy(); pintaEquipo(); pintaCanales(); pintaOperaciones();
 pintaGatesInline(); pintaWaTope(); pintaPropinaPlan(); pintaCanalChat();
 msg('bot','¡Hola! 👋 Soy GuIA, el asistente automático que atiende este chat. Ahora respondo sobre «'+tourChat().nombre+'» — prueba los ejemplos, o crea otro tour en el 🧠 Cerebro y verás que cada uno tiene su cerebro, sin mezclas.');
+
+/* Y lo último: si la dirección trae los datos de quien la comparte, se aplican encima de
+   todo lo anterior. Va al FINAL a propósito — necesita que las funciones de pintado ya
+   existan, y así la demo de ejemplo queda montada por debajo para poder volver a ella. */
+tdArranca();
 </script>
 </body>
 </html>
