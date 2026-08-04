@@ -453,6 +453,10 @@
      suma o no. Por eso los interruptores van aquí y no en una pantalla aparte: la pregunta
      «¿cuánto me cuesta?» no la contesta el plan solo, la contesta la cesta entera, y el
      total tiene que moverse delante de quien la monta. */
+
+  .recarga-demo{ margin:0 0 10px; }
+  .recarga-demo .btn{ width:100%; min-height:48px; font-weight:700; }
+  .recarga-demo p{ margin:5px 0 0; text-align:center; }
   .comp-sel{ background:#f3ecdb; border:1px solid #e0d3b4; border-radius:10px;
     padding:9px 11px; margin-top:8px; font-size:11.5px; color:#5c6653; }
   .comp-tit{ font-weight:800; font-size:10px; letter-spacing:.07em; text-transform:uppercase;
@@ -942,6 +946,15 @@
     <p class="mini muted" style="margin:6px 0 0; text-align:center;" id="ag-resumen-dia"></p>
   </div>
 
+  <!-- The reload button. In the real app it sits above the manifest for the same reason
+       it does here: at the meeting point, with twelve people in front of you and one
+       saying “I booked ten minutes ago”, waiting for the cycle to bring it is an
+       unbearable place to stand. It speeds nothing up: it hands the guide the decision of
+       when to look. And it does NOT say “updated”, it says what changed. -->
+  <div class="recarga-demo">
+    <button class="btn sec" id="ag-recargar" onclick="recargaManifiesto()">⟳&nbsp; Check for anything new</button>
+    <p class="mini muted" id="ag-recarga-pie">This list is from a moment ago</p>
+  </div>
   <p class="mini muted ag-hint" style="margin:0 0 6px;">The day’s tours, <b>in order</b> of departure (swipe to see them all →).</p>
   <div class="ag-wrap" id="ag-wrap"><div id="ag-tours"></div></div>
 </section>
@@ -4519,6 +4532,29 @@ function respuestaEN(t){
 }
 
 /* ═══ FIN MOTOR GuIA ═══ */
+
+
+/* ── THE RELOAD BUTTON ────────────────────────────────────────────────────────────────
+   Simulated here, but the rule it teaches is the real app's: **a button that only says
+   “updated” does not answer the question being asked**, which at the meeting point is
+   always the same — has that booking come through yet?
+
+   So it says what changed, “nothing new” counts as an answer, and it locks while it
+   looks: under pressure people press three times in a row. */
+var AG_RECARGANDO = false, AG_TRAIDO = 0;
+function recargaManifiesto(){
+  if (AG_RECARGANDO) return;
+  var b = document.getElementById('ag-recargar'), pie = document.getElementById('ag-recarga-pie');
+  AG_RECARGANDO = true; b.disabled = true; b.textContent = 'Looking…';
+  pie.textContent = '';
+  setTimeout(function(){
+    AG_RECARGANDO = false; b.disabled = false; b.innerHTML = '⟳&nbsp; Check for anything new';
+    AG_TRAIDO++;
+    pie.innerHTML = (AG_TRAIDO % 2 === 1)
+      ? '<b>↑ 2 more people</b> — a GuruWalk booking that just came in'
+      : '<b>Nothing new</b> — your list is up to date';
+  }, 700);
+}
 
 /* ============ navegación ============ */
 /* Módulos: la BASE va en todo plan; los SUPLEMENTOS se desbloquean por plan.
