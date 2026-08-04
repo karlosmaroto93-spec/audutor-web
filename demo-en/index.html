@@ -58,10 +58,6 @@
   .marca .wm-ruta{ width:100%; height:.62em; margin-top:.1em; display:block; overflow:visible; }
   .demo-chip{ font-size:10px; font-weight:800; letter-spacing:.08em; background:var(--coral-deep);
               color:#fff; border-radius:6px; padding:2px 7px; margin-left:auto; }
-  .legal-lat{ display:block; margin:16px 0 2px; padding-top:12px;
-    border-top:1px solid rgba(255,255,255,.14); font-size:10.5px; letter-spacing:.02em;
-    color:var(--muted); text-decoration:none; opacity:.6; }
-  .legal-lat:hover{ opacity:1; text-decoration:underline; }
   .tenant{ font-size:12px; color:#8a7f63; padding:0 10px 16px; border-bottom:1px solid #e0d3b4;
            margin-bottom:12px; }
   .tenant b{ color:#33514a; display:block; font-size:13.5px; }
@@ -82,6 +78,18 @@
      sitio a nada. Lo que sí cambia en los dos es que los GRUPOS nacen plegados, para que
      el primer golpe de vista sea corto — `ir()` abre solo el grupo de la vista activa,
      así que ni te pierdes al navegar ni se rompe un enlace directo a una vista de dentro. */
+  /* El aviso legal, al pie de la PÁGINA. Estuvo en dos sitios malos antes: entre el
+     nombre de la empresa y el menú (el punto de más peso visual de la barra) y luego al
+     final del lateral — que sobre el papel es el fondo, pero con el menú plegado el
+     lateral solo tiene cuatro cosas y el enlace acababa pegado justo encima del
+     contenido, más visible que antes.
+     El pie de la página es donde todo el mundo lo busca y donde no compite con nada. Y
+     sigue cumpliendo: el art. 10 LSSI pide acceso permanente, fácil y directo — un pie
+     de página lo es; lo que no valdría es esconderlo detrás de un botón. */
+  .pie-legal{ margin:30px 0 0; padding:16px 0 4px; border-top:1px solid var(--line);
+    text-align:center; font-size:11.5px; letter-spacing:.02em; }
+  .pie-legal a{ color:var(--muted); text-decoration:none; opacity:.8; }
+  .pie-legal a:hover{ opacity:1; text-decoration:underline; color:var(--acc2); }
   .nav-hamb{ display:none; }
   @media (max-width:760px){
     .nav-hamb{
@@ -748,7 +756,6 @@
     </div>
     Everything here is interactive and simulated in your browser.
     Nothing is saved and nothing is sent.<br><button onclick="location.reload()">↺ Reset demo</button></div>
-  <a class="legal-lat" href="../en/legal-notice/">Legal notice and privacy</a>
 </aside>
 
 <main>
@@ -1703,6 +1710,7 @@ Places held for your group for 48 h 👉 oldtownwalks.co.uk/combo/x3f9
 </section>
 
 <div id="guia-dispo"></div>
+<p class="pie-legal"><a href="../en/legal-notice/">Legal notice and privacy</a></p>
 </main>
 </div>
 <!-- ============ vista previa del viajero: propina + reseña en una pantalla ============ -->
