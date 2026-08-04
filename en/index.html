@@ -414,6 +414,22 @@
   .tf-o .tf-n small{ display:block; font-weight:400; font-size:12px; color:var(--muted); margin-top:2px; }
   .tf-o .tf-p{ font-size:13.5px; font-weight:800; color:var(--amber); font-variant-numeric:tabular-nums;
     white-space:nowrap; }
+  /* El detalle desplegable de un complemento. Va FUERA del <label> a propósito: dentro,
+     pulsar «qué hace» marcaría la casilla, y el visitante acabaría contratando por leer.
+     La línea de puntos se muda del label al detalle para que el bloque no salga partido. */
+  .tf-o.con-mas{ border-bottom:none; padding-bottom:2px; }
+  .tf-mas{ margin:0 0 2px 26px; padding-bottom:8px; border-bottom:1px dashed var(--line); }
+  .tf-mas summary{ font-size:11.5px; font-weight:800; color:var(--acc); cursor:pointer;
+    list-style:none; letter-spacing:.01em; padding:2px 0; }
+  .tf-mas summary::-webkit-details-marker{ display:none; }
+  .tf-mas summary::before{ content:'+ '; font-weight:900; }
+  .tf-mas[open] summary::before{ content:'\2013 '; }
+  .tf-mas summary:hover{ text-decoration:underline; }
+  .tf-mas ul{ margin:7px 0 0; padding-left:15px; font-size:11.5px; color:var(--muted);
+    line-height:1.5; }
+  .tf-mas li{ margin-bottom:6px; }
+  .tf-mas li:last-child{ margin-bottom:0; }
+  .tf-mas b{ color:var(--ink2); }
   .tf-res{ margin-top:16px; padding-top:14px; border-top:1.5px solid var(--line); }
   .tf-res-l{ display:flex; justify-content:space-between; gap:10px; font-size:12.5px;
     color:var(--ink2); padding:2px 0; }
@@ -813,17 +829,49 @@
       <p class="tf-sub">Tick what you need and watch all three plans change. Add and drop them whenever you like.</p>
 
       <div class="tf-g">The assistant and your shopfront</div>
-      <label class="tf-o"><input type="checkbox" data-c="guia" data-eur="39" onchange="tarifa()">
+      <label class="tf-o con-mas"><input type="checkbox" data-c="guia" data-eur="39" onchange="tarifa()">
         <span class="tf-n">GuIA, the assistant<small>You are out with a group and cannot look at your phone. It answers with your facts —and what it does not know it hands to you instead of making it up</small></span>
         <span class="tf-p">+€39</span></label>
+      <details class="tf-mas"><summary>What it does, exactly</summary>
+        <ul>
+          <li>It answers in your website chat, <b>in whatever language people write in</b>.</li>
+          <li>Only from what you put in its <b>49 fields</b>: meeting point, times, duration, where it
+            ends, how to spot the guide, how long they wait, what happens if it rains, children, dogs,
+            accessibility, toilets, what to bring, cancellations, how people pay at the end…</li>
+          <li>What it does not know <b>it hands to you</b> — and logs it in a list sorted by how many
+            times you have been asked, so you know what to answer first.</li>
+          <li>You answer it once and from then on it answers. <b>That question stops reaching
+            you.</b></li>
+          <li>It knows what is happening in the street: someone who writes “I’m lost” gets the live
+            map, <b>never the guide’s phone number</b>.</li>
+          <li><b>It authorises nothing</b> only a person can authorise —a minor coming alone, an
+            allergy, a guide dog— and it never quotes places it has not checked.</li>
+        </ul>
+      </details>
       <label class="tf-o"><input type="checkbox" data-c="web" data-eur="15" onchange="tarifa()">
         <span class="tf-n">Your website, built for you<small>You have already written the times and the meeting point twice. This is the third and it writes itself</small></span>
         <span class="tf-p">+€15</span></label>
 
       <div class="tf-g">Platforms and the till</div>
-      <label class="tf-o"><input type="checkbox" data-c="agente" data-eur="29" onchange="tarifa()">
+      <label class="tf-o con-mas"><input type="checkbox" data-c="agente" data-eur="29" onchange="tarifa()">
         <span class="tf-n">The platform agent<small>You have 14 on your list; one platform has 17. You know before you set off, not with the three of them standing there</small></span>
         <span class="tf-p">+€29</span></label>
+      <details class="tf-mas"><summary>What it does, exactly</summary>
+        <ul>
+          <li>It signs into your platform dashboards <b>with your own session, on your own
+            computer</b>. Audutor stores no platform password, and it is not going to.</li>
+          <li><b>It counts</b>: how many people each platform has, and how many places are left. If
+            one has 17 and only 14 reached you, the missing three show up.</li>
+          <li><b>It closes</b> the departures that are full, dashboard by dashboard — which is what
+            you do by hand today, every time one fills up.</li>
+          <li>Saying it closed <b>is not the same as closed</b>: the order stays at “says it did it”
+            until someone checks, and the green ✓ is only ever put there by a person.</li>
+          <li>If it stops halfway, the order <b>goes back into the queue by itself</b>. It is never
+            assumed good just for sitting there.</li>
+          <li>And while the numbers disagree, <b>GuIA stops quoting places</b> until someone
+            looks.</li>
+        </ul>
+      </details>
       <label class="tf-o"><input type="checkbox" data-c="liquidacion" data-eur="19" onchange="tarifa()">
         <span class="tf-n">Guide payouts<small>Sunday afternoon with the notebook and the calculator. Every tour arrives already settled: tips, the channel’s cut, the guide’s share and yours</small></span>
         <span class="tf-p">+€19</span></label>

@@ -368,6 +368,22 @@
   .tf-o .tf-n small{ display:block; font-weight:400; font-size:12px; color:var(--muted); margin-top:2px; }
   .tf-o .tf-p{ font-size:13.5px; font-weight:800; color:var(--amber); font-variant-numeric:tabular-nums;
     white-space:nowrap; }
+  /* El detalle desplegable de un complemento. Va FUERA del <label> a propósito: dentro,
+     pulsar «qué hace» marcaría la casilla, y el visitante acabaría contratando por leer.
+     La línea de puntos se muda del label al detalle para que el bloque no salga partido. */
+  .tf-o.con-mas{ border-bottom:none; padding-bottom:2px; }
+  .tf-mas{ margin:0 0 2px 26px; padding-bottom:8px; border-bottom:1px dashed var(--line); }
+  .tf-mas summary{ font-size:11.5px; font-weight:800; color:var(--acc); cursor:pointer;
+    list-style:none; letter-spacing:.01em; padding:2px 0; }
+  .tf-mas summary::-webkit-details-marker{ display:none; }
+  .tf-mas summary::before{ content:'+ '; font-weight:900; }
+  .tf-mas[open] summary::before{ content:'\2013 '; }
+  .tf-mas summary:hover{ text-decoration:underline; }
+  .tf-mas ul{ margin:7px 0 0; padding-left:15px; font-size:11.5px; color:var(--muted);
+    line-height:1.5; }
+  .tf-mas li{ margin-bottom:6px; }
+  .tf-mas li:last-child{ margin-bottom:0; }
+  .tf-mas b{ color:var(--ink2); }
   .tf-res{ margin-top:16px; padding-top:14px; border-top:1.5px solid var(--line); }
   .tf-res-l{ display:flex; justify-content:space-between; gap:10px; font-size:12.5px;
     color:var(--ink2); padding:2px 0; }
@@ -840,17 +856,49 @@
       y se ponen cuando quieras.</p>
 
       <div class="tf-g">El asistente y tu escaparate</div>
-      <label class="tf-o"><input type="checkbox" data-c="guia" data-eur="39" onchange="tarifa()">
+      <label class="tf-o con-mas"><input type="checkbox" data-c="guia" data-eur="39" onchange="tarifa()">
         <span class="tf-n">GuIA, el asistente<small>Estás andando con un grupo y no puedes mirar el móvil. Contesta con tus datos —y lo que no sabe te lo pasa a ti en vez de inventarlo</small></span>
         <span class="tf-p">+39 €</span></label>
+      <details class="tf-mas"><summary>Qué hace, exactamente</summary>
+        <ul>
+          <li>Contesta en el chat de tu web, <b>en el idioma en que le escriban</b>.</li>
+          <li>Solo con lo que tú has puesto en sus <b>49 casillas</b>: punto de encuentro, horarios,
+            duración, dónde acaba, cómo reconocer al guía, cuánto espera, si llueve, niños, mascotas,
+            accesibilidad, baños, qué llevar, cancelaciones, cómo se paga al final…</li>
+          <li>Lo que no sabe <b>te lo pasa a ti</b> — y te lo apunta en una lista ordenada por cuántas
+            veces se lo han preguntado, para que sepas qué contestar primero.</li>
+          <li>Se lo contestas una vez y a partir de ahí lo contesta él. <b>Esa pregunta deja de
+            llegarte.</b></li>
+          <li>Sabe lo que pasa en la calle: a quien escribe «me he perdido» le manda el mapa en vivo,
+            <b>sin dar nunca el teléfono del guía</b>.</li>
+          <li><b>No autoriza nada</b> que solo pueda autorizar una persona —un menor que viene solo,
+            una alergia, un perro guía— ni da plazas que no ha comprobado.</li>
+        </ul>
+      </details>
       <label class="tf-o"><input type="checkbox" data-c="web" data-eur="15" onchange="tarifa()">
         <span class="tf-n">Tu web, montada sola<small>Ya has escrito los horarios y el punto de encuentro dos veces. Esta es la tercera y va sola</small></span>
         <span class="tf-p">+15 €</span></label>
 
       <div class="tf-g">Las plataformas y la caja</div>
-      <label class="tf-o"><input type="checkbox" data-c="agente" data-eur="29" onchange="tarifa()">
+      <label class="tf-o con-mas"><input type="checkbox" data-c="agente" data-eur="29" onchange="tarifa()">
         <span class="tf-n">El agente de plataformas<small>Tú llevas 14 en la lista; una plataforma tiene 17. Lo sabes antes de salir, no con los tres delante</small></span>
         <span class="tf-p">+29 €</span></label>
+      <details class="tf-mas"><summary>Qué hace, exactamente</summary>
+        <ul>
+          <li>Entra en los paneles de tus plataformas <b>con tu sesión y en tu ordenador</b>. Audutor
+            no guarda ninguna contraseña de plataforma, y no va a guardarlas.</li>
+          <li><b>Cuenta</b>: cuánta gente le consta a cada plataforma y cuántas plazas quedan. Si a
+            una le constan 17 y a ti te han llegado 14, aparecen las tres que faltan.</li>
+          <li><b>Cierra</b> las salidas llenas, panel por panel — que es lo que hoy haces tú a mano
+            cada vez que se llena una.</li>
+          <li>Que diga que cerró <b>no es que esté cerrado</b>: la orden se queda en «dice que la
+            hizo» hasta que se comprueba, y el ✓ verde lo pone una persona.</li>
+          <li>Si se queda a medias, la orden <b>vuelve sola a la cola</b>. Nunca se da por buena por
+            llevar tiempo parada.</li>
+          <li>Y mientras los números no cuadren, <b>GuIA deja de dar plazas</b> hasta que alguien
+            mire.</li>
+        </ul>
+      </details>
       <label class="tf-o"><input type="checkbox" data-c="liquidacion" data-eur="19" onchange="tarifa()">
         <span class="tf-n">Liquidación a guías<small>El domingo por la tarde con el cuaderno y la calculadora. Cada tour ya viene cuadrado: propina, comisión del canal, lo del guía y lo tuyo</small></span>
         <span class="tf-p">+19 €</span></label>
