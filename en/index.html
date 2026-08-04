@@ -380,6 +380,16 @@
     .addon{ grid-template-columns:1fr; gap:20px; padding:22px; }
   }
   /* ---- facturación mensual / anual ---- */
+  /* El cobro por encima del plan. Va DEBAJO de la lista y con su propio aire, no metido
+     en un bullet: la lista dice qué incluye el plan y esto dice qué pasa cuando te lo
+     pasas, que es otra pregunta. Y va en la tarjeta, no en una nota al pie, porque una
+     página que promete «no hay letra pequeña» no puede esconder justo el número que
+     aparece el mes que creces. */
+  .plan-extra{ margin:-6px 0 16px; padding:9px 11px; border-radius:9px;
+    background:rgba(18,138,107,.07); border:1px dashed var(--line);
+    font-size:12.5px; line-height:1.5; color:var(--ink2); }
+  .plan-extra b{ color:var(--amber); }
+  .plan.premium .plan-extra{ background:rgba(201,138,45,.10); border-color:rgba(163,106,16,.28); }
   .fact-toggle-wrap{ text-align:center; margin:-8px 0 32px; }
   .fact-toggle{ display:inline-flex; background:var(--paper); border:1.5px solid var(--line);
     border-radius:99px; padding:4px; gap:2px; }
@@ -589,7 +599,8 @@
       it messages your customers so they actually turn up, gets stragglers back to the group, spots the bookings that are really one group, and settles every tour to the penny. Every channel’s bookings land in one list. <b>Modular</b>: start with two modules and grow when you want to.</p>
       <div class="hero-ctas reveal" style="--d:220ms">
         <a class="btn" href="../demo-en/" data-demo>🖱️ Try the interactive demo</a>
-        <a class="btn sec" href="#contacto">Book a guided demo</a>
+        <p class="plan-extra">Essential is free and caps at 150: when you get there we tell you, and you decide whether to move to Pro.</p>
+      <a class="btn sec" href="#contacto">Book a guided demo</a>
       </div>
       <p class="hero-nota reveal" style="--d:300ms">It was built while running tours, not in a boardroom. Setting it up takes an afternoon: forward your booking emails and the inbox fills itself in. Nothing to migrate, nothing to sign.</p>
       <div class="guia-saludo reveal" style="--d:380ms">
@@ -726,7 +737,7 @@
       <div class="fact-nota" data-nota hidden>billed annually · €790/year (2 months free)</div>
       <div class="para">For companies running a team of guides · <b>up to 800 travellers a month</b> · unlimited tours and guides</div>
       <ul>
-        <li>Everything in Essential · <b>unlimited tours, guides and channels</b> — no bands, no price jumps as the team grows — · full history · <b>+€6/month</b> per extra 100 travellers, <b>up to 2,500</b></li>
+        <li>Everything in Essential · <b>unlimited tours, guides and channels</b> · full history</li>
         <li>No Audutor branding — your brand on the tip screen and the guide page</li>
         <li><b>The full smart anti-no-show sequence</b>: it adapts to how risky each booking looks — and
           leaves a record of who was contacted, when, and who confirmed</li>
@@ -736,6 +747,7 @@
         <li><b>Guide payouts</b>: your own split, worked out tour by tour — and the totals reconcile</li>
         <li><b>Abandoned checkouts and tour bundles</b>: the follow-up sale happens without you</li>
       </ul>
+      <p class="plan-extra">Above 800 travellers: <b>+€6/month per extra 100</b>, up to 2,500.</p>
       <a class="btn" href="#contacto">Book a demo</a>
     </div>
     <div class="plan premium reveal" style="--d:220ms">
@@ -743,11 +755,12 @@
       <div class="fact-nota" data-nota hidden>billed annually · €1,990/year (2 months free)</div>
       <div class="para">Everything Audutor does · <b>up to 5,000 travellers a month</b> — for operators running several tours a day</div>
       <ul>
-        <li>Everything in Pro · <b>5,000 travellers included, no steps</b> — at that volume it works out at <b>4 cents a traveller</b> · beyond that, <b>+€3/month per 100</b></li>
+        <li>Everything in Pro · <b>5,000 travellers included, no steps</b></li>
         <li><b>Analytics</b>: the numbers by tour, guide, channel and time slot</li>
         <li>Priority support and hands-on setup</li>
-        <li>Coming next: online payments, invoicing and a channel manager for ticketed tours</li>
       </ul>
+      <p class="plan-extra">Above 5,000: <b>+€3/month per 100</b> up to 20,000, and
+      <b>+€19/month per 1,000</b> beyond that.</p>
       <a class="btn" href="#contacto">Talk to us about Premium</a>
     </div>
   </div>

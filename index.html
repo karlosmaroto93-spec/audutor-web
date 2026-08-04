@@ -385,6 +385,16 @@
     .addon{ grid-template-columns:1fr; gap:20px; padding:22px; }
   }
   /* ---- facturación mensual / anual ---- */
+  /* El cobro por encima del plan. Va DEBAJO de la lista y con su propio aire, no metido
+     en un bullet: la lista dice qué incluye el plan y esto dice qué pasa cuando te lo
+     pasas, que es otra pregunta. Y va en la tarjeta, no en una nota al pie, porque una
+     página que promete «no hay letra pequeña» no puede esconder justo el número que
+     aparece el mes que creces. */
+  .plan-extra{ margin:-6px 0 16px; padding:9px 11px; border-radius:9px;
+    background:rgba(18,138,107,.07); border:1px dashed var(--line);
+    font-size:12.5px; line-height:1.5; color:var(--ink2); }
+  .plan-extra b{ color:var(--amber); }
+  .plan.premium .plan-extra{ background:rgba(201,138,45,.10); border-color:rgba(163,106,16,.28); }
   .fact-toggle-wrap{ text-align:center; margin:-8px 0 32px; }
   .fact-toggle{ display:inline-flex; background:var(--paper); border:1.5px solid var(--line);
     border-radius:99px; padding:4px; gap:2px; }
@@ -745,6 +755,7 @@
         <li>2 guías · <b>150 viajeros/mes</b> · historial de 30 días</li>
         <li>Página del guía y propina con marca «con Audutor»</li>
       </ul>
+      <p class="plan-extra">Esencial es gratis y no se pasa de 150: al llegar, te avisamos y decides si subes a Pro.</p>
       <a class="btn sec" href="#contacto">Empezar gratis</a>
     </div>
     <div class="plan destacado reveal" style="--d:110ms">
@@ -762,6 +773,7 @@
         <li><b>Liquidación a guías</b> con reparto configurable</li>
         <li><b>Carrito abandonado y combos</b></li>
       </ul>
+      <p class="plan-extra">Si pasas de 800 viajeros: <b>+6 €/mes por cada 100</b>, hasta 2.500.</p>
       <a class="btn" href="#contacto">Pedir una demo</a>
     </div>
     <div class="plan premium reveal" style="--d:220ms">
@@ -772,8 +784,9 @@
         <li>Todo lo de Pro · <b>5.000 viajeros incluidos, sin tramos</b></li>
         <li><b>Cuadro de mando</b> por tour, guía, canal y franja</li>
         <li>Soporte prioritario y onboarding dedicado</li>
-        <li>Próximamente: cobro online, facturación y channel manager de pago</li>
       </ul>
+      <p class="plan-extra">Si pasas de 5.000: <b>+3 €/mes por cada 100</b> hasta 20.000, y
+      <b>+19 €/mes por cada 1.000</b> a partir de ahí.</p>
       <a class="btn" href="#contacto">Quiero Premium</a>
     </div>
   </div>
