@@ -4565,7 +4565,7 @@ function recargaManifiesto(){
 var SUPLEMENTOS={
   chat:      { n:'GuIA · Customer chat', plan:'Pro', d:'The assistant that handles your customers in the chat on your site: it answers with the facts of each tour and hands over anything it does not know. It never makes things up.' },
 cerebro:   { n:'GuIA’s brain', plan:'Pro', d:'The per-tour fact sheet that feeds the assistant, with AI filling it in from the tour’s own page and drafts you can edit.' },   // y L1991: n:'Smart anti-no-show sequence'
-  carrito:   { n:'Abandoned baskets and combos', plan:'Pro', d:'Picks up whoever abandoned a booking halfway and offers the ticketed walk to anyone who did the free one — the second sale, on its own.' },
+  carrito:   { n:'Abandoned baskets and combos', plan:'Premium', d:'Picks up whoever abandoned a booking halfway and offers the ticketed walk to anyone who did the free one — the second sale, on its own.' },
   cuadro:    { n:'Analytics', plan:'Premium', d:'The numbers behind the business: occupancy, channels, tips by guide and time slot, no-shows. So you decide on data, not on a hunch.' },
   liquidacion:{ n:'Guide payouts', plan:'Pro', d:'Every tour’s books balanced: split by percentage or flat fee, channel cost, CSV and print. The guide never pays.' },
   proyeccion:{ n:'Revenue projection', plan:'Premium', d:'The business-plan simulator: drag the sliders and see what each guide and the company earn per month.' },
@@ -4577,8 +4577,8 @@ cerebro:   { n:'GuIA’s brain', plan:'Pro', d:'The per-tour fact sheet that fee
 /* Planes de la demo (precios congruentes con la landing) y qué desbloquea cada uno. */
 /* Los planes son BONOS DE VIAJEROS; lo que decide las funciones son los COMPLEMENTOS. */
 var PLANES={ esencial:{orden:0, n:'Essential', precio:'€0',   bono:150,  base:0},
-             pro:     {orden:1, n:'Pro',      precio:'€39',  bono:800,  base:39},
-             premium: {orden:2, n:'Premium',  precio:'€149', bono:3000, base:149} };
+             pro:     {orden:1, n:'Pro',      precio:'€39',  bono:1000, base:39},
+             premium: {orden:2, n:'Premium',  precio:'€149', bono:5000, base:149} };
 /* Esta demo no tiene la vista del agente, así que su complemento no abre nada aquí: se
    ofrece igual para que el precio que se ve sea el mismo que el de la web inglesa. */
 var COMPLEMENTOS = {

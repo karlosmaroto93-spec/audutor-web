@@ -4749,7 +4749,7 @@ function recargaManifiesto(){
 var SUPLEMENTOS={
   chat:      { n:'GuIA · Chat del cliente', plan:'Pro', d:'El asistente que atiende a tus clientes en el chat de tu web: responde con los hechos de cada tour y deriva lo que no sabe. Nunca inventa.' },
   cerebro:   { n:'GuIA · Cerebro', plan:'Pro', d:'El formulario de hechos por tour que alimenta al asistente, con IA que lo rellena desde la web del tour y borradores editables.' },
-  carrito:   { n:'Carrito abandonado y combos', plan:'Pro', d:'Recupera al que se quedó a medias reservando y ofrece el tour de pago a quien hizo el free tour — la segunda venta, sola.' },
+  carrito:   { n:'Carrito abandonado y combos', plan:'Premium', d:'Recupera al que se quedó a medias reservando y ofrece el tour de pago a quien hizo el free tour — la segunda venta, sola.' },
   agente:    { n:'El agente de plataformas', plan:'Premium', d:'Entra en los paneles de tus plataformas con TU sesión —Audutor no guarda ninguna contraseña—, cuenta cuánta gente le consta a cada una y cierra las salidas llenas. Y aunque diga que cerró, aquí sigue sin ✓ hasta que lo compruebes tú.' },
   cuadro:    { n:'Cuadro de mando', plan:'Premium', d:'La analítica del negocio: ocupación, canales, propina por guía y por franja, no-shows. Para decidir con datos, no a ojo.' },
   liquidacion:{ n:'Liquidación a guías', plan:'Pro', d:'La cuenta de cada tour siempre cuadrada: reparto por % o tarifa fija, coste de canal, CSV e imprimir. El guía nunca paga.' },
@@ -4765,8 +4765,8 @@ var SUPLEMENTOS={
    el 81 % del mercado no llega ni a 3.000 viajeros: vender el plan por volumen dejaba a
    Premium sin más argumento que un tope que a casi nadie le aprieta. */
 var PLANES={ esencial:{orden:0, n:'Esencial', precio:'0 €',   bono:150,  base:0},
-             pro:     {orden:1, n:'Pro',      precio:'39 €',  bono:800,  base:39},
-             premium: {orden:2, n:'Premium',  precio:'149 €', bono:3000, base:149} };
+             pro:     {orden:1, n:'Pro',      precio:'39 €',  bono:1000, base:39},
+             premium: {orden:2, n:'Premium',  precio:'149 €', bono:5000, base:149} };
 /* Qué cuesta cada complemento y qué desbloquea. Una clave por complemento, y la lista de
    vistas que abre — así añadir uno nuevo es una línea y no hay que tocar el gating. */
 var COMPLEMENTOS = {
