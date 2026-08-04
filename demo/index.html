@@ -622,6 +622,14 @@
   .td-c span{ display:block; font-size:12.5px; font-weight:700; color:var(--ink2); margin-bottom:3px; }
   .td-c input{ width:100%; font:inherit; font-size:14px; padding:9px 10px; border-radius:9px;
     border:1.5px solid var(--line); background:#fff; color:inherit; }
+
+  /* El rótulo que NOMBRA la pantalla, encima del titular que la describe. El titular decía
+     muy bien QUÉ HACE y no decía CÓMO SE LLAMA, así que quien llegaba buscando «el panel del
+     agente» no reconocía que ya estaba en él. Un titular describe; un rótulo identifica, y
+     en un producto con trece pantallas hacen falta los dos. */
+  .rotulo-vista{ display:inline-block; font-size:11px; font-weight:800; letter-spacing:.07em;
+    text-transform:uppercase; color:var(--amber); background:var(--gold-soft);
+    border:1px solid #ecd9b0; border-radius:99px; padding:3px 11px; margin-bottom:7px; }
   .comp-sel{ background:#f3ecdb; border:1px solid #e0d3b4; border-radius:10px;
     padding:9px 11px; margin-top:8px; font-size:11.5px; color:#5c6653; }
   .comp-tit{ font-weight:800; font-size:10px; letter-spacing:.07em; text-transform:uppercase;
@@ -1553,7 +1561,7 @@ Plazas de vuestro grupo guardadas 48 h 👉 patioycompas.example/combo/x3f9
      encenderlo ni, sobre todo, para darte cuenta de que está encendido.
      En la app tiene panel propio desde el 3-ago; aquí es el mismo sitio. -->
 <section class="vista" id="v-agente">
-  <div class="cab"><h1>El agente que entra en tus paneles</h1><span class="sub">mira tus fichas, cuenta la gente que les consta y cierra lo lleno — y nada de lo que dice cuenta como hecho hasta que lo miras tú</span></div>
+  <div class="cab"><span class="rotulo-vista">🤖 El agente de plataformas · complemento</span><h1>El agente que entra en tus paneles</h1><span class="sub">mira tus fichas, cuenta la gente que les consta y cierra lo lleno — y nada de lo que dice cuenta como hecho hasta que lo miras tú</span></div>
   <!-- EL AGENTE EXTERNO. Va aquí, con los canales, porque es de lo que habla: entrar en
        el panel de cada plataforma. Apagado por defecto y con su estado en la cabecera —
        un interruptor que deja entrar a un proceso en el panel de tus plataformas no
