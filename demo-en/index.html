@@ -775,7 +775,7 @@
         <label><input type="checkbox" id="c-guia" onchange="compTog('guia',this)"><span>GuIA, the assistant</span><b>+€39</b></label>
         <label><input type="checkbox" id="c-agente" onchange="compTog('agente',this)"><span>The platform agent</span><b>+€29</b></label>
         <label><input type="checkbox" id="c-web" onchange="compTog('web',this)"><span>Your website</span><b>+€15</b></label>
-        <label><input type="checkbox" id="c-soporte" onchange="compTog('soporte',this)"><span>Priority support</span><b>+€19</b></label>
+        <label><input type="checkbox" id="c-liquidacion" onchange="compTog('liquidacion',this)"><span>Guide payouts</span><b>+€19</b></label>
         <div class="comp-total">Your plan: <b id="comp-tot">€39</b><span id="comp-desglose"></span></div>
       </div>
       <div style="font-size:10.5px; margin-top:8px; opacity:.85; line-height:1.5;">💳 Tips: <b>0 %</b> when you take it in person (your own SumUp, card reader or Tap to Pay). Only the <b>link or QR</b> carries <b>1.9 % + £0.30</b>.</div>
@@ -4546,9 +4546,9 @@ var COMPLEMENTOS = {
   guia:     { n:'GuIA, the assistant', precio:39, abre:['chat','cerebro'] },
   agente:   { n:'The platform agent', precio:29, abre:[] },
   web:      { n:'Your website', precio:15, abre:[] },
-  soporte:  { n:'Priority support', precio:19, abre:[] },
+  liquidacion:{ n:'Guide payouts', precio:19, abre:['liquidacion'] },
 };
-S.comp = { guia:false, agente:false, web:false, soporte:false };
+S.comp = { guia:false, agente:false, web:false, liquidacion:false };
 function abiertoPorComplemento(v){
   for (var k in COMPLEMENTOS)
     if (S.comp[k] && COMPLEMENTOS[k].abre.indexOf(v) !== -1) return true;
@@ -4575,9 +4575,18 @@ function pintaComplementos(){
   for (var k in COMPLEMENTOS){ var el = document.getElementById('c-'+k); if (el) el.checked = !!S.comp[k]; }
 }
 function reqOrden(v){ return SUPLEMENTOS[v].plan==='Premium' ? 2 : 1; }   // plan mínimo que lo incluye
+/* Qué complemento abre esta vista, o null si la abre el plan. Existe porque el cartel del
+   candado ofrecía «Cambiar a Pro» para vistas que el plan NO abre —GuIA y la liquidación—:
+   se pulsaba, se cambiaba de plan y el candado seguía puesto. Un botón que no hace nada es
+   peor que no tener botón: el visitante no concluye «me falta el complemento», concluye
+   «esto está roto». */
+function complementoQueAbre(v){
+  for (var k in COMPLEMENTOS) if (COMPLEMENTOS[k].abre.indexOf(v) !== -1) return k;
+  return null;
+}
 function disponible(v){ if(!SUPLEMENTOS[v]) return true;
   if (abiertoPorComplemento(v)) return true;
-  for (var k in COMPLEMENTOS) if (COMPLEMENTOS[k].abre.indexOf(v) !== -1) return !!S.desbloqueado[v];
+  if (complementoQueAbre(v)) return !!S.desbloqueado[v];
   return PLANES[S.plan].orden >= reqOrden(v) || S.desbloqueado[v]; }
 function bloqueado(v){ return SUPLEMENTOS[v] && !disponible(v); }
 function pintaCandados(){
@@ -4624,8 +4633,29 @@ function pintaPlanSel(){
   document.querySelectorAll('#plan-sel button').forEach(function(b){
     b.classList.toggle('on', b.dataset.plan===S.plan); });
 }
+/* El botón del cartel: marca el complemento y repinta, que es exactamente lo que hace la
+   casilla del selector. Un sitio solo donde se contrata en la demo. */
+function contrataDemo(k){
+  S.comp[k]=true; pintaComplementos(); pintaCandados();
+  ir((location.hash.slice(1))||'operaciones');
+}
 function pintaGate(v){
-  var i=SUPLEMENTOS[v], reqPlan=i.plan==='Premium'?'premium':'pro', P=PLANES[reqPlan];
+  var i=SUPLEMENTOS[v], ck=complementoQueAbre(v);
+  if (ck){
+    var C=COMPLEMENTOS[ck];
+    document.getElementById('gate-body').innerHTML=
+      '<div class="cerr">\U0001f512</div>'+
+      '<h2 style="margin:6px 0 2px;">'+i.n+'</h2>'+
+      '<p class="chip" style="background:rgba(201,138,45,.25); color:var(--amber); margin:6px 0; display:inline-block;">Add-on \u201c'+C.n+'\u201d \u00b7 \u20ac'+C.precio+'/month, on any plan</p>'+
+      '<p style="color:var(--ink2); max-width:40ch; margin:6px auto 0;">'+i.d+'</p>'+
+      '<p class="mini muted" style="max-width:42ch; margin:12px auto;">This <b>does not depend on your plan</b>: the plan is the traveller bundle, and the add-on goes on and off whenever you like.</p>'+
+      '<div class="fila" style="gap:8px; justify-content:center; flex-wrap:wrap;">'+
+        '<button class="btn" onclick="contrataDemo(\''+ck+'\')">Add \u201c'+C.n+'\u201d (+\u20ac'+C.precio+'/month)</button>'+
+        '<button class="btn sec" onclick="desbloquear(\''+v+'\')">\U0001f513 Just try it (demo)</button>'+
+      '</div>';
+    return;
+  }
+  var reqPlan=i.plan==='Premium'?'premium':'pro', P=PLANES[reqPlan];
   document.getElementById('gate-body').innerHTML=
     '<div class="cerr">🔒</div>'+
     '<h2 style="margin:6px 0 2px;">'+i.n+'</h2>'+

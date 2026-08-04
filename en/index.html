@@ -785,7 +785,6 @@
           leaves a record of who was contacted, when, and who confirmed</li>
         <li>SMS and WhatsApp reminders <b>uncapped on our side</b> <span class="mini">— Meta bills you directly at their own rate, with nothing added by us, and the smart sequence only spends where there is real risk</span></li>
         <li><b>Platform reconciliation</b>: claw back the fees you paid on people who never turned up — with a running total of what you have reclaimed this month</li>
-        <li><b>Guide payouts</b>: your own split, worked out tour by tour — and the totals reconcile</li>
         <li><b>Abandoned checkouts and tour bundles</b>: the follow-up sale happens without you</li>
       </ul>
       <p class="plan-extra">Above 800 travellers: <b>+€6/month per extra 100</b>, up to 2,000.</p>
@@ -798,7 +797,7 @@
       <ul>
         <li>Everything in Pro · <b>3,000 travellers included, no steps</b></li>
         <li><b>Analytics</b>: the numbers by tour, guide, channel and time slot</li>
-        <li>Priority support and hands-on setup</li>
+        <li><b>We set it up with you</b>: your operation goes live on a call, not from a manual</li>
       </ul>
       <p class="plan-extra">Above 3,000: <b>+€3/month per 100</b> up to 10,000, and
       <b>+€19/month per 1,000</b> beyond that.</p>
@@ -821,12 +820,12 @@
         <span class="tf-n">Your website, built for you<small>You have already written the times and the meeting point twice. This is the third and it writes itself</small></span>
         <span class="tf-p">+€15</span></label>
 
-      <div class="tf-g">Platforms and backup</div>
+      <div class="tf-g">Platforms and the till</div>
       <label class="tf-o"><input type="checkbox" data-c="agente" data-eur="29" onchange="tarifa()">
         <span class="tf-n">The platform agent<small>The bookings that never reached your inbox show up before the tour, not when that person turns up at the meeting point</small></span>
         <span class="tf-p">+€29</span></label>
-      <label class="tf-o"><input type="checkbox" data-c="soporte" data-eur="19" onchange="tarifa()">
-        <span class="tf-n">Priority support<small>Same-day replies, and we do the setup with you instead of sending you a manual</small></span>
+      <label class="tf-o"><input type="checkbox" data-c="liquidacion" data-eur="19" onchange="tarifa()">
+        <span class="tf-n">Guide payouts<small>Sunday afternoon with the notebook and the calculator. Every tour arrives already settled: tips, the channel’s cut, the guide’s share and yours</small></span>
         <span class="tf-p">+€19</span></label>
 
       <div class="tf-res">
@@ -834,6 +833,9 @@
         <div class="tf-tot"><span>With <b id="tf-plan">Pro</b></span><b id="tf-total">€39</b></div>
         <p class="tf-nota">Add-ons work with any plan, including the free one. The plan only
         decides how many travellers you have included.<br><br>
+        <b>Support is included in every plan</b>, the free one too. We do not charge for it
+        and there is no second queue: if something breaks on a Saturday, it breaks the same
+        for everyone.<br><br>
         <b>Without GuIA the system still works</b> —the daily brief, the manifest, the inbox,
         the reminders, the settlements— but the reminders go out and you read your customers'
         replies yourself. GuIA is the one that answers.</p>
@@ -1156,10 +1158,14 @@ function tarifa(){
     es.textContent = '€' + (ex.total ? ex.total : 0);
 
   var cont = document.getElementById('tf-lineas');
+  /* En inglés el símbolo va DELANTE y el texto va en inglés. Las dos cosas estaban en
+     español aquí: el desglose escribía «+19 €» junto a unos botones que dicen «€39», y el
+     estado vacío se pintaba «Sin complementos…» en cuanto el visitante desmarcaba la
+     última casilla — el HTML sí estaba traducido, pero este JS lo machacaba. */
   if (cont) cont.innerHTML = ex.piezas.length
     ? ex.piezas.map(function(x){
-        return '<div class="tf-res-l"><span>'+x.n+'</span><b>+'+x.e+' €</b></div>'; }).join('')
-    : '<p class="tf-vacio">Sin complementos: pagas solo el bono de viajeros.</p>';
+        return '<div class="tf-res-l"><span>'+x.n+'</span><b>+€'+x.e+'</b></div>'; }).join('')
+    : '<p class="tf-vacio">No add-ons: you pay for the traveller bundle only.</p>';
 
   var basePlan = { esencial:0, pro:39, premium:149 }[TF_PLAN];
   var tot = basePlan + ex.total;
