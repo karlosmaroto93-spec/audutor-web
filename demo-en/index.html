@@ -73,6 +73,33 @@
     background:#fdf8ec; margin-bottom:12px; border-radius:11px; }
   aside nav a.destacada.act{ background:var(--acc); border-color:var(--acc); }
   /* grupos desplegables del menú, por temas */
+  /* ── El menú, plegable en móvil ────────────────────────────────────────────────────
+     En móvil el lateral deja de ser lateral: se apila arriba y, con el menú entero
+     desplegado, ocupaba la primera pantalla completa. Quien abre la demo en el teléfono
+     veía un índice, no el producto. Ahora hay un botón y el menú nace cerrado.
+     En escritorio el botón no existe y el menú se ve siempre: ahí el lateral no le quita
+     sitio a nada. Lo que sí cambia en los dos es que los GRUPOS nacen plegados, para que
+     el primer golpe de vista sea corto — `ir()` abre solo el grupo de la vista activa,
+     así que ni te pierdes al navegar ni se rompe un enlace directo a una vista de dentro. */
+  .nav-hamb{ display:none; }
+  @media (max-width:760px){
+    .nav-hamb{
+      display:flex; align-items:center; gap:9px; width:100%; margin:2px 0 0;
+      min-height:48px; padding:12px 12px; border:1px solid rgba(255,255,255,.28);
+      border-radius:10px; background:rgba(255,255,255,.10); color:#fdf9ee;
+      font:inherit; font-size:15px; font-weight:700; cursor:pointer;
+    }
+    .nav-hamb:hover{ background:rgba(255,255,255,.18); }
+    aside nav{ display:none; margin-top:10px; }
+    aside.menu-abierto nav{ display:block; }
+    /* El pie del lateral —el selector de plan y su leyenda— medía 398 px de los 633 que
+       ocupaba la barra en un móvil de 725 px de alto. Son controles de la demo, no
+       producto: se pliegan con el menú, en el mismo botón. Quien abre la demo en el
+       teléfono tiene que ver el producto, no los mandos para configurarlo. */
+    aside .pie-demo{ display:none; }
+    aside.menu-abierto .pie-demo{ display:block; }
+
+  }
   .nav-g-cab{ display:flex; gap:10px; align-items:center; width:100%; text-align:left; border:0;
     background:transparent; color:#3d5a4e; padding:9px 10px; border-radius:9px; font-size:14px;
     font-weight:600; margin-bottom:2px; cursor:pointer; font-family:inherit; }
@@ -668,7 +695,8 @@
   <div class="marca"><a class="marca-link" href="../" title="Go to the Audutor website"><span class="wm"><span class="wm-palabra">Audutor</span><svg class="wm-ruta" viewBox="0 0 96 14" preserveAspectRatio="none" aria-hidden="true"><path d="M2 10 C 20 4, 36 12, 52 7 S 78 5, 84 8" fill="none" stroke="#8fb0a6" stroke-width="1.7" stroke-dasharray="0.1 5.2" stroke-linecap="round"/><path d="M90 1.4c-2.4 0-4.4 2-4.4 4.4 0 3.2 4.4 7 4.4 7s4.4-3.8 4.4-7c0-2.4-2-4.4-4.4-4.4z" fill="#12805f"/><circle cx="90" cy="5.9" r="1.7" fill="#f3ecdb"/></svg></span></a> <span class="demo-chip">DEMO</span></div>
   <div class="tenant"><b>Old Town Walks · Edinburgh</b>fictional company — made-up data</div>
   <a class="legal-lat" href="../en/legal-notice/">Legal notice and privacy</a>
-  <nav>
+  <button class="nav-hamb" onclick="menuMovil()" aria-expanded="false" aria-controls="nav-princ"><span aria-hidden="true">☰</span><span class="hamb-txt">Menu</span></button>
+<nav id="nav-princ">
     <a href="#operaciones" data-v="operaciones" class="act destacada">🗞️ Dashboard <span class="n" id="n-exc">6</span></a>
     <div class="nav-g" id="ng-dia">
       <button class="nav-g-cab" onclick="this.parentElement.classList.toggle('abierto')">📅 Day to day <span class="flecha">▾</span></button>
@@ -704,10 +732,8 @@
   </nav>
   <div class="pie-demo">
     <div class="leyenda-planes">
-      <b>Your plan (demo):</b> switch it and watch the modules unlock. The <b>core</b> (everything without 🔒:
-      operations, team, channels and the basic anti-no-show reminder) is in every plan. On Essential:
-      <b>1 tour, 1 guide and 2 channels</b>; guides and channels <b>unlimited from Pro</b>.
-      The <span class="sup-chip">add-on</span> modules switch on according to your plan.
+      <b>Your plan (demo):</b> switch it and see what unlocks. Essential comes with
+      <b>1 tour, 2 guides and 2 channels</b>; from Pro, unlimited.
       <div class="mk-sel">
         <b>Market (demo):</b> same product, same language — adapted to each country’s currency, business model and habits.
         <div class="fila" id="mk-btns" style="gap:4px; margin-top:6px; flex-wrap:wrap;"></div>
@@ -3039,6 +3065,34 @@ function normCritica(t){
     .replace(/[^a-z0-9]+/g,' ').replace(/\s+/g,' ').trim();
 }
 
+/* ── «Quiero hablar con una persona» ──────────────────────────────────────────────────
+   Un asistente automático tiene que dar una salida clara a un humano, y esto no es una
+   cortesía del producto: lo exige la política de mensajería de Meta cuando automatizas
+   dentro de la ventana de 24 h, y el art. 21.2 del texto refundido de consumidores obliga
+   a «atención personal directa» desde 2007 SIN umbral de tamaño — o sea que aplica a un
+   free tour de tres empleados igual que a un banco.
+
+   Va en la capa crítica y no en las reglas por el mismo motivo que las urgencias: quien
+   pide hablar con una persona ya ha decidido que el chat no le sirve, y hacerle pasar
+   antes por la FAQ es exactamente lo que le hace colgar. Ninguna regla puede llegar antes.
+
+   La palabra suelta —PERSONA / PERSON— está anclada a la frase entera a propósito: «una
+   persona me dijo que…» no es una petición de escalado, y responderla como si lo fuera
+   mandaría a la bandeja del encargado media conversación normal. */
+var RE_PERSONA = new RegExp(
+  /* la palabra sola, que es lo que se le ofrece al viajero en el saludo */
+  '^(persona|person|humano|human|operador|operator|agente|agent)$|' +
+  /* español */
+  'hablar con (una |un )?(persona|humano|alguien|operador|agente|encargado|responsable)|' +
+  'quiero (una |un )?(persona|humano)|me pasas con|pasame con|atencion humana|' +
+  'no quiero (hablar con )?(un )?(bot|robot|maquina)|eres (un )?(bot|robot)|' +
+  /* inglés */
+  'talk to (a |an )?(person|human|someone|agent|operator|manager)|' +
+  'speak to (a |an )?(person|human|someone|agent|operator|manager)|' +
+  'real (person|human)|human (agent|being|support)|' +
+  'i (do not|dont) want (to talk to )?(a )?(bot|robot)|are you (a )?(bot|robot)',
+  'i');
+
 /* La respuesta a «me duele el pecho» no es ninguna regla: es el número de emergencias y
    el guía, que está al lado. En la bandeja tampoco puede salir como «no la entendió»,
    porque ese chip invita a ENSEÑAR una respuesta — y una emergencia no se automatiza. */
@@ -3099,7 +3153,11 @@ var RE_MENOR_SOLO = new RegExp(
   'puede ir sol[oa] (mi |el |la )?(hijo|hija|nino|nina|menor)|mandar a mis? (hijos?|ninos?)|' +
   /* inglés: mismo patrón de proximidad, que es lo que aguanta «my daughter is 15, can
      she come alone» sin tener que enumerar cada forma de preguntarlo */
-  '\\b(son|daughter|kid|kids|child|children|grandson|granddaughter|teenager)\\b[^.?!]{0,40}\\b(alone|on (his|her|their) own|by (him|her|them)sel(f|ves)|without (me|us|an adult|a parent))\\b|' +
+  /* «my 12 year old» no llevaba ninguna de las palabras de la lista y se caía del
+     cortafuegos: el lado español sí tenía «de N años» y el inglés no. Es de las
+     formas más normales de decirlo, y aquí la consecuencia de no casar no es una
+     respuesta pobre — es un programa autorizando a un menor a ir solo. */
+  '\\b(son|daughter|kid|kids|child|children|grandson|granddaughter|teenager|\\d{1,2}[ -]?year[ -]?old)\\b[^.?!]{0,40}\\b(alone|on (his|her|their) own|by (him|her|them)sel(f|ves)|without (me|us|an adult|a parent))\\b|' +
   '\\b(alone|on (his|her|their) own|without (me|us|an adult))\\b[^.?!]{0,40}\\b(son|daughter|kid|kids|child|children)\\b');
 /* Solo condiciones donde decir «sí puedes» sería un juicio médico. Fuera quedan a
    propósito la muleta, la escayola y la silla de ruedas: eso es ACCESIBILIDAD, su hecho
@@ -3125,6 +3183,17 @@ function capaCritica(t, lang){
     var uEN = 'If this is an emergency, call '+emer+' right now and tell the guide — they are next to you. '+
               'I have just alerted the office 🙂';
     return xx ? uEN+'\n\n'+uES : (es ? uES : uEN);
+  }
+
+  /* Antes que el cortafuegos de autorización: quien pide una persona no necesita que le
+     expliquemos por qué su pregunta va a una persona. Ya lo ha pedido. */
+  if (RE_PERSONA.test(m)){
+    registraDerivada(t, 'persona');
+    var pES = 'Claro 🙂 Aviso ahora mismo al encargado y te contesta por aquí una persona. '+
+              'Si es urgente y estás en el tour, el guía está a tu lado.';
+    var pEN = 'Of course 🙂 I am letting the office know right now and a person will reply here. '+
+              'If it is urgent and you are on the tour, the guide is right next to you.';
+    return xx ? pEN+'\n\n'+pES : (es ? pES : pEN);
   }
 
   if (RE_MENOR_SOLO.test(m) || RE_MEDICO.test(m) || RE_PERRO_GUIA.test(m)){
@@ -3826,7 +3895,7 @@ function respuestaGuiaES(t){
       'lista de internet.';
 
   if (/hola|buenas|hello/.test(m))
-    return '¡Hola! 👋 Soy GuIA. Ahora mismo te atiendo sobre «'+tourChat().nombre+'»: horarios, punto de encuentro, duración… y con tu código puedo cancelar, avisar de un retraso o pasarte el mapa del grupo.';
+    return '¡Hola! 👋 Soy GuIA, el asistente automático que atiende este chat. Ahora mismo te atiendo sobre «'+tourChat().nombre+'»: horarios, punto de encuentro, duración… y con tu código puedo cancelar, avisar de un retraso o pasarte el mapa del grupo.\n\nSi prefieres hablar con una persona, escribe <b>PERSONA</b> y te paso 🙂';
   registraDerivada(t);
   return 'Esto prefiero no responderlo yo para no equivocarme: se lo paso al encargado y te contesta enseguida 🙂\n\n<i>— Regla de oro: GuIA nunca inventa. Esta pregunta queda registrada en el Cerebro: respóndela una vez allí y la sabrá para siempre.</i>';
 }
@@ -4007,6 +4076,18 @@ function buscaAprendida(t, lang){
 
 function respuestaEN(t){
   var m=normalizaEN(t), o=tourChat().kb;
+  /* La capa crítica, también aquí. El motor español ya lo hacía y su comentario decía por
+     qué: «dejar el cortafuegos colgando de quién llame es exactamente cómo se abrió el
+     agujero». En este lado seguía colgando.
+     No era teórico: a esta función se entra DIRECTAMENTE —el propio banco inglés lo hace
+     con toda pregunta sin prefijo de idioma—, y por ese camino un «I have chest pain» se
+     quedaba sin el número de emergencias y sin avisar al guía, un menor sin acompañante
+     no llegaba al cortafuegos de autorización, y quien pedía hablar con una persona
+     recibía la derivada genérica en vez de su escalado.
+     Llamarla dos veces no cuesta nada: si el router ya la ejecutó, devolvió null y no
+     estaríamos aquí. */
+  var criEN = capaCritica(t, 'en');
+  if (criEN) return criEN;
   /* v() devuelve el hecho YA EN INGLÉS. Traducir en el ACCESO y no en cada emisión es
      lo único que hace que no se pueda olvidar: este motor venía de la demo inglesa,
      donde los hechos ya están en inglés y trEN() es la identidad, así que las 27
@@ -4066,7 +4147,7 @@ function respuestaEN(t){
   /* Cortesías — también por TOKEN, para que un «Danke!» o un «merci» no acaben
      derivados al encargado como si fueran una duda. */
   if (/^\s*(hola|hi|hello|hey|good (morning|afternoon|evening))[\s!.,]*$/i.test(t) || /^\s*hola[\s!.,]*$/.test(m))
-    return 'Hi there! 👋 I\'m GuIA. Ask me anything about the tour 🙂';
+    return 'Hi there! 👋 I\'m GuIA, the automated assistant answering this chat. Ask me anything about the tour 🙂\n\nIf you would rather talk to a person, just type <b>PERSON</b> and I will pass you over.';
   if (/^\s*(thanks|thank you|ok|okay|great|perfect|cheers|lovely|brilliant|nice one)[\s!.,]*$/i.test(t) || /^\s*(muchas )?gracias[\s!.,]*$/.test(m))
     return 'Anytime! I\'m here if you need anything else 🙂';
   if (/^\s*(bye|goodbye|see you|see ya|ciao|cheerio)[\s!.,]*$/i.test(t) || /^\s*(adios|hasta luego|hasta pronto)[\s!.,]*$/.test(m))
@@ -4556,12 +4637,33 @@ function ofertaEsencialPlus(){}   /* oferta no pública: fuera del build */
 function cambiarPlan(p){ S.plan=p; pintaPlanSel(); pintaCandados(); pintaWaTope(); pintaPropinaPlan(); pintaEsPlus();
   ir((location.hash.slice(1))||'operaciones');   // re-evalúa el bloqueo de la vista actual
   toast('Plan '+PLANES[p].n+' active — the modules it includes are unlocked'); }
+var TXT_MENU = 'Menu', TXT_CERRAR = 'Close';
+
+/* El menú de móvil. Se cierra solo al elegir una vista: dejarlo abierto obliga a un
+   segundo toque para ver lo que acabas de pedir, que en una pantalla de teléfono es
+   justo el toque que sobra. */
+function menuMovil(){
+  var lat = document.querySelector('aside'), bt = document.querySelector('.nav-hamb');
+  if (!lat || !bt) return;
+  var abierto = lat.classList.toggle('menu-abierto');
+  bt.setAttribute('aria-expanded', abierto ? 'true' : 'false');
+  bt.querySelector('.hamb-txt').textContent = abierto ? TXT_CERRAR : TXT_MENU;
+}
+function cierraMenuMovil(){
+  var lat = document.querySelector('aside'), bt = document.querySelector('.nav-hamb');
+  if (!lat || !bt || !lat.classList.contains('menu-abierto')) return;
+  lat.classList.remove('menu-abierto');
+  bt.setAttribute('aria-expanded', 'false');
+  bt.querySelector('.hamb-txt').textContent = TXT_MENU;
+}
+
 function ir(v){
   document.querySelectorAll('.vista').forEach(function(s){ s.classList.remove('act'); s.classList.remove('borroso'); });
   var sec=document.getElementById('v-'+v); sec.classList.add('act');
   document.querySelectorAll('aside nav a').forEach(function(a){
     a.classList.toggle('act', a.dataset.v===v); });
   history.replaceState(null,'','#'+v);
+  cierraMenuMovil();
   var enlace=document.querySelector('aside nav a[data-v="'+v+'"]');
   if (enlace && enlace.closest('.nav-g')) enlace.closest('.nav-g').classList.add('abierto');
   var ov=document.getElementById('gate-overlay');
@@ -7315,7 +7417,7 @@ S.tours.forEach(function(t){ CAMPOS_KB.forEach(function(c){ if ((t.kb[c.k]||'').
 seedDispo(); seedCobertura();
 pintaManifiesto(); pintaNoshowCfg(); pintaNoshow(); pintaLiq(); pintaCerebro(); pintaCombosDestinatarios(); pintaPost(); calcProy(); pintaEquipo(); pintaCanales(); pintaOperaciones();
 pintaGatesInline(); pintaWaTope(); pintaPropinaPlan(); pintaCanalChat(); pintaPropCfg(); pintaCoste();
-msg('bot','Hi! 👋 I’m GuIA. Right now I answer about “'+tourChat().nombre+'” — try the examples, or create another tour under 🧠 Brain and you’ll see each one has its own brain, with nothing mixed in.');
+msg('bot','Hi! 👋 I’m GuIA, the automated assistant answering this chat. Right now I answer about “'+tourChat().nombre+'” — try the examples, or create another tour under 🧠 Brain and you’ll see each one has its own brain, with nothing mixed in.');
 </script>
 </body>
 </html>
