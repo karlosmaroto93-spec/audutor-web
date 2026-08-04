@@ -44,10 +44,17 @@ body::before{
 .caja{
   position:relative; z-index:1; width:100%; max-width:392px; background:var(--paper);
   border:1px solid var(--line); border-radius:18px; padding:30px 26px 26px;
+  /* La franja de color de arriba se sale con `margin` negativo para llegar de lado a
+     lado, y con su propio `border-radius` NO seguía la curva de la tarjeta: un radio
+     de 18 px sobre una franja de 3 px de alto dibuja otra curva distinta, y encima
+     sobresalía 1 px por cada lado porque el margen no contaba el borde.
+     Con `overflow:hidden` la curva la pone la TARJETA y la franja se recorta contra
+     ella: deja de adivinarla y por eso encaja exacta. */
+  overflow:hidden;
   box-shadow:0 1px 2px rgba(34,48,43,.05), 0 12px 34px -12px rgba(34,48,43,.16);
 }
 .caja::before{
-  content:""; display:block; height:3px; margin:-30px -26px 22px; border-radius:18px 18px 0 0;
+  content:""; display:block; height:4px; margin:-30px -26px 22px;
   background:linear-gradient(90deg,var(--acc),var(--gold) 55%,var(--coral));
 }
 .wm{ font:400 27px/1 Iowan Old Style,Palatino,Georgia,serif; color:var(--acc); display:block; }
