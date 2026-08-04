@@ -58,8 +58,9 @@
   .marca .wm-ruta{ width:100%; height:.62em; margin-top:.1em; display:block; overflow:visible; }
   .demo-chip{ font-size:10px; font-weight:800; letter-spacing:.08em; background:var(--coral-deep);
               color:#fff; border-radius:6px; padding:2px 7px; margin-left:auto; }
-  .legal-lat{ display:block; margin:6px 0 0; font-size:10.5px; letter-spacing:.02em;
-    color:var(--muted); text-decoration:none; opacity:.75; }
+  .legal-lat{ display:block; margin:16px 0 2px; padding-top:12px;
+    border-top:1px solid rgba(255,255,255,.14); font-size:10.5px; letter-spacing:.02em;
+    color:var(--muted); text-decoration:none; opacity:.6; }
   .legal-lat:hover{ opacity:1; text-decoration:underline; }
   .tenant{ font-size:12px; color:#8a7f63; padding:0 10px 16px; border-bottom:1px solid #e0d3b4;
            margin-bottom:12px; }
@@ -694,7 +695,6 @@
   <div style="background:#e7f0fb; border:1px solid #9dbfe0; border-radius:9px; padding:9px 11px; margin:0 0 10px; font-size:11px; color:#24506e; line-height:1.45;">⚖️ <b>UK advertising rules built in.</b> No suggested tip amounts and no “pay what you want” wording — the CAP/ASA guidance on free walking tours forbids both. If the company takes a cut of the tip, that must be disclosed to the customer.</div>
   <div class="marca"><a class="marca-link" href="../" title="Go to the Audutor website"><span class="wm"><span class="wm-palabra">Audutor</span><svg class="wm-ruta" viewBox="0 0 96 14" preserveAspectRatio="none" aria-hidden="true"><path d="M2 10 C 20 4, 36 12, 52 7 S 78 5, 84 8" fill="none" stroke="#8fb0a6" stroke-width="1.7" stroke-dasharray="0.1 5.2" stroke-linecap="round"/><path d="M90 1.4c-2.4 0-4.4 2-4.4 4.4 0 3.2 4.4 7 4.4 7s4.4-3.8 4.4-7c0-2.4-2-4.4-4.4-4.4z" fill="#12805f"/><circle cx="90" cy="5.9" r="1.7" fill="#f3ecdb"/></svg></span></a> <span class="demo-chip">DEMO</span></div>
   <div class="tenant"><b>Old Town Walks · Edinburgh</b>fictional company — made-up data</div>
-  <a class="legal-lat" href="../en/legal-notice/">Legal notice and privacy</a>
   <button class="nav-hamb" onclick="menuMovil()" aria-expanded="false" aria-controls="nav-princ"><span aria-hidden="true">☰</span><span class="hamb-txt">Menu</span></button>
 <nav id="nav-princ">
     <a href="#operaciones" data-v="operaciones" class="act destacada">🗞️ Dashboard <span class="n" id="n-exc">6</span></a>
@@ -748,6 +748,7 @@
     </div>
     Everything here is interactive and simulated in your browser.
     Nothing is saved and nothing is sent.<br><button onclick="location.reload()">↺ Reset demo</button></div>
+  <a class="legal-lat" href="../en/legal-notice/">Legal notice and privacy</a>
 </aside>
 
 <main>
