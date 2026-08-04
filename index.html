@@ -611,6 +611,7 @@
   <div class="links">
     <a href="#producto" data-i18n="nav.producto">Producto</a>
     <a href="#asistente" data-i18n="nav.asistente">El asistente</a>
+    <a href="#agente">El agente</a>
     <a href="#dia" data-i18n="nav.dia">Un día</a>
     <a href="#planes" data-i18n="nav.planes">Planes</a>
     <!-- El cliente que YA es cliente. Sale antes que la demo porque el que vuelve no
@@ -708,8 +709,8 @@
       <p>Propinas, comisiones de cada canal y reparto guía-empresa, tour a tour y listo para
       la gestoría.</p></div>
     <div class="celda celda-guia reveal" style="--d:70ms"><svg class="ico-svg" aria-hidden="true" focusable="false"><use href="#guia"/></svg><h3>Un asistente que no inventa</h3>
-      <p>GuIA contesta a tus clientes con tus datos y con ninguno más. Lo que no sabe, te lo
-      pasa a ti.</p></div>
+      <p>Contesta con tus datos y con ninguno más. <b>Cada pregunta que le enseñas deja de
+      llegarte</b>: la contestas una vez, no cuarenta.</p></div>
     <div class="celda reveal" style="--d:140ms"><span class="ico">🧑‍🤝‍🧑</span><h3>Tus guías, sin cuentas ni líos</h3>
       <p>Cada guía entra por su enlace: su tour de hoy, check-in de un toque y walk-ins. Sin
       usuarios que gestionar.</p></div>
@@ -841,18 +842,18 @@
 
       <div class="tf-g">El asistente y tu escaparate</div>
       <label class="tf-o"><input type="checkbox" data-c="guia" data-eur="39" onchange="tarifa()">
-        <span class="tf-n">GuIA, el asistente<small>Contesta por WhatsApp y en tu web con tus datos y con ninguno más</small></span>
+        <span class="tf-n">GuIA, el asistente<small>«¿Dónde quedamos?» cuarenta veces al día, a las once de la noche y en tres idiomas. Contesta él, con tus datos</small></span>
         <span class="tf-p">+39 €</span></label>
       <label class="tf-o"><input type="checkbox" data-c="web" data-eur="15" onchange="tarifa()">
-        <span class="tf-n">Tu web, montada sola<small>Se monta con los datos que ya tienes escritos</small></span>
+        <span class="tf-n">Tu web, montada sola<small>Ya has escrito los horarios y el punto de encuentro dos veces. Esta es la tercera y va sola</small></span>
         <span class="tf-p">+15 €</span></label>
 
       <div class="tf-g">Las plataformas y el respaldo</div>
       <label class="tf-o"><input type="checkbox" data-c="agente" data-eur="29" onchange="tarifa()">
-        <span class="tf-n">El agente de plataformas<small>Entra en los paneles con tu sesión y cuenta lo que le consta a cada uno</small></span>
+        <span class="tf-n">El agente de plataformas<small>Las reservas que nunca llegaron a tu correo aparecen antes del tour, no cuando esa persona se planta en el punto de encuentro</small></span>
         <span class="tf-p">+29 €</span></label>
       <label class="tf-o"><input type="checkbox" data-c="soporte" data-eur="19" onchange="tarifa()">
-        <span class="tf-n">Soporte prioritario<small>Respuesta el mismo día y alta acompañada</small></span>
+        <span class="tf-n">Soporte prioritario<small>Respuesta el mismo día, y el alta la hacemos contigo en vez de mandarte un manual</small></span>
         <span class="tf-p">+19 €</span></label>
 
       <div class="tf-res">
@@ -927,6 +928,42 @@
     En la demo puedes verlo derivar: pídele un descuento a GuIA y mira dónde acaba la pregunta.
     <a href="demo/" style="color:var(--acc); font-weight:700;">Probarlo →</a></p>
 </div></section>
+<!-- EL AGENTE. Hasta ahora solo tenía una línea en el tarifador, y por eso no se vendía:
+     un producto entero explicado en catorce palabras. Va DESPUÉS del asistente porque
+     resuelve el problema contrario —GuIA habla con tus clientes, el agente mira lo que
+     dicen las plataformas— y porque el orden de la página va de lo que ya conocen a lo
+     que no ha visto nunca. -->
+<section class="alt" id="agente"><div class="wrap">
+  <div class="sec-head">
+    <h2 data-split>Las plataformas no te cuentan todo.<br>Alguien tiene que entrar a mirar.</h2>
+    <p class="reveal">Cada plataforma lleva su propia contabilidad, y solo te manda un correo cuando
+    le apetece. El resto del tiempo tu lista y la suya son dos números distintos, y el primero que
+    se entera de la diferencia es el guía, en el punto de encuentro, con la gente delante.</p>
+  </div>
+  <div class="grid3">
+    <div class="celda star reveal"><span class="ico">🔢</span><h3>Cuenta lo que le consta a cada una</h3>
+      <p>Entra en los paneles y mira cuánta gente tiene apuntada cada plataforma. Si a una le
+      constan tres personas más que a ti, <b>son tres reservas que no llegaron a tu correo</b> —
+      y lo sabes hoy, no cuando aparezcan.</p>
+      <span class="mini">es lo único que puede enterarse de un correo que nunca llegó</span></div>
+    <div class="celda star reveal" style="--d:70ms"><span class="ico">🔐</span><h3>Cierra las salidas llenas</h3>
+      <p>Cuando un tour se completa hay que cerrarlo en cada panel, uno por uno, y si tardas
+      entra gente que ya no cabe. El agente lo hace en cuanto se llena. <b>Pero aquí sigue
+      saliendo como no cerrada hasta que lo compruebes tú</b>: que diga que cerró no es que esté
+      cerrado.</p>
+      <span class="mini">el ✓ lo pone una persona, siempre</span></div>
+    <div class="celda star reveal" style="--d:140ms"><span class="ico">🤐</span><h3>Y hace callar a GuIA cuando toca</h3>
+      <p>Si los números no cuadran, GuIA <b>deja de decir cuántas plazas quedan</b> hasta que
+      alguien lo mire. Sin el agente, seguiría contestando «quedan 3 🙂» con toda la seguridad
+      del mundo sobre una lista que sabe incompleta.</p>
+      <span class="mini">solo puede hacer que GuIA diga menos, nunca más</span></div>
+  </div>
+  <p class="reveal" style="text-align:center; color:var(--muted); font-size:14px; margin:20px 0 0; max-width:74ch; margin-inline:auto;">
+    <b>Corre en tu ordenador y con tu sesión.</b> Audutor no guarda ninguna contraseña de ninguna
+    plataforma: el agente usa la que ya tienes abierta, como si te sentaras tú.
+    <a href="demo/#agente" style="color:var(--acc); font-weight:700;">Verlo en la demo →</a></p>
+</div></section>
+
 
 <section class="alt" id="porque"><div class="wrap">
   <div class="sec-head">

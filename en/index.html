@@ -606,6 +606,7 @@
   <div class="links">
     <a href="#producto" data-i18n="nav.producto">Product</a>
     <a href="#asistente" data-i18n="nav.asistente">The assistant</a>
+    <a href="#agente">The agent</a>
     <a href="#dia" data-i18n="nav.dia">A day in the life</a>
     <a href="#planes" data-i18n="nav.planes">Pricing</a>
     <!-- Mirror of the ES nav: hidden until APP_URL has a value. -->
@@ -814,18 +815,18 @@
 
       <div class="tf-g">The assistant and your shopfront</div>
       <label class="tf-o"><input type="checkbox" data-c="guia" data-eur="39" onchange="tarifa()">
-        <span class="tf-n">GuIA, the assistant<small>Answers on WhatsApp and your site chat with your facts and no others</small></span>
+        <span class="tf-n">GuIA, the assistant<small>«Where do we meet?» forty times a day, at eleven at night and in three languages. It answers, with your facts</small></span>
         <span class="tf-p">+€39</span></label>
       <label class="tf-o"><input type="checkbox" data-c="web" data-eur="15" onchange="tarifa()">
-        <span class="tf-n">Your website, built for you<small>Assembled from the facts you have already written</small></span>
+        <span class="tf-n">Your website, built for you<small>You have already written the times and the meeting point twice. This is the third and it writes itself</small></span>
         <span class="tf-p">+€15</span></label>
 
       <div class="tf-g">Platforms and backup</div>
       <label class="tf-o"><input type="checkbox" data-c="agente" data-eur="29" onchange="tarifa()">
-        <span class="tf-n">The platform agent<small>Signs into the panels with your session and counts what each one has on its books</small></span>
+        <span class="tf-n">The platform agent<small>The bookings that never reached your inbox show up before the tour, not when that person turns up at the meeting point</small></span>
         <span class="tf-p">+€29</span></label>
       <label class="tf-o"><input type="checkbox" data-c="soporte" data-eur="19" onchange="tarifa()">
-        <span class="tf-n">Priority support<small>Same-day replies and hands-on setup</small></span>
+        <span class="tf-n">Priority support<small>Same-day replies, and we do the setup with you instead of sending you a manual</small></span>
         <span class="tf-p">+€19</span></label>
 
       <div class="tf-res">
@@ -899,6 +900,38 @@
     In the demo you can watch it hand something over: ask GuIA for a discount and see where the question
     lands. <a href="../demo-en/" style="color:var(--acc); font-weight:700;">Try it →</a></p>
 </div></section>
+<!-- THE AGENT. Until now it had a single line in the pricing panel, and that is why it
+     didn't sell: a whole product explained in fourteen words. -->
+<section class="alt" id="agente"><div class="wrap">
+  <div class="sec-head">
+    <h2 data-split>The platforms don't tell you everything.<br>Someone has to go in and look.</h2>
+    <p class="reveal">Each platform keeps its own books and only emails you when it feels like it.
+    The rest of the time your list and theirs are two different numbers, and the first person to
+    find out about the gap is the guide, at the meeting point, with the group in front of them.</p>
+  </div>
+  <div class="grid3">
+    <div class="celda star reveal"><span class="ico">🔢</span><h3>It counts what each one has on its books</h3>
+      <p>It signs into the panels and checks how many people each platform has down. If one has
+      three more than you do, <b>those are three bookings that never reached your inbox</b> — and
+      you know today, not when they turn up.</p>
+      <span class="mini">it is the only thing that can find out about an email that never arrived</span></div>
+    <div class="celda star reveal" style="--d:70ms"><span class="ico">🔐</span><h3>It closes departures that are full</h3>
+      <p>When a tour fills up you have to close it on every panel, one by one, and if you're slow
+      people book seats that aren't there. The agent does it as soon as it fills. <b>But here it
+      still shows as not closed until you check</b>: saying it closed is not the same as closed.</p>
+      <span class="mini">the ✓ is always placed by a person</span></div>
+    <div class="celda star reveal" style="--d:140ms"><span class="ico">🤐</span><h3>And it makes GuIA go quiet when it should</h3>
+      <p>If the numbers don't add up, GuIA <b>stops saying how many places are left</b> until
+      someone looks. Without the agent it would carry on answering «3 left 🙂» with total
+      confidence, about a list it knows is incomplete.</p>
+      <span class="mini">it can only make GuIA say less, never more</span></div>
+  </div>
+  <p class="reveal" style="text-align:center; color:var(--muted); font-size:14px; margin:20px 0 0; max-width:74ch; margin-inline:auto;">
+    <b>It runs on your computer, with your session.</b> Audutor stores no platform passwords: the
+    agent uses the one you already have open, as if you sat down yourself.
+    <a href="../demo-en/" style="color:var(--acc); font-weight:700;">See it in the demo →</a></p>
+</div></section>
+
 
 <section class="alt" id="porque"><div class="wrap">
   <div class="sec-head">
