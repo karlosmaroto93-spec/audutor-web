@@ -133,8 +133,26 @@
     background:transparent; color:#3d5a4e; padding:9px 10px; border-radius:9px; font-size:14px;
     font-weight:600; margin-bottom:2px; cursor:pointer; font-family:inherit; }
   .nav-g-cab:hover{ background:#eae1c9; }
-  .nav-g-cab .flecha{ margin-left:auto; transition:transform .25s; font-size:11px; }
+  /* ── LA FLECHA DEL MENÚ ───────────────────────────────────────────────────────────
+     Era el carácter «▾» a 11 px y en el gris del texto: sobre el verde de la barra casi no
+     se veía, y a un palmo del ojo no se distinguía si el grupo estaba abierto o cerrado.
+
+     Ahora se DIBUJA con dos bordes en vez de escribirse. Tres motivos, y ninguno es de
+     gusto: un glifo depende de la fuente del sistema y cambia de tamaño y de peso en cada
+     máquina; un trazo de 2 px sobre fondo oscuro se ve donde un carácter fino no; y así el
+     estado abierto puede tener SU PROPIO COLOR además de su giro — que es la regla de la
+     casa, el estado se distingue por forma y no solo por color. */
+  .nav-g-cab .flecha{ margin-left:auto; flex:0 0 auto; width:16px; height:16px;
+    position:relative; font-size:0; color:transparent; transition:transform .22s ease; }
+  .nav-g-cab .flecha::before{ content:''; position:absolute; left:3px; top:4px;
+    width:8px; height:8px; border-right:2px solid #7d9a8e; border-bottom:2px solid #7d9a8e;
+    transform:rotate(45deg); border-radius:1px; transition:border-color .14s; }
+  .nav-g-cab:hover .flecha::before{ border-color:#0d4d3d; }
   .nav-g.abierto .nav-g-cab .flecha{ transform:rotate(180deg); }
+  /* Abierto además en dorado: si el único cambio fuera el giro, con el menú a media
+     pantalla hay que mirar dos veces para saber cuál está desplegado. */
+  .nav-g.abierto .nav-g-cab .flecha::before{ border-color:var(--gold); }
+  .nav-g.abierto .nav-g-cab{ color:#0d4d3d; }
   .nav-g-hijos{ display:none; padding-left:10px; border-left:1px solid #dfd2b2; margin:0 0 4px 14px; }
   .nav-g.abierto .nav-g-hijos{ display:block; animation:aparece .25s ease; }
   aside nav a .n{ margin-left:auto; background:var(--rojo); color:#fff; font-size:10.5px;
@@ -1516,7 +1534,7 @@ Places held for your group for 48 h 👉 oldtownwalks.co.uk/combo/x3f9
     </div>
     <div class="fila" style="margin-top:12px; gap:8px;">
       <b class="mini">Booking costs (platform fees):</b>
-      <button class="btn mini" id="tab-cost-emp" onclick="modoCoste('empresa')">The company absorbs them (usual)</button>
+      <button class="btn mini" id="tab-cost-emp" onclick="modoCoste('empresa')">The company absorbs them</button>
       <button class="btn mini sec" id="tab-cost-ing" onclick="modoCoste('ingreso')">Taken off the takings before the split</button>
     </div>
     <div class="fila" style="margin-top:12px; gap:8px;">
@@ -1539,7 +1557,7 @@ Places held for your group for 48 h 👉 oldtownwalks.co.uk/combo/x3f9
     <table id="tabla-liq-guia">
       <tr><th>Guide</th><th>Tours</th><th>People</th><th>Takings</th><th>💳 Booking costs</th><th>Net to split</th><th>💵 To pay the guide</th><th>Company</th></tr>
     </table>
-    <div class="mini muted" style="margin:10px 0 0;">With “<b>the company absorbs them</b>” (the usual choice):
+    <div class="mini muted" style="margin:10px 0 0;">With “<b>the company absorbs them</b>”:
       the split is calculated on the GROSS takings — the guide gets their full share — and the platform
       fees come out of the company’s side. <details class="mas"><summary>ⓘ more</summary><span class="mas-p">With “taken off the takings”: the cost is paid
       first and the net is split. Either way, <b>the guide never pays</b>: a tour that took nothing
@@ -1594,7 +1612,7 @@ Places held for your group for 48 h 👉 oldtownwalks.co.uk/combo/x3f9
     </div>
     <div class="fila" style="margin-top:10px; gap:8px;">
       <b class="mini">Platform fee:</b>
-      <button class="btn mini" id="py-tab-cemp" onclick="proyCoste('empresa')">The company absorbs it (usual)</button>
+      <button class="btn mini" id="py-tab-cemp" onclick="proyCoste('empresa')">The company absorbs it</button>
       <button class="btn mini sec" id="py-tab-cing" onclick="proyCoste('ingreso')">Taken off the total before the split</button>
     </div>
   </div>
@@ -5073,12 +5091,31 @@ function agDia(dir){
   S.agDia = Math.max(0, Math.min(S.agenda.length-1, S.agDia+dir));
   pintaManifiesto();
 }
+/* ── WHY THIS WRAPPER ─────────────────────────────────────────────────────────────────
+   `pintaManifiesto` empties `#ag-tours` BEFORE painting, so any exception halfway through
+   left the manifest BLANK and silent. And the manifest is the screen a guide opens in the
+   street: going empty without a word is the worst possible failure in the whole demo,
+   because it looks like there are no tours. */
 function pintaManifiesto(){
+  try { pintaManifiestoReal(); }
+  catch (e) {
+    var c = document.getElementById('ag-tours');
+    if (c) c.innerHTML = '<div class="movil" style="text-align:center; color:var(--rojo);">' +
+      'The manifest could not be drawn. Reload the page.</div>';
+    if (window.console) console.error('manifest:', e);
+  }
+}
+function pintaManifiestoReal(){
   var tt=agTotales();
   document.getElementById('ag-sem-pax').textContent=tt.semPax;
   document.getElementById('ag-sem-rec').textContent=euros(tt.semRec);
   document.getElementById('ag-mes-pax').textContent=tt.mesPax;
   document.getElementById('ag-mes-rec').textContent=euros(tt.mesRec);
+  /* The day index is clamped to the agenda's REAL range: out of range, `S.agenda[S.agDia]`
+     is `undefined` and the next line throws — the likeliest cause of the vanishing
+     manifest. */
+  if (!S.agenda || !S.agenda.length) return;
+  S.agDia = Math.max(0, Math.min(S.agenda.length - 1, Number(S.agDia) || 0));
   var dia=S.agenda[S.agDia];
   // En modo guía solo se ven los tours que guía esa persona (su móvil, no la oficina).
   var tours = S.guiaVista ? dia.tours.filter(function(t){ return t.guia===S.guiaVista; }) : dia.tours;
@@ -6891,7 +6928,7 @@ var TOURS_LIQ = [
 ];
 var COMISION_CANAL = 2.5;
 var liqModo = 'pct';
-var liqCoste = 'empresa';   // LO HABITUAL: la empresa asume las comisiones de canal
+var liqCoste = 'empresa';   // POR DEFECTO: el canal lo paga quien lo contrata, no el guía
 
 function eur(x){ return dinero(x, 2); }
 function celdaEur(x, esGuia){
@@ -6937,7 +6974,7 @@ function repartoTour(x, pct, fijo){
     else { var eb = Math.min(base, fijo*x.ax); guia = base - eb; emp = eb; }
     emp += Math.min(0, x.rec - coste);          // descubierto (rec < coste) a la empresa
   } else {
-    // LO HABITUAL (por defecto): el reparto se hace sobre el ingreso BRUTO —
+    // POR DEFECTO: el reparto se hace sobre el ingreso BRUTO —
     // el guía cobra su parte entera — y la empresa asume el coste de reservas
     // DE SU PARTE. El guía nunca paga comisiones, en ningún caso.
     if (liqModo==='pct'){ guia = x.rec*pct/100; }

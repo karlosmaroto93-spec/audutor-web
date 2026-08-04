@@ -153,8 +153,26 @@
     font-weight:600; margin-bottom:2px; cursor:pointer; font-family:inherit;
     transition:background .14s, color .14s; }
   .nav-g-cab:hover{ background:rgba(255,255,255,.09); color:#fff; }
-  .nav-g-cab .flecha{ margin-left:auto; transition:transform .25s; font-size:11px; }
+  /* ── LA FLECHA DEL MENÚ ───────────────────────────────────────────────────────────
+     Era el carácter «▾» a 11 px y en el gris del texto: sobre el verde de la barra casi no
+     se veía, y a un palmo del ojo no se distinguía si el grupo estaba abierto o cerrado.
+
+     Ahora se DIBUJA con dos bordes en vez de escribirse. Tres motivos, y ninguno es de
+     gusto: un glifo depende de la fuente del sistema y cambia de tamaño y de peso en cada
+     máquina; un trazo de 2 px sobre fondo oscuro se ve donde un carácter fino no; y así el
+     estado abierto puede tener SU PROPIO COLOR además de su giro — que es la regla de la
+     casa, el estado se distingue por forma y no solo por color. */
+  .nav-g-cab .flecha{ margin-left:auto; flex:0 0 auto; width:16px; height:16px;
+    position:relative; font-size:0; color:transparent; transition:transform .22s ease; }
+  .nav-g-cab .flecha::before{ content:''; position:absolute; left:3px; top:4px;
+    width:8px; height:8px; border-right:2px solid #9dc4b6; border-bottom:2px solid #9dc4b6;
+    transform:rotate(45deg); border-radius:1px; transition:border-color .14s; }
+  .nav-g-cab:hover .flecha::before{ border-color:#fff; }
   .nav-g.abierto .nav-g-cab .flecha{ transform:rotate(180deg); }
+  /* Abierto además en dorado: si el único cambio fuera el giro, con el menú a media
+     pantalla hay que mirar dos veces para saber cuál está desplegado. */
+  .nav-g.abierto .nav-g-cab .flecha::before{ border-color:var(--gold); }
+  .nav-g.abierto .nav-g-cab{ color:#fff; }
   .nav-g-hijos{ display:none; padding-left:10px; border-left:1px dashed rgba(255,255,255,.22);
     margin:0 0 4px 14px; }
   .nav-g.abierto .nav-g-hijos{ display:block; animation:aparece .25s ease; }
@@ -1746,7 +1764,7 @@ Plazas de vuestro grupo guardadas 48 h 👉 patioycompas.example/combo/x3f9
     </div>
     <div class="fila" style="margin-top:12px; gap:8px;">
       <b class="mini">Coste de reservas (comisiones de canal):</b>
-      <button class="btn mini" id="tab-cost-emp" onclick="modoCoste('empresa')">Lo asume la empresa (lo habitual)</button>
+      <button class="btn mini" id="tab-cost-emp" onclick="modoCoste('empresa')">Lo asume la empresa</button>
       <button class="btn mini sec" id="tab-cost-ing" onclick="modoCoste('ingreso')">Se descuenta del ingreso antes del reparto</button>
     </div>
     <div class="fila" style="margin-top:12px; gap:8px;">
@@ -1769,7 +1787,7 @@ Plazas de vuestro grupo guardadas 48 h 👉 patioycompas.example/combo/x3f9
     <table id="tabla-liq-guia">
       <tr><th>Guía</th><th>Tours</th><th>Personas</th><th>Recaudación</th><th>💳 Coste reservas</th><th>Neto a repartir</th><th>💵 A pagar al guía</th><th>Empresa</th></tr>
     </table>
-    <div class="mini muted" style="margin:10px 0 0;">Con «<b>lo asume la empresa</b>» (lo habitual):
+    <div class="mini muted" style="margin:10px 0 0;">Con «<b>lo asume la empresa</b>»:
       el reparto se hace sobre el ingreso BRUTO — el guía cobra su parte entera — y las comisiones
       de canal salen de la parte de la empresa. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Con «se descuenta del ingreso»: el coste se paga
       primero y se reparte el neto. En ambos, <b>el guía nunca paga</b>: el descubierto de un tour
@@ -1824,7 +1842,7 @@ Plazas de vuestro grupo guardadas 48 h 👉 patioycompas.example/combo/x3f9
     </div>
     <div class="fila" style="margin-top:10px; gap:8px;">
       <b class="mini">Comisión de plataforma:</b>
-      <button class="btn mini" id="py-tab-cemp" onclick="proyCoste('empresa')">La asume la empresa (lo habitual)</button>
+      <button class="btn mini" id="py-tab-cemp" onclick="proyCoste('empresa')">La asume la empresa</button>
       <button class="btn mini sec" id="py-tab-cing" onclick="proyCoste('ingreso')">Se descuenta del total antes del reparto</button>
     </div>
   </div>
@@ -5461,7 +5479,7 @@ function pintaHallazgos(){
   if (AG_HALLA.repite.length) H += sec('LO QUE SE REPITE', AG_HALLA.repite.map(function(d){
     return '<p class="mini" style="margin:3px 0;"><b>'+d.nombre+':</b> en <b>'+d.conDescuadre+' de los '+d.mirados+
       '</b> conteos le constaba más gente que a ti — '+d.personas+' personas en total.</p>'; }).join('') +
-    '<p class="mini muted" style="margin:3px 0 0;">Lo normal es que haya reservas de esa plataforma que no llegan a tu correo.</p>');
+    '<p class="mini muted" style="margin:3px 0 0;">Si hay reservas de esa plataforma que no llegaron a tu correo, aparecen aquí.</p>');
   if (AG_HALLA.liberadas.length) H += sec('SE HAN LIBERADO PLAZAS', AG_HALLA.liberadas.map(function(l){
     /* «Le constan» y no «puedes vender»: el número es de SU contabilidad. Nuestro aforo es
        el del tour, y decir «puedes vender 2 más» sobre el libro de otro es sobrevender. */
@@ -5770,12 +5788,35 @@ function agDia(dir){
   S.agDia = Math.max(0, Math.min(S.agenda.length-1, S.agDia+dir));
   pintaManifiesto();
 }
+/* ── POR QUÉ ESTA ENVOLTURA ───────────────────────────────────────────────────────────
+   `pintaManifiesto` vacía `#ag-tours` ANTES de pintar, así que cualquier excepción a mitad
+   —un tour sin reservas, un día que no existe, un mercado que se cambia mientras pinta—
+   dejaba el manifiesto EN BLANCO y sin decir nada. Y el manifiesto es la pantalla que un
+   guía abre en la calle: quedarse vacía en silencio es el peor fallo posible de toda la
+   demo, porque parece que no hay tours.
+
+   Ahora si algo revienta se dice, y en la demo además se ve en consola: un blanco callado
+   se confunde con «día libre» y un blanco que habla se arregla. */
 function pintaManifiesto(){
+  try { pintaManifiestoReal(); }
+  catch (e) {
+    var c = document.getElementById('ag-tours');
+    if (c) c.innerHTML = '<div class="movil" style="text-align:center; color:var(--rojo);">' +
+      'No se ha podido pintar el manifiesto. Recarga la página.</div>';
+    if (window.console) console.error('manifiesto:', e);
+  }
+}
+function pintaManifiestoReal(){
   var tt=agTotales();
   document.getElementById('ag-sem-pax').textContent=tt.semPax;
   document.getElementById('ag-sem-rec').textContent=euros(tt.semRec);
   document.getElementById('ag-mes-pax').textContent=tt.mesPax;
   document.getElementById('ag-mes-rec').textContent=euros(tt.mesRec);
+  /* El índice del día se ata al rango REAL de la agenda. Si algo lo deja fuera —cambiar de
+     mercado, una semilla más corta— `S.agenda[S.agDia]` es `undefined` y la línea siguiente
+     revienta: es la causa más probable del manifiesto que desaparece. */
+  if (!S.agenda || !S.agenda.length) return;
+  S.agDia = Math.max(0, Math.min(S.agenda.length - 1, Number(S.agDia) || 0));
   var dia=S.agenda[S.agDia];
   // En modo guía solo se ven los tours que guía esa persona (su móvil, no la oficina).
   var tours = S.guiaVista ? dia.tours.filter(function(t){ return t.guia===S.guiaVista; }) : dia.tours;
@@ -7184,7 +7225,7 @@ var TOURS_LIQ = [
 ];
 var COMISION_CANAL = 2.5;
 var liqModo = 'pct';
-var liqCoste = 'empresa';   // LO HABITUAL: la empresa asume las comisiones de canal
+var liqCoste = 'empresa';   // POR DEFECTO: el canal lo paga quien lo contrata, no el guía
 
 function eur(x){ return x.toFixed(2).replace('.',',')+' €'; }
 function celdaEur(x, esGuia){
@@ -7224,7 +7265,7 @@ function repartoTour(x, pct, fijo){
     else { var eb = Math.min(base, fijo*x.ax); guia = base - eb; emp = eb; }
     emp += Math.min(0, x.rec - coste);          // descubierto (rec < coste) a la empresa
   } else {
-    // LO HABITUAL (por defecto): el reparto se hace sobre el ingreso BRUTO —
+    // POR DEFECTO: el reparto se hace sobre el ingreso BRUTO —
     // el guía cobra su parte entera — y la empresa asume el coste de reservas
     // DE SU PARTE. El guía nunca paga comisiones, en ningún caso.
     if (liqModo==='pct'){ guia = x.rec*pct/100; }
