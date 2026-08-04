@@ -774,8 +774,8 @@
         <div class="comp-tit">Add-ons</div>
         <label><input type="checkbox" id="c-guia" onchange="compTog('guia',this)"><span>GuIA, the assistant</span><b>+€39</b></label>
         <label><input type="checkbox" id="c-agente" onchange="compTog('agente',this)"><span>The platform agent</span><b>+€29</b></label>
-        <label><input type="checkbox" id="c-web" onchange="compTog('web',this)"><span>Your website</span><b>+€15</b></label>
-        <label><input type="checkbox" id="c-liquidacion" onchange="compTog('liquidacion',this)"><span>Guide payouts</span><b>+€19</b></label>
+        <label><input type="checkbox" id="c-web" onchange="compTog('web',this)"><span>Your website</span><b>+€9</b></label>
+        <label><input type="checkbox" id="c-liquidacion" onchange="compTog('liquidacion',this)"><span>Guide payouts</span><b>+€9</b></label>
         <div class="comp-total">Your plan: <b id="comp-tot">€39</b><span id="comp-desglose"></span></div>
       </div>
       <div style="font-size:10.5px; margin-top:8px; opacity:.85; line-height:1.5;">💳 Tips: <b>0 %</b> when you take it in person (your own SumUp, card reader or Tap to Pay). Only the <b>link or QR</b> carries <b>1.9 % + £0.30</b>.</div>
@@ -4545,8 +4545,8 @@ var PLANES={ esencial:{orden:0, n:'Essential', precio:'€0',   bono:150,  base:
 var COMPLEMENTOS = {
   guia:     { n:'GuIA, the assistant', precio:39, abre:['chat','cerebro'] },
   agente:   { n:'The platform agent', precio:29, abre:[] },
-  web:      { n:'Your website', precio:15, abre:[] },
-  liquidacion:{ n:'Guide payouts', precio:19, abre:['liquidacion'] },
+  web:      { n:'Your website', precio:9, abre:[] },
+  liquidacion:{ n:'Guide payouts', precio:9, abre:['liquidacion'] },
 };
 S.comp = { guia:false, agente:false, web:false, liquidacion:false };
 function abiertoPorComplemento(v){

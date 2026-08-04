@@ -874,8 +874,8 @@
         <div class="comp-tit">Complementos</div>
         <label><input type="checkbox" id="c-guia" onchange="compTog('guia',this)"><span>GuIA, el asistente</span><b>+39 €</b></label>
         <label><input type="checkbox" id="c-agente" onchange="compTog('agente',this)"><span>El agente de plataformas</span><b>+29 €</b></label>
-        <label><input type="checkbox" id="c-web" onchange="compTog('web',this)"><span>Tu web, montada sola</span><b>+15 €</b></label>
-        <label><input type="checkbox" id="c-liquidacion" onchange="compTog('liquidacion',this)"><span>Liquidación a guías</span><b>+19 €</b></label>
+        <label><input type="checkbox" id="c-web" onchange="compTog('web',this)"><span>Tu web, montada sola</span><b>+9 €</b></label>
+        <label><input type="checkbox" id="c-liquidacion" onchange="compTog('liquidacion',this)"><span>Liquidación a guías</span><b>+9 €</b></label>
         <div class="comp-total">Tu tarifa: <b id="comp-tot">39 €</b><span id="comp-desglose"></span></div>
       </div>
       <div style="font-size:10.5px; margin-top:8px; opacity:.85; line-height:1.5;">💳 Propina: <b>0 %</b> si cobras en mano. Solo el <b>enlace o QR</b> lleva <b>1,9 % + 0,30 € — todo incluido</b> (la pasarela va dentro, no se suma aparte).</div>
@@ -4731,8 +4731,8 @@ var PLANES={ esencial:{orden:0, n:'Esencial', precio:'0 €',   bono:150,  base:
 var COMPLEMENTOS = {
   guia:     { n:'GuIA, el asistente', precio:39, abre:['chat','cerebro'] },
   agente:   { n:'El agente de plataformas', precio:29, abre:['agente'] },
-  web:      { n:'Tu web, montada sola', precio:15, abre:[] },
-  liquidacion:{ n:'Liquidación a guías', precio:19, abre:['liquidacion'] },
+  web:      { n:'Tu web, montada sola', precio:9, abre:[] },
+  liquidacion:{ n:'Liquidación a guías', precio:9, abre:['liquidacion'] },
 };
 S.comp = { guia:false, agente:false, web:false, liquidacion:false };
 
