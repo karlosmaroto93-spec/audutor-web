@@ -302,6 +302,7 @@
   .planes{ display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:18px; align-items:stretch; }
   .plan{ background:var(--paper); border:1.5px solid var(--line); border-radius:16px; padding:26px;
     display:flex; flex-direction:column; }
+  .plan.elegido{ box-shadow:0 0 0 2px var(--acc), 0 10px 34px rgba(18,138,107,.13); }
   .plan.destacado{ border-color:var(--acc); box-shadow:0 10px 34px rgba(18,138,107,.13); position:relative; }
   .plan.destacado::before{ content:"Most popular"; position:absolute; top:-12px; left:22px;
       background:var(--acc); color:#fff; font-size:11.5px; font-weight:800; letter-spacing:.06em;
@@ -390,6 +391,44 @@
     font-size:12.5px; line-height:1.5; color:var(--ink2); }
   .plan-extra b{ color:var(--amber); }
   .plan.premium .plan-extra{ background:rgba(201,138,45,.10); border-color:rgba(163,106,16,.28); }
+  /* ── EL TARIFADOR ───────────────────────────────────────────────────────────────────
+     Los planes a la izquierda y los complementos a la derecha, todo en una pantalla. Está
+     hecho a imagen del configurador de tours privados de Madrid Latido, que funciona por
+     el mismo motivo: quien está decidiendo no quiere leer tres columnas y sumar de
+     cabeza — quiere marcar lo suyo y ver el número moverse.
+     Por eso el precio de las TRES tarjetas se recalcula a la vez: así se comparan los tres
+     planes con TU cesta puesta, que es la comparación que de verdad se hace. */
+  .tarifador{ display:grid; grid-template-columns:1fr 340px; gap:24px; align-items:start; }
+  .tf-comp{ position:sticky; top:88px; background:var(--paper); border:1.5px solid var(--line);
+    border-radius:16px; padding:20px 18px; }
+  .tf-comp h3{ font-size:17px; font-family:var(--sans); font-weight:800; margin:0 0 3px; color:var(--deep); }
+  .tf-comp .tf-sub{ font-size:13px; color:var(--muted); margin:0 0 14px; line-height:1.5; }
+  .tf-g{ font-size:10.5px; font-weight:800; letter-spacing:.07em; text-transform:uppercase;
+    color:var(--amber); margin:14px 0 5px; }
+  .tf-g:first-of-type{ margin-top:0; }
+  .tf-o{ display:flex; gap:9px; align-items:flex-start; padding:8px 0; cursor:pointer;
+    border-bottom:1px dashed var(--line); }
+  .tf-o:hover{ background:rgba(18,138,107,.04); }
+  .tf-o input{ width:17px; height:17px; margin-top:2px; accent-color:var(--acc); cursor:pointer; flex:0 0 auto; }
+  .tf-o .tf-n{ flex:1; font-size:13.5px; font-weight:700; color:var(--ink); line-height:1.35; }
+  .tf-o .tf-n small{ display:block; font-weight:400; font-size:12px; color:var(--muted); margin-top:2px; }
+  .tf-o .tf-p{ font-size:13.5px; font-weight:800; color:var(--amber); font-variant-numeric:tabular-nums;
+    white-space:nowrap; }
+  .tf-res{ margin-top:16px; padding-top:14px; border-top:1.5px solid var(--line); }
+  .tf-res-l{ display:flex; justify-content:space-between; gap:10px; font-size:12.5px;
+    color:var(--ink2); padding:2px 0; }
+  .tf-res-l b{ font-variant-numeric:tabular-nums; }
+  .tf-tot{ display:flex; justify-content:space-between; align-items:baseline; gap:10px;
+    margin-top:10px; padding-top:10px; border-top:1px solid var(--line); }
+  .tf-tot span{ font-size:13.5px; font-weight:700; color:var(--deep); }
+  .tf-tot b{ font-family:var(--serif); font-size:30px; font-weight:600; color:var(--acc2);
+    font-variant-numeric:tabular-nums; }
+  .tf-nota{ font-size:11.5px; color:var(--muted); margin:8px 0 0; line-height:1.5; }
+  .tf-vacio{ font-size:12.5px; color:var(--muted); font-style:italic; }
+  @media (max-width:980px){
+    .tarifador{ grid-template-columns:1fr; }
+    .tf-comp{ position:static; }
+  }
   .fact-toggle-wrap{ text-align:center; margin:-8px 0 32px; }
   .fact-toggle{ display:inline-flex; background:var(--paper); border:1.5px solid var(--line);
     border-radius:99px; padding:4px; gap:2px; }
@@ -717,8 +756,10 @@
     </div>
     <p class="pausa">Pay annually and it’s one decision instead of twelve. In the off-season you can pause for up to 2 months and keep all your data.</p>
   </div>
+  <div class="tarifador">
+  <div class="tf-planes">
   <div class="planes">
-    <div class="plan reveal">
+    <div class="plan reveal" data-plan="esencial">
       <h3>Essential</h3><div class="precio">€0</div>
       <div class="para">For trying it out on a live operation · <b>150 travellers a month</b></div>
       <ul>
@@ -732,8 +773,8 @@
       <p class="plan-extra">Essential is free and caps at 150: when you get there we tell you, and you decide whether to move to Pro.</p>
       <a class="btn sec" href="#contacto">Start free</a>
     </div>
-    <div class="plan destacado reveal" style="--d:110ms">
-      <h3>Pro</h3><div class="precio">€<span class="imp" data-mensual="39" data-anual="32">39</span><small>/month</small></div>
+    <div class="plan destacado reveal elegido" style="--d:110ms" data-plan="pro">
+      <h3>Pro</h3><div class="precio">€<span class="imp" data-base="39" data-mensual="39" data-anual="32">39</span><small>/month</small></div>
       <div class="fact-nota" data-nota hidden>billed annually · €390/year (2 months free)</div>
       <div class="para">For companies running a team of guides · <b>800 travellers a month</b> · unlimited tours and guides</div>
       <ul>
@@ -749,8 +790,8 @@
       <p class="plan-extra">Above 800 travellers: <b>+€6/month per extra 100</b>, up to 2,000.</p>
       <a class="btn" href="#contacto">Book a demo</a>
     </div>
-    <div class="plan premium reveal" style="--d:220ms">
-      <h3>Premium</h3><div class="precio">€<span class="imp" data-mensual="149" data-anual="124">149</span><small>/month</small></div>
+    <div class="plan premium reveal" style="--d:220ms" data-plan="premium">
+      <h3>Premium</h3><div class="precio">€<span class="imp" data-base="149" data-mensual="149" data-anual="124">149</span><small>/month</small></div>
       <div class="fact-nota" data-nota hidden>billed annually · €1,490/year (2 months free)</div>
       <div class="para">For operators running several departures a day · <b>3,000 travellers a month</b></div>
       <ul>
@@ -763,37 +804,53 @@
       <a class="btn" href="#contacto">Talk to us about Premium</a>
     </div>
   </div>
-  <!-- THE ADD-ONS. GuIA used to sit inside Pro and the agent inside Premium, so the plan
-       decided two things at once: how many travellers you carry and which features you get.
-       They are split because they are different questions — 81 % of the market doesn't even
-       reach 3,000 travellers, so tying features to volume left half the table paying for a
-       cap that never bites and unable to add what they actually want. -->
-  <div class="comp reveal">
-    <div class="comp-cab">
-      <h3>And you add what you need</h3>
-      <p>All three work with any plan, including the free one. Add and drop them whenever you like.</p>
-    </div>
-    <div class="comp-grid">
-      <div class="comp-c">
-        <h4>GuIA, the assistant</h4>
-        <div class="cp">+€49<small>/month</small></div>
-        <p>Answers your travellers on WhatsApp and in your website chat with your facts and no
-        others. What it doesn't know, it passes to you.</p>
+  </div>
+    <!-- THE ADD-ONS PANEL. On the right and sticky: you tick here and see the effect on all
+         three cards at once, without scrolling. The plan is only the traveller BUNDLE;
+         everything else is chosen. -->
+    <aside class="tf-comp reveal">
+      <h3>Build your own plan</h3>
+      <p class="tf-sub">Tick what you need and watch all three plans change. Add and drop them whenever you like.</p>
+
+      <div class="tf-g">Looking after your customers</div>
+      <label class="tf-o"><input type="checkbox" data-c="guia" data-eur="49" onchange="tarifa()">
+        <span class="tf-n">GuIA, the assistant<small>Answers on WhatsApp and your site chat with your facts and no others</small></span>
+        <span class="tf-p">+€49</span></label>
+      <label class="tf-o"><input type="checkbox" data-c="web" data-eur="15" onchange="tarifa()">
+        <span class="tf-n">Your website, built for you<small>Assembled from the facts you have already written</small></span>
+        <span class="tf-p">+€15</span></label>
+      <label class="tf-o"><input type="checkbox" data-c="carrito" data-eur="19" onchange="tarifa()">
+        <span class="tf-n">Abandoned cart and combos<small>The second sale, on its own</small></span>
+        <span class="tf-p">+€19</span></label>
+
+      <div class="tf-g">Dealing with the platforms</div>
+      <label class="tf-o"><input type="checkbox" data-c="agente" data-eur="39" onchange="tarifa()">
+        <span class="tf-n">The platform agent<small>Signs into the panels with your session and counts what each one has on its books</small></span>
+        <span class="tf-p">+€39</span></label>
+      <label class="tf-o"><input type="checkbox" data-c="concilia" data-eur="25" onchange="tarifa()">
+        <span class="tf-n">No-show reconciliation<small>Claims the commission back inside each platform's window</small></span>
+        <span class="tf-p">+€25</span></label>
+
+      <div class="tf-g">Your team and your numbers</div>
+      <label class="tf-o"><input type="checkbox" data-c="liquida" data-eur="19" onchange="tarifa()">
+        <span class="tf-n">Guide settlements<small>Configurable splits and every tour reconciled</small></span>
+        <span class="tf-p">+€19</span></label>
+      <label class="tf-o"><input type="checkbox" data-c="cuadro" data-eur="19" onchange="tarifa()">
+        <span class="tf-n">Analytics<small>The numbers by tour, guide, channel and time slot</small></span>
+        <span class="tf-p">+€19</span></label>
+      <label class="tf-o"><input type="checkbox" data-c="marca" data-eur="9" onchange="tarifa()">
+        <span class="tf-n">Drop the “Audutor” badge<small>Your brand on the tip screen and the guide page</small></span>
+        <span class="tf-p">+€9</span></label>
+      <label class="tf-o"><input type="checkbox" data-c="soporte" data-eur="29" onchange="tarifa()">
+        <span class="tf-n">Priority support<small>Same-day replies and hands-on setup</small></span>
+        <span class="tf-p">+€29</span></label>
+
+      <div class="tf-res">
+        <div id="tf-lineas"><p class="tf-vacio">No add-ons: you pay for the traveller bundle only.</p></div>
+        <div class="tf-tot"><span>With <b id="tf-plan">Pro</b></span><b id="tf-total">€39</b></div>
+        <p class="tf-nota">Add-ons work with any plan, including the free one. The plan only decides how many travellers you have included.</p>
       </div>
-      <div class="comp-c">
-        <h4>The platform agent</h4>
-        <div class="cp">+€39<small>/month</small></div>
-        <p>Signs into your platform panels with your own session —we store no passwords—, counts
-        the people each platform has on its books and shows you the bookings that never reached
-        your inbox.</p>
-      </div>
-      <div class="comp-c">
-        <h4>Your website, built for you</h4>
-        <div class="cp">+€15<small>/month</small></div>
-        <p>Assembled from the facts you have already written: tours, times, meeting point and
-        policies. Change a time and the site updates without you touching it.</p>
-      </div>
-    </div>
+    </aside>
   </div>
 
   
@@ -954,13 +1011,10 @@
       botones.forEach(function (b) {
         b.setAttribute('aria-checked', b.dataset.modo === modo ? 'true' : 'false');
       });
-      document.querySelectorAll('.precio .imp[data-mensual]').forEach(function (imp) {
-        var destino = modo === 'anual' ? imp.dataset.anual : imp.dataset.mensual;
-        if (imp.textContent === destino) return;
-        if (reduce) { imp.textContent = destino; return; }
-        imp.classList.add('cambia');
-        setTimeout(function () { imp.textContent = destino; imp.classList.remove('cambia'); }, 180);
-      });
+      /* Los importes los pinta `tarifa()`, que sabe qué complementos hay marcados.
+         Reescribirlos aquí haría que marcar una casilla y cambiar a anual se pisaran. */
+      TF_MODO = modo;
+      tarifa();
       document.querySelectorAll('[data-nota]').forEach(function (n) {
         n.hidden = modo !== 'anual';
       });
@@ -1042,6 +1096,74 @@ function cambiaIdioma(){
   sw.querySelector('.bandera').textContent = LANG==='en' ? '🇪🇸' : '🇬🇧';
   sw.querySelector('.lbl').textContent     = LANG==='en' ? 'ES' : 'EN';
 }
+/* ── EL TARIFADOR ─────────────────────────────────────────────────────────────────────
+   Marcar un complemento recalcula las TRES tarjetas a la vez, no solo la elegida: la
+   comparación que de verdad se hace no es «cuánto vale Pro» sino «cuánto me vale a MÍ
+   cada plan con lo que yo necesito». Con una sola tarjeta moviéndose, esa comparación
+   había que hacerla de cabeza.
+   El bono de viajeros lo decide el plan; todo lo demás se elige. Por eso `data-base`
+   guarda solo la cuota del plan y los extras se suman encima al pintar. */
+var TF_MODO = 'mensual';        // lo cambia el conmutador de facturación
+var TF_PLAN = 'pro';            // el plan sobre el que se enseña el total
+
+function tfExtras(){
+  var t = 0, piezas = [];
+  document.querySelectorAll('.tf-o input:checked').forEach(function(i){
+    t += +i.dataset.eur;
+    piezas.push({ n: i.closest('.tf-o').querySelector('.tf-n').childNodes[0].textContent.trim(),
+                  e: +i.dataset.eur });
+  });
+  return { total:t, piezas:piezas };
+}
+/* Anual = dos meses gratis, igual que el plan: se aplica al TOTAL y no solo al bono, o el
+   descuento se evaporaría en cuanto alguien añadiera un complemento. */
+function tfAnual(v){ return Math.round(v * 10 / 12); }
+
+function tarifa(){
+  var ex = tfExtras();
+  document.querySelectorAll('.plan').forEach(function(p){
+    var imp = p.querySelector('.precio .imp'); if(!imp) return;
+    var base = +imp.dataset.base;
+    var v = base + ex.total;
+    imp.textContent = TF_MODO === 'anual' ? tfAnual(v) : v;
+    var nota = p.querySelector('[data-nota]');
+    if (nota) nota.textContent = 'billed annually · €' + (v*10).toLocaleString('en-GB') + '/year (2 months free)';
+  });
+  /* El plan gratuito deja de ser gratuito en cuanto se le añade algo, y decir «0 €» con
+     complementos marcados sería mentir en la única tarjeta que promete no cobrar. */
+  var es = document.querySelector('.plan .precio');
+  if (es && !es.querySelector('.imp'))
+    es.textContent = '€' + (ex.total ? ex.total : 0);
+
+  var cont = document.getElementById('tf-lineas');
+  if (cont) cont.innerHTML = ex.piezas.length
+    ? ex.piezas.map(function(x){
+        return '<div class="tf-res-l"><span>'+x.n+'</span><b>+'+x.e+' €</b></div>'; }).join('')
+    : '<p class="tf-vacio">Sin complementos: pagas solo el bono de viajeros.</p>';
+
+  var basePlan = { esencial:0, pro:39, premium:149 }[TF_PLAN];
+  var tot = basePlan + ex.total;
+  var t = document.getElementById('tf-total');
+  if (t) t.textContent = '€' + (TF_MODO === 'anual' ? tfAnual(tot) : tot);
+  var n = document.getElementById('tf-plan');
+  if (n) n.textContent = { esencial:'Essential', pro:'Pro', premium:'Premium' }[TF_PLAN];
+}
+
+/* Elegir plan pinchando la tarjeta. Es lo que hace que el total de la derecha signifique
+   algo: sin esto habría que decidir por cuál se enseña y acertar para todo el mundo. */
+document.addEventListener('DOMContentLoaded', function(){
+  document.querySelectorAll('.plan').forEach(function(p){
+    p.style.cursor = 'pointer';
+    p.addEventListener('click', function(ev){
+      if (ev.target.closest('a, input, label')) return;   // los botones y casillas, a lo suyo
+      TF_PLAN = p.dataset.plan || 'pro';
+      document.querySelectorAll('.plan').forEach(function(q){ q.classList.toggle('elegido', q===p); });
+      tarifa();
+    });
+  });
+  tarifa();
+});
+
 </script>
 </body>
 </html>
