@@ -447,6 +447,24 @@
     font-size:15px; cursor:pointer; line-height:1; font-family:inherit; }
   .mk-sel button.on{ background:var(--acc); border-color:var(--acc); box-shadow:0 0 0 2px rgba(18,138,107,.2); }
   .mk-sel #mk-nota{ color:#7a6f55; font-style:italic; }
+  /* ── Los complementos, pegados al selector de plan ──────────────────────────────────
+     El plan dejó de ser «qué funciones tienes» y pasó a ser «cuántos viajeros llevas»: un
+     bono, con recargo al pasarse. Lo que antes decidía el plan —GuIA, el agente— ahora se
+     suma o no. Por eso los interruptores van aquí y no en una pantalla aparte: la pregunta
+     «¿cuánto me cuesta?» no la contesta el plan solo, la contesta la cesta entera, y el
+     total tiene que moverse delante de quien la monta. */
+  .comp-sel{ background:#f3ecdb; border:1px solid #e0d3b4; border-radius:10px;
+    padding:9px 11px; margin-top:8px; font-size:11.5px; color:#5c6653; }
+  .comp-tit{ font-weight:800; font-size:10px; letter-spacing:.07em; text-transform:uppercase;
+    color:#7a6f55; margin-bottom:6px; }
+  .comp-sel label{ display:flex; align-items:center; gap:7px; padding:5px 0; cursor:pointer;
+    border-bottom:1px dashed rgba(122,111,85,.22); }
+  .comp-sel label span{ flex:1; }
+  .comp-sel label b{ color:#7a5210; font-variant-numeric:tabular-nums; }
+  .comp-sel input{ width:15px; height:15px; accent-color:var(--acc); cursor:pointer; }
+  .comp-total{ margin-top:8px; font-size:12.5px; color:#33514a; }
+  .comp-total b{ font-size:16px; color:var(--acc-deep); font-variant-numeric:tabular-nums; }
+  .comp-total span{ display:block; font-size:10.5px; color:#7a6f55; font-style:italic; margin-top:2px; }
   .plan-sel{ display:flex; gap:4px; margin-top:8px; flex-wrap:wrap; }
   /* Tres botones en ~187 px: el nombre del plan debe caber sin desbordar la caja.
      “Esencial” a 12 px no cabía en los ~56 px útiles de cada botón. */
@@ -749,8 +767,15 @@
       </div>
       <div class="plan-sel" id="plan-sel">
         <button data-plan="esencial" onclick="cambiarPlan('esencial')"><b>Essential</b>€0</button>
-        <button data-plan="pro" onclick="cambiarPlan('pro')"><b>Pro</b>€79</button>
-        <button data-plan="premium" onclick="cambiarPlan('premium')"><b>Premium</b>€249</button>
+        <button data-plan="pro" onclick="cambiarPlan('pro')"><b>Pro</b>€39</button>
+        <button data-plan="premium" onclick="cambiarPlan('premium')"><b>Premium</b>€149</button>
+      </div>
+      <div class="comp-sel" id="comp-sel">
+        <div class="comp-tit">Add-ons</div>
+        <label><input type="checkbox" id="c-guia" onchange="compTog('guia',this)"><span>GuIA, the assistant</span><b>+€49</b></label>
+        <label><input type="checkbox" id="c-agente" onchange="compTog('agente',this)"><span>The platform agent</span><b>+€39</b></label>
+        <label><input type="checkbox" id="c-web" onchange="compTog('web',this)"><span>Your website</span><b>+€15</b></label>
+        <div class="comp-total">Your plan: <b id="comp-tot">€39</b><span id="comp-desglose"></span></div>
       </div>
       <div style="font-size:10.5px; margin-top:8px; opacity:.85; line-height:1.5;">💳 Tips: <b>0 %</b> when you take it in person (your own SumUp, card reader or Tap to Pay). Only the <b>link or QR</b> carries <b>1.9 % + £0.30</b>.</div>
     </div>
@@ -4510,11 +4535,47 @@ cerebro:   { n:'GuIA’s brain', plan:'Pro', d:'The per-tour fact sheet that fee
   conciliacion:{ n:'Platform reconciliation', plan:'Pro', d:'The list of no-shows to report inside each platform’s deadline, built for you from the guide’s own head count, so you claw the fees back.' },
 };
 /* Planes de la demo (precios congruentes con la landing) y qué desbloquea cada uno. */
-var PLANES={ esencial:{orden:0, n:'Essential', precio:'£0'},
-             pro:     {orden:1, n:'Pro',      precio:'€79'},
-             premium: {orden:2, n:'Premium',  precio:'€249'} };
+/* Los planes son BONOS DE VIAJEROS; lo que decide las funciones son los COMPLEMENTOS. */
+var PLANES={ esencial:{orden:0, n:'Essential', precio:'€0',   bono:150,  base:0},
+             pro:     {orden:1, n:'Pro',      precio:'€39',  bono:800,  base:39},
+             premium: {orden:2, n:'Premium',  precio:'€149', bono:3000, base:149} };
+/* Esta demo no tiene la vista del agente, así que su complemento no abre nada aquí: se
+   ofrece igual para que el precio que se ve sea el mismo que el de la web inglesa. */
+var COMPLEMENTOS = {
+  guia:   { n:'GuIA, the assistant',   precio:49, abre:['chat','cerebro'] },
+  agente: { n:'The platform agent',    precio:39, abre:[] },
+  web:    { n:'Your website',          precio:15, abre:[] },
+};
+S.comp = { guia:false, agente:false, web:false };
+function abiertoPorComplemento(v){
+  for (var k in COMPLEMENTOS)
+    if (S.comp[k] && COMPLEMENTOS[k].abre.indexOf(v) !== -1) return true;
+  return false;
+}
+function totalCesta(){
+  var t = PLANES[S.plan].base, piezas = [];
+  for (var k in COMPLEMENTOS) if (S.comp[k]) { t += COMPLEMENTOS[k].precio; piezas.push(COMPLEMENTOS[k].n); }
+  return { total:t, piezas:piezas };
+}
+function compTog(k, el){ S.comp[k] = el.checked; pintaComplementos(); pintaCandados(); ir((location.hash.slice(1))||'operaciones'); }
+function pintaComplementos(){
+  var c = totalCesta(), t = document.getElementById('comp-tot');
+  /* En EUROS, no en la moneda del mercado. `dinero()` formatea con la divisa del mercado
+     activo —libras en el preset británico— y la cuota se factura siempre en euros: lo dice
+     la propia web inglesa («We bill in euros, in the UK as everywhere else»). Con £ el
+     total contradecía a los botones de al lado, que dicen €39 y €149. */
+  if (t) t.textContent = '€' + c.total;
+  var d = document.getElementById('comp-desglose');
+  var bono = String(PLANES[S.plan].bono).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  if (d) d.textContent = c.piezas.length
+    ? PLANES[S.plan].n + ' (' + bono + ' travellers) + ' + c.piezas.join(' + ')
+    : PLANES[S.plan].n + ' · ' + bono + ' travellers included';
+  for (var k in COMPLEMENTOS){ var el = document.getElementById('c-'+k); if (el) el.checked = !!S.comp[k]; }
+}
 function reqOrden(v){ return SUPLEMENTOS[v].plan==='Premium' ? 2 : 1; }   // plan mínimo que lo incluye
 function disponible(v){ if(!SUPLEMENTOS[v]) return true;
+  if (abiertoPorComplemento(v)) return true;
+  for (var k in COMPLEMENTOS) if (COMPLEMENTOS[k].abre.indexOf(v) !== -1) return !!S.desbloqueado[v];
   return PLANES[S.plan].orden >= reqOrden(v) || S.desbloqueado[v]; }
 function bloqueado(v){ return SUPLEMENTOS[v] && !disponible(v); }
 function pintaCandados(){
@@ -4643,7 +4704,7 @@ function pintaEsPlus(){
   e.style.display = S.plan==='esencial' ? 'block' : 'none';
 }
 function ofertaEsencialPlus(){}   /* oferta no pública: fuera del build */
-function cambiarPlan(p){ S.plan=p; pintaPlanSel(); pintaCandados(); pintaWaTope(); pintaPropinaPlan(); pintaEsPlus();
+function cambiarPlan(p){ S.plan=p; pintaPlanSel(); pintaComplementos(); pintaCandados(); pintaWaTope(); pintaPropinaPlan(); pintaEsPlus();
   ir((location.hash.slice(1))||'operaciones');   // re-evalúa el bloqueo de la vista actual
   toast('Plan '+PLANES[p].n+' active — the modules it includes are unlocked'); }
 var TXT_MENU = 'Menu', TXT_CERRAR = 'Close';
@@ -4685,7 +4746,7 @@ function ir(v){
 document.querySelectorAll('aside nav a').forEach(function(a){
   a.addEventListener('click', function(ev){ ev.preventDefault(); ir(a.dataset.v); });
 });
-pintaCandados(); pintaPlanSel(); pintaEsPlus(); pintaMkSel(); pintaDineroEstatico();
+pintaCandados(); pintaPlanSel(); pintaComplementos(); pintaEsPlus(); pintaMkSel(); pintaDineroEstatico();
 
 /* ===== Modo guía: el enlace personal del guía — SOLO su manifiesto y su
    disponibilidad, sin nada de la consola de la oficina. hash #guia. ===== */

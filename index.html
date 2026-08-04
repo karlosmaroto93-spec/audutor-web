@@ -344,6 +344,22 @@
   .plan li{ padding:6px 0 6px 26px; position:relative; border-top:1px dashed var(--line); }
   .plan li:first-child{ border-top:0; }
   .plan li::before{ content:"✓"; position:absolute; left:2px; color:var(--acc); font-weight:800; }
+  /* ── Los complementos ────────────────────────────────────────────────────────────────
+     El plan es un BONO DE VIAJEROS; esto es lo que se le suma. Van DEBAJO de las tarjetas y
+     no dentro, porque no pertenecen a ninguna: los tres se pueden contratar con cualquier
+     plan, incluido el gratuito, y meterlos en una columna sugeriría lo contrario. */
+  .comp{ margin-top:34px; }
+  .comp-cab{ text-align:center; margin-bottom:18px; }
+  .comp-cab h3{ font-size:20px; font-family:var(--sans); font-weight:800; color:var(--deep); margin:0 0 6px; }
+  .comp-cab p{ font-size:14.5px; color:var(--muted); margin:0; }
+  .comp-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .comp-c{ background:var(--paper); border:1.5px solid var(--line); border-radius:14px; padding:20px 18px; }
+  .comp-c h4{ font-size:16.5px; font-family:var(--sans); font-weight:800; margin:0 0 4px; color:var(--ink); }
+  .comp-c .cp{ font-family:var(--serif); font-size:26px; font-weight:600; color:var(--amber);
+    font-variant-numeric:tabular-nums; }
+  .comp-c .cp small{ font-family:var(--sans); font-size:13px; color:var(--muted); font-weight:600; }
+  .comp-c p{ font-size:14px; color:var(--ink2); margin:8px 0 0; line-height:1.6; }
+  @media (max-width:820px){ .comp-grid{ grid-template-columns:1fr; } }
   /* ---- propina digital: la tarjeta de tarifas ----------------------------------------
      Este bloque existía en el HTML desde el principio SIN una sola regla de CSS. No se
      notaba leyendo el código —el marcado es correcto— pero en pantalla salía desnudo: sin
@@ -746,7 +762,7 @@
   <div class="planes">
     <div class="plan reveal">
       <h3>Esencial</h3><div class="precio">0 €</div>
-      <div class="para">Para probar operando · <b>1 tour · 2 guías · 150 viajeros/mes</b></div>
+      <div class="para">Para probar operando · <b>150 viajeros al mes</b></div>
       <ul>
         <li>Parte del día y manifiesto del guía en el móvil</li>
         <li>Buzón de reservas: <b>hasta 2 canales</b></li>
@@ -759,9 +775,9 @@
       <a class="btn sec" href="#contacto">Empezar gratis</a>
     </div>
     <div class="plan destacado reveal" style="--d:110ms">
-      <h3>Pro</h3><div class="precio"><span class="imp" data-mensual="79" data-anual="66">79</span> €<small>/mes</small></div>
-      <div class="fact-nota" data-nota hidden>facturado anualmente · 790 €/año (2 meses gratis)</div>
-      <div class="para">Para la empresa con equipo · <b>hasta 800 viajeros/mes</b> · tours y guías ilimitados</div>
+      <h3>Pro</h3><div class="precio"><span class="imp" data-mensual="39" data-anual="32">39</span> €<small>/mes</small></div>
+      <div class="fact-nota" data-nota hidden>facturado anualmente · 390 €/año (2 meses gratis)</div>
+      <div class="para">Para la empresa con equipo · <b>800 viajeros al mes</b> · tours y guías ilimitados</div>
       <ul>
         <li>Todo lo de Esencial · <b>tours, guías y canales ilimitados</b> · historial completo</li>
         <li>Sin marca «Audutor» — tu marca en la propina y la página del guía</li>
@@ -769,7 +785,6 @@
           reserva — y deja registrado quién avisó, cuándo y quién confirmó</li>
         <li>Recordatorios por WhatsApp y SMS <b>sin límite por nuestra parte</b></li>
         <li><b>Conciliación con plataformas</b>: reclama las comisiones de los no-shows</li>
-        <li><b>GuIA</b> atendiendo tu chat</li>
         <li><b>Liquidación a guías</b> con reparto configurable</li>
         <li><b>Carrito abandonado y combos</b></li>
       </ul>
@@ -777,21 +792,51 @@
       <a class="btn" href="#contacto">Pedir una demo</a>
     </div>
     <div class="plan premium reveal" style="--d:220ms">
-      <h3>Premium</h3><div class="precio"><span class="imp" data-mensual="249" data-anual="207">249</span> €<small>/mes</small></div>
-      <div class="fact-nota" data-nota hidden>facturado anualmente · 2.490 €/año (2 meses gratis)</div>
-      <div class="para">Todo Audutor · <b>hasta 5.000 viajeros/mes</b> — para operadores que escalan</div>
+      <h3>Premium</h3><div class="precio"><span class="imp" data-mensual="149" data-anual="124">149</span> €<small>/mes</small></div>
+      <div class="fact-nota" data-nota hidden>facturado anualmente · 1.490 €/año (2 meses gratis)</div>
+      <div class="para">Para el operador con varias salidas al día · <b>3.000 viajeros al mes</b></div>
       <ul>
-        <li>Todo lo de Pro · <b>5.000 viajeros incluidos, sin tramos</b></li>
-        <li><b>El agente de plataformas</b>: entra en los paneles con tu sesión, cuenta la
-          gente que le consta a cada uno y te enseña las reservas que no llegaron a tu buzón</li>
+        <li>Todo lo de Pro · <b>3.000 viajeros incluidos, sin tramos</b></li>
         <li><b>Cuadro de mando</b> por tour, guía, canal y franja</li>
         <li>Soporte prioritario y onboarding dedicado</li>
       </ul>
-      <p class="plan-extra">Si pasas de 5.000: <b>+3 €/mes por cada 100</b> hasta 10.000, y
+      <p class="plan-extra">Si pasas de 3.000: <b>+3 €/mes por cada 100</b> hasta 10.000, y
       <b>+19 €/mes por cada 1.000</b> a partir de ahí.</p>
       <a class="btn" href="#contacto">Quiero Premium</a>
     </div>
   </div>
+  <!-- LOS COMPLEMENTOS. Antes GuIA venía dentro de Pro y el agente dentro de Premium, así
+       que el plan decidía dos cosas a la vez: cuántos viajeros llevas y qué funciones
+       tienes. Se separan porque son preguntas distintas — el 81 % del mercado no llega ni a
+       3.000 viajeros, así que atar las funciones al volumen dejaba a media tabla pagando
+       por un tope que no le aprieta y sin poder añadir lo que sí quiere. -->
+  <div class="comp reveal">
+    <div class="comp-cab">
+      <h3>Y le sumas lo que necesites</h3>
+      <p>Los tres funcionan con cualquier plan, también con el gratuito. Se quitan y se ponen cuando quieras.</p>
+    </div>
+    <div class="comp-grid">
+      <div class="comp-c">
+        <h4>GuIA, el asistente</h4>
+        <div class="cp">+49 €<small>/mes</small></div>
+        <p>Contesta a tus clientes por WhatsApp y en el chat de tu web con tus datos y con
+        ninguno más. Lo que no sabe, te lo pasa a ti.</p>
+      </div>
+      <div class="comp-c">
+        <h4>El agente de plataformas</h4>
+        <div class="cp">+39 €<small>/mes</small></div>
+        <p>Entra en los paneles con tu sesión —no guardamos ninguna contraseña—, cuenta la
+        gente que le consta a cada plataforma y te enseña las reservas que no llegaron a tu buzón.</p>
+      </div>
+      <div class="comp-c">
+        <h4>Tu web, montada sola</h4>
+        <div class="cp">+15 €<small>/mes</small></div>
+        <p>Se monta con los datos que ya tienes escritos: tours, horarios, punto de encuentro
+        y políticas. Cambias un horario y la web se actualiza sin que la toques.</p>
+      </div>
+    </div>
+  </div>
+
   
   <p class="reveal" style="text-align:center; color:var(--muted); font-size:13px; margin:14px 0 0;">
     Precios <b>sin IVA</b>. Con NIF español facturamos con el 21 %; en el resto de la UE
@@ -944,7 +989,7 @@
     document.querySelectorAll('.reveal, [data-split]').forEach(function (el) { el.classList.add('in'); });
   }
 
-  // Toggle de facturación mensual / anual. Los precios mensuales (0/79/249) son
+  // Toggle de facturación mensual / anual. Los precios mensuales (0/39/149) son
   // los valores por defecto en el HTML; el anual solo los cruza vía data-*.
   var toggle = document.getElementById('factToggle');
   if (toggle) {

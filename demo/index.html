@@ -574,6 +574,24 @@
     font-size:15px; cursor:pointer; line-height:1; font-family:inherit; }
   .mk-sel button.on{ background:var(--acc); border-color:var(--acc); box-shadow:0 0 0 2px rgba(18,138,107,.2); }
   .mk-sel #mk-nota{ color:#7a6f55; font-style:italic; }
+  /* ── Los complementos, pegados al selector de plan ──────────────────────────────────
+     El plan dejó de ser «qué funciones tienes» y pasó a ser «cuántos viajeros llevas»: un
+     bono, con recargo al pasarse. Lo que antes decidía el plan —GuIA, el agente— ahora se
+     suma o no. Por eso los interruptores van aquí y no en una pantalla aparte: la pregunta
+     «¿cuánto me cuesta?» no la contesta el plan solo, la contesta la cesta entera, y el
+     total tiene que moverse delante de quien la monta. */
+  .comp-sel{ background:#f3ecdb; border:1px solid #e0d3b4; border-radius:10px;
+    padding:9px 11px; margin-top:8px; font-size:11.5px; color:#5c6653; }
+  .comp-tit{ font-weight:800; font-size:10px; letter-spacing:.07em; text-transform:uppercase;
+    color:#7a6f55; margin-bottom:6px; }
+  .comp-sel label{ display:flex; align-items:center; gap:7px; padding:5px 0; cursor:pointer;
+    border-bottom:1px dashed rgba(122,111,85,.22); }
+  .comp-sel label span{ flex:1; }
+  .comp-sel label b{ color:#7a5210; font-variant-numeric:tabular-nums; }
+  .comp-sel input{ width:15px; height:15px; accent-color:var(--acc); cursor:pointer; }
+  .comp-total{ margin-top:8px; font-size:12.5px; color:#33514a; }
+  .comp-total b{ font-size:16px; color:var(--acc-deep); font-variant-numeric:tabular-nums; }
+  .comp-total span{ display:block; font-size:10.5px; color:#7a6f55; font-style:italic; margin-top:2px; }
   .plan-sel{ display:flex; gap:4px; margin-top:8px; flex-wrap:wrap; }
   /* Tres botones en ~187 px: el nombre del plan debe caber sin desbordar la caja.
      «Esencial» a 12 px no cabía en los ~56 px útiles de cada botón. */
@@ -837,7 +855,7 @@
   <div class="pie-demo">
     <div class="leyenda-planes">
       <b>Tu plan (demo):</b> cámbialo y mira qué se desbloquea. Esencial trae
-      <b>1 tour, 2 guías y 2 canales</b>; desde Pro, ilimitados. El <b>agente de plataformas</b> es de Premium.
+      <b>1 tour, 2 guías y 2 canales</b>; desde Pro, ilimitados. El plan es un <b>bono de viajeros</b>: GuIA, el agente y la web se suman aparte.
       <div class="mk-sel">
         <b>Mercado (demo):</b> el mismo producto, en el mismo idioma, adaptado a la moneda, el modelo de negocio y las costumbres de cada país.
         <div class="fila" id="mk-btns" style="gap:4px; margin-top:6px; flex-wrap:wrap;"></div>
@@ -845,8 +863,19 @@
       </div>
       <div class="plan-sel" id="plan-sel">
         <button data-plan="esencial" onclick="cambiarPlan('esencial')"><b>Esencial</b>0 €</button>
-        <button data-plan="pro" onclick="cambiarPlan('pro')"><b>Pro</b>79 €</button>
-        <button data-plan="premium" onclick="cambiarPlan('premium')"><b>Premium</b>249 €</button>
+        <button data-plan="pro" onclick="cambiarPlan('pro')"><b>Pro</b>39 €</button>
+        <button data-plan="premium" onclick="cambiarPlan('premium')"><b>Premium</b>149 €</button>
+      </div>
+      <!-- LOS COMPLEMENTOS. El plan es un BONO de viajeros; esto es lo que le sumas encima.
+           Van aquí, pegados al selector, porque la pregunta «¿cuánto me cuesta?» no se
+           contesta con el plan solo: se contesta con la cesta. Y cada interruptor mueve el
+           total que se ve debajo, para que el cliente monte su tarifa mirándola. -->
+      <div class="comp-sel" id="comp-sel">
+        <div class="comp-tit">Complementos</div>
+        <label><input type="checkbox" id="c-guia" onchange="compTog('guia',this)"><span>GuIA, el asistente</span><b>+49 €</b></label>
+        <label><input type="checkbox" id="c-agente" onchange="compTog('agente',this)"><span>El agente de plataformas</span><b>+39 €</b></label>
+        <label><input type="checkbox" id="c-web" onchange="compTog('web',this)"><span>Tu web, montada sola</span><b>+15 €</b></label>
+        <div class="comp-total">Tu tarifa: <b id="comp-tot">39 €</b><span id="comp-desglose"></span></div>
       </div>
       <div style="font-size:10.5px; margin-top:8px; opacity:.85; line-height:1.5;">💳 Propina: <b>0 %</b> si cobras en mano. Solo el <b>enlace o QR</b> lleva <b>1,9 % + 0,30 € — todo incluido</b> (la pasarela va dentro, no se suma aparte).</div>
     </div>
@@ -4689,12 +4718,55 @@ var SUPLEMENTOS={
   conciliacion:{ n:'Conciliación con plataformas', plan:'Pro', d:'La lista de no-shows a reportar dentro del plazo de cada plataforma, montada sola con los ajustes del guía, para recuperar las comisiones.' },
 };
 /* Planes de la demo (precios congruentes con la landing) y qué desbloquea cada uno. */
-var PLANES={ esencial:{orden:0, n:'Esencial', precio:'0 €'},
-             pro:     {orden:1, n:'Pro',      precio:'79 €'},
-             premium: {orden:2, n:'Premium',  precio:'249 €'} };
+/* Los planes ya no son «qué funciones tienes»: son BONOS DE VIAJEROS. Lo que decide qué
+   funciones hay son los COMPLEMENTOS, que se suman o no a cualquier plan. El motivo es que
+   el 81 % del mercado no llega ni a 3.000 viajeros: vender el plan por volumen dejaba a
+   Premium sin más argumento que un tope que a casi nadie le aprieta. */
+var PLANES={ esencial:{orden:0, n:'Esencial', precio:'0 €',   bono:150,  base:0},
+             pro:     {orden:1, n:'Pro',      precio:'39 €',  bono:800,  base:39},
+             premium: {orden:2, n:'Premium',  precio:'149 €', bono:3000, base:149} };
+/* Qué cuesta cada complemento y qué desbloquea. Una clave por complemento, y la lista de
+   vistas que abre — así añadir uno nuevo es una línea y no hay que tocar el gating. */
+var COMPLEMENTOS = {
+  guia:   { n:'GuIA, el asistente',        precio:49, abre:['chat','cerebro'] },
+  agente: { n:'El agente de plataformas',  precio:39, abre:['agente'] },
+  web:    { n:'Tu web, montada sola',      precio:15, abre:[] },
+};
+S.comp = { guia:false, agente:false, web:false };
+
+/* Un suplemento está disponible si algún complemento CONTRATADO lo abre, o si sigue
+   colgando del plan (cuadro de mando, proyección: esos se quedan como estaban). */
+function abiertoPorComplemento(v){
+  for (var k in COMPLEMENTOS)
+    if (S.comp[k] && COMPLEMENTOS[k].abre.indexOf(v) !== -1) return true;
+  return false;
+}
 function reqOrden(v){ return SUPLEMENTOS[v].plan==='Premium' ? 2 : 1; }   // plan mínimo que lo incluye
 function disponible(v){ if(!SUPLEMENTOS[v]) return true;
+  if (abiertoPorComplemento(v)) return true;
+  /* Lo que abre un complemento NO lo abre el plan: si no, contratar Premium regalaría GuIA
+     y el complemento no significaría nada. */
+  for (var k in COMPLEMENTOS) if (COMPLEMENTOS[k].abre.indexOf(v) !== -1) return !!S.desbloqueado[v];
   return PLANES[S.plan].orden >= reqOrden(v) || S.desbloqueado[v]; }
+
+/* El total de la cesta: el bono del plan más lo que se le sume. Es lo que se ve moverse
+   al tocar un interruptor, y es la razón de que los complementos vivan pegados al selector. */
+function totalCesta(){
+  var t = PLANES[S.plan].base, piezas = [];
+  for (var k in COMPLEMENTOS) if (S.comp[k]) { t += COMPLEMENTOS[k].precio; piezas.push(COMPLEMENTOS[k].n); }
+  return { total:t, piezas:piezas };
+}
+function compTog(k, el){ S.comp[k] = el.checked; pintaComplementos(); pintaCandados(); ir((location.hash.slice(1))||'operaciones'); }
+function pintaComplementos(){
+  var c = totalCesta(), t = document.getElementById('comp-tot');
+  if (t) t.textContent = dinero(c.total, 0);
+  var d = document.getElementById('comp-desglose');
+  var bono = String(PLANES[S.plan].bono).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  if (d) d.textContent = c.piezas.length
+    ? PLANES[S.plan].n + ' (' + bono + ' viajeros) + ' + c.piezas.join(' + ')
+    : PLANES[S.plan].n + ' · ' + bono + ' viajeros incluidos';
+  for (var k in COMPLEMENTOS){ var el = document.getElementById('c-'+k); if (el) el.checked = !!S.comp[k]; }
+}
 function bloqueado(v){ return SUPLEMENTOS[v] && !disponible(v); }
 function pintaCandados(){
   document.querySelectorAll('aside nav a[data-v]').forEach(function(a){
@@ -4831,7 +4903,7 @@ function pintaEsPlus(){
   e.style.display = S.plan==='esencial' ? 'block' : 'none';
 }
 function ofertaEsencialPlus(){}   /* oferta no pública: fuera del build */
-function cambiarPlan(p){ S.plan=p; pintaPlanSel(); pintaCandados(); pintaWaTope(); pintaPropinaPlan(); pintaEsPlus();
+function cambiarPlan(p){ S.plan=p; pintaPlanSel(); pintaComplementos(); pintaCandados(); pintaWaTope(); pintaPropinaPlan(); pintaEsPlus();
   ir((location.hash.slice(1))||'operaciones');   // re-evalúa el bloqueo de la vista actual
   toast('Plan '+PLANES[p].n+' activo — se desbloquean los módulos incluidos'); }
 var TXT_MENU = 'Menú', TXT_CERRAR = 'Cerrar';
@@ -4874,7 +4946,7 @@ function ir(v){
 document.querySelectorAll('aside nav a').forEach(function(a){
   a.addEventListener('click', function(ev){ ev.preventDefault(); ir(a.dataset.v); });
 });
-pintaCandados(); pintaPlanSel(); pintaEsPlus(); pintaMkSel(); pintaDineroEstatico();
+pintaCandados(); pintaPlanSel(); pintaComplementos(); pintaEsPlus(); pintaMkSel(); pintaDineroEstatico();
 
 /* ===== Modo guía: el enlace personal del guía — SOLO su manifiesto y su
    disponibilidad, sin nada de la consola de la oficina. hash #guia. ===== */
