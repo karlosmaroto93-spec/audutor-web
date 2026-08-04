@@ -461,6 +461,8 @@
     border-bottom:1px dashed rgba(122,111,85,.22); }
   .comp-sel label span{ flex:1; }
   .comp-sel label b{ color:#7a5210; font-variant-numeric:tabular-nums; }
+  .comp-gratis{ font-size:10.5px; line-height:1.4; color:#0c6b56; font-weight:700;
+    background:rgba(18,138,107,.09); border-radius:6px; padding:4px 6px; margin:0 0 5px; }
   .comp-sel input{ width:15px; height:15px; accent-color:var(--acc); cursor:pointer; }
   .comp-total{ margin-top:8px; font-size:12.5px; color:#33514a; }
   .comp-total b{ font-size:16px; color:var(--acc-deep); font-variant-numeric:tabular-nums; }
@@ -771,6 +773,7 @@
         <button data-plan="premium" onclick="cambiarPlan('premium')"><b>Premium</b>€149</button>
       </div>
       <div class="comp-sel" id="comp-sel">
+        <div class="comp-gratis">🎁 The first month of every add-on is free.</div>
         <div class="comp-tit">Add-ons</div>
         <label><input type="checkbox" id="c-guia" onchange="compTog('guia',this)"><span>GuIA, the assistant</span><b>+€39</b></label>
         <label><input type="checkbox" id="c-agente" onchange="compTog('agente',this)"><span>The platform agent</span><b>+€29</b></label>

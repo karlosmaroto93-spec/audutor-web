@@ -372,6 +372,11 @@
      pulsar «qué hace» marcaría la casilla, y el visitante acabaría contratando por leer.
      La línea de puntos se muda del label al detalle para que el bloque no salga partido. */
   .tf-o.con-mas{ border-bottom:none; padding-bottom:2px; }
+  /* El aviso del mes gratis. Va pegado al subtítulo del panel y NO grita: si pareciera una
+     pegatina de oferta, el visitante lo lee como un truco y desconfía del precio de al lado. */
+  .tf-gratis{ font-size:12px; line-height:1.45; color:var(--deep); background:rgba(18,138,107,.07);
+    border:1px solid rgba(18,138,107,.22); border-radius:8px; padding:8px 10px; margin:0 0 14px; }
+  .tf-gratis b{ color:var(--acc); }
   .tf-mas{ margin:0 0 2px 26px; padding-bottom:8px; border-bottom:1px dashed var(--line); }
   .tf-mas summary{ font-size:11.5px; font-weight:800; color:var(--acc); cursor:pointer;
     list-style:none; letter-spacing:.01em; padding:2px 0; }
@@ -854,6 +859,8 @@
       <h3>Móntate tu tarifa</h3>
       <p class="tf-sub">Marca lo que necesites y mira cómo cambian los tres planes. Se quitan
       y se ponen cuando quieras.</p>
+      <p class="tf-gratis"><b>El primer mes de cada complemento no se cobra.</b> Sin tarjeta.
+      Si al cabo del mes uno no te ha servido, lo quitas.</p>
 
       <div class="tf-g">El asistente y tu escaparate</div>
       <label class="tf-o con-mas"><input type="checkbox" data-c="guia" data-eur="39" onchange="tarifa()">
@@ -919,7 +926,8 @@
       <div class="tf-res">
         <div id="tf-lineas"><p class="tf-vacio">Sin complementos: pagas solo el bono de viajeros.</p></div>
         <div class="tf-tot"><span>Con <b id="tf-plan">Pro</b></span><b id="tf-total">39 €</b></div>
-        <p class="tf-nota">Los complementos se suman a cualquier plan, también al gratuito.
+        <p class="tf-nota">Con el primer mes gratis, esto empieza pagando solo el bono.<br><br>
+        Los complementos se suman a cualquier plan, también al gratuito.
         El plan solo decide cuántos viajeros llevas incluidos.<br><br>
         <b>Sin GuIA el sistema funciona igual</b> —el parte del día, el manifiesto, el buzón,
         los recordatorios, la liquidación—, pero los recordatorios salen y las respuestas de
