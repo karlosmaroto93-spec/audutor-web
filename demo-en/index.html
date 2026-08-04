@@ -495,6 +495,11 @@
   .recarga-demo{ margin:0 0 10px; }
   .recarga-demo .btn{ width:100%; min-height:48px; font-weight:700; }
   .recarga-demo p{ margin:5px 0 0; text-align:center; }
+  /* El rótulo que NOMBRA la pantalla, encima del titular que la describe. Un titular
+     describe; un rótulo identifica — con trece pantallas hacen falta los dos. */
+  .rotulo-vista{ display:inline-block; font-size:11px; font-weight:800; letter-spacing:.07em;
+    text-transform:uppercase; color:var(--amber); background:var(--gold-soft);
+    border:1px solid #ecd9b0; border-radius:99px; padding:3px 11px; margin-bottom:7px; }
   .comp-sel{ background:#f3ecdb; border:1px solid #e0d3b4; border-radius:10px;
     padding:9px 11px; margin-top:8px; font-size:11.5px; color:#5c6653; }
   .comp-tit{ font-weight:800; font-size:10px; letter-spacing:.07em; text-transform:uppercase;
@@ -786,6 +791,7 @@
       <button class="nav-g-cab" onclick="this.parentElement.classList.toggle('abierto')">📣 Bookings &amp; sales <span class="flecha">▾</span></button>
       <div class="nav-g-hijos">
         <a href="#canales" data-v="canales">🔌 Channels &amp; sync</a>
+        <a href="#agente" data-v="agente">🤖 The platform agent <span class="cand">🔒</span></a>
         <a href="#noshow" data-v="noshow">📉 Anti no-show</a>
         <a href="#carrito" data-v="carrito">🛒 Baskets &amp; combos <span class="cand">🔒</span></a>
       </div>
@@ -1106,6 +1112,19 @@
       once and covers every tour. <b>Watch the [square brackets]</b>: they mark where
       your detail goes — when you type it in, <b>delete the brackets too</b> (leave “[10:00]” and GuIA would
       read the brackets out loud).</span></details></div>
+    <!-- WHAT THE AGENT HAS READ. It lives INSIDE the brain, not on the agent's card, and
+         that is the line: the brain gets what changes what GuIA CAN SAY; the agent panel
+         gets what changes what the agent DOES. And it is a proposal, never an auto-fill:
+         a published listing can sit untouched for months, and accepting it blind puts the
+         stale version in GuIA's mouth — quoting the operator himself. -->
+    <div id="ficha-prop" style="display:none; margin:12px 0 0; padding:11px 12px;
+         background:var(--acc-soft); border-left:3px solid var(--acc); border-radius:0 12px 12px 0;">
+      <b style="font-size:13.5px;">The agent has already read your listings</b>
+      <p class="mini muted" style="margin:4px 0 8px;">This is what <b>you</b> have published
+        on the platforms and is not in the brain yet. <b>Look before you accept</b>: if that
+        listing has sat untouched for months, GuIA would repeat the stale version.</p>
+      <div id="ficha-lista"></div>
+    </div>
     <div id="kb-acordeon"></div>
   </div>
 
@@ -1454,6 +1473,108 @@ Places held for your group for 48 h 👉 oldtownwalks.co.uk/combo/x3f9
       <b>in progress</b>, Viator’s official API (two-way availability) · <b>after that</b>, GYG/Viator
       through a certified channel manager. <details class="mas"><summary>ⓘ more</summary><span class="mas-p">It all ends up in the same place: manifest, anti-no-show, groups and
       payouts.</span></details></div>
+  </div>
+
+</section>
+
+<section class="vista" id="v-agente">
+  <div class="cab"><span class="rotulo-vista">🤖 The platform agent · add-on</span><h1>The agent that signs into your dashboards</h1><span class="sub">reads your listings, counts the people each platform has on record and closes what is full — and nothing it says counts as done until you look at it</span></div>
+  <!-- THE EXTERNAL AGENT. It sits here, with the channels, because that is what it is
+       about: signing into each platform's dashboard. Off by default, with its state in
+       the header — a switch that lets a process into your platform dashboards cannot be
+       hidden, neither to turn it on nor to notice it is on. -->
+  <div class="card" id="card-agente">
+    <div class="fila" style="justify-content:space-between; align-items:flex-start;">
+      <h2 style="margin:0;">🤖 The agent that signs into your dashboards <span class="chip gris" id="ag-estado">off</span></h2>
+      <label class="interruptor" style="margin-left:auto;"><input type="checkbox" id="ag-sw" onchange="agToggle()"><span></span></label>
+    </div>
+    <p class="mini muted" style="margin:8px 0 0; max-width:70ch;">
+      You can run an agent that signs into your platform dashboards. <b>It runs on your own
+      computer, with your own session</b>: Audutor stores no platform password. It closes
+      full departures, yes — but what earns its keep is that it <b>LOOKS</b>: it counts how
+      many people each platform has on record, so you learn about the bookings that never
+      reached your inbox. And even when it says it has closed one, it still shows here as
+      <b>not closed</b> until you check it yourself.</p>
+    <!-- THE FIVE VERBS, VISIBLE WITH THE AGENT OFF. The default mental model of «agent»
+         is «robot that does things for me»; the real one is «eyes, and a pair of hands you
+         do not fully trust». If that is not read BEFORE switching it on, the rest of the
+         screen —«says it did», «unchecked»— reads as odd distrust instead of as the
+         design. -->
+    <div id="ag-verbos" style="margin-top:12px; border-top:1px dashed var(--line); padding-top:12px;">
+      <div class="mini" style="font-weight:800; margin-bottom:6px;">The five things it does — and they are not worth the same</div>
+      <p class="mini muted" style="margin:0 0 5px;"><b style="color:var(--ink);">Count people.</b>
+        It opens your departure on each platform and says how many people they have on
+        record. It touches nothing, and it is the most useful thing it does: it is how you
+        learn about the bookings that never reached your inbox.</p>
+      <p class="mini muted" style="margin:0 0 5px;"><b style="color:var(--ink);">Read your listing.</b>
+        It reads what you have published and brings it back, to propose it in the brain. It
+        does not even need to sign into your account for that.</p>
+      <p class="mini muted" style="margin:0 0 5px;"><b style="color:var(--ink);">Count reviews.</b>
+        How many sit unanswered. Answering them is yours: writing in your name is not
+        something a program does.</p>
+      <p class="mini muted" style="margin:0 0 5px;"><b style="color:var(--ink);">Close.</b>
+        It tries, on the dashboards you tick, one by one. And even when it says it closed
+        one, it still shows here as not closed until you look. It never paints a green ✓.</p>
+      <p class="mini muted" style="margin:0 0 8px;"><b style="color:var(--ink);">Reopen.</b>
+        Only what it closed, and only when you ask. It does the dashboard; you pick the
+        moment.</p>
+      <div style="border-left:2px dashed var(--line); padding-left:11px; margin-top:10px;">
+        <div class="mini" style="font-weight:800; letter-spacing:.06em;">WHAT IT CANNOT DO</div>
+        <p class="mini muted" style="margin:5px 0 0;">✕ Open places on its own, or add capacity.</p>
+        <p class="mini muted" style="margin:3px 0 0;">✕ Hold any password of yours: we never ask for one and never store one.</p>
+        <p class="mini muted" style="margin:3px 0 0;">✕ Know who is coming. Each job tells it the platform, the dashboard and the time. No names, no booking references.</p>
+        <p class="mini muted" style="margin:3px 0 0;">✕ Answer a review or write anything in your name.</p>
+        <p class="mini muted" style="margin:3px 0 0;">✕ Enter a dashboard you have not ticked, or more times a day than you set.</p>
+      </div>
+    </div>
+    <div id="ag-cuerpo" style="display:none; margin-top:12px;">
+      <div style="border-top:1px dashed var(--line); padding-top:12px;">
+        <div class="mini" style="font-weight:800; margin-bottom:6px;">Which dashboards can it enter?</div>
+        <div id="ag-plataformas" class="fila" style="gap:14px; flex-wrap:wrap;"></div>
+        <p class="mini muted" style="margin:8px 0 0;">Switching it on grants nothing by
+          itself: you choose dashboard by dashboard. With none ticked, it does nothing.</p>
+      </div>
+      <!-- WHAT EARNS ITS KEEP, and the only part of the agent that reaches GuIA's mouth.
+           When a platform has more people on record than we do, we know two things: our
+           count is short, and we do not know by how much. At exactly that moment GuIA was
+           answering «there are places left 🙂» with full confidence. It is shown the way
+           it is lived: press the button and the chat answer changes. -->
+      <div style="border-top:1px dashed var(--line); margin-top:12px; padding-top:12px;">
+        <div class="mini" style="font-weight:800; margin-bottom:6px;">What it LOOKS at for you</div>
+        <div id="ag-censo"></div>
+        <div class="fila" style="gap:8px; margin-top:9px; flex-wrap:wrap;">
+          <button class="btn mini sec" onclick="agCuenta(28)">Count now (they have 28 on record)</button>
+          <button class="btn mini sec" onclick="agCuenta(0)">Clear the mismatch</button>
+          <button class="btn mini sec" onclick="agLeeFicha()">Read your published listing</button>
+        </div>
+        <p class="mini muted" style="margin:8px 0 0;">
+          Looking touches nothing, and it is the only thing that can learn about the
+          bookings that never reached your inbox. Try it, then ask GuIA «any places left?»
+          in the chat: <b>it stops giving the number</b>. It can only make it say less,
+          never more.</p>
+      </div>
+      <!-- WHAT IT FINDS BY LOOKING. Four things that only show up after several looks, and
+           none resolves itself: the first three are notices and the fourth is a commercial
+           decision a program must NOT take. Putting a closed departure back on sale is not
+           reversible — whoever saw «full» does not come back — so the agent proposes and a
+           person decides. -->
+      <div style="border-top:1px dashed var(--line); margin-top:12px; padding-top:12px;">
+        <div class="mini" style="font-weight:800; margin-bottom:6px;">What it finds by looking</div>
+        <div id="ag-halla"></div>
+        <div class="fila" style="gap:8px; margin-top:9px; flex-wrap:wrap;">
+          <button class="btn mini sec" onclick="agPasada()">Do another pass</button>
+          <button class="btn mini sec" onclick="agReset()">Start over</button>
+        </div>
+      </div>
+      <div style="border-top:1px dashed var(--line); margin-top:12px; padding-top:12px;">
+        <div class="mini" style="font-weight:800; margin-bottom:6px;">What it has done today</div>
+        <div id="ag-ordenes"></div>
+        <p class="mini muted" style="margin:8px 0 0;">
+          The agent <b>never</b> leaves a departure in green: the furthest it gets is «says
+          it closed it». The ✓ is yours, when you check — and if bookings from that
+          platform keep arriving afterwards, it shows in red.</p>
+      </div>
+    </div>
   </div>
 
 </section>
@@ -2732,6 +2853,20 @@ function calloPorDescuadre(t){
     '\n\n<i>— A la plataforma le constan más reservas de las que han llegado a tu buzón, '+
     'así que el número de plazas que GuIA tiene delante está corto. Míralo en el panel '+
     'antes de confirmar nada.</i>';
+}
+/* La misma mordaza, en inglés. Recibe los hechos como TEXTO porque el accesor `v` vive
+   dentro de `respuestaEN` y esto no puede depender de él: la función dice lo que se puede
+   decir —horario y corte— y calla la cifra que otra fuente ya ha desmentido. */
+function calloPorDescuadreEN(t, hs, co){
+  registraDerivada(t, 'persona');
+  return 'I can\'t promise today\'s places myself right now: our count and the '+
+    'platform\'s don\'t add up. I\'ve passed it to the manager, who\'ll confirm in a '+
+    'moment 🙂'+
+    (hs ? '\n\nWhat I can tell you: we run '+sinPuntoFinal(hs)+'.' : '')+
+    (co ? ' You can book up to '+sinPuntoFinal(co)+'.' : '')+
+    '\n\n<i>— The platform has more bookings on record than have reached your inbox, so '+
+    'the number GuIA is looking at is short. Check their dashboard before confirming '+
+    'anything.</i>';
 }
 /* «a las 17», «17:00», «10h», «5 pm», «a las diez». Devuelve la hora 0-23, o null. */
 function horaDelMensaje(m){
@@ -4444,6 +4579,12 @@ function respuestaEN(t){
     var q=salidaDelMensaje(m);
     if (q.ninguna)
       return 'Each departure takes up to '+afN+' people — a manageable group where you can actually hear the guide 🙂';
+    /* LA MORDAZA POR DESCUADRE — y solo estaba en el motor español. Un viajero inglés
+       preguntando por plazas durante un descuadre recibía «X of 25 booked in 🙂» con toda
+       la seguridad del mundo, sobre un recuento que el propio sistema ya sabe corto. La
+       regla entera está explicada en el lado español; aquí solo su espejo. Va tras
+       `ninguna` y antes de `fueraDeHora`, en el MISMO sitio que allí. */
+    if (hayDescuadre(q.salida?[q.salida]:(q.varias||[]))) return calloPorDescuadreEN(t, v('horas'), v('corte'));
     if (q.fueraDeHora){
       registraDerivada(t, 'persona');
       return 'I don\'t have a departure at that time on today\'s sheet — '+
@@ -4587,6 +4728,200 @@ function recargaManifiesto(){
   }, 700);
 }
 
+
+/* ══ THE PLATFORM AGENT ═══════════════════════════════════════════════════════
+   Same rules as the Spanish demo, word for word where it matters: findings ACCUMULATE
+   across passes —nobody discovers that a platform always mismatches by looking once—,
+   «says it closed it» is never «closed», and reopening is a person's decision. */
+var AG = { activo:false, plataformas:{ guruwalk:true, civitatis:false, freetour:false },
+  ordenes:[
+    { plataforma:'GuruWalk', hora:'08:12', estado:'dice', txt:'Capacity set to 0 · Session closed' },
+    { plataforma:'Civitatis', hora:'08:14', estado:'fallo', txt:'the capacity button is no longer where it was' },
+  ] };
+var AG_NOMBRES = { guruwalk:'GuruWalk', civitatis:'Civitatis', freetour:'Freetour.com' };
+/* What the agent FINDS by looking. Kept apart from `ordenes` on purpose: an order is
+   something the agent did and someone must check; this is something it saw and a person
+   decides. */
+var AG_HALLA = { pasadas:0, repite:[], liberadas:[], reabrir:[], resenas:0 };
+
+function agToggle(){ AG.activo = document.getElementById('ag-sw').checked; pintaAgente(); }
+function agPlat(k, el){ AG.plataformas[k] = el.checked; pintaAgente(); }
+/* Each pass is one round of the dashboards. Findings accumulate because that is how they
+   appear in real life — which is why the diagnosis only shows from the second pass on. */
+function agPasada(){
+  AG_HALLA.pasadas++;
+  var act = Object.keys(AG.plataformas).filter(function(k){ return AG.plataformas[k] });
+  if (!act.length){ toast('No platform ticked: the agent cannot go in to look'); return; }
+  var n = AG_NOMBRES[act[0]];
+  if (AG_HALLA.pasadas >= 2)
+    AG_HALLA.repite = [{ nombre:n, conDescuadre:AG_HALLA.pasadas - 1, mirados:AG_HALLA.pasadas, personas:(AG_HALLA.pasadas-1)*3 }];
+  if (AG_HALLA.pasadas === 2) AG_HALLA.liberadas = [{ nombre:n, plazas:2 }];
+  if (AG_HALLA.pasadas >= 3) AG_HALLA.reabrir = [{ nombre:n, tour:'Free Old Town walking tour', hora:'10:00' }];
+  AG_HALLA.resenas = AG_HALLA.pasadas >= 2 ? 4 : 0;
+  pintaAgente();
+  toast('Pass ' + AG_HALLA.pasadas + ' · the agent has looked again');
+}
+function agReset(){ AG_HALLA = { pasadas:0, repite:[], liberadas:[], reabrir:[], resenas:0 }; pintaAgente(); }
+function agPideReabrir(i){
+  var r = AG_HALLA.reabrir[i]; if (!r) return;
+  AG.ordenes.unshift({ plataforma:r.nombre, hora:'now', estado:'dice',
+    txt:'Reopening requested by you · ' + r.tour + ' ' + r.hora });
+  AG_HALLA.reabrir.splice(i,1); pintaAgente();
+  toast('Reopening ordered. Still unticked until you check it on their dashboard.');
+}
+function pintaHallazgos(){
+  var c = document.getElementById('ag-halla'); if (!c) return;
+  var H = '', sec = function(t, cuerpo){
+    return '<div style="margin-bottom:10px;"><div class="mini" style="font-weight:800; letter-spacing:.04em; color:var(--acc2);">'+t+'</div>'+cuerpo+'</div>'; };
+  if (AG_HALLA.repite.length) H += sec('WHAT KEEPS REPEATING', AG_HALLA.repite.map(function(d){
+    return '<p class="mini" style="margin:3px 0;"><b>'+d.nombre+':</b> in <b>'+d.conDescuadre+' of the '+d.mirados+
+      '</b> counts it had more people on record than you — '+d.personas+' people in total.</p>'; }).join('') +
+    '<p class="mini muted" style="margin:3px 0 0;">If bookings from that platform never reached your inbox, they show up here.</p>');
+  if (AG_HALLA.liberadas.length) H += sec('PLACES HAVE FREED UP', AG_HALLA.liberadas.map(function(l){
+    /* «They have on record», never «you can sell»: the number belongs to THEIR books.
+       Saying «you can sell 2 more» off someone else's ledger is overselling. */
+    return '<p class="mini" style="margin:3px 0;"><b>'+l.nombre+'</b> has <b>'+l.plazas+
+      '</b> more free places on record than in the previous count. Someone cancelled there.</p>'; }).join(''));
+  if (AG_HALLA.reabrir.length) H += sec('CLOSED, AND NO LONGER FULL', AG_HALLA.reabrir.map(function(r,i){
+    return '<p class="mini" style="margin:3px 0;">'+r.nombre+' · '+r.tour+' '+r.hora+
+      ' — it was closed for being full and no longer is. <button class="btn mini sec" style="padding:2px 9px;" onclick="agPideReabrir('+i+')">Reopen it</button></p>'; }).join('') +
+    '<p class="mini muted" style="margin:3px 0 0;">Your call: reopening is not reversible — whoever saw «full» does not come back.</p>');
+  if (AG_HALLA.resenas) H += sec('REVIEWS LEFT UNANSWERED',
+    '<p class="mini" style="margin:3px 0;"><b>'+AG_HALLA.resenas+'</b> unanswered across the dashboards. The agent counts them; answering is yours.</p>');
+  c.innerHTML = H || '<p class="mini muted" style="margin:0;">Nothing yet. Do a pass — then another: what repeats only shows by looking several times.</p>';
+}
+function pintaAgente(){
+  var sw = document.getElementById('ag-sw'); if(!sw) return;
+  sw.checked = AG.activo;
+  var est = document.getElementById('ag-estado');
+  est.textContent = AG.activo ? 'running' : 'off';
+  est.className = 'chip' + (AG.activo ? '' : ' gris');
+  document.getElementById('ag-cuerpo').style.display = AG.activo ? '' : 'none';
+  pintaHallazgos();
+  /* The contract is read BEFORE switching it on; with the agent running, what matters is
+     what it brought back. */
+  var vb = document.getElementById('ag-verbos');
+  if (vb) vb.style.display = AG.activo ? 'none' : '';
+
+  document.getElementById('ag-plataformas').innerHTML =
+    Object.keys(AG_NOMBRES).map(function(k){
+      return '<label class="mini" style="display:flex;align-items:center;gap:6px;">'+
+        '<input type="checkbox" '+(AG.plataformas[k]?'checked':'')+
+        ' onchange="agPlat(\''+k+'\', this)"> May enter '+AG_NOMBRES[k]+'</label>';
+    }).join('');
+
+  /* The head-count: both numbers side by side, and the difference. «28» alone says
+     nothing; «28, and you have 6» says twenty-two people are missing from the list the
+     guide walks out with. */
+  var sC = ((S.agenda[S.agDia] || {}).tours || [])[0];
+  var faltanC = sC ? (+sC.faltan || 0) : 0;
+  var nuestroC = sC ? (sC.res || []).reduce(function(a, r){ return a + (r.ok ? r.p : 0) }, 0) : 0;
+  var cajaC = document.getElementById('ag-censo');
+  if (cajaC) cajaC.innerHTML = faltanC
+    ? '<div class="fila" style="gap:8px;align-items:baseline;flex-wrap:wrap;">'+
+      '<span class="chip" style="background:var(--coral-soft);color:var(--coral-deep);">mismatch</span>'+
+      '<b style="font-size:13px;">GuruWalk · the '+sC.hora+' departure</b>'+
+      '<span class="mini">they have <b>'+(nuestroC+faltanC)+'</b> on record and you have <b>'+nuestroC+'</b> — '+
+      '<b style="color:var(--coral-deep);">'+faltanC+' people missing from your list</b></span></div>'+
+      '<p class="mini" style="margin:6px 0 0;color:var(--coral-deep);"><b>While it does not add up, GuIA stops '+
+      'saying how many places are left.</b> It gives the time and the cut-off, and hands the question to a person.</p>'
+    : '<p class="mini muted" style="margin:0;">It has not counted yet, or the count matches your list.</p>';
+
+  var elegidas = Object.keys(AG.plataformas).filter(function(k){ return AG.plataformas[k]; });
+  var caja = document.getElementById('ag-ordenes');
+  if (!elegidas.length){
+    caja.innerHTML = '<p class="mini" style="color:var(--amber);margin:0;">It is running but you have not '+
+      'told it where it may enter, so it is doing nothing.</p>';
+    return;
+  }
+  caja.innerHTML = AG.ordenes.filter(function(o){
+    return elegidas.indexOf(o.plataforma.toLowerCase().replace('.com','')) >= 0; }).map(function(o){
+    var dice = o.estado === 'dice';
+    return '<div class="fila" style="gap:8px;padding:7px 0;border-bottom:1px solid var(--line);">'+
+      '<span class="chip '+(dice?'ambar':'')+'" style="'+(dice?'':'background:var(--coral-soft);color:var(--coral-deep);')+'">'+
+      (dice ? 'says it closed it' : 'could not') + '</span>'+
+      '<b style="font-size:13px;">'+o.plataforma+'</b>'+
+      '<span class="mini muted">'+o.hora+' · «'+o.txt+'»</span>'+
+      (dice ? '<button class="btn mini sec" style="margin-left:auto;" onclick="agComprueba(this)">I checked it myself</button>'
+            : '<span class="mini" style="margin-left:auto;color:var(--coral-deep);font-weight:800;">yours to do</span>')+
+      '</div>';
+  }).join('') || '<p class="mini muted" style="margin:0;">Nothing to do on those dashboards today.</p>';
+}
+/**
+ * The agent counts, and GuIA goes quiet. `faltan` is the field the engine checks in the
+ * places rule: when it is above zero, no number is given.
+ */
+function agCuenta(pax){
+  var ss = (S.agenda[S.agDia] || {}).tours || [];
+  /* On ONE departure, the first. A head-count belongs to one listing; applying it to every
+     departure and adding up the mismatches is the same count repeated. */
+  ss.forEach(function(t, i){
+    delete t.faltan;
+    if (i !== 0) return;
+    var nuestro = (t.res || []).reduce(function(a, r){ return a + (r.ok ? r.p : 0) }, 0);
+    if (pax > nuestro) t.faltan = pax - nuestro;
+  });
+  pintaAgente();
+  toast(pax ? 'The agent counted ' + pax + ' on GuruWalk. Now ask GuIA in the chat if there are places left.'
+            : 'Mismatch cleared: GuIA gives the number again.');
+}
+
+/**
+ * The agent reads the PUBLIC listing and proposes facts to the brain. Three kinds and not
+ * six on purpose: the published CAPACITY is usually that platform's own allotment, the
+ * published TIME is a bare time with no days, and the TITLE was set by the operator.
+ */
+var FICHA_PUB = {
+  llegar: { l:'How to get there', v:'Waverley station is a 4-minute walk; Lothian buses 23, 27 and 41 stop on George IV Bridge' },
+  punto:  { l:'Meeting point', v:'the Mercat Cross on the Royal Mile, beside St Giles’ Cathedral' },
+  idiomas:{ l:'Languages', v:'English and Spanish' },
+  dur:    { l:'Duration', v:'2 h 15 min' }
+};
+function agLeeFicha(){
+  var caja = document.getElementById('ficha-lista');
+  var t = S.tours[S.tourSel] || S.tours[0];
+  var libres = Object.keys(FICHA_PUB).filter(function(k){
+    /* What is ALREADY written is not proposed: reviewing a proposal that says what you
+       already have is work for nothing, and it teaches accepting the list unread. */
+    return !((t.kb || {})[k] || '').trim();
+  });
+  document.getElementById('ficha-prop').style.display = '';
+  if (!libres.length){
+    caja.innerHTML = '<p class="mini muted" style="margin:0;">Nothing new: everything published '+
+      'on your listings is already written here.</p>';
+    toast('Everything on the listing was already written.');
+    return;
+  }
+  caja.innerHTML = libres.map(function(k){
+    var p = FICHA_PUB[k];
+    return '<div style="padding:8px 0;border-top:1px solid var(--line);">'+
+      '<div class="mini" style="font-weight:800;color:var(--ink2);">'+p.l+'</div>'+
+      '<div style="font-size:13.5px;margin:2px 0 3px;">'+p.v+'</div>'+
+      '<div class="mini muted" style="font-style:italic;">what you have published on '+
+      'GuruWalk for “'+t.nombre+'”</div>'+
+      '<div class="fila" style="gap:8px;margin-top:6px;">'+
+      '<button class="btn mini" onclick="fichaAcepta(\''+k+'\', this)">Accept</button>'+
+      '<button class="btn mini sec" onclick="this.closest(\'div[style*=padding]\').remove()">No</button>'+
+      '</div></div>';
+  }).join('');
+  toast('The agent has read your GuruWalk listing. Look it over and accept what is right.');
+}
+function fichaAcepta(k, b){
+  var t = S.tours[S.tourSel] || S.tours[0];
+  t.kb = t.kb || {};
+  t.kb[k] = FICHA_PUB[k].v;
+  b.textContent = '✓ Saved'; b.disabled = true;
+  b.nextElementSibling && b.nextElementSibling.remove();
+  pintaCerebro();
+  toast('Saved to the brain. Ask GuIA about it in the chat.');
+}
+
+function agComprueba(b){
+  b.parentElement.querySelector('.chip').outerHTML =
+    '<span class="chip" style="background:var(--acc-soft);color:var(--acc2);">✓ checked by you</span>';
+  b.remove();
+}
+
 /* ============ navegación ============ */
 /* Módulos: la BASE va en todo plan; los SUPLEMENTOS se desbloquean por plan.
    Base = operaciones, manifiesto, equipo, canales y el recordatorio anti no-show
@@ -4596,6 +4931,7 @@ function recargaManifiesto(){
 var SUPLEMENTOS={
   chat:      { n:'GuIA · Customer chat', plan:'Pro', d:'The assistant that handles your customers in the chat on your site: it answers with the facts of each tour and hands over anything it does not know. It never makes things up.' },
 cerebro:   { n:'GuIA’s brain', plan:'Pro', d:'The per-tour fact sheet that feeds the assistant, with AI filling it in from the tour’s own page and drafts you can edit.' },   // y L1991: n:'Smart anti-no-show sequence'
+  agente:    { n:'The platform agent', plan:'Premium', d:'Signs into your platform dashboards with YOUR session —Audutor stores no password—, counts how many people each one has on record and closes full departures. And even when it says it closed one, it stays unticked here until you check it yourself.' },
   carrito:   { n:'Abandoned baskets and combos', plan:'Premium', d:'Picks up whoever abandoned a booking halfway and offers the ticketed walk to anyone who did the free one — the second sale, on its own.' },
   cuadro:    { n:'Analytics', plan:'Premium', d:'The numbers behind the business: occupancy, channels, tips by guide and time slot, no-shows. So you decide on data, not on a hunch.' },
   liquidacion:{ n:'Guide payouts', plan:'Pro', d:'Every tour’s books balanced: split by percentage or flat fee, channel cost, CSV and print. The guide never pays.' },
@@ -4614,7 +4950,7 @@ var PLANES={ esencial:{orden:0, n:'Essential', precio:'€0',   bono:150,  base:
    ofrece igual para que el precio que se ve sea el mismo que el de la web inglesa. */
 var COMPLEMENTOS = {
   guia:     { n:'GuIA, the assistant', precio:39, abre:['chat','cerebro'] },
-  agente:   { n:'The platform agent', precio:29, abre:[] },
+  agente:   { n:'The platform agent', precio:29, abre:['agente'] },
   web:      { n:'Your website, always current', precio:9, abre:[] },
   cuentas:  { n:'The books, tour by tour', precio:9, abre:['liquidacion'] },
 };
@@ -4852,6 +5188,7 @@ function ir(v){
   if (bloqueado(v)){ sec.classList.add('borroso'); pintaGate(v); ov.style.display='block'; window.scrollTo(0,0); }
   else { ov.style.display='none'; }
   pintaGatesInline();   // gates inline de la vista (noshow / conciliación), según el plan activo
+  if (v==='agente') pintaAgente();             // el censo y las órdenes cambian con lo que se toque en otras vistas
   if (v==='operaciones') pintaOperaciones();   // refresca el seguimiento con lo marcado en el manifiesto
   if (v==='equipo') pintaEquipo();             // refresca estados (p. ej. propina activada desde el móvil del guía)
 }
@@ -5015,7 +5352,7 @@ function pintaCuadroDia(){
   }
 }
 function pintaEstadoBanner(){
-  pintaCuadroDia();
+  pintaCuadroDia(); pintaAgente();
   var b=document.getElementById('estado-banner'), t=document.getElementById('estado-txt');
   if(!b||!t) return;
   if(S.excs>0){ b.className='estado-banner revisar'; b.querySelector('.big').textContent='⚠️';

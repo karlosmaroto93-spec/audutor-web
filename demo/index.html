@@ -2960,6 +2960,20 @@ function calloPorDescuadre(t){
     'así que el número de plazas que GuIA tiene delante está corto. Míralo en el panel '+
     'antes de confirmar nada.</i>';
 }
+/* La misma mordaza, en inglés. Recibe los hechos como TEXTO porque el accesor `v` vive
+   dentro de `respuestaEN` y esto no puede depender de él: la función dice lo que se puede
+   decir —horario y corte— y calla la cifra que otra fuente ya ha desmentido. */
+function calloPorDescuadreEN(t, hs, co){
+  registraDerivada(t, 'persona');
+  return 'I can\'t promise today\'s places myself right now: our count and the '+
+    'platform\'s don\'t add up. I\'ve passed it to the manager, who\'ll confirm in a '+
+    'moment 🙂'+
+    (hs ? '\n\nWhat I can tell you: we run '+sinPuntoFinal(hs)+'.' : '')+
+    (co ? ' You can book up to '+sinPuntoFinal(co)+'.' : '')+
+    '\n\n<i>— The platform has more bookings on record than have reached your inbox, so '+
+    'the number GuIA is looking at is short. Check their dashboard before confirming '+
+    'anything.</i>';
+}
 /* «a las 17», «17:00», «10h», «5 pm», «a las diez». Devuelve la hora 0-23, o null. */
 function horaDelMensaje(m){
   var x=m.match(/\b([01]?\d|2[0-3])[:.]([0-5]\d)\b/);
@@ -4671,6 +4685,12 @@ function respuestaEN(t){
     var q=salidaDelMensaje(m);
     if (q.ninguna)
       return 'Each departure takes up to '+afN+' people — a manageable group where you can actually hear the guide 🙂';
+    /* LA MORDAZA POR DESCUADRE — y solo estaba en el motor español. Un viajero inglés
+       preguntando por plazas durante un descuadre recibía «X of 25 booked in 🙂» con toda
+       la seguridad del mundo, sobre un recuento que el propio sistema ya sabe corto. La
+       regla entera está explicada en el lado español; aquí solo su espejo. Va tras
+       `ninguna` y antes de `fueraDeHora`, en el MISMO sitio que allí. */
+    if (hayDescuadre(q.salida?[q.salida]:(q.varias||[]))) return calloPorDescuadreEN(t, v('horas'), v('corte'));
     if (q.fueraDeHora){
       registraDerivada(t, 'persona');
       return 'I don\'t have a departure at that time on today\'s sheet — '+
