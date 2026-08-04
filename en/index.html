@@ -329,6 +329,45 @@
     border:0; box-shadow:0 8px 22px rgba(201,138,45,.4); }
   .plan.premium .btn:hover{ background:#e6ad46; box-shadow:0 12px 28px rgba(201,138,45,.5); transform:translateY(-1px); }
   @media (max-width:900px){ .plan.premium{ transform:none; } }
+
+  /* ── PREMIUM ELEGIDO: LA SECCIÓN ENTERA CAMBIA ─────────────────────────────────────
+     Elegir Premium no puede sentirse igual que elegir Pro. La sección se oscurece a un
+     verde de tinta con un halo dorado detrás de la tarjeta, y las tarjetas —que conservan
+     su fondo claro— pasan a flotar sobre él en vez de estar pegadas a la página.
+
+     Lo que NO cambia: el contraste dentro de las tarjetas y del panel. Solo se le da la
+     vuelta al cromo de la sección —titular, notas, interruptor—, que es lo único que
+     quedaría ilegible. Un cambio de fondo que obliga a repintar el texto de veinte sitios
+     es un cambio de fondo que acaba con una frase gris sobre negro. */
+  #planes{ transition:background .5s ease, border-color .5s ease; }
+  #planes.premium-on{
+    background:
+      radial-gradient(760px 420px at 50% 8%, rgba(201,138,45,.20), transparent 68%),
+      linear-gradient(168deg,#123f33 0%,#0d2b24 55%,#0a201b 100%);
+    border-top-color:rgba(201,138,45,.4); border-bottom-color:rgba(201,138,45,.4); }
+  #planes.premium-on .sec-head h2{ color:#fdf6e6; }
+  #planes.premium-on .sec-head p,
+  #planes.premium-on .pausa,
+  #planes.premium-on > .wrap > p.reveal{ color:#cbd8d0; }
+  #planes.premium-on .sec-head p b,
+  #planes.premium-on > .wrap > p.reveal b{ color:var(--gold); }
+  #planes.premium-on .fact-toggle{ background:rgba(255,253,247,.08); border-color:rgba(201,138,45,.35); }
+  #planes.premium-on .fact-toggle button{ color:#e8f0eb; }
+  #planes.premium-on .fact-toggle button[aria-checked="true"]{ background:var(--gold); color:#231400; }
+  #planes.premium-on .adorno{ color:rgba(201,138,45,.22); }
+  /* La estrella se separa del resto: sube un poco más y el halo se le nota. */
+  #planes.premium-on .plan.premium{ transform:translateY(-18px);
+    box-shadow:0 34px 70px rgba(0,0,0,.42), 0 0 0 1px rgba(201,138,45,.5); }
+  @media (max-width:900px){ #planes.premium-on .plan.premium{ transform:none; } }
+  @media (prefers-reduced-motion:reduce){ #planes{ transition:none; } }
+
+  /* El coste por viajero, debajo del precio. Es el número con el que un operador compara
+     de verdad: la cuota mensual no le dice nada hasta que la divide por su volumen, y
+     dividir de cabeza es justo lo que no va a hacer. */
+  .plan-unit{ font-size:12.5px; font-weight:700; color:var(--amber); margin:0 0 10px;
+    font-variant-numeric:tabular-nums; }
+  .plan.premium .plan-unit{ color:#8a5c0a; }
+  #planes.premium-on .plan-unit{ color:var(--amber); }
   .plan h3{ font-size:20px; font-family:var(--sans); font-weight:800; }
   .plan .precio{ font-family:var(--serif); font-size:38px; font-weight:600; margin:10px 0 2px; }
   .plan .precio small{ font-size:15px; color:var(--muted); font-family:var(--sans); font-weight:600; }
@@ -783,6 +822,7 @@
   <div class="planes">
     <div class="plan reveal" data-plan="esencial">
       <h3>Essential</h3><div class="precio">€0</div>
+      <div class="plan-unit" data-bono="150"></div>
       <div class="para">For trying it out on a live operation · <b>150 travellers a month</b></div>
       <ul>
         <li>Daily brief and the guide’s manifest on their phone</li>
@@ -798,6 +838,7 @@
     <div class="plan destacado reveal elegido" style="--d:110ms" data-plan="pro">
       <h3>Pro</h3><div class="precio">€<span class="imp" data-base="39" data-mensual="39" data-anual="32">39</span><small>/month</small></div>
       <div class="fact-nota" data-nota hidden>billed annually · €390/year (2 months free)</div>
+      <div class="plan-unit" data-bono="800"></div>
       <div class="para">For companies running a team of guides · <b>800 travellers a month</b> · unlimited tours and guides</div>
       <ul>
         <li>Everything in Essential · <b>unlimited tours, guides and channels</b> · full history</li>
@@ -814,6 +855,7 @@
     <div class="plan premium reveal" style="--d:220ms" data-plan="premium">
       <h3>Premium</h3><div class="precio">€<span class="imp" data-base="149" data-mensual="149" data-anual="124">149</span><small>/month</small></div>
       <div class="fact-nota" data-nota hidden>billed annually · €1,490/year (2 months free)</div>
+      <div class="plan-unit" data-bono="3000"></div>
       <div class="para">For operators running several departures a day · <b>3,000 travellers a month</b></div>
       <ul>
         <li>Everything in Pro · <b>3,000 travellers included, no steps</b></li>
@@ -910,6 +952,9 @@
   </div>
 
   
+  <p class="reveal" style="text-align:center; color:var(--muted); font-size:13px; margin:14px 0 0; max-width:74ch; margin-inline:auto;">
+    The <b>cost per traveller</b> is there to compare against what you pay for software, not
+    against a platform commission: the platform brings you the customer and we do not.</p>
   <p class="reveal" style="text-align:center; color:var(--muted); font-size:13px; margin:14px 0 0;">Prices <b>exclude VAT</b>. With a Spanish NIF we invoice at 21 %; elsewhere in the EU with a VAT
     number, under the reverse charge.</p>
   <p class="reveal" style="text-align:center; color:var(--muted); font-size:14px; margin:10px 0 0; max-width:70ch; margin-inline:auto;"><b>Reminders are billed by Meta to your own account</b>, with nothing added on top by us. And we
@@ -1207,6 +1252,27 @@ function tfExtras(){
    descuento se evaporaría en cuanto alguien añadiera un complemento. */
 function tfAnual(v){ return Math.round(v * 10 / 12); }
 
+/* ── COST PER TRAVELLER ──────────────────────────────────────────────────────────────
+   A monthly fee tells an operator nothing until they divide it by their volume, and
+   dividing in their head is exactly what they will not do. It gets divided here, and it
+   moves with the add-ons: that is what makes ticking a box mean something.
+
+   ALWAYS two decimals, even for “0.05”: rounding to one would turn 0.05 and 0.16 into
+   “0.1” and “0.2”, which is where the comparison stops existing. */
+function porViajero(euros, bono){
+  if (!bono) return '';
+  return (euros / bono).toFixed(2);
+}
+function pintaUnidad(totalPorPlan){
+  document.querySelectorAll('.plan').forEach(function(p){
+    var u = p.querySelector('.plan-unit'); if(!u) return;
+    var bono = +u.dataset.bono;
+    var tot = totalPorPlan[p.dataset.plan];
+    u.textContent = tot ? 'works out at €' + porViajero(tot, bono) + ' per traveller'
+                        : 'no cost per traveller';
+  });
+}
+
 function tarifa(){
   var ex = tfExtras();
   document.querySelectorAll('.plan').forEach(function(p){
@@ -1237,6 +1303,11 @@ function tarifa(){
   var tot = basePlan + ex.total;
   var t = document.getElementById('tf-total');
   if (t) t.textContent = '€' + (TF_MODO === 'anual' ? tfAnual(tot) : tot);
+  /* Elegir Premium no puede sentirse igual que elegir Pro: la sección entera cambia. */
+  var sec = document.getElementById('planes');
+  if (sec) sec.classList.toggle('premium-on', TF_PLAN === 'premium');
+  pintaUnidad({ esencial: ex.total, pro: 39 + ex.total, premium: 149 + ex.total });
+
   var n = document.getElementById('tf-plan');
   if (n) n.textContent = { esencial:'Essential', pro:'Pro', premium:'Premium' }[TF_PLAN];
 }
