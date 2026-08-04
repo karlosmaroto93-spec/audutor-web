@@ -442,11 +442,6 @@
     font-size:13.5px; font-family:inherit; }
   .caja-ingresos{ background:#fbfaf7; border:1.5px solid var(--gold); border-radius:12px;
     padding:12px 14px; margin-top:14px; }
-  .caja-propina{ background:var(--turq-soft); border:1.5px solid var(--turq); border-radius:12px;
-    padding:12px 14px; margin-top:10px; }
-  .caja-propina .pr-sel{ border:1.5px solid var(--line); border-radius:8px; padding:7px 8px;
-    font-size:13px; font-family:inherit; background:#fff; }
-  .caja-ingresos .rec-in{ border:1.5px solid var(--line); border-radius:8px; padding:8px 10px;
     font-size:14px; font-family:var(--mono); }
   /* calendario de horario */
   .cal{ display:grid; grid-template-columns:158px repeat(7,minmax(52px,1fr)); gap:6px; min-width:660px; }
@@ -1252,34 +1247,6 @@
     <div id="post-preguntas"></div>
     <p class="mini muted" id="post-hint" style="margin:10px 0 0;"></p>
     <div id="post-prev" style="display:none;"></div>
-    <div style="margin-top:14px; padding-top:12px; border-top:1px dashed var(--line);">
-      <div class="fila" style="justify-content:space-between; gap:12px;">
-      </div>
-      <!-- Importes de la pantalla de propina: los decide la empresa -->
-      <div style="margin-top:12px; background:var(--acc-soft); border:1px solid var(--line); border-radius:10px; padding:11px 14px;">
-        <b style="font-size:13px;">💶 Pantalla de propina — la eliges tú, POR TOUR</b>
-        <span class="chip gris" style="margin-left:6px;">para: <b id="pc-tour">…</b></span>
-        <div class="fila" style="gap:10px; margin-top:8px; align-items:center; flex-wrap:wrap;">
-          <label class="mini">Fijos (€/persona)
-            <input id="pc-1" type="number" min="1" value="10" style="width:52px;">
-            <input id="pc-2" type="number" min="1" value="15" style="width:52px;">
-            <input id="pc-3" type="number" min="1" value="20" style="width:52px;"></label>
-          <label class="mini">Preseleccionado
-            <select id="pc-pre"><option>10</option><option selected>15</option><option>20</option></select></label>
-          <label class="mini" style="display:flex; align-items:center; gap:6px;">
-            <input id="pc-libre" type="checkbox" checked> permitir «✏️ Otra cantidad» (libre, no toca los fijos)</label>
-        </div>
-        <div class="fila" style="gap:10px; margin-top:8px; align-items:center; flex-wrap:wrap;">
-          <label class="mini" style="flex:1; min-width:230px;">Texto del enlace para no dejar nada
-            <input id="pc-nada" value="también está bien 🙂" style="width:100%;"></label>
-          <label class="mini" style="flex:1; min-width:230px;">Gracias cuando no deja nada
-            <input id="pc-gracias" value="Esperamos que lo hayas disfrutado — ¡nos vemos en la próxima!" style="width:100%;"></label>
-          <button class="btn mini" onclick="guardaPropCfg()">Guardar</button>
-        </div>
-        <p class="mini muted" style="margin:7px 0 0;">Esto es lo que ve el viajero. El importe libre lo
-      escribe él en total y no altera los tres anclados.</p>
-      </div>
-    </div>
   </div>
 
   <div class="card">
@@ -2194,7 +2161,7 @@ function tourNuevo(nombre, fuente, valores){
   var kb={}; CAMPOS_KB.forEach(function(c){ kb[c.k]=(valores&&valores[c.k])||''; });
   return {
     /* cada tour nace con SU pantalla de propina, copiada del defecto */
-    propCfg: JSON.parse(JSON.stringify(S.propCfgDefecto)), id:'t'+(S?S.tours.length+1:1), nombre:nombre, fuente:fuente, kb:kb };
+    id:'t'+(S?S.tours.length+1:1), nombre:nombre, fuente:fuente, kb:kb };
 }
 
 var S = {
@@ -2208,8 +2175,6 @@ var S = {
      propina» y el del gracias sin importe. Antes decían «el tour es gratis», que en un
      tour de pago era mentira; ahora los escribe el administrador de cada tour. Esto es
      el DEFECTO con el que nace cada tour. */
-  propCfgDefecto:{ imp:[10,15,20], pre:15, libre:true,
-    nadaTxt:'también está bien 🙂', graciasTxt:'Esperamos que lo hayas disfrutado — ¡nos vemos en la próxima!' },
   att:[
     { n:"Sofía Cabrera",  p:6, canal:"GuruWalk",  ok:false, grupo:true, conf:true },
     { n:"Javier Cabrera",  p:5, canal:"GuruWalk",  ok:false, grupo:true, conf:true },
@@ -5189,7 +5154,7 @@ function pintaWaTope(){
    Solo el DIFERIDO (enlace de WhatsApp o QR de Audutor) tiene tarifa, igual en todos
    los planes. */
 /* QR de demo: patrón determinista con aspecto de QR (buscadores + módulos por hash).
-   No codifica de verdad — en producción sería un QR real al enlace de propina del tour. */
+   No codifica de verdad — en producción llevaría a la página del guía. */
 function qrSvg(txt){
   var N=21, h=0, i, x, y;
   for (i=0;i<txt.length;i++){ h=(h*31+txt.charCodeAt(i))>>>0; }
@@ -5939,59 +5904,6 @@ function pintaManifiestoReal(){
       toast('💶 Recaudación guardada: '+euros(v)+' — ya suma en la semana, el mes y la liquidación');
     };
     mov.appendChild(caja);
-    /* Propina digital desde el manifiesto: el guía la cobra sin pedir el teléfono a nadie.
-       Dos caminos, los dos de un toque: enseñar el QR al grupo (lo escanean y les sale
-       la pantalla de propina) o mandar el enlace por WhatsApp a una reserva concreta
-       (GuIA lo envía — el guía sigue sin ver teléfonos, RGPD). */
-    if (!t.sinGuia){
-      var prop=document.createElement('div'); prop.className='caja-propina';
-      var ops=t.res.map(function(a,ai){
-        return '<option value="'+ai+'">'+a.n+' ('+a.p+'p · '+a.canal+')</option>'; }).join('');
-      prop.innerHTML='<strong>💳 Cobrar la propina <span class="chip turq" style="margin-left:4px;">va a tu cuenta</span></strong>'+
-        '<p class="mini muted" style="margin:6px 0 8px;">Lo primero, <b>cobrar en el momento</b> con tu SumUp o datáfono: '+
-        '<b>sin comisión de Audutor</b> — da igual el método. El enlace y el QR son para <b>quien ya se fue</b> '+
-        'o para grupos.</p>'+
-        '<div class="fila" style="gap:8px; margin-top:8px; align-items:center; flex-wrap:wrap;">'+
-          '<button class="btn mini pr-tap">📲 Cobrar ahora (acercar tarjeta)</button>'+
-          '<button class="btn mini sec pr-sumup">💳 Cobrar con SumUp</button>'+
-          '<button class="btn mini sec pr-qr">📷 QR / enlace</button>'+
-        '</div>'+
-        '<div class="fila" style="gap:8px; margin-top:8px; align-items:center; flex-wrap:wrap;">'+
-          '<span class="mini muted">o mandar el enlace a una reserva:</span>'+
-          '<select class="pr-sel" style="max-width:180px;"><option value="-1">elige la reserva…</option>'+ops+'</select>'+
-          '<button class="btn mini sec pr-send">Enviar</button>'+
-        '</div>'+
-        '<div class="pr-qr-caja" style="display:none; margin-top:10px; text-align:center;">'+
-          '<div class="pr-qr-svg"></div>'+
-          '<p class="mini muted" style="margin:6px auto 0; max-width:34ch;">El grupo lo escanea y le sale la pantalla de propina — '+
-          '<a href="#" class="pr-ver" style="color:var(--acc); font-weight:700;">así la ve el viajero →</a></p>'+
-        '</div>';
-      prop.querySelector('.pr-tap').onclick=function(){
-        toast('💡 Audutor no cobra por mover dinero que ya tienes en la mano: para eso está tu datáfono, y es más '+
-              'barato. Cóbralo como quieras (0 % de Audutor) y nosotros lo anotamos, lo repartimos y lo cuadramos. '+
-              'Solo hay comisión en el enlace a quien se fue sin dejar nada.');
-      };
-      prop.querySelector('.pr-sumup').onclick=function(){
-        toast('💳 (Simulado) Audutor abre tu SumUp con el importe puesto y anota el cobro solo. '+
-              'Sin comisión nuestra: cobras a tu tarifa de siempre y la liquidación cuadra igual.');
-      };
-      prop.querySelector('.pr-qr').onclick=function(){
-        var c=prop.querySelector('.pr-qr-caja');
-        var abre = c.style.display==='none';
-        if (abre && !c.querySelector('svg')) c.querySelector('.pr-qr-svg').innerHTML=qrSvg('propina/PYC-'+t.hora.replace(':','')+'-'+ti);
-        c.style.display = abre ? 'block' : 'none';
-      };
-      prop.querySelector('.pr-send').onclick=function(){
-        var ai=+prop.querySelector('.pr-sel').value;
-        if (ai<0){ toast('Elige primero a quién enviárselo 🙂'); return; }
-        var a=t.res[ai];
-        t.obs=t.obs||[];
-        t.obs.push({ a:'GuIA', rec:true, t:'💳 Enlace de propina enviado a «'+a.n+'» por WhatsApp ('+t.hora+')' });
-        pintaManifiesto();
-        toast('💳 GuIA envía a '+a.n+' el enlace de propina por WhatsApp');
-      };
-      mov.appendChild(prop);
-    }
     // observaciones del tour (cambios de pax del guía + avisos de GuIA/encargado)
     t.obs = t.obs || [];
     var obsBox=document.createElement('div'); obsBox.style.cssText='margin-top:14px;';
@@ -6672,7 +6584,6 @@ function pintaCerebro(){
   } else { card.style.display='none'; n.style.display='none'; }
   pintaSelectorChat();
   pintaEnsAmbito();
-  pintaPropCfg();
   pintaRespuestas();
   pintaDerivadasChat();   // la bandeja de derivadas arriba del chat comparte la misma fuente
 }
@@ -6785,17 +6696,6 @@ function postSet(k,v){
    QUIÉN escanea — por eso el primer paso de la pantalla es identificarse tocando su
    nombre en la lista de esa salida (2 toques, sin escribir códigos). Al hacerlo,
    Audutor ya sabe cuántas personas eran y calcula el total sin preguntar nada. */
-/* Solo lo que el enlace puede COBRAR de verdad por Stripe: tarjeta y las dos carteras,
-   que enciende automatic_payment_methods en el PaymentIntent (app/servidor/stripe.js,
-   propinaRemota) — no son decorado. */
-/* La config de propina del tour que está viendo el viajero — y si no casa por nombre,
-   la del tour activo del Cerebro. La global ya no existe. */
-function cfgPropina(){
-  /* Miraba el tour que veía el viajero; ese flujo ya no existe. */
-  var t=tourKb();
-  return (t && t.propCfg) || S.propCfgDefecto;
-}
-
 /* ===== Página del guía (reserva directa): QR por guía + vista previa en el móvil ===== */
 function gpSlug(n){ return n.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
 function pintaGpLista(){
@@ -6817,7 +6717,7 @@ function abrirGuidePage(nombre){
     '<li>🎯 <b>El momento de oro:</b> el final del tour. El guía enseña su QR y la recomendación aterriza en <b>tu web</b>, no en la plataforma.</li>'+
     '<li>🗓 <b>Los horarios y las plazas son los de verdad</b> — salen de tu cuadrante y de lo que le consta a cada canal, no de una tabla escrita a mano.</li>'+
     '<li>📈 La página lleva el <b>nombre del guía</b>: la analítica te dice qué guías traen reservas (y eso también motiva).</li>'+
-    '<li>💚 Enlaza con la <b>propina digital</b>: quien viene de un tour puede dejarla ahí mismo.</li></ul>'+
+    '</ul>'+
     '<p class="mini">Audutor <b>no cobra la reserva</b>: enseña las plazas y lleva a donde tú ya vendes. La página real viviría en tu dominio.</p>';
   document.getElementById('viajero-overlay').classList.add('ver');
   document.body.style.overflow='hidden';
@@ -6847,7 +6747,6 @@ function pintaGuidePage(nombre){
       return '<button class="vj-cta" style="margin-top:8px;" onclick="toast(\'En producción esto lleva a donde tú ya vendes — tu web o tu plataforma. Audutor no cobra entradas: te dice qué plazas quedan de verdad\')">'+
         t+' · '+tours[t]+' → ver plazas</button>'; }).join('')+
     '<div class="vj-transp" style="margin-top:12px;">🗓 Los horarios y las plazas salen de <b>su cuadrante de verdad</b>: si mueve una salida, aquí cambia sola.</div>'+
-    '<button class="vj-volver" onclick="pintaViajero(\'importe\')">💚 ¿Acabas de hacer su tour? Déjale propina</button>'+
     '</div>';
   pant.scrollTop=0;
 }
@@ -6864,36 +6763,6 @@ document.addEventListener('keydown', function(e){ if (e.key==='Escape') cerrarVi
    salida digna: dice cuántos son y el cobro queda como propina del tour sin asignar. */
 /* «Otra cantidad»: el viajero escribe el TOTAL que quiera — no toca los importes fijos. */
 
-/* Guarda la config de importes de propina (Cerebro → Mensaje post-tour) y
-   actualiza el desplegable de preseleccionado con los fijos que haya. */
-function guardaPropCfg(){
-  var imp=[+document.getElementById('pc-1').value||10,
-           +document.getElementById('pc-2').value||15,
-           +document.getElementById('pc-3').value||20].sort(function(a,b){return a-b});
-  var pre=+document.getElementById('pc-pre').value;
-  if (imp.indexOf(pre)===-1) pre=imp[1];
-  /* AL TOUR ACTIVO del Cerebro, no a una config global: cada tour cobra lo suyo. */
-  var t=tourKb();
-  t.propCfg={ imp:imp, pre:pre, libre:document.getElementById('pc-libre').checked,
-    nadaTxt:(document.getElementById('pc-nada').value||'').trim()||'Prefiero no dejar nada ahora',
-    graciasTxt:(document.getElementById('pc-gracias').value||'').trim()||'Esperamos que lo hayas disfrutado.' };
-  var sel=document.getElementById('pc-pre');
-  sel.innerHTML=imp.map(function(v){ return '<option'+(v===pre?' selected':'')+'>'+v+'</option>'; }).join('');
-  toast('💶 Guardado para «'+t.nombre+'»: '+imp.join(' / ')+' € · preseleccionado '+pre+' €'+
-        (t.propCfg.libre?' · cantidad libre activada':' · sin cantidad libre'));
-}
-/* Rellena la tarjeta de config con lo del tour activo — se llama al repintar el Cerebro. */
-function pintaPropCfg(){
-  var t=tourKb(); if (!t || !document.getElementById('pc-1')) return;
-  var c=t.propCfg||S.propCfgDefecto;
-  var et=document.getElementById('pc-tour'); if (et) et.textContent=t.nombre;
-  ['pc-1','pc-2','pc-3'].forEach(function(id,i){ document.getElementById(id).value=c.imp[i]||''; });
-  var sel=document.getElementById('pc-pre');
-  sel.innerHTML=c.imp.map(function(v){ return '<option'+(v===c.pre?' selected':'')+'>'+v+'</option>'; }).join('');
-  document.getElementById('pc-libre').checked=!!c.libre;
-  document.getElementById('pc-nada').value=c.nadaTxt||'';
-  document.getElementById('pc-gracias').value=c.graciasTxt||'';
-}
 
 /* ============ IA integrada en el Cerebro: rellena el formulario desde texto ============ */
 /* Extrae del perfil del tour los campos que reconoce y los CONFIRMA en el

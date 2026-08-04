@@ -311,11 +311,6 @@
     font-size:13.5px; font-family:inherit; }
   .caja-ingresos{ background:#fbfaf7; border:1.5px solid var(--gold); border-radius:12px;
     padding:12px 14px; margin-top:14px; }
-  .caja-propina{ background:var(--turq-soft); border:1.5px solid var(--turq); border-radius:12px;
-    padding:12px 14px; margin-top:10px; }
-  .caja-propina .pr-sel{ border:1.5px solid var(--line); border-radius:8px; padding:7px 8px;
-    font-size:13px; font-family:inherit; background:#fff; }
-  .caja-ingresos .rec-in{ border:1.5px solid var(--line); border-radius:8px; padding:8px 10px;
     font-size:14px; font-family:var(--mono); }
   /* calendario de horario */
   .cal{ display:grid; grid-template-columns:158px repeat(7,minmax(52px,1fr)); gap:6px; min-width:660px; }
@@ -1140,34 +1135,6 @@
     <div id="post-preguntas"></div>
     <p class="mini muted" id="post-hint" style="margin:10px 0 0;"></p>
     <div id="post-prev" style="display:none;"></div>
-    <div style="margin-top:14px; padding-top:12px; border-top:1px dashed var(--line);">
-      <div class="fila" style="justify-content:space-between; gap:12px;">
-        <p class="mini muted" style="margin:0; max-width:56ch;">The link in that message opens, on the customer’s</p>
-      </div>
-      <!-- Importes de la pantalla de propina: los decide la empresa -->
-      <div style="margin-top:12px; background:var(--acc-soft); border:1px solid var(--line); border-radius:10px; padding:11px 14px;">
-        <b style="font-size:13px;">💶 Tip amounts — you choose them</b>
-        <div class="fila" id="pc-fijos" style="gap:10px; margin-top:8px; align-items:center; flex-wrap:wrap;">
-          <label class="mini">Anchors (per person)
-            <input id="pc-1" type="number" min="1" value="10" style="width:52px;">
-            <input id="pc-2" type="number" min="1" value="15" style="width:52px;">
-            <input id="pc-3" type="number" min="1" value="20" style="width:52px;"></label>
-          <label class="mini">Preselected
-            <select id="pc-pre"><option>10</option><option selected>15</option><option>20</option></select></label>
-          <label class="mini" style="display:flex; align-items:center; gap:6px;">
-            <input id="pc-libre" type="checkbox" checked> allow “✏️ Other amount” (free, leaves the anchors alone)</label>
-        </div>
-        <div class="fila" style="gap:10px; margin-top:8px; align-items:center; flex-wrap:wrap;">
-          <label class="mini" style="flex:1; min-width:230px;">Text of the “leave nothing” link
-            <input id="pc-nada" value="that's absolutely fine 🙂" style="width:100%;"></label>
-          <label class="mini" style="flex:1; min-width:230px;">Thanks when nothing is left
-            <input id="pc-gracias" value="We hope you had a great time — see you on the next one!" style="width:100%;"></label>
-        </div>
-        <span class="chip gris">applies to: <b id="pc-tour">…</b></span>
-        <button class="btn mini" style="margin-top:8px;" onclick="guardaPropCfg()">Save</button>
-        <p class="mini muted" id="pc-nota" style="margin:7px 0 0;"></p>
-      </div>
-    </div>
   </div>
 
   <div class="card">
@@ -2090,7 +2057,7 @@ function tourNuevo(nombre, fuente, valores){
   /* ticket no es un hecho del Cerebro, es una propiedad del tour: marca los walks
      con entrada de pago para que su precio siga a la moneda del mercado. */
   return {
-    propCfg: JSON.parse(JSON.stringify(S.propCfgDefecto)), id:'t'+(S?S.tours.length+1:1), nombre:nombre, fuente:fuente, kb:kb,
+    id:'t'+(S?S.tours.length+1:1), nombre:nombre, fuente:fuente, kb:kb,
            ticket: !!(valores && valores.ticket) };
 }
 
@@ -2104,8 +2071,6 @@ var S = {
   /* Config de la pantalla de propina: POR TOUR (defecto con el que nace cada tour).
      En UK la guía CAP/ASA prohíbe sugerir importes, así que el defecto viene sin fijos
      — y como es por tour, un mismo operador podría llevar distinto en otro mercado. */
-  propCfgDefecto:{ imp:[], pre:0, libre:true, ukCompliance:true,
-    nadaTxt:'I would rather not leave anything now', graciasTxt:'We hope you had a great time — see you on the next one!' },
   att:[
     { n:"Sophie Maclean",  p:6, canal:"GuruWalk",  ok:false, grupo:true, conf:true },
     { n:"Mark Maclean",  p:5, canal:"GuruWalk",  ok:false, grupo:true, conf:true },
@@ -5557,59 +5522,6 @@ function pintaManifiestoReal(){
       toast('💶 Takings saved: '+euros(v)+' — it already counts in the week, the month and the payout');
     };
     mov.appendChild(caja);
-    /* Propina digital desde el manifiesto: el guía la cobra sin pedir el teléfono a nadie.
-       Dos caminos, los dos de un toque: enseñar el QR al grupo (lo escanean y les sale
-       la pantalla de propina) o mandar el enlace por WhatsApp a una reserva concreta
-       (GuIA lo envía — el guía sigue sin ver teléfonos, RGPD). */
-    if (!t.sinGuia){
-      var prop=document.createElement('div'); prop.className='caja-propina';
-      var ops=t.res.map(function(a,ai){
-        return '<option value="'+ai+'">'+a.n+' ('+a.p+'p · '+a.canal+')</option>'; }).join('');
-      prop.innerHTML='<strong>💳 Collect tips <span class="chip turq" style="margin-left:4px;">goes to your account</span></strong>'+
-        '<p class="mini muted" style="margin:6px 0 8px;">First, <b>charge on the spot</b> with your SumUp or card reader: '+
-        '<b>no Audutor fee</b>, whatever the method. The link and QR are for <b>whoever already left</b> '+
-        'or for groups.</p>'+
-        '<div class="fila" style="gap:8px; margin-top:8px; align-items:center; flex-wrap:wrap;">'+
-          '<button class="btn mini pr-tap">📲 Charge now (tap card)</button>'+
-          '<button class="btn mini sec pr-sumup">💳 Charge with SumUp</button>'+
-          '<button class="btn mini sec pr-qr">📷 QR or link</button>'+
-        '</div>'+
-        '<div class="fila" style="gap:8px; margin-top:8px; align-items:center; flex-wrap:wrap;">'+
-          '<span class="mini muted">or send the link to one booking:</span>'+
-          '<select class="pr-sel" style="max-width:180px;"><option value="-1">pick a booking…</option>'+ops+'</select>'+
-          '<button class="btn mini sec pr-send">Send</button>'+
-        '</div>'+
-        '<div class="pr-qr-caja" style="display:none; margin-top:10px; text-align:center;">'+
-          '<div class="pr-qr-svg"></div>'+
-          '<p class="mini muted" style="margin:6px auto 0; max-width:34ch;">The group scans it and the tip screen comes up — '+
-          '<a href="#" class="pr-ver" style="color:var(--acc); font-weight:700;">this is what the customer sees →</a></p>'+
-        '</div>';
-      prop.querySelector('.pr-tap').onclick=function(){
-        toast('💡 We don’t charge for moving money already in your hand — that’s what your card reader is for, and '+
-              'it’s cheaper. Take it however you like (0 % from Audutor) and we log it, split it and reconcile it. '+
-              'There’s only a fee on the link to whoever left without tipping.');
-      };
-      prop.querySelector('.pr-sumup').onclick=function(){
-        toast('💳 (Simulated) Audutor opens your SumUp with the amount already in and logs the payment itself. '+
-              'No fee from us: you charge at your usual rate and the payout still balances.');
-      };
-      prop.querySelector('.pr-qr').onclick=function(){
-        var c=prop.querySelector('.pr-qr-caja');
-        var abre = c.style.display==='none';
-        if (abre && !c.querySelector('svg')) c.querySelector('.pr-qr-svg').innerHTML=qrSvg('propina/OTW-'+t.hora.replace(':','')+'-'+ti);
-        c.style.display = abre ? 'block' : 'none';
-      };
-      prop.querySelector('.pr-send').onclick=function(){
-        var ai=+prop.querySelector('.pr-sel').value;
-        if (ai<0){ toast('Pick who it goes to first 🙂'); return; }
-        var a=t.res[ai];
-        t.obs=t.obs||[];
-        t.obs.push({ a:'GuIA', rec:true, t:'💳 Tip link sent to “'+a.n+'” by text ('+t.hora+')' });
-        pintaManifiesto();
-        toast('💳 GuIA has sent '+a.n+' the tip link by text');
-      };
-      mov.appendChild(prop);
-    }
     // observaciones del tour (cambios de pax del guía + avisos de GuIA/encargado)
     t.obs = t.obs || [];
     var obsBox=document.createElement('div'); obsBox.style.cssText='margin-top:14px;';
@@ -6530,7 +6442,6 @@ function pintaCerebro(){
   } else { card.style.display='none'; n.style.display='none'; }
   pintaSelectorChat();
   pintaEnsAmbito();
-  pintaPropCfg();
   pintaRespuestas();
   pintaDerivadasChat();   // la bandeja de derivadas arriba del chat comparte la misma fuente
 }
@@ -6631,21 +6542,6 @@ function postSet(k,v){
   S.post[k]=v; pintaPost();
   var ahora=(S.post.resena===null?1:0)+(S.post.privados===null?1:0);
   if (antes>0 && ahora===0) toast('💬 Set up — the finished message for each walk is below');
-}
-
-/* ============ vista previa del viajero: propina + reseña en una pantalla ============
-   Flujo de internal docs §4: GuIA manda el enlace post-tour
-   al hacer check-out del manifiesto; tarjeta, Apple Pay o Google Pay; la propina va
-   entera al guía y al viajero no se le recarga nada (prohibido por las Payment Services
-   Regulations 2017 en Reino Unido); reseña en Google después de pagar, sin condicionar.
-   OJO: este comentario decía «anclas 10/15/20 £ con 15 preseleccionado» — eso ya NO es
-   así en el mercado británico, donde el código CAP/ASA prohíbe sugerir importe en algo
-   anunciado como gratis. Lo decide el mercado activo (MK.sinSugerir), no este texto.
-   Escenario ficticio: Marco (5 pax) con Emma. */
-function cfgPropina(){
-  /* Miraba el tour que veía el viajero; ese flujo ya no existe. */
-  var t=tourKb();
-  return (t && t.propCfg) || S.propCfgDefecto;
 }
 
 /* ===== Guide page (reserva directa): QR por guía + vista previa en el móvil ===== */
@@ -6856,7 +6752,6 @@ function pintaGuidePage(nombre){
     }).join('')+
     '<div class="vj-transp">🗓 The days, times and places left come <b>straight from their real schedule</b> — '+
       'move a departure and this changes on its own.</div>'+
-    '<button class="vj-volver" onclick="pintaViajero(\'importe\')">💚 Just done their walk? Leave '+g.n+' a tip</button>'+
     '</div>';
   pant.scrollTop=0;
 }
@@ -6869,61 +6764,6 @@ function cerrarViajero(){
 document.addEventListener('keydown', function(e){ if (e.key==='Escape') cerrarViajero(); });
 /* “Otra cantidad”: el viajero escribe el TOTAL que quiera — no toca los importes fijos. */
 
-/* Guarda la config de importes de propina (Cerebro → Mensaje post-tour) y
-   actualiza el desplegable de preseleccionado con los fijos que haya. */
-/* Rellena la tarjeta con la config del tour activo del Cerebro. */
-function pintaPropCfg(){
-  var t=tourKb(); if (!t || !document.getElementById('pc-1')) return;
-  var c=t.propCfg||S.propCfgDefecto;
-  var et=document.getElementById('pc-tour'); if (et) et.textContent=t.nombre;
-  ['pc-1','pc-2','pc-3'].forEach(function(id,i){ var el=document.getElementById(id); if (el) el.value=c.imp[i]||''; });
-  var lb=document.getElementById('pc-libre'); if (lb) lb.checked=!!c.libre;
-  var nn=document.getElementById('pc-nada'); if (nn) nn.value=c.nadaTxt||'';
-  var gg=document.getElementById('pc-gracias'); if (gg) gg.value=c.graciasTxt||'';
-}
-function guardaPropCfg(){
-  /* Mercados con código publicitario que prohíbe sugerir importe (UK: CAP/ASA):
-     el configurador no puede guardar anclas, sólo cantidad libre. */
-  if (MK.sinSugerir){
-    tourKb().propCfg={ imp:[], pre:0, libre:true, sinSugerir:true,
-      nadaTxt:(document.getElementById('pc-nada')||{value:''}).value||'that\'s absolutely fine 🙂',
-      graciasTxt:(document.getElementById('pc-gracias')||{value:''}).value||'We hope you had a great time!' };
-    pintaPropCfg();
-    toast('⚖️ '+MK.nombre+': no set amounts saved. The CAP/ASA code does not allow suggesting a tip, '+
-          'so the customer screen shows a free amount only.');
-    return;
-  }
-  var imp=[+document.getElementById('pc-1').value||10,
-           +document.getElementById('pc-2').value||15,
-           +document.getElementById('pc-3').value||20].sort(function(a,b){return a-b});
-  var pre=+document.getElementById('pc-pre').value;
-  if (imp.indexOf(pre)===-1) pre=imp[1];
-  tourKb().propCfg={ imp:imp, pre:pre, libre:document.getElementById('pc-libre').checked,
-    nadaTxt:(document.getElementById('pc-nada')||{value:''}).value||'that\'s absolutely fine 🙂',
-    graciasTxt:(document.getElementById('pc-gracias')||{value:''}).value||'We hope you had a great time!' };
-  var sel=document.getElementById('pc-pre');
-  sel.innerHTML=imp.map(function(v){ return '<option'+(v===pre?' selected':'')+'>'+v+'</option>'; }).join('');
-  toast('💶 Amounts saved: '+imp.join(' / ')+' '+MK.moneda.sim+' · '+pre+' '+MK.moneda.sim+' preselected'+
-        (tourKb().propCfg.libre?' · free amount on':' · no free amount'));
-}
-
-/* Pinta el configurador de importes según el mercado activo: donde no se puede
-   sugerir cifra, los fijos quedan deshabilitados y se explica por qué. */
-function pintaPropCfg(){
-  var nota=document.getElementById('pc-nota'), fijos=document.getElementById('pc-fijos');
-  if (!nota || !fijos) return;
-  var bloq = !!MK.sinSugerir;
-  fijos.querySelectorAll('input,select').forEach(function(el){
-    el.disabled = bloq; el.style.opacity = bloq ? .45 : 1;
-  });
-  fijos.style.pointerEvents = bloq ? 'none' : '';
-  nota.innerHTML = bloq
-    ? '⚖️ <b>'+MK.bandera+' '+MK.nombre+': no set amounts.</b> The CAP/ASA code treats a suggested figure '+
-      'as a price on something advertised as free, so the customer screen offers a free amount only. '+
-      'Switch the market above to one where anchors are allowed and these boxes come back.'
-    : 'Whatever you save here is what the customer sees on their screen — check it with the preview. '+
-      'The free amount is a total they type themselves and does not touch the three anchors.';
-}
 
 /* ============ IA integrada en el Cerebro: rellena el formulario desde texto ============ */
 /* Extrae del perfil del tour los campos que reconoce y los CONFIRMA en el
