@@ -750,7 +750,7 @@
       <div class="plan-sel" id="plan-sel">
         <button data-plan="esencial" onclick="cambiarPlan('esencial')"><b>Essential</b>€0</button>
         <button data-plan="pro" onclick="cambiarPlan('pro')"><b>Pro</b>€79</button>
-        <button data-plan="premium" onclick="cambiarPlan('premium')"><b>Premium</b>€199</button>
+        <button data-plan="premium" onclick="cambiarPlan('premium')"><b>Premium</b>€249</button>
       </div>
       <div style="font-size:10.5px; margin-top:8px; opacity:.85; line-height:1.5;">💳 Tips: <b>0 %</b> when you take it in person (your own SumUp, card reader or Tap to Pay). Only the <b>link or QR</b> carries <b>1.9 % + £0.30</b>.</div>
     </div>
@@ -4512,7 +4512,7 @@ cerebro:   { n:'GuIA’s brain', plan:'Pro', d:'The per-tour fact sheet that fee
 /* Planes de la demo (precios congruentes con la landing) y qué desbloquea cada uno. */
 var PLANES={ esencial:{orden:0, n:'Essential', precio:'£0'},
              pro:     {orden:1, n:'Pro',      precio:'€79'},
-             premium: {orden:2, n:'Premium',  precio:'€199'} };
+             premium: {orden:2, n:'Premium',  precio:'€249'} };
 function reqOrden(v){ return SUPLEMENTOS[v].plan==='Premium' ? 2 : 1; }   // plan mínimo que lo incluye
 function disponible(v){ if(!SUPLEMENTOS[v]) return true;
   return PLANES[S.plan].orden >= reqOrden(v) || S.desbloqueado[v]; }

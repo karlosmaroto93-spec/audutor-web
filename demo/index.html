@@ -819,7 +819,7 @@
       <button class="nav-g-cab" onclick="this.parentElement.classList.toggle('abierto')">📣 Reservas y ventas <span class="flecha">▾</span></button>
       <div class="nav-g-hijos">
         <a href="#canales" data-v="canales">🔌 Canales y sincronización</a>
-        <a href="#agente" data-v="agente">🤖 El agente de plataformas</a>
+        <a href="#agente" data-v="agente">🤖 El agente de plataformas <span class="cand">🔒</span></a>
         <a href="#noshow" data-v="noshow">📉 Anti no-show</a>
         <a href="#carrito" data-v="carrito">🛒 Carrito y combos <span class="cand">🔒</span></a>
       </div>
@@ -837,7 +837,7 @@
   <div class="pie-demo">
     <div class="leyenda-planes">
       <b>Tu plan (demo):</b> cámbialo y mira qué se desbloquea. Esencial trae
-      <b>1 tour, 2 guías y 2 canales</b>; desde Pro, ilimitados.
+      <b>1 tour, 2 guías y 2 canales</b>; desde Pro, ilimitados. El <b>agente de plataformas</b> es de Premium.
       <div class="mk-sel">
         <b>Mercado (demo):</b> el mismo producto, en el mismo idioma, adaptado a la moneda, el modelo de negocio y las costumbres de cada país.
         <div class="fila" id="mk-btns" style="gap:4px; margin-top:6px; flex-wrap:wrap;"></div>
@@ -846,7 +846,7 @@
       <div class="plan-sel" id="plan-sel">
         <button data-plan="esencial" onclick="cambiarPlan('esencial')"><b>Esencial</b>0 €</button>
         <button data-plan="pro" onclick="cambiarPlan('pro')"><b>Pro</b>79 €</button>
-        <button data-plan="premium" onclick="cambiarPlan('premium')"><b>Premium</b>199 €</button>
+        <button data-plan="premium" onclick="cambiarPlan('premium')"><b>Premium</b>249 €</button>
       </div>
       <div style="font-size:10.5px; margin-top:8px; opacity:.85; line-height:1.5;">💳 Propina: <b>0 %</b> si cobras en mano. Solo el <b>enlace o QR</b> lleva <b>1,9 % + 0,30 € — todo incluido</b> (la pasarela va dentro, no se suma aparte).</div>
     </div>
@@ -4679,6 +4679,7 @@ var SUPLEMENTOS={
   chat:      { n:'GuIA · Chat del cliente', plan:'Pro', d:'El asistente que atiende a tus clientes en el chat de tu web: responde con los hechos de cada tour y deriva lo que no sabe. Nunca inventa.' },
   cerebro:   { n:'GuIA · Cerebro', plan:'Pro', d:'El formulario de hechos por tour que alimenta al asistente, con IA que lo rellena desde la web del tour y borradores editables.' },
   carrito:   { n:'Carrito abandonado y combos', plan:'Pro', d:'Recupera al que se quedó a medias reservando y ofrece el tour de pago a quien hizo el free tour — la segunda venta, sola.' },
+  agente:    { n:'El agente de plataformas', plan:'Premium', d:'Entra en los paneles de tus plataformas con TU sesión —Audutor no guarda ninguna contraseña—, cuenta cuánta gente le consta a cada una y cierra las salidas llenas. Y aunque diga que cerró, aquí sigue sin ✓ hasta que lo compruebes tú.' },
   cuadro:    { n:'Cuadro de mando', plan:'Premium', d:'La analítica del negocio: ocupación, canales, propina por guía y por franja, no-shows. Para decidir con datos, no a ojo.' },
   liquidacion:{ n:'Liquidación a guías', plan:'Pro', d:'La cuenta de cada tour siempre cuadrada: reparto por % o tarifa fija, coste de canal, CSV e imprimir. El guía nunca paga.' },
   proyeccion:{ n:'Proyección de ingresos', plan:'Premium', d:'El simulador de plan de negocio: mueve los deslizadores y ve cuánto gana cada guía y la empresa al mes.' },
@@ -4690,7 +4691,7 @@ var SUPLEMENTOS={
 /* Planes de la demo (precios congruentes con la landing) y qué desbloquea cada uno. */
 var PLANES={ esencial:{orden:0, n:'Esencial', precio:'0 €'},
              pro:     {orden:1, n:'Pro',      precio:'79 €'},
-             premium: {orden:2, n:'Premium',  precio:'199 €'} };
+             premium: {orden:2, n:'Premium',  precio:'249 €'} };
 function reqOrden(v){ return SUPLEMENTOS[v].plan==='Premium' ? 2 : 1; }   // plan mínimo que lo incluye
 function disponible(v){ if(!SUPLEMENTOS[v]) return true;
   return PLANES[S.plan].orden >= reqOrden(v) || S.desbloqueado[v]; }
