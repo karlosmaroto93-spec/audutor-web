@@ -775,7 +775,7 @@
         <label><input type="checkbox" id="c-guia" onchange="compTog('guia',this)"><span>GuIA, the assistant</span><b>+€39</b></label>
         <label><input type="checkbox" id="c-agente" onchange="compTog('agente',this)"><span>The platform agent</span><b>+€29</b></label>
         <label><input type="checkbox" id="c-web" onchange="compTog('web',this)"><span>Your website, always current</span><b>+€9</b></label>
-        <label><input type="checkbox" id="c-liquidacion" onchange="compTog('liquidacion',this)"><span>Guide payouts</span><b>+€9</b></label>
+        <label><input type="checkbox" id="c-cuentas" onchange="compTog('cuentas',this)"><span>The books, tour by tour</span><b>+€9</b></label>
         <div class="comp-total">Your plan: <b id="comp-tot">€39</b><span id="comp-desglose"></span></div>
       </div>
       <div style="font-size:10.5px; margin-top:8px; opacity:.85; line-height:1.5;">💳 Tips: <b>0 %</b> when you take it in person (your own SumUp, card reader or Tap to Pay). Only the <b>link or QR</b> carries <b>1.9 % + £0.30</b>.</div>
@@ -1265,10 +1265,10 @@ Places held for your group for 48 h 👉 oldtownwalks.co.uk/combo/x3f9
         <button class="btn mini" style="margin-top:10px;" onclick="probarBuzon()">📥 Try the inbox now</button>
       </div>
       <div style="border:1px solid var(--line); border-radius:11px; padding:14px;">
-        <b>🌐 2 · Your own booking engine</b>
-        <div class="mini muted" style="margin:8px 0 0;">Your Audutor booking page (“your own site”):
-        direct bookings with <b>no commission</b>, a manage-booking link for the customer (cancel or change
-        in one tap) and group detection at the point of booking. <details class="mas"><summary>ⓘ more</summary><span class="mas-p">This is the channel the system pushes to grow —
+        <b>🌐 2 · Your own site</b>
+        <div class="mini muted" style="margin:8px 0 0;">The pages Audutor builds from your Cerebro — always
+        showing the real timetable — plus the guide pages with their QR. Audutor does not take the booking:
+        it sends people where you already sell, with no commission in the middle. <details class="mas"><summary>ⓘ more</summary><span class="mas-p">This is the channel the system pushes to grow —
         abandoned checkout, combos and reviews all point here.</span></details></div>
       </div>
       <div style="border:1px solid var(--line); border-radius:11px; padding:14px;">
@@ -1683,7 +1683,7 @@ Places held for your group for 48 h 👉 oldtownwalks.co.uk/combo/x3f9
   <div class="card">
     <h2>🔗 Guide page — the QR that turns a good tour into the next booking</h2>
     <div class="mini muted" style="margin:0 0 10px;">Every guide gets a public page with their tours and
-      direct booking on your site — <b>no platform commission</b>. <details class="mas"><summary>ⓘ more</summary><span class="mas-p">The
+      the places that are really left, and from there to <b>your own site</b>. <details class="mas"><summary>ⓘ more</summary><span class="mas-p">The
       moment that counts is the end of the tour: people have just had a good time and ask “what else do you run?”.
       The guide shows their QR and that recommendation lands on your site, not the platform’s. Each page carries
       the guide’s name, so the analytics tell you which guides bring bookings in.</span></details></div>
@@ -4546,9 +4546,9 @@ var COMPLEMENTOS = {
   guia:     { n:'GuIA, the assistant', precio:39, abre:['chat','cerebro'] },
   agente:   { n:'The platform agent', precio:29, abre:[] },
   web:      { n:'Your website, always current', precio:9, abre:[] },
-  liquidacion:{ n:'Guide payouts', precio:9, abre:['liquidacion'] },
+  cuentas:  { n:'The books, tour by tour', precio:9, abre:['liquidacion'] },
 };
-S.comp = { guia:false, agente:false, web:false, liquidacion:false };
+S.comp = { guia:false, agente:false, web:false, cuentas:false };
 function abiertoPorComplemento(v){
   for (var k in COMPLEMENTOS)
     if (S.comp[k] && COMPLEMENTOS[k].abre.indexOf(v) !== -1) return true;
@@ -6245,12 +6245,12 @@ function abrirGuidePage(nombre){
     '<li>🎯 <b>The moment that counts:</b> the end of the walk. The guide shows their QR and the recommendation lands on <b>your site</b>, not the platform’s.</li>'+
     '<li>🗓 <b>Real availability, not a contact form.</b> The walks, days and times come straight from your schedule — add a departure in Team &amp; availability and it appears here on its own.</li>'+
     '<li>👥 <b>The group size is already filled in</b> with the booking they just walked on. Five of you this morning, five for the ghost walk tonight — one tap instead of a form.</li>'+
-    '<li>💶 <b>Direct booking, no commission</b> — everyone who comes in this way saves you the platform’s ~£2.50 per person, and it lands on the guide’s manifest for that departure.</li>'+
+    '<li>🗓 <b>The days, times and places left are the real ones</b> — straight from your schedule and from what each channel has, not a table typed by hand.</li>'+
     '<li>📈 The page carries the <b>guide’s name</b>, so you can see which guides bring bookings in.</li></ul>'+
-    '<p class="mini">Nothing is really booked. The real page would live on your own domain.</p>';
+    '<p class="mini">Audutor <b>does not take the booking</b>: it shows what is left and sends people where you already sell. The real page would live on your own domain.</p>';
   document.getElementById('viajero-overlay').classList.add('ver');
   document.body.style.overflow='hidden';
-  GP.paso='tours'; GP.tour=null; GP.hora=null; GP.diaIdx=0; GP.pax=null; GP.codigo=null;
+  GP.paso='tours'; GP.tour=null; GP.hora=null; GP.diaIdx=0;
   pintaGuidePage(nombre);
 }
 /* ============ Página del guía: reservar OTRO tour desde su QR ============
@@ -6263,7 +6263,7 @@ function abrirGuidePage(nombre){
      (VJ.pax): acaba de venir en grupo de 5, lo más probable es que reserve para 5.
    Los datos de cada tour (duración, punto de encuentro, modelo de precio) vienen
    del Cerebro, así que el operador los mantiene en un solo sitio. */
-var GP={ guia:null, paso:'tours', tour:null, diaIdx:0, hora:null, pax:null, codigo:null };
+var GP={ guia:null, paso:'tours', tour:null, diaIdx:0, hora:null };
 
 /* Próximos 14 días desde el «hoy» de la demo (sáb 18 jul 2026). Sin Date() para
    que la demo sea determinista y no cambie según el día en que se abra. */
@@ -6338,7 +6338,6 @@ function gpElige(tour){
   var ds=gpDiasDe(tour); GP.diaIdx = ds.length ? ds[0].i : 0;
   var hs=gpHorasDe(tour, ds.length?ds[0].dow:0); GP.hora = hs.length?hs[0]:null;
   /* Prefijado con las personas de SU reserva — es el caso normal al salir de un tour */
-  if (GP.pax===null) GP.pax = Math.max(1, VJ.pax||1);
   pintaGuidePage(GP.guia);
 }
 function gpDia(i){
@@ -6349,54 +6348,14 @@ function gpDia(i){
   pintaGuidePage(GP.guia);
 }
 function gpHora(h){ GP.hora=h; pintaGuidePage(GP.guia); }
-function gpPax(delta){
-  var aforo=parseInt(gpKb(GP.tour).aforo,10)||20;
-  GP.pax=Math.min(aforo, Math.max(1, (GP.pax||1)+delta));
-  pintaGuidePage(GP.guia);
-}
 function gpVuelve(){ GP.paso='tours'; GP.tour=null; GP.hora=null; pintaGuidePage(GP.guia); }
-function gpReserva(){
-  var dia=gpDias()[GP.diaIdx];
-  if (!GP.hora){ toast('Pick a time first 🙂'); return; }
-  if (gpLibres(GP.tour, dia, GP.hora) < GP.pax){
-    toast('That departure hasn’t got room for '+GP.pax+' — try another time or day.'); return;
-  }
-  var k=GP.tour+dia.d+GP.hora+GP.pax, h=0;
-  for (var i=0;i<k.length;i++) h=(h*33+k.charCodeAt(i))>>>0;
-  GP.codigo='OTW-'+h.toString(36).slice(0,6);
-  GP.paso='hecho';
-  pintaGuidePage(GP.guia);
-  toast('✅ Simulated direct booking on your own site — no platform fee, and it shows up on the guide’s manifest for that departure.');
-}
-
 function pintaGuidePage(nombre){
   GP.guia=nombre;
   var g=S.equipo.guias.filter(function(x){return x.n===nombre})[0]||{n:nombre,color:'#0c6b56',nota:'—'};
   var pant=document.getElementById('viajero-pantalla');
   var cab='<div class="vj-estado"><span>18:52</span><span>📶&nbsp;&nbsp;🔋</span></div>'+
     '<div class="vj-cab"><span class="dot"></span><b>'+MK.empresa+'</b>'+
-    '<span class="vj-seguro">direct booking</span></div>';
-
-  /* ---- paso 3: hecho ---- */
-  if (GP.paso==='hecho'){
-    var d3=gpDias()[GP.diaIdx];
-    pant.innerHTML=cab+
-      '<div class="vj-cuerpo vj-gracias">'+
-      '<div class="vj-check">🎟️</div>'+
-      '<h3 style="margin:8px 0 2px;">You’re booked in</h3>'+
-      '<p class="mini muted" style="margin:0 0 10px;">Confirmation on its way to you now.</p>'+
-      '<div class="gp-resumen" style="text-align:left;">'+
-        '<b>'+GP.tour+'</b><br>'+
-        d3.et+' '+d3.d+' '+d3.mes+' · '+gpHora12(GP.hora)+'<br>'+
-        GP.pax+(GP.pax===1?' person':' people')+' · '+gpPrecio(GP.tour)+'<br>'+
-        '<span class="mini muted">Booking reference '+GP.codigo+'</span>'+
-      '</div>'+
-      '<div class="vj-transp" style="text-align:left;">📋 It is already on '+g.n+'’s manifest for that departure, '+
-        'and '+empresaCorta()+' paid <b>no platform commission</b> on it — you booked direct.</div>'+
-      '<button class="vj-volver" onclick="gpVuelve()">← Book something else</button>'+
-      '</div>';
-    pant.scrollTop=0; return;
-  }
+    '<span class="vj-seguro">their page</span></div>';
 
   /* ---- paso 2: cuándo y cuántos ---- */
   if (GP.paso==='cuando'){
@@ -6406,8 +6365,7 @@ function pintaGuidePage(nombre){
     var horas=gpHorasDe(GP.tour, dia.dow);
     var libres=GP.hora ? gpLibres(GP.tour, dia, GP.hora) : 0;
     var aforo=parseInt(kb.aforo,10)||20;
-    var mismaReserva=(GP.pax===Math.max(1, VJ.pax||1));
-    pant.innerHTML=cab+
+        pant.innerHTML=cab+
       '<div class="vj-cuerpo">'+
       '<button class="vj-volver" style="margin:0 0 6px;" onclick="gpVuelve()">← All tours</button>'+
       '<h3 style="font-family:var(--serif); font-size:18px; margin:2px 0 1px;">'+GP.tour+'</h3>'+
@@ -6433,25 +6391,17 @@ function pintaGuidePage(nombre){
             }).join('')
           : '<span class="mini muted">Nothing on this day — pick another.</span>')+
       '</div>'+
-      '<p class="vj-tit">How many of you?</p>'+
-      '<div class="gp-pax">'+
-        '<button onclick="gpPax(-1)"'+(GP.pax<=1?' disabled':'')+' aria-label="One fewer">−</button>'+
-        '<span class="gp-n">'+GP.pax+'</span>'+
-        '<button onclick="gpPax(1)"'+(GP.pax>=aforo?' disabled':'')+' aria-label="One more">+</button>'+
-      '</div>'+
-      (mismaReserva
-        ? '<p class="mini muted" style="margin:6px 2px 0;">Same as the booking you came on today — change it if the group has.</p>'
-        : '')+
-      (GP.hora && libres && libres<GP.pax
-        ? '<div class="vj-transp">⚠️ Only '+libres+' left at '+gpHora12(GP.hora)+'. Try another time, or split the group.</div>'
-        : '')+
+      /* Ni contador de personas ni botón de reservar: Audutor NO vende entradas, opera lo
+         que ya se vendió. Lo que sí es suyo —y no lo tiene nadie más— es saber cuántas
+         plazas quedan DE VERDAD en esa salida, contando todos los canales. Eso se enseña,
+         y de ahí al sitio donde el operador ya vende. */
       '<div class="gp-resumen">'+
-        '<b>'+dia.et+' '+dia.d+' '+dia.mes+(GP.hora?' · '+gpHora12(GP.hora):'')+'</b> · '+
-        GP.pax+(GP.pax===1?' person':' people')+'<br>'+
-        gpPrecio(GP.tour)+' — nothing to pay now.'+
+        '<b>'+dia.et+' '+dia.d+' '+dia.mes+(GP.hora?' · '+gpHora12(GP.hora):'')+'</b><br>'+
+        gpPrecio(GP.tour)+
+        (GP.hora ? ' · '+libres+' place'+(libres===1?'':'s')+' left across every channel' : '')+
       '</div>'+
-      '<button class="vj-cta" onclick="gpReserva()">Book '+GP.pax+(GP.pax===1?' place':' places')+'</button>'+
-      '<p class="vj-legal">Free cancellation right up to the start time. Demo with made-up data — nothing is really booked.</p>'+
+      '<button class="vj-cta" onclick="toast(\'In production this goes where you already sell — your own site or your platform. Audutor does not take the booking: it tells you what is really left\')">See places at '+empresaCorta()+'</button>'+
+      '<p class="vj-legal">Audutor does not sell tickets: it runs what you already sold. Demo with made-up data.</p>'+
       '</div>';
     pant.scrollTop=0; return;
   }
@@ -6466,7 +6416,7 @@ function pintaGuidePage(nombre){
       '<p class="mini muted" style="margin:0;">Guide at '+empresaCorta()+' · ⭐ '+(g.nota||'—')+'</p></div>'+
     '<div class="vj-burbuja" style="margin-top:10px;">💬 <i>“The walk with '+g.n+' was the best thing we did all trip. We’d do it again tomorrow.”</i>'+
       '<span class="vj-hora">verified review</span></div>'+
-    '<p class="vj-tit">Walks you can book with us</p>'+
+    '<p class="vj-tit">Their next walks</p>'+
     tours.map(function(t){
       var kb=gpKb(t.tour);
       var dias=gpDiasDe(t.tour);
@@ -6480,8 +6430,8 @@ function pintaGuidePage(nombre){
         '<span class="gp-precio">'+gpPrecio(t.tour)+' →</span>'+
         '</button>';
     }).join('')+
-    '<div class="vj-transp">✨ Booked <b>straight with '+empresaCorta()+'</b> — no middleman, no platform fee, '+
-      'and free cancellation up to the start time.</div>'+
+    '<div class="vj-transp">🗓 The days, times and places left come <b>straight from their real schedule</b> — '+
+      'move a departure and this changes on its own.</div>'+
     '<button class="vj-volver" onclick="pintaViajero(\'importe\')">💚 Just done their walk? Leave '+g.n+' a tip</button>'+
     '</div>';
   pant.scrollTop=0;

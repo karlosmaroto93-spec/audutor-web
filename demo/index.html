@@ -875,7 +875,7 @@
         <label><input type="checkbox" id="c-guia" onchange="compTog('guia',this)"><span>GuIA, el asistente</span><b>+39 €</b></label>
         <label><input type="checkbox" id="c-agente" onchange="compTog('agente',this)"><span>El agente de plataformas</span><b>+29 €</b></label>
         <label><input type="checkbox" id="c-web" onchange="compTog('web',this)"><span>Tu web, siempre al día</span><b>+9 €</b></label>
-        <label><input type="checkbox" id="c-liquidacion" onchange="compTog('liquidacion',this)"><span>Liquidación a guías</span><b>+9 €</b></label>
+        <label><input type="checkbox" id="c-cuentas" onchange="compTog('cuentas',this)"><span>Las cuentas de cada tour</span><b>+9 €</b></label>
         <div class="comp-total">Tu tarifa: <b id="comp-tot">39 €</b><span id="comp-desglose"></span></div>
       </div>
       <div style="font-size:10.5px; margin-top:8px; opacity:.85; line-height:1.5;">💳 Propina: <b>0 %</b> si cobras en mano. Solo el <b>enlace o QR</b> lleva <b>1,9 % + 0,30 € — todo incluido</b> (la pasarela va dentro, no se suma aparte).</div>
@@ -1347,10 +1347,10 @@ Plazas de vuestro grupo guardadas 48 h 👉 patioycompas.example/combo/x3f9
         <button class="btn mini" style="margin-top:10px;" onclick="probarBuzon()">📥 Probar el buzón ahora</button>
       </div>
       <div style="border:1px solid var(--line); border-radius:11px; padding:14px;">
-        <b>🌐 2 · Motor de reservas propio</b>
-        <div class="mini muted" style="margin:8px 0 0;">Tu página de reservas de Audutor (la «web propia»):
-        reservas directas <b>sin comisión</b>, con enlace de gestión para el cliente (cancelar o cambiar
-        en un clic) y detección de grupos al reservar. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Es el canal que el sistema empuja a crecer —
+        <b>🌐 2 · Tu propia web</b>
+        <div class="mini muted" style="margin:8px 0 0;">Las páginas que Audutor monta con tu Cerebro
+        —enseñando siempre el horario de verdad— y las páginas de cada guía con su QR. Audutor
+        <b>no cobra la reserva</b>: lleva a donde tú ya vendes, sin comisión por el medio. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Es el canal que el sistema empuja a crecer —
         carrito, combos y reseñas apuntan aquí.</span></details></div>
       </div>
       <div style="border:1px solid var(--line); border-radius:11px; padding:14px;">
@@ -1865,7 +1865,7 @@ Plazas de vuestro grupo guardadas 48 h 👉 patioycompas.example/combo/x3f9
   <div class="card">
     <h2>🔗 Página del guía — el QR que convierte un buen tour en la próxima reserva</h2>
     <div class="mini muted" style="margin:0 0 10px;">Cada guía tiene una página pública con sus tours y
-      reserva directa en tu web — <b>sin comisión de plataforma</b>. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">El
+      las plazas que quedan de verdad, y de ahí a <b>tu propia web</b>. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">El
       momento de oro es el final del tour: la gente acaba de pasarlo bien y pregunta «¿qué más hacéis?».
       El guía enseña su QR y esa recomendación aterriza en tu web, no en la plataforma. Cada página lleva
       el nombre del guía, así la analítica te dice qué guías traen reservas.</span></details></div>
@@ -4732,9 +4732,9 @@ var COMPLEMENTOS = {
   guia:     { n:'GuIA, el asistente', precio:39, abre:['chat','cerebro'] },
   agente:   { n:'El agente de plataformas', precio:29, abre:['agente'] },
   web:      { n:'Tu web, siempre al día', precio:9, abre:[] },
-  liquidacion:{ n:'Liquidación a guías', precio:9, abre:['liquidacion'] },
+  cuentas:  { n:'Las cuentas de cada tour', precio:9, abre:['liquidacion'] },
 };
-S.comp = { guia:false, agente:false, web:false, liquidacion:false };
+S.comp = { guia:false, agente:false, web:false, cuentas:false };
 
 /* Un suplemento está disponible si algún complemento CONTRATADO lo abre, o si sigue
    colgando del plan (cuadro de mando, proyección: esos se quedan como estaban). */
@@ -6521,10 +6521,10 @@ function abrirGuidePage(nombre){
   if (NOTA_VIAJERO0===null) NOTA_VIAJERO0=nota.innerHTML;
   nota.innerHTML='<h3>La página del guía 🔗</h3><ul>'+
     '<li>🎯 <b>El momento de oro:</b> el final del tour. El guía enseña su QR y la recomendación aterriza en <b>tu web</b>, no en la plataforma.</li>'+
-    '<li>💶 <b>Reserva directa sin comisión</b> — cada persona que entra por aquí se ahorra los ~2,50 €/persona de la plataforma.</li>'+
+    '<li>🗓 <b>Los horarios y las plazas son los de verdad</b> — salen de tu cuadrante y de lo que le consta a cada canal, no de una tabla escrita a mano.</li>'+
     '<li>📈 La página lleva el <b>nombre del guía</b>: la analítica te dice qué guías traen reservas (y eso también motiva).</li>'+
     '<li>💚 Enlaza con la <b>propina digital</b>: quien viene de un tour puede dejarla ahí mismo.</li></ul>'+
-    '<p class="mini">Los botones de reserva son simulados. La página real viviría en tu dominio.</p>';
+    '<p class="mini">Audutor <b>no cobra la reserva</b>: enseña las plazas y lleva a donde tú ya vendes. La página real viviría en tu dominio.</p>';
   document.getElementById('viajero-overlay').classList.add('ver');
   document.body.style.overflow='hidden';
   pintaGuidePage(nombre);
@@ -6536,7 +6536,7 @@ function pintaGuidePage(nombre){
   franjasEmpresa().forEach(function(f){ if(!tours[f.tour]) tours[f.tour]=f.hora; });
   pant.innerHTML='<div class="vj-estado"><span>18:52</span><span>📶&nbsp;&nbsp;🔋</span></div>'+
     '<div class="vj-cab"><span class="dot"></span><b>Patio y Compás · Sevilla</b>'+
-    '<span class="vj-seguro">reserva directa</span></div>'+
+    '<span class="vj-seguro">su página</span></div>'+
     '<div class="vj-cuerpo">'+
     '<div style="text-align:center; margin:6px 0 2px;">'+
       '<span class="ini grande" style="background:'+g.color+'; width:56px; height:56px; font-size:22px; display:inline-flex; margin:0;">'+iniGuia(g)+'</span>'+
@@ -6544,11 +6544,15 @@ function pintaGuidePage(nombre){
       '<p class="mini muted" style="margin:0;">guía en Patio y Compás · ⭐ '+(g.nota||'—')+' · te lo cuenta como nadie</p></div>'+
     '<div class="vj-burbuja" style="margin-top:10px;">💬 <i>«La visita con '+g.n+' fue lo mejor del viaje. Repetiríamos mañana.»</i>'+
       '<span class="vj-hora">reseña verificada</span></div>'+
-    '<p class="vj-tit">Mis tours — reserva gratis, plazas al momento</p>'+
+    '<p class="vj-tit">Sus próximas salidas</p>'+
     Object.keys(tours).map(function(t){
-      return '<button class="vj-cta" style="margin-top:8px;" onclick="toast(\'Reserva directa simulada — en producción aterriza en tu web, sin comisión de plataforma\')">'+
-        t+' · '+tours[t]+' → reservar</button>'; }).join('')+
-    '<div class="vj-transp" style="margin-top:12px;">✨ Reservas <b>directas con Patio y Compás</b> — sin intermediarios ni comisiones.</div>'+
+      /* NO es un botón de reservar, y la diferencia no es de redacción: Audutor no vende
+         entradas —opera lo que ya se vendió— así que prometer aquí una reserva sería vender
+         un motor de reservas que no existe. Lo nuestro es el horario y las plazas que
+         quedan de verdad; de ahí, al sitio donde el operador ya vende. */
+      return '<button class="vj-cta" style="margin-top:8px;" onclick="toast(\'En producción esto lleva a donde tú ya vendes — tu web o tu plataforma. Audutor no cobra entradas: te dice qué plazas quedan de verdad\')">'+
+        t+' · '+tours[t]+' → ver plazas</button>'; }).join('')+
+    '<div class="vj-transp" style="margin-top:12px;">🗓 Los horarios y las plazas salen de <b>su cuadrante de verdad</b>: si mueve una salida, aquí cambia sola.</div>'+
     '<button class="vj-volver" onclick="pintaViajero(\'importe\')">💚 ¿Acabas de hacer su tour? Déjale propina</button>'+
     '</div>';
   pant.scrollTop=0;
