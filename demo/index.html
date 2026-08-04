@@ -872,15 +872,10 @@
            total que se ve debajo, para que el cliente monte su tarifa mirándola. -->
       <div class="comp-sel" id="comp-sel">
         <div class="comp-tit">Complementos</div>
-        <label><input type="checkbox" id="c-guia" onchange="compTog('guia',this)"><span>GuIA, el asistente</span><b>+49 €</b></label>
-        <label><input type="checkbox" id="c-agente" onchange="compTog('agente',this)"><span>El agente de plataformas</span><b>+39 €</b></label>
+        <label><input type="checkbox" id="c-guia" onchange="compTog('guia',this)"><span>GuIA, el asistente</span><b>+39 €</b></label>
+        <label><input type="checkbox" id="c-agente" onchange="compTog('agente',this)"><span>El agente de plataformas</span><b>+29 €</b></label>
         <label><input type="checkbox" id="c-web" onchange="compTog('web',this)"><span>Tu web, montada sola</span><b>+15 €</b></label>
-        <label><input type="checkbox" id="c-concilia" onchange="compTog('concilia',this)"><span>Conciliación de no-shows</span><b>+25 €</b></label>
-        <label><input type="checkbox" id="c-liquida" onchange="compTog('liquida',this)"><span>Liquidación a guías</span><b>+19 €</b></label>
-        <label><input type="checkbox" id="c-cuadro" onchange="compTog('cuadro',this)"><span>Cuadro de mando</span><b>+19 €</b></label>
-        <label><input type="checkbox" id="c-carrito" onchange="compTog('carrito',this)"><span>Carrito abandonado y combos</span><b>+19 €</b></label>
-        <label><input type="checkbox" id="c-marca" onchange="compTog('marca',this)"><span>Sin la marca «Audutor»</span><b>+9 €</b></label>
-        <label><input type="checkbox" id="c-soporte" onchange="compTog('soporte',this)"><span>Soporte prioritario</span><b>+29 €</b></label>
+        <label><input type="checkbox" id="c-soporte" onchange="compTog('soporte',this)"><span>Soporte prioritario</span><b>+19 €</b></label>
         <div class="comp-total">Tu tarifa: <b id="comp-tot">39 €</b><span id="comp-desglose"></span></div>
       </div>
       <div style="font-size:10.5px; margin-top:8px; opacity:.85; line-height:1.5;">💳 Propina: <b>0 %</b> si cobras en mano. Solo el <b>enlace o QR</b> lleva <b>1,9 % + 0,30 € — todo incluido</b> (la pasarela va dentro, no se suma aparte).</div>
@@ -4734,17 +4729,12 @@ var PLANES={ esencial:{orden:0, n:'Esencial', precio:'0 €',   bono:150,  base:
 /* Qué cuesta cada complemento y qué desbloquea. Una clave por complemento, y la lista de
    vistas que abre — así añadir uno nuevo es una línea y no hay que tocar el gating. */
 var COMPLEMENTOS = {
-  guia:     { n:'GuIA, el asistente', precio:49, abre:['chat','cerebro'] },
-  agente:   { n:'El agente de plataformas', precio:39, abre:['agente'] },
+  guia:     { n:'GuIA, el asistente', precio:39, abre:['chat','cerebro'] },
+  agente:   { n:'El agente de plataformas', precio:29, abre:['agente'] },
   web:      { n:'Tu web, montada sola', precio:15, abre:[] },
-  concilia: { n:'Conciliación de no-shows', precio:25, abre:['ahorro'] },
-  liquida:  { n:'Liquidación a guías', precio:19, abre:['liquidacion'] },
-  cuadro:   { n:'Cuadro de mando', precio:19, abre:['cuadro','proyeccion'] },
-  carrito:  { n:'Carrito abandonado y combos', precio:19, abre:['carrito'] },
-  marca:    { n:'Sin la marca «Audutor»', precio:9, abre:[] },
-  soporte:  { n:'Soporte prioritario', precio:29, abre:[] },
+  soporte:  { n:'Soporte prioritario', precio:19, abre:[] },
 };
-S.comp = { guia:false, agente:false, web:false, concilia:false, liquida:false, cuadro:false, carrito:false, marca:false, soporte:false };
+S.comp = { guia:false, agente:false, web:false, soporte:false };
 
 /* Un suplemento está disponible si algún complemento CONTRATADO lo abre, o si sigue
    colgando del plan (cuadro de mando, proyección: esos se quedan como estaban). */

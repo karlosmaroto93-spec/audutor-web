@@ -772,15 +772,10 @@
       </div>
       <div class="comp-sel" id="comp-sel">
         <div class="comp-tit">Add-ons</div>
-        <label><input type="checkbox" id="c-guia" onchange="compTog('guia',this)"><span>GuIA, the assistant</span><b>+€49</b></label>
-        <label><input type="checkbox" id="c-agente" onchange="compTog('agente',this)"><span>The platform agent</span><b>+€39</b></label>
+        <label><input type="checkbox" id="c-guia" onchange="compTog('guia',this)"><span>GuIA, the assistant</span><b>+€39</b></label>
+        <label><input type="checkbox" id="c-agente" onchange="compTog('agente',this)"><span>The platform agent</span><b>+€29</b></label>
         <label><input type="checkbox" id="c-web" onchange="compTog('web',this)"><span>Your website</span><b>+€15</b></label>
-        <label><input type="checkbox" id="c-concilia" onchange="compTog('concilia',this)"><span>No-show reconciliation</span><b>+€25</b></label>
-        <label><input type="checkbox" id="c-liquida" onchange="compTog('liquida',this)"><span>Guide settlements</span><b>+€19</b></label>
-        <label><input type="checkbox" id="c-cuadro" onchange="compTog('cuadro',this)"><span>Analytics</span><b>+€19</b></label>
-        <label><input type="checkbox" id="c-carrito" onchange="compTog('carrito',this)"><span>Abandoned cart and combos</span><b>+€19</b></label>
-        <label><input type="checkbox" id="c-marca" onchange="compTog('marca',this)"><span>Drop the “Audutor” badge</span><b>+€9</b></label>
-        <label><input type="checkbox" id="c-soporte" onchange="compTog('soporte',this)"><span>Priority support</span><b>+€29</b></label>
+        <label><input type="checkbox" id="c-soporte" onchange="compTog('soporte',this)"><span>Priority support</span><b>+€19</b></label>
         <div class="comp-total">Your plan: <b id="comp-tot">€39</b><span id="comp-desglose"></span></div>
       </div>
       <div style="font-size:10.5px; margin-top:8px; opacity:.85; line-height:1.5;">💳 Tips: <b>0 %</b> when you take it in person (your own SumUp, card reader or Tap to Pay). Only the <b>link or QR</b> carries <b>1.9 % + £0.30</b>.</div>
@@ -4548,17 +4543,12 @@ var PLANES={ esencial:{orden:0, n:'Essential', precio:'€0',   bono:150,  base:
 /* Esta demo no tiene la vista del agente, así que su complemento no abre nada aquí: se
    ofrece igual para que el precio que se ve sea el mismo que el de la web inglesa. */
 var COMPLEMENTOS = {
-  guia:     { n:'GuIA, the assistant', precio:49, abre:['chat','cerebro'] },
-  agente:   { n:'The platform agent', precio:39, abre:[] },
+  guia:     { n:'GuIA, the assistant', precio:39, abre:['chat','cerebro'] },
+  agente:   { n:'The platform agent', precio:29, abre:[] },
   web:      { n:'Your website', precio:15, abre:[] },
-  concilia: { n:'No-show reconciliation', precio:25, abre:['ahorro'] },
-  liquida:  { n:'Guide settlements', precio:19, abre:['liquidacion'] },
-  cuadro:   { n:'Analytics', precio:19, abre:['cuadro','proyeccion'] },
-  carrito:  { n:'Abandoned cart and combos', precio:19, abre:['carrito'] },
-  marca:    { n:'Drop the “Audutor” badge', precio:9, abre:[] },
-  soporte:  { n:'Priority support', precio:29, abre:[] },
+  soporte:  { n:'Priority support', precio:19, abre:[] },
 };
-S.comp = { guia:false, agente:false, web:false, concilia:false, liquida:false, cuadro:false, carrito:false, marca:false, soporte:false };
+S.comp = { guia:false, agente:false, web:false, soporte:false };
 function abiertoPorComplemento(v){
   for (var k in COMPLEMENTOS)
     if (S.comp[k] && COMPLEMENTOS[k].abre.indexOf(v) !== -1) return true;
