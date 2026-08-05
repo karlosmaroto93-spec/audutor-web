@@ -77,12 +77,33 @@ button{
 }
 button:hover{ background:var(--acc-deep); }
 button:disabled{ background:var(--line); color:var(--muted); cursor:default; }
-/* `width:auto` y `min-height:0` NO sobran: esta página tiene un `button{ width:100% }`
-   global para los botones de enviar, y sin desactivarlo aquí este enlace se comía la
-   línea entera y el pie se leía en tres renglones sueltos. */
-.enlace-modo{ display:inline; width:auto; min-height:0; margin:0; padding:0;
-  background:none; border:0; font:inherit; font-size:13px; font-weight:700;
-  color:var(--acc); text-decoration:underline; cursor:pointer; }
+/* ── El selector de entrar / crear cuenta ──────────────────────────────────────────
+   Era un enlace subrayado en el pie: se leía como una nota al pie y no como la decisión
+   que es. Ahora son dos pestañas de verdad arriba de la tarjeta —lo primero que se ve al
+   llegar— con la elegida en relieve sobre un carril hundido.
+
+   `width:auto` y `min-height:0` no sobran: la página tiene un `button{ width:100% }`
+   global para los botones de enviar, y sin desactivarlo aquí cada pestaña se comía una
+   línea entera. Es el mismo choque de siempre entre una regla de elemento y una clase
+   nueva. */
+.modos{
+  display:flex; gap:4px; margin:0 0 20px; padding:4px;
+  background:#f1ece0; border-radius:12px; border:1px solid var(--line);
+}
+.modo{
+  flex:1; width:auto; min-height:42px; margin:0; padding:0 10px;
+  border:0; border-radius:9px; background:transparent; cursor:pointer;
+  font:inherit; font-size:14px; font-weight:700; color:var(--ink2);
+  transition:background .16s ease, color .16s ease, box-shadow .16s ease;
+}
+/* La elegida se distingue por RELIEVE y no solo por color: sobre el carril hundido, la
+   activa es la única que parece una tecla levantada. */
+.modo[aria-selected="true"]{
+  background:var(--paper); color:var(--ink);
+  box-shadow:0 1px 2px rgba(74,61,32,.10), 0 2px 6px -2px rgba(74,61,32,.16);
+}
+.modo:focus-visible{ outline:3px solid var(--acc); outline-offset:2px; }
+@media (prefers-reduced-motion:reduce){ .modo{ transition:none; } }
 .campo-mas{ margin-top:14px; }
 .aviso{ margin:16px 0 0; font-size:13.5px; line-height:1.45; }
 .aviso.malo{ color:var(--coral); }
@@ -115,6 +136,12 @@ button:disabled{ background:var(--line); color:var(--muted); cursor:default; }
   <h1>Entra en Audutor</h1>
   <p class="lead">No hay contraseña. Escribe tu correo y te mandamos un enlace.</p>
 
+  <div class="modos" role="tablist" aria-label="Entrar o crear cuenta">
+    <button type="button" class="modo" id="tab-entrar" role="tab" aria-selected="true"
+            aria-controls="f">Entrar</button>
+    <button type="button" class="modo" id="tab-alta" role="tab" aria-selected="false"
+            aria-controls="fa">Crear cuenta</button>
+  </div>
   <form id="f" hidden>
     <label for="e">Tu correo</label>
     <input id="e" type="email" inputmode="email" autocomplete="email" required
@@ -140,12 +167,7 @@ button:disabled{ background:var(--line); color:var(--muted); cursor:default; }
     necesitas entrar, escríbenos y te mandamos el enlace a mano.
   </p>
 
-  <p class="abajo" id="pie-entrar">¿Todavía no tienes cuenta?
-    <button type="button" class="enlace-modo" id="ir-alta">Crear una cuenta</button>
-    · <a href="../demo/">Probar la demo</a></p>
-  <p class="abajo" id="pie-alta" hidden>¿Ya tienes cuenta?
-    <button type="button" class="enlace-modo" id="ir-entrar">Entrar</button>
-    · <a href="../demo/">Probar la demo</a></p>
+  <p class="abajo">¿Quieres verlo antes? <a href="../demo/">Probar la demo</a></p>
 </main>
 
 <p class="volver"><a href="../">← Volver a la web</a> · <a href="../aviso-legal/">Aviso legal</a></p>
@@ -193,22 +215,23 @@ var APP_URL = 'https://audutor.fly.dev';
   var fa = document.getElementById('fa');
   var amsg = document.getElementById('amsg');
   var ab = document.getElementById('ab');
-  var pieEntrar = document.getElementById('pie-entrar');
-  var pieAlta = document.getElementById('pie-alta');
+  var tabEntrar = document.getElementById('tab-entrar');
+  var tabAlta = document.getElementById('tab-alta');
   var h1 = document.querySelector('h1');
   var lead = document.querySelector('.lead');
 
   function modo(alta){
     f.hidden = alta; fa.hidden = !alta;
-    pieEntrar.hidden = alta; pieAlta.hidden = !alta;
+    tabEntrar.setAttribute('aria-selected', String(!alta));
+    tabAlta.setAttribute('aria-selected', String(alta));
     h1.textContent = alta ? 'Crea tu cuenta' : 'Entra en Audutor';
     lead.textContent = alta
       ? 'Sin tarjeta y sin permanencia. Te mandamos el enlace de entrada al correo.'
       : 'No hay contraseña. Escribe tu correo y te mandamos un enlace.';
     (alta ? document.getElementById('ae') : document.getElementById('e')).focus();
   }
-  document.getElementById('ir-alta').addEventListener('click', function(){ modo(true); });
-  document.getElementById('ir-entrar').addEventListener('click', function(){ modo(false); });
+  tabAlta.addEventListener('click', function(){ modo(true); });
+  tabEntrar.addEventListener('click', function(){ modo(false); });
 
   fa.addEventListener('submit', function(ev){
     ev.preventDefault();
