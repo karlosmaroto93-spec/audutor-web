@@ -74,6 +74,13 @@ button{
 }
 button:hover{ background:var(--acc-deep); }
 button:disabled{ background:var(--line); color:var(--muted); cursor:default; }
+/* `width:auto` y `min-height:0` NO sobran: esta página tiene un `button{ width:100% }`
+   global para los botones de enviar, y sin desactivarlo aquí este enlace se comía la
+   línea entera y el pie se leía en tres renglones sueltos. */
+.enlace-modo{ display:inline; width:auto; min-height:0; margin:0; padding:0;
+  background:none; border:0; font:inherit; font-size:13px; font-weight:700;
+  color:var(--acc); text-decoration:underline; cursor:pointer; }
+.campo-mas{ margin-top:14px; }
 .aviso{ margin:16px 0 0; font-size:13.5px; line-height:1.45; }
 .aviso.malo{ color:var(--coral); }
 .aviso.bueno{ color:var(--acc); }
@@ -113,12 +120,29 @@ button:disabled{ background:var(--line); color:var(--muted); cursor:default; }
     <p class="aviso" id="msg" role="status" aria-live="polite"></p>
   </form>
 
+
+  <form id="fa" hidden>
+    <label for="ae">Your email</label>
+    <input id="ae" type="email" inputmode="email" autocomplete="email" required
+           placeholder="you@company.com">
+    <label class="campo-mas" for="an">Your company name</label>
+    <input id="an" type="text" autocomplete="organization" required maxlength="80"
+           placeholder="Free Walking Tour Edinburgh">
+    <button type="submit" id="ab">Create the account</button>
+    <p class="aviso" id="amsg" role="status" aria-live="polite"></p>
+  </form>
+
   <p class="cerrado" id="cerrado" hidden>
     Access is not open yet — the app goes live these days. If you are already a customer
     and need to get in, write to us and we'll send the link by hand.
   </p>
 
-  <p class="abajo">Don't have an account yet? <a href="../../demo-en/">Try the demo</a></p>
+  <p class="abajo" id="pie-entrar">Don't have an account yet?
+    <button type="button" class="enlace-modo" id="ir-alta">Create one</button>
+    · <a href="../../demo-en/">Try the demo</a></p>
+  <p class="abajo" id="pie-alta" hidden>Already have an account?
+    <button type="button" class="enlace-modo" id="ir-entrar">Log in</button>
+    · <a href="../../demo-en/">Try the demo</a></p>
 </main>
 
 <p class="volver"><a href="../">← Back to the site</a> · <a href="../legal-notice/">Legal notice</a></p>
@@ -154,6 +178,61 @@ var APP_URL = 'https://audutor.fly.dev';
       b.disabled = false; b.textContent = 'Send me the link';
       msg.className = 'aviso malo';
       msg.textContent = "We couldn't request it right now. Try again in a minute, or write to us.";
+    });
+  });
+
+  /* ── Create account ─────────────────────────────────────────────────────────
+     This page only knew how to SEND THE LINK, and the link only arrives if the email
+     already has an account. So anyone landing here without one asked for the link, got
+     nothing —rightly so: saying «that email doesn't exist» would turn this page into a
+     checker of who is an Audutor customer— and was left with no way in and no way to
+     sign up. The signup route existed on the server from day one; this was what was
+     missing. */
+  var fa = document.getElementById('fa');
+  var amsg = document.getElementById('amsg');
+  var ab = document.getElementById('ab');
+  var pieEntrar = document.getElementById('pie-entrar');
+  var pieAlta = document.getElementById('pie-alta');
+  var h1 = document.querySelector('h1');
+  var lead = document.querySelector('.lead');
+
+  function modo(alta){
+    f.hidden = alta; fa.hidden = !alta;
+    pieEntrar.hidden = alta; pieAlta.hidden = !alta;
+    h1.textContent = alta ? 'Create your account' : 'Log in to Audutor';
+    lead.textContent = alta
+      ? 'No card and no lock-in. We send your login link to your email.'
+      : 'No password. Type your email and we send you a link.';
+    (alta ? document.getElementById('ae') : document.getElementById('e')).focus();
+  }
+  document.getElementById('ir-alta').addEventListener('click', function(){ modo(true); });
+  document.getElementById('ir-entrar').addEventListener('click', function(){ modo(false); });
+
+  fa.addEventListener('submit', function(ev){
+    ev.preventDefault();
+    var correo = document.getElementById('ae').value.trim();
+    var empresa = document.getElementById('an').value.trim();
+    if (!correo || !empresa) return;
+    ab.disabled = true; ab.textContent = 'Creating…';
+    amsg.className = 'aviso'; amsg.textContent = '';
+    fetch(APP_URL.replace(/\/+$/, '') + '/api/alta/empresa', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: correo, nombreEmpresa: empresa }),
+    }).then(function(r){
+      return r.json().catch(function(){ return {}; }).then(function(j){
+        if (!r.ok) throw new Error(j.error || ('HTTP ' + r.status));
+        return j;
+      });
+    }).then(function(){
+      amsg.className = 'aviso bueno';
+      amsg.textContent = 'Account created. Check your email: we have sent you the link to get in.';
+      ab.textContent = 'Account created';
+    }).catch(function(e){
+      ab.disabled = false; ab.textContent = 'Create the account';
+      amsg.className = 'aviso malo';
+      amsg.textContent = /ya tiene cuenta|already/i.test(e.message)
+        ? 'That email already has an account. Use «Log in».'
+        : 'Could not create it: ' + e.message;
     });
   });
 })();
