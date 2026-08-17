@@ -2545,7 +2545,11 @@ S.tours.push(tourNuevo('Nocturno de leyendas', 'semilla', {
 S.tours.push(tourNuevo('Alcázar al atardecer', 'semilla', {
   titulo:'Alcázar al atardecer',
   modelo:'Tour con entrada: 24 € por persona, se paga al reservar',
-  horas:'lunes, miércoles, viernes y sábados · 19:00',
+  horas:'lunes, martes, miércoles, viernes y sábados · 19:00',
+  /* ENUMERADOS y no «de lunes a miércoles»: `parseDiasStr` busca subcadenas —«lun»,
+     «mar», «mié»— y un rango se salta los días del medio, así que leía [0,2] y la
+     prueba de paridad ficha↔ciclo saltaba. El parser no entiende rangos; ese hueco
+     queda apuntado. */
   dur:'1 h 45 min',
   punto:'la Puerta del León del Real Alcázar, en el Patio de Banderas',
   fin:'los jardines del Alcázar, junto al Estanque de Mercurio',
@@ -2693,110 +2697,130 @@ var MESES_CORTO = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','
    `foco` es lo que ese día viene a enseñar; sale en el rótulo de la agenda para que quien
    recorre la semana sepa qué está mirando en cada parada. */
 var GUION_SEMANA = {
-  /* MÁS CARGA, y no por adornar: con una salida y dos reservas al día, la mitad de las
-     pantallas —el cupo, la cobertura, la conciliación, el reparto por canal— salían con
-     números tan pequeños que no demostraban nada. Una empresa de verdad tiene dos o tres
-     salidas diarias y ocho o diez reservas por salida; con eso los KPI dejan de ser
-     decorativos y las excepciones (grupo grande, salida llena, guía sin cubrir) aparecen
-     solas donde tienen que aparecer.
-     El TOUR DE PAGO entra en el guion —«Alcázar al atardecer», 24 €— porque el
-     complemento se vende en la web y en la demo no se veía ni una salida suya: sin él, la
-     liquidación no tiene ticket que repartir ni comisión de canal que calcular. */
+  /* VOLUMEN DE EMPRESA LLENA. Iba a 11-18 reservas y 28-61 personas al día, y con eso las
+     pantallas seguían enseñando números de operador pequeño: el cupo casi nunca apretaba,
+     el reparto por canal era plano y el detector de grupos tenía UN caso en toda la
+     semana. Ahora 20-30 reservas y 70-110 personas, que es un free tour de agosto en
+     Sevilla — y las excepciones aparecen porque el día las produce, no porque se fuercen.
+     Los aforos se respetan: Centro 25, Triana y Nocturno 20, Alcázar 18. Alguna salida
+     roza el lleno a propósito (es lo que dispara «cierra en plataformas») y NINGUNA lo
+     pasa: una demo con overbooking enseñaría un fallo, no una función.
+     GRUPOS REPARTIDOS: cinco en la semana, en días distintos y de tamaños distintos, con
+     el patrón real —mismo apellido, reservas separadas— porque es así como llegan
+     partidos desde las plataformas. */
   1: { foco: 'el lunes de las cuentas', tours: [
        { hora:'10:00', tit:'Centro histórico', guia:'Elena', rec:0,
-         res:resAg([['Fam. Weber',3,'GuruWalk',0,0,0,{ant:1}],['I. Costa',2,'Web propia',0,0,0,{conf:1}],
-                    ['S. Lindholm',2,'Civitatis',0],['Grupo Meyer',4,'GuruWalk',0,0,0,{hist:1}],
-                    ['A. Ferreira',2,'Freetour',0],['T. Kaufmann',3,'Web propia',0]]) },
+         res:resAg([['Fam. Weber',3,'GuruWalk',0],['I. Costa',2,'Web propia',0],
+                    ['S. Lindholm',2,'Civitatis',0],['Grupo Meyer',4,'GuruWalk',0],
+                    ['A. Ferreira',2,'Freetour',0],['T. Kaufmann',3,'Web propia',0],
+                    ['M. Halvorsen',2,'GuruWalk',0],['Fam. Iglesias',4,'Web propia',0],
+                    ['D. Cruz',2,'Civitatis',0],['R. Weber',3,'GuruWalk',0]]) },
        { hora:'17:00', tit:'Centro histórico', guia:'Curro', rec:0,
          res:resAg([['J. Moretti',2,'GuruWalk',0],['Fam. Sanz',4,'Web propia',0],
-                    ['P. Nowak',2,'Civitatis',0]]) },
+                    ['P. Nowak',2,'Civitatis',0],['L. Sarmiento',3,'GuruWalk',0],
+                    ['Fam. Nilsson',4,'Web propia',0],['R. Kaya',2,'Freetour',0],
+                    ['C. Bonnet',2,'Civitatis',0]]) },
        { hora:'19:00', tit:'Alcázar al atardecer', precio:24, guia:'Yasmina', rec:0,
-         res:resAg([['R. Delgado',2,'Web propia',0],['K. Bauer',2,'Civitatis',0]]) },
+         res:resAg([['R. Delgado',2,'Web propia',0],['K. Bauer',2,'Civitatis',0],
+                    ['Fam. Ponte',4,'Web propia',0],['H. Sato',2,'GuruWalk',0],
+                    ['V. Marino',3,'Web propia',0]]) },
      ]},
   2: { foco: 'el buzón trabajando', tours: [
        { hora:'10:00', tit:'Centro histórico', guia:'Curro', rec:0,
-         res:resAg([['H. Lindqvist',2,'Civitatis',0,0,0,{hist:1}],['Fam. Otero',4,'Web propia',0,0,0,{conf:1}],
-                    ['M. Rossi',3,'GuruWalk',0],['Grupo Aalto',5,'GuruWalk',0,0,0,{ant:1}],
+         res:resAg([['H. Lindqvist',2,'Civitatis',0],['Fam. Otero',4,'Web propia',0],
+                    ['M. Rossi',3,'GuruWalk',0],['Grupo Aalto',5,'GuruWalk',0],
                     ['C. Ibáñez',2,'Freetour',0],['D. Fischer',2,'Civitatis',0],
-                    ['Fam. Leroy',4,'Web propia',0]]) },
+                    ['Fam. Leroy',4,'Web propia',0],['P. Aalto',3,'GuruWalk',0]]) },
        { hora:'17:00', tit:'Centro histórico', guia:'Elena', rec:0,
          res:resAg([['B. Rossi',2,'GuruWalk',0],['N. Halonen',3,'Civitatis',0],
-                    ['Fam. Duarte',4,'Web propia',0],['O. Petrova',2,'GuruWalk',0]]) },
+                    ['Fam. Duarte',4,'Web propia',0],['O. Petrova',2,'GuruWalk',0],
+                    ['S. Mendes',2,'Freetour',0],['Fam. Arroyo',4,'Web propia',0],
+                    ['T. Lange',3,'Civitatis',0]]) },
+       { hora:'19:00', tit:'Alcázar al atardecer', precio:24, guia:'Yasmina', rec:0,
+         res:resAg([['A. Ricci',2,'Web propia',0],['Fam. Toledo',3,'Civitatis',0],
+                    ['J. Berg',2,'Web propia',0],['L. Sousa',2,'GuruWalk',0]]) },
      ]},
   3: { foco: 'el Cerebro a medio montar', tours: [
        { hora:'10:00', tit:'Centro histórico', guia:'Elena', rec:0,
-         res:resAg([['M. Andersen',2,'Web propia',0,0,0,{conf:1}],['Grupo Ferrer',5,'GuruWalk',0,0,0,{ant:1}],
-                    ['L. Bianchi',2,'Civitatis',0,0,0,{hist:1}],['Fam. Navarro',4,'Web propia',0],
-                    ['S. Wagner',2,'GuruWalk',0],['V. Popescu',3,'Freetour',0]]) },
-       /* El 17:00 que le faltaba: la ficha del Centro dice «todos los días · 10:00 y
-          17:00», así que sin esta salida el miércoles quedaba un hueco fantasma que
-          Equipo contaba como «sin cubrir». */
+         res:resAg([['M. Andersen',2,'Web propia',0],['Grupo Ferrer',5,'GuruWalk',0],
+                    ['L. Bianchi',2,'Civitatis',0],['Fam. Navarro',4,'Web propia',0],
+                    ['S. Wagner',2,'GuruWalk',0],['V. Popescu',3,'Freetour',0],
+                    ['A. Ferrer',4,'GuruWalk',0],['K. Lund',2,'Civitatis',0]]) },
        { hora:'17:00', tit:'Centro histórico', guia:'Curro', rec:0,
          res:resAg([['Fam. Quirós',3,'Web propia',0],['E. Lahti',2,'GuruWalk',0],
-                    ['R. Amato',2,'Civitatis',0]]) },
+                    ['R. Amato',2,'Civitatis',0],['Fam. Pinto',4,'Web propia',0],
+                    ['G. Novak',2,'Freetour',0],['M. Castells',3,'GuruWalk',0],
+                    ['Fam. Ekman',4,'Web propia',0]]) },
        { hora:'19:00', tit:'Alcázar al atardecer', precio:24, guia:'Curro', rec:0,
          res:resAg([['Fam. Ortiz',3,'Web propia',0],['G. Steiner',2,'Civitatis',0],
-                    ['H. Nakamura',2,'Web propia',0]]) },
+                    ['H. Nakamura',2,'Web propia',0],['B. Lorca',4,'GuruWalk',0],
+                    ['N. Reyes',2,'Web propia',0]]) },
      ]},
   4: { foco: 'los recordatorios de mañana', tours: [
        { hora:'10:00', tit:'Centro histórico', guia:'Curro', rec:0,
-         res:resAg([['S. Nakamura',2,'Civitatis',0,0,0,{hist:1}],['Fam. Prieto',3,'Web propia',0,0,0,{conf:1}],
-                    ['L. Dubois',2,'GuruWalk',0],['Grupo Virtanen',6,'GuruWalk',0,0,0,{ant:1}],
+         res:resAg([['S. Nakamura',2,'Civitatis',0],['Fam. Prieto',3,'Web propia',0],
+                    ['L. Dubois',2,'GuruWalk',0],['Grupo Virtanen',6,'GuruWalk',0],
                     ['A. Molnár',2,'Freetour',0],['Fam. Roca',4,'Web propia',0],
-                    ['E. Sørensen',2,'Civitatis',0]]) },
+                    ['E. Sørensen',2,'Civitatis',0],['T. Virtanen',3,'GuruWalk',0]]) },
        { hora:'17:00', tit:'Centro histórico', guia:'Elena', rec:0,
          res:resAg([['T. Bergman',2,'GuruWalk',0],['Fam. Gil',3,'Web propia',0],
-                    ['R. Kovács',2,'Civitatis',0]]) },
+                    ['R. Kovács',2,'Civitatis',0],['Fam. Bonet',4,'Web propia',0],
+                    ['P. Salas',2,'Freetour',0],['M. Wirtz',3,'GuruWalk',0],
+                    ['Fam. Duran',4,'Web propia',0],['C. Neri',2,'Civitatis',0]]) },
        { hora:'18:30', tit:'Triana con tapas', guia:'Yasmina', rec:0,
          res:resAg([['K. Novak',2,'Web propia',0],['Fam. Requena',4,'GuruWalk',0],
-                    ['P. Andersson',2,'Civitatis',0]]) },
+                    ['P. Andersson',2,'Civitatis',0],['Fam. Salgado',3,'Web propia',0],
+                    ['J. Rinne',2,'Web propia',0],['D. Marchetti',2,'GuruWalk',0]]) },
      ]},
-  /* Sin `rec` escrito: lo calcula `montaSemana` según el día caiga en pasado o futuro.
-     Estaba puesto aquí —232 € y 267 €— porque este guion se escribió como «el viernes que
-     ya pasó», y un martes la demo enseñaba ese dinero recaudado en una salida de tres días
-     después. */
   5: { foco: 'las salidas que hay que cerrar', tours: [
        { hora:'10:00', tit:'Centro histórico', guia:'Elena', rec:0,
-         res:resAg([['Fam. Serrano',3,'Web propia',1,0,0,{conf:1}],['P. Kowalski',2,'Web propia',1],
-                    ['Grupo Hansen',4,'GuruWalk',1,0,0,{ant:1}],['N. Berger',2,'GuruWalk',0,0,1,{hist:1}],
+         res:resAg([['Fam. Serrano',3,'Web propia',1],['P. Kowalski',2,'Web propia',1],
+                    ['Grupo Hansen',4,'GuruWalk',1],['N. Berger',2,'GuruWalk',0,0,1],
                     ['C. Vidal',2,'Civitatis',0,0,1],['M. Eriksen',3,'GuruWalk',1],
-                    ['Fam. Solís',4,'Web propia',1],['J. Kim',2,'Freetour',1]]) },
+                    ['Fam. Solís',4,'Web propia',1],['J. Kim',2,'Freetour',1],
+                    ['L. Hansen',3,'GuruWalk',1]]) },
        { hora:'17:00', tit:'Centro histórico', guia:'Curro', rec:0,
          res:resAg([['Fam. Herrera',3,'Web propia',1],['H. Meyer',2,'GuruWalk',1],
                     ['Grupo Lévy',5,'Civitatis',1],['J. Alonso',2,'Web propia',1],
-                    ['T. Moreno',4,'GuruWalk',1],['Walk-in',4,'walk-in',1,1]]) },
-       { hora:'19:00', tit:'Alcázar al atardecer', precio:24, guia:'Yasmina', rec:0, ventaEfectivo:96,
+                    ['T. Moreno',4,'GuruWalk',1],['Walk-in',4,'walk-in',1,1],
+                    ['S. Bru',2,'Freetour',1],['Fam. Coll',3,'Web propia',1]]) },
+       { hora:'19:00', tit:'Alcázar al atardecer', precio:24, guia:'Yasmina', rec:0,
          res:resAg([['Fam. Cano',4,'Web propia',1],['L. Ricci',2,'Civitatis',1],
-                    ['S. Haddad',2,'GuruWalk',1]]) },
+                    ['S. Haddad',2,'GuruWalk',1],['Fam. Prats',3,'Web propia',1],
+                    ['A. Yılmaz',2,'Civitatis',1],['R. Cano',3,'Web propia',1]]) },
      ]},
   6: { foco: 'el día fuerte, en marcha', tours: [
-       /* Sin `live:true`: lo pone `montaSemana` mirando el reloj. Escrito aquí, el cuadro
-          del día decía «1 tour en marcha» a las once de la noche del sábado y «0» a las
-          diez y media de un martes con el grupo andando. */
        { hora:'10:00', tit:'Centro histórico', guia:'Elena', rec:0, res:S.att,
          obs:[{ a:'GuIA', rec:false, t:'«Fam. Dubois» avisó por el chat que vendrán 3, no 4 — ajústalo al llegar' }] },
        { hora:'17:00', tit:'Centro histórico', guia:'Curro', rec:0,
          res:resAg([['Fam. Green',4,'Web propia',0],['L. Ortega',2,'Civitatis',0],
                     ['S. Petit',3,'GuruWalk',0],['Grupo Jensen',5,'GuruWalk',0],
-                    ['A. Costa',2,'Freetour',0],['Fam. Bru',4,'Web propia',0]]) },
+                    ['A. Costa',2,'Freetour',0],['Fam. Bru',4,'Web propia',0],
+                    ['M. Jensen',3,'GuruWalk',0]]) },
        { hora:'18:30', tit:'Triana con tapas', guia:'Yasmina', rec:0,
          res:resAg([['R. Vargas',2,'Web propia',0],['Grupo Dubois',6,'GuruWalk',0],
-                    ['M. Lorenzo',3,'Civitatis',0]]) },
+                    ['M. Lorenzo',3,'Civitatis',0],['Fam. Serra',4,'Web propia',0],
+                    ['T. Ilves',2,'GuruWalk',0]]) },
        { hora:'19:00', tit:'Alcázar al atardecer', precio:24, guia:'Curro', rec:0,
          res:resAg([['Fam. Ruano',3,'Web propia',0],['T. Halla',2,'Civitatis',0],
-                    ['B. Osei',2,'Web propia',0],['Fam. Marín',4,'GuruWalk',0]]) },
+                    ['B. Osei',2,'Web propia',0],['Fam. Marín',4,'GuruWalk',0],
+                    ['N. Aumann',2,'Web propia',0],['S. Grau',3,'Civitatis',0]]) },
      ]},
   0: { foco: 'el nocturno sin guía', tours: [
        { hora:'10:00', tit:'Centro histórico', guia:'Curro', rec:0,
-         res:resAg([['A. Novak',2,'Civitatis',0,0,0,{hist:1}],['Fam. Ruiz',4,'Web propia',0,0,0,{conf:1}],
-                    ['K. Schmidt',2,'GuruWalk',0],['Grupo Salo',5,'GuruWalk',0,0,0,{ant:1}],
-                    ['I. Marchetti',2,'Freetour',0],['Fam. Pardo',3,'Web propia',0]]) },
+         res:resAg([['A. Novak',2,'Civitatis',0],['Fam. Ruiz',4,'Web propia',0],
+                    ['K. Schmidt',2,'GuruWalk',0],['Grupo Salo',5,'GuruWalk',0],
+                    ['I. Marchetti',2,'Freetour',0],['Fam. Pardo',3,'Web propia',0],
+                    ['E. Salo',4,'GuruWalk',0],['C. Vela',2,'Civitatis',0]]) },
        { hora:'17:00', tit:'Centro histórico', guia:'Elena', rec:0,
          res:resAg([['D. Rivas',2,'Web propia',0],['Fam. Klein',4,'GuruWalk',0],
-                    ['Y. Tanaka',2,'Civitatis',0]]) },
+                    ['Y. Tanaka',2,'Civitatis',0],['Fam. Lozano',3,'Web propia',0],
+                    ['O. Bakker',2,'Freetour',0],['M. Klein',3,'GuruWalk',0],
+                    ['P. Serrat',2,'Web propia',0]]) },
        { hora:'21:00', tit:'Nocturno de leyendas', guia:'— sin asignar —', sinGuia:true, rec:0,
          res:resAg([['P. Marín',2,'Web propia',0],['Fam. Blasco',3,'GuruWalk',0],
-                    ['C. Amaral',2,'Civitatis',0]]) },
+                    ['C. Amaral',2,'Civitatis',0],['Fam. Riera',4,'Web propia',0],
+                    ['L. Tuomi',2,'GuruWalk',0]]) },
      ]},
 };
 
