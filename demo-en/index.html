@@ -454,6 +454,51 @@
           font-family:inherit; background:var(--paper); }
   input[type=range]{ accent-color:var(--acc); }
 
+  /* El configurador del tour privado. Dos columnas en escritorio —eliges a la izquierda,
+     ves el número a la derecha— y apilado en el móvil.
+     Portado de la demo española: los valores son los MISMOS a propósito. Esta pantalla no
+     existía aquí, y una demo inglesa que se ve distinta de la española es lo que hace que
+     un cliente diga «esto no es lo que me enseñasteis» sin saber decir por qué. */
+  .tp-wrap{ display:grid; grid-template-columns:1fr 258px; gap:16px; align-items:start; }
+  .tp-g{ margin-bottom:14px; }
+  .tp-lab{ display:block; font-size:11.5px; font-weight:800; letter-spacing:.05em;
+    text-transform:uppercase; color:var(--muted); margin-bottom:7px; }
+  .tp-nums{ display:flex; gap:8px; flex-wrap:wrap; }
+  .tp-nums label{ flex:1; min-width:76px; font-size:12px; color:var(--ink2); }
+  .tp-nums small{ display:block; color:var(--muted); font-size:10.5px; }
+  .tp-nums input{ width:100%; margin-top:3px; padding:7px 8px; border:1.5px solid var(--line);
+    border-radius:9px; font:inherit; font-size:15px; font-weight:700; text-align:center;
+    background:var(--paper); color:var(--ink); }
+  .tp-hint{ margin:7px 0 0; font-size:11.5px; line-height:1.45; color:var(--muted); }
+  .tp-pills{ display:flex; gap:8px; flex-wrap:wrap; }
+  .tp-pill{ flex:1; min-width:128px; cursor:pointer; position:relative; }
+  .tp-pill input{ position:absolute; opacity:0; pointer-events:none; }
+  .tp-pill > span{ display:block; padding:9px 11px; border:1.5px solid var(--line);
+    border-radius:11px; font-size:13px; background:var(--paper); }
+  .tp-pill > span small{ display:block; color:var(--muted); font-size:11px; font-weight:400; }
+  .tp-pill input:checked + span{ border-color:var(--acc); background:var(--acc-soft); }
+  .tp-check{ display:flex; gap:9px; align-items:flex-start; padding:8px 0; cursor:pointer;
+    font-size:13px; border-top:1px solid var(--line); }
+  .tp-check small{ display:block; color:var(--muted); font-size:11.5px; }
+  /* COLOR PROPIO Y NO HEREDADO. En la española la caja heredaba un verde pálido de un
+     ancestro y los rótulos salían a 1,22:1 sobre su fondo — invisibles, medido. Una
+     estimación de precio que no se lee es peor que no ponerla. */
+  .tp-est{ background:var(--acc-soft); border:1.5px solid var(--acc); border-radius:13px;
+    padding:13px 14px; position:sticky; top:12px; color:var(--ink); }
+  .tp-l > span{ color:var(--ink2); }
+  .tp-est-t{ font-size:11.5px; font-weight:800; letter-spacing:.05em; text-transform:uppercase;
+    color:var(--acc2); margin-bottom:8px; }
+  .tp-l{ display:flex; justify-content:space-between; gap:10px; align-items:baseline;
+    font-size:13px; padding:5px 0; border-bottom:1px dashed rgba(18,128,95,.25); }
+  .tp-l small{ display:block; color:var(--muted); font-size:11px; }
+  .tp-l b{ font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .tp-tot{ border-bottom:0; margin-top:4px; padding-top:9px; border-top:1.5px solid var(--acc); }
+  .tp-tot b{ font-family:var(--serif); font-size:25px; color:var(--acc); }
+  .tp-nota{ margin:9px 0 0; font-size:11.5px; line-height:1.45; color:var(--ink2); }
+  .tp-cero{ margin-top:9px; padding-top:8px; border-top:1px dashed rgba(18,128,95,.25);
+    font-size:11px; color:var(--muted); }
+  @media (max-width:760px){ .tp-wrap{ grid-template-columns:1fr; } .tp-est{ position:static; } }
+
   /* candados de suplementos */
   .cand{ font-size:11px; opacity:.85; margin-left:4px; }
   aside nav a .n{ margin-left:auto; }
@@ -795,7 +840,7 @@
         <a href="#canales" data-v="canales">🔌 Channels &amp; sync</a>
         <a href="#agente" data-v="agente">🤖 The platform agent <span class="cand">🔒</span></a>
         <a href="#noshow" data-v="noshow">📉 Anti no-show</a>
-        <a href="#carrito" data-v="carrito">🛒 Baskets &amp; combos <span class="cand">🔒</span></a>
+        <a href="#carrito" data-v="carrito">🧺 What else you sell <span class="cand">🔒</span></a>
       </div>
     </div>
     <div class="nav-g" id="nav-eco">
@@ -1241,25 +1286,101 @@
 
 <!-- ================= CARRITO Y COMBOS ================= -->
 <section class="vista" id="v-carrito">
-  <div class="cab"><h1>Abandoned baskets and combos</h1><span class="sub">the sale that was slipping away, recovered on its own</span></div>
+  <div class="cab"><h1>What you sell besides the tour</h1><span class="sub">your catalogue — on your site and in GuIA’s mouth</span></div>
+
+  <!-- AQUÍ HABÍA UN CARRITO ABANDONADO, con su tabla de gente que «dejó a medias» una
+       reserva, su botón de «recuperar ahora» y un «typical recovery rate: 15–25 %».
+       Retirado el 17-ago-2026, portando la decisión que la demo española tomó el 11-ago, y
+       no por estar sin construir: es IMPOSIBLE. Audutor no cobra reservas —decisión del
+       4-ago—, así que no hay ninguna cesta que abandonar ni que recuperar. La reserva se
+       hace en la web del operador o en la plataforma, y ahí no llegamos.
+       Vivió seis días más que su gemela española porque nadie fue a buscarla: es
+       exactamente el patrón del gemelo olvidado, y encima prometiendo una cifra de
+       conversión de un producto que no existe.
+       Lo que sí existe es lo de abajo: el catálogo de extras, que sale en su web y que
+       GuIA cuenta cuando preguntan; el configurador del privado; y el combo. -->
 
   <div class="card">
-    <h2>🛒 Abandoned baskets (last 24 h)</h2>
-    <table>
-      <tr><th>Who</th><th>Where they got to</th><th>Ago</th><th></th></tr>
-      <tr><td><b>Julia K.</b><br><span class="mini muted">julia•••@gmail.com</span></td>
-        <td>Free tour · tomorrow 10:00 AM · 2p</td><td class="num">42 min</td>
-        <td><button class="btn mini" onclick="verMsj('msj-carrito')">Recover now</button></td></tr>
-      <tr><td><b>Tomás R.</b><br><span class="mini muted">+44 7•• ••• •12</span></td>
-        <td>Ghosts night walk · Sat 9:00 PM · 4p</td><td class="num">3 h</td>
-        <td><button class="btn mini sec" onclick="toast('Scheduled: a reminder in 1 h if they don’t come back')">Auto in 1 h</button></td></tr>
-    </table>
-    <div class="mensaje-prev" id="msj-carrito">📲 <b>Text to Julia — preview</b>
+    <h2>🧺 Your catalogue of extras</h2>
+    <p class="mini muted" style="margin:0 0 10px;">What you sell besides the free walk: ticketed
+      walks, private tours, tastings, whatever it is. You write it once in the Brain and from
+      then on it <b>shows on your site</b> and <b>GuIA tells people about it</b> when they ask
+      what else you do. Nothing to remember.</p>
+    <!-- ESTE CHAT NO ES UNA MAQUETA: lo escribe GuIA. Gemelo del de la demo española, y
+         aquí la pregunta importa doble: «besides the free tour» lleva «free» dentro y la
+         regla de precio se la comía, así que este cuadro habría enseñado el modelo de
+         precio del walk gratis como respuesta a «¿qué más vendéis?». -->
+    <div class="mensaje-prev" id="extras-chat" style="display:block;"></div>
+    <p class="mini muted" style="margin:10px 0 0;"><b>Audutor takes no cut of any of those
+      extras.</b> It shows what you sell and points to where you already charge.</p>
+  </div>
 
-Hi Julia! 👋 We noticed you got halfway through booking tomorrow’s 10:00 AM free tour for 2.
-We’ve held your places for 30 minutes: finish here 👉 oldtownwalks.co.uk/r/8k2w
-If you were only browsing, just ignore me 🙂
-<button class="btn mini" style="margin-top:8px;" onclick="toast('Sent (simulated). Typical recovery rate in this industry: 15–25 %')">Send</button></div>
+  <!-- ══ EL TOUR PRIVADO, MODULABLE ═══════════════════════════════════════════════════
+       Portado de la demo española el 17-ago-2026 (y allí, del configurador de privados de
+       Madrid Latido). Lo que se trae no es el formulario: es que un tour privado NO tiene
+       un precio, tiene una BASE y unas opciones —duración, extras, entradas— y el viajero
+       quiere ver cómo se mueve el número mientras elige.
+       Las dos decisiones que también se portan, y no son de gusto:
+        · Las plazas incluidas se llenan con los que MÁS pagarían (adultos primero), así
+          quien se sale del cupo y paga suplemento es el más barato. Al revés, el mismo
+          grupo salía más caro por el mismo servicio.
+        · El cálculo va en CÉNTIMOS. Con decimales en coma flotante, 19,50 × 3 se desvía un
+          céntimo: le enseñarías un número al cliente y guardarías otro.
+       Y UNA TERCERA QUE SOLO HACE FALTA AQUÍ: la tarifa entera sigue a la moneda del
+       mercado. Esta demo se muda de ciudad al cambiar de mercado —Edimburgo, Dublín,
+       Boston—, así que un importe escrito en libras en el formulario sale en libras en
+       Boston. Los rótulos se pintan; no hay ni un número en este HTML.
+       Y la regla de la casa: la estimación es orientativa y quien cierra el precio es una
+       PERSONA. Audutor no cobra este tour — lleva a donde el operador ya cobra. -->
+  <div class="card">
+    <h2>🎟️ Your private tour, modular</h2>
+    <p class="mini muted" style="margin:0 0 12px;">This is how your customer sees it on <b>your
+      site</b>: they choose and the price moves. You set it up once in the Brain — the “from”
+      comes from your company fact <b>Private tours</b>, the same one GuIA quotes to anyone who
+      asks in the chat.</p>
+
+    <div class="tp-wrap">
+      <div class="tp-form">
+        <div class="tp-g"><span class="tp-lab">How many of you</span>
+          <div class="tp-nums">
+            <label>Adults<input type="number" id="tp-ad" min="0" max="30" value="4"></label>
+            <label>Teens<small>12-17</small><input type="number" id="tp-jo" min="0" max="30" value="1"></label>
+            <label>Children<small>under 12</small><input type="number" id="tp-pe" min="0" max="30" value="1"></label>
+          </div>
+          <p class="tp-hint" id="tp-h-pax"></p>
+        </div>
+
+        <div class="tp-g"><span class="tp-lab">Length</span>
+          <div class="tp-pills">
+            <label class="tp-pill"><input type="radio" name="tpdur" value="ese" checked>
+              <span><b>Essential</b><small id="tp-h-ese">2 h · included</small></span></label>
+            <label class="tp-pill"><input type="radio" name="tpdur" value="pro">
+              <span><b>Extended ✦</b><small id="tp-h-pro">3 h</small></span></label>
+          </div>
+        </div>
+
+        <div class="tp-g"><span class="tp-lab">Extras</span>
+          <label class="tp-check"><input type="checkbox" id="tp-radio">
+            <span>Headsets <small id="tp-h-radio"></small></span></label>
+          <label class="tp-check"><input type="checkbox" class="tp-ent" id="tp-e1">
+            <span>Entry to the main sight <small id="tp-h-e1"></small></span></label>
+          <label class="tp-check"><input type="checkbox" class="tp-ent" id="tp-e2">
+            <span>A tasting to finish <small id="tp-h-e2"></small></span></label>
+        </div>
+      </div>
+
+      <aside class="tp-est">
+        <div class="tp-est-t">Estimate</div>
+        <div class="tp-l"><span>Guide <small id="tp-d-guia"></small></span><b id="tp-guia">—</b></div>
+        <div class="tp-l" id="tp-l-radio" hidden><span>Headsets <small id="tp-d-radio"></small></span><b id="tp-radio-e">0</b></div>
+        <div class="tp-l" id="tp-l-ent" hidden><span>Entries <small id="tp-d-ent"></small></span><b id="tp-ent">0</b></div>
+        <div class="tp-l" id="tp-l-ges" hidden><span>Handling <small>5 % of the entries</small></span><b id="tp-ges">0</b></div>
+        <div class="tp-l tp-tot"><span>Total</span><b id="tp-total">—</b></div>
+        <p class="tp-nota">Rough estimate. <b>A person confirms the final price</b> when they
+          reply — like the green ✓ everywhere else in the system.</p>
+        <div class="tp-cero">Audutor takes no cut of this tour: it points to where you already charge.</div>
+      </aside>
+    </div>
   </div>
 
   <div class="card">
@@ -1274,19 +1395,22 @@ If you were only browsing, just ignore me 🙂
          onclick="ir('cerebro'); setTimeout(function(){ document.getElementById('card-posttour').scrollIntoView({behavior:'smooth'}); },80); return false;">🧠
         Brain → 📮 Post-tour message</a>.</p>
     <div class="fila">
-      <select id="combo-a"><option>Free Old Town tour (today)</option><option>Leith food &amp; whisky walk</option></select>
+      <!-- LOS DOS DESPLEGABLES SALEN DEL CATÁLOGO. Estaban escritos a mano y ofrecían de
+           destino un «Leith whisky tasting walk · £35» que esta empresa no hace —el suyo
+           es el «Leith food & whisky walk», y es de PROPINA, no de £35—, y el precio del
+           otro estaba clavado en £24: al pasar el mercado a Estados Unidos la ficha decía
+           $32 y esta pantalla seguía ofreciendo £24. -->
+      <select id="combo-a"></select>
       <span>→ offers →</span>
-      <select id="combo-b"><option>Ghosts night walk · £24</option><option>Leith whisky tasting walk · £35</option></select>
-      <label class="mini">discount <input type="range" id="combo-dto" min="0" max="30" step="5" value="15"
-        oninput="document.getElementById('combo-dto-v').textContent=this.value"> <b><span id="combo-dto-v">15</span> %</b></label>
+      <select id="combo-b"></select>
+      <label class="mini">discount <input type="range" id="combo-dto" min="0" max="30" step="5" value="15"> <b><span id="combo-dto-v">15</span> %</b></label>
       <button class="btn mini" onclick="verMsj('msj-combo')">Preview</button>
     </div>
-    <div class="mensaje-prev" id="msj-combo">📲 <b>Goes out 1 h after the tour — ONLY to bookings from your own site</b> (platform bookings already get a review request from the platform itself)
-
-Thanks for coming along this morning! 🙌 If you’re after more, this week we’re running the
-<b>Ghosts of the Old Town night walk</b> with 15 % off for people who’ve already walked with us: £20.40 (instead of £24).
-Places held for your group for 48 h 👉 oldtownwalks.co.uk/combo/x3f9
-<button class="btn mini" style="margin-top:8px;" onclick="toast('Combo switched on (simulated): offered after every free tour')">Switch combo on</button></div>
+    <!-- El mensaje nombraba un «Ghosts of the Old Town night walk» que no es como se llama
+         el tour, y su cuenta («15 % → £20.40 instead of £24») estaba escrita a mano: mover
+         el deslizador cambiaba el porcentaje de arriba y dejaba el importe quieto, y
+         cambiar de mercado no lo tocaba. Se pinta con el tour, la moneda y el descuento. -->
+    <div class="mensaje-prev" id="msj-combo"></div>
   </div>
 </section>
 
@@ -1630,13 +1754,13 @@ Places held for your group for 48 h 👉 oldtownwalks.co.uk/combo/x3f9
     <div class="fila" style="margin-top:12px; gap:8px;">
       <b class="mini">Split mode:</b>
       <button class="btn mini" id="tab-pct" onclick="modoLiq('pct')">% of the tip to the guide</button>
-      <button class="btn mini sec" id="tab-fijo" onclick="modoLiq('fijo')">Flat £ per person to the company</button>
+      <button class="btn mini sec" id="tab-fijo" onclick="modoLiq('fijo')">Flat <span data-moneda>£</span> per person to the company</button>
       <label class="mini" id="ctl-pct">the guide keeps
         <input type="range" min="50" max="80" step="1" value="67" id="rep-pct" oninput="pintaLiq()">
         <b><span id="rep-v">67</span> %</b> of the net</label>
       <label class="mini" id="ctl-fijo" style="display:none;">the company keeps
         <input type="range" min="1" max="10" step="0.5" value="2.5" id="rep-fijo" oninput="pintaLiq()">
-        <b>£<span id="fijo-v">2.50</span></b> per attendee; the guide keeps the rest</label>
+        <b><span data-moneda>£</span><span id="fijo-v">2.50</span></b> per attendee; the guide keeps the rest</label>
     </div>
   </div>
 
@@ -1705,7 +1829,7 @@ Places held for your group for 48 h 👉 oldtownwalks.co.uk/combo/x3f9
     <div class="fila" style="margin-top:14px; gap:8px;">
       <b class="mini">Split mode:</b>
       <button class="btn mini" id="py-tab-pct" onclick="proyModo('pct')">% of the tip to the guide</button>
-      <button class="btn mini sec" id="py-tab-fijo" onclick="proyModo('fijo')">Flat £ per person to the company</button>
+      <button class="btn mini sec" id="py-tab-fijo" onclick="proyModo('fijo')">Flat <span data-moneda>£</span> per person to the company</button>
       <label class="mini" id="py-ctl-pct">the guide keeps
         <input type="range" id="py-rep" min="50" max="80" step="1" value="67" oninput="calcProy()">
         <b><span id="py-rep-v">67</span> %</b></label>
@@ -1734,7 +1858,7 @@ Places held for your group for 48 h 👉 oldtownwalks.co.uk/combo/x3f9
   <div class="kpi-fila" style="margin:0 0 14px;">
     <div class="kpi"><span class="v">114</span><span class="l">people this month (7 departures)</span></div>
     <div class="kpi"><span class="v">65 %</span><span class="l">average occupancy (on 25 places)</span></div>
-    <div class="kpi"><span class="v">£11.60</span><span class="l">average tip per person</span></div>
+    <div class="kpi"><span class="v" data-dinero="11.60" data-dec="2">£11.60</span><span class="l">average tip per person</span></div>
     <div class="kpi"><span class="v">17 %</span><span class="l">actual no-show rate (38 % before the system)</span></div>
     <div class="kpi"><span class="v">4.9 ⭐</span><span class="l">average rating · 32 new reviews</span></div>
   </div>
@@ -1775,24 +1899,29 @@ Places held for your group for 48 h 👉 oldtownwalks.co.uk/combo/x3f9
     <h2>By tour · by time slot</h2>
     <table>
       <tr><th>Tour · time</th><th>Departures</th><th>People</th><th>Average per departure</th><th>Tip per person</th></tr>
-      <tr><td><b>Old Town · 10:00 AM</b></td><td>3</td><td>57</td><td class="num">19.0</td><td class="num">£12.10</td></tr>
-      <tr><td><b>Old Town · 5:00 PM</b></td><td>2</td><td>43</td><td class="num">21.5</td><td class="num">£11.40</td></tr>
-      <tr><td><b>Leith · 6:30 PM</b></td><td>1</td><td>12</td><td class="num">12.0</td><td class="num">£25.10</td></tr>
+      <tr><td><b>Old Town · 10:00 AM</b></td><td>3</td><td>57</td><td class="num">19.0</td><td class="num" data-dinero="12.10" data-dec="2">£12.10</td></tr>
+      <tr><td><b>Old Town · 5:00 PM</b></td><td>2</td><td>43</td><td class="num">21.5</td><td class="num" data-dinero="11.40" data-dec="2">£11.40</td></tr>
+      <tr><td><b>Leith · 6:30 PM</b></td><td>1</td><td>12</td><td class="num">12.0</td><td class="num" data-dinero="25.10" data-dec="2">£25.10</td></tr>
       <tr><td><b>Night walk · 9:00 PM</b></td><td>1</td><td>2</td><td class="num neg">2.0</td><td class="num">— <span class="mini muted">(ticketed)</span></td></tr>
     </table>
     <div class="mini muted" style="margin:10px 0 0;">⚠ The <b>Night walk</b> is not pulling: 2 on a ticketed
       walk that needs 4 to run. <details class="mas"><summary>ⓘ more</summary><span class="mas-p">It is a ticketed walk, so the question is occupancy, not tips: move the time, cut the
       frequency, or push it harder to the people who did the free walk that morning. Leith is the
-      opposite problem — small groups, but £25 a head in tips, so it earns its slot. Deciding this on
+      opposite problem — small groups, but <span data-moneda>£</span>25 a head in tips, so it earns its slot. Deciding this on
       the numbers instead of a hunch is what this page is for.</span></details></div>
   </div>
 
   <div class="card" style="overflow-x:auto;">
     <h2>By guide</h2>
-    <table>
+    <!-- DE LA LIQUIDACIÓN, que es lo que la nota de abajo promete: «one source of truth».
+         Gemelo del arreglo de la demo española, y con el mismo desenlace: decía Emma 51
+         mientras la liquidación del MISMO rango decía 63. Y con los importes en libras
+         escritos a mano, que en el mercado americano salían en libras.
+         Aquí la lista de guías no puede llevar a Yasmina ni a nadie del parte español: esta
+         demo tiene su equipo (Emma, Liam, …), y por eso sale de `TOURS_LIQ` y no de una
+         lista aparte. -->
+    <table id="tabla-cuadro-guia">
       <tr><th>Guide</th><th>People</th><th>Tip per person</th><th>Rating</th></tr>
-      <tr><td><b>Emma</b></td><td>51</td><td class="num">£13.60</td><td>4.9 ⭐ <span class="mini muted">(“best guide in Edinburgh”, “absolutely hilarious”)</span></td></tr>
-      <tr><td><b>Liam</b></td><td>61</td><td class="num">£10.30</td><td>4.8 ⭐ <span class="mini muted">(“knows an incredible amount”, “so friendly”)</span></td></tr>
     </table>
     <p class="mini muted" style="margin:10px 0 0;">The same numbers you’ll see under
       <a href="#liquidacion" style="color:var(--acc); font-weight:700;" onclick="ir('liquidacion'); return false;">Guide payouts</a> —
@@ -1808,14 +1937,14 @@ Places held for your group for 48 h 👉 oldtownwalks.co.uk/combo/x3f9
     <div class="kpi-fila" style="margin:0 0 10px;">
       <div class="kpi"><span class="v">31</span><span class="l">people in the gap this month</span></div>
       <div class="kpi"><span class="v">28</span><span class="l">no-shows reported in time (≤72 h)</span></div>
-      <div class="kpi"><span class="v">£70.00</span><span class="l">fees clawed back by reporting them</span></div>
-      <div class="kpi malo"><span class="v">£7.50</span><span class="l">absorbed for reporting 3 too late</span></div>
+      <div class="kpi"><span class="v" data-dinero="70" data-dec="2">£70.00</span><span class="l">fees clawed back by reporting them</span></div>
+      <div class="kpi malo"><span class="v" data-dinero="7.50" data-dec="2">£7.50</span><span class="l">absorbed for reporting 3 too late</span></div>
     </div>
     <table>
       <tr><th>Platform</th><th>Gap (people)</th><th>Reported</th><th>Clawed back</th><th>Absorbed</th></tr>
-      <tr><td><b>GuruWalk</b></td><td>22</td><td>20</td><td class="num pos-guia">£50.00</td><td class="num neg">£5.00</td></tr>
-      <tr><td><b>Viator</b></td><td>7</td><td>7</td><td class="num">— <span class="mini muted">(no per-person fee)</span></td><td class="num">£0.00</td></tr>
-      <tr><td><b>FreeTour.com</b></td><td>2</td><td>1</td><td class="num pos-guia">£2.00</td><td class="num neg">£2.00</td></tr>
+      <tr><td><b>GuruWalk</b></td><td>22</td><td>20</td><td class="num pos-guia" data-dinero="50" data-dec="2">£50.00</td><td class="num neg" data-dinero="5" data-dec="2">£5.00</td></tr>
+      <tr><td><b>Viator</b></td><td>7</td><td>7</td><td class="num">— <span class="mini muted">(no per-person fee)</span></td><td class="num" data-dinero="0" data-dec="2">£0.00</td></tr>
+      <tr><td><b>FreeTour.com</b></td><td>2</td><td>1</td><td class="num pos-guia" data-dinero="2" data-dec="2">£2.00</td><td class="num neg" data-dinero="2" data-dec="2">£2.00</td></tr>
     </table>
     <p class="mini muted" style="margin:10px 0 0;">Each platform’s rule is set under
       <a href="#canales" style="color:var(--acc); font-weight:700;" onclick="ir('canales'); return false;">🔌 Channels → Reconciliation</a>.
@@ -2082,6 +2211,30 @@ function sincronizaTickets(){
     t.kb.modelo   = TICKET_MODELO();
     t.kb.entradas = TICKET_ENTRADAS();
   });
+  /* EL CATÁLOGO TAMBIÉN SIGUE A LA MONEDA, y por eso se genera aquí en vez de escribirse
+     en la semilla: es el único hecho de empresa que nombra un precio, y escrito a mano se
+     quedaba en «£24» al pasar el mercado a Estados Unidos, donde el ticket vale $32.
+     Estaba vacío «para que se vean los huecos de empresa», y mientras tanto la pantalla
+     «What you sell besides the tour» prometía que GuIA lo cuenta cuando se lo preguntan —
+     y GuIA lo derivaba a una persona. Quedan cuatro huecos de empresa para la
+     demostración (seguridad, fumar, wifi, confirmación). */
+  /* El «desde» del privado TAMBIÉN sigue a la moneda. Estaba escrito «from £180 per group»
+     en la semilla y no lo regeneraba nadie: en el mercado de Boston GuIA le contestaba en
+     libras a un viajero que paga en dólares, y el configurador de la misma pantalla partía
+     de ese número. Es el mismo fallo que el combo clavado en £24, un campo más allá. */
+  S.kbEmpresa.privados = 'Yes! We run tailored private walks from ' + precioTxt(precioPrivado()) +
+    ' per group. Tell me and the manager will put a no-obligation proposal together for you.';
+
+  var pago = S.tours.filter(function(t){ return t.ticket; });
+  var libres = S.tours.filter(function(t){ return !t.ticket; });
+  var lista = function(a){ return a.length<2 ? (a[0]||'')
+    : a.slice(0,-1).join(', ') + ' and ' + a[a.length-1]; };
+  S.kbEmpresa.catalogo = pago.length
+    ? 'Besides the free walks we run the ' + lista(pago.map(function(t){
+        return '“'+t.nombre+'” ('+precioTxt(precioTicket())+' per person)'; })) +
+      '. The ' + lista(libres.map(function(t){ return '“'+t.nombre+'”'; })) +
+      ' are tip-based, so booking costs nothing.'
+    : '';
 }
 function tourNuevo(nombre, fuente, valores){
   var kb={}; CAMPOS_KB.forEach(function(c){ kb[c.k]=(valores&&valores[c.k])||''; });
@@ -2588,10 +2741,22 @@ function reCod(){
    En las demos no existe y todo queda como estaba. */
 function codEscrito(t){
   var x = String(t||'');
-  var porPrefijo = (x.match(reCod()) || [])[0];
-  if (porPrefijo) return porPrefijo;
   var may = x.toUpperCase();
   var vivos = S.locsVivos || [];
+  var porPrefijo = (x.match(reCod()) || [])[0];
+  if (porPrefijo){
+    /* UN CÓDIGO CON LA FORMA BUENA NO ES UNA RESERVA. Esto devolvía cualquier «PYC-loque
+       sea» solo por casar el patrón, así que a quien escribía un código equivocado —una
+       cifra mal copiada del email— GuIA le contestaba «¡Hecho! Cancelo tu reserva ✅». No
+       cancelaba nada, porque no había nada: le decía a una persona que su reserva estaba
+       cancelada cuando seguía viva, y esa persona no se presenta.
+       Con la lista de vivos delante se comprueba; sin ella —un anfitrión que no la
+       siembre— se mantiene el comportamiento de antes, que es lo que hay. */
+    if (!vivos.length) return porPrefijo;
+    for (var j=0;j<vivos.length;j++)
+      if (String(vivos[j]).toUpperCase() === porPrefijo.toUpperCase()) return vivos[j];
+    return null;
+  }
   for (var i=0;i<vivos.length;i++){
     var l = String(vivos[i]||'').toUpperCase();
     /* Cuatro caracteres de suelo: un localizador de dos letras casaría dentro de
@@ -2601,6 +2766,18 @@ function codEscrito(t){
   return null;
 }
 function codDe(t){ return codEscrito(t) || S.codConocido || null; }
+/* UN CÓDIGO ESCRITO QUE NO ES DE NINGUNA RESERVA VIVA. Se distingue de «no ha escrito
+   código» porque son dos situaciones distintas y piden dos respuestas distintas: al que no
+   ha puesto código se le pide; al que ha puesto uno que no consta hay que DECÍRSELO, o se
+   queda pensando que lo suyo está resuelto.
+   Y no vale caer a `S.codConocido`: quien escribe un localizador está nombrando una
+   reserva concreta, y cancelarle otra «la que creemos que es la suya» porque la que
+   escribió no existe es exactamente lo que no puede pasar. */
+function codMuerto(t){
+  var esc = (String(t||'').match(reCod()) || [])[0];
+  if (!esc) return null;
+  return codEscrito(t) ? null : esc;
+}
 
 function fon(w){
   return String(w)
@@ -4159,6 +4336,20 @@ function respuestaGuiaES(t){
     /* Sobre el mensaje NORMALIZADO, donde el corrector ya bajó «cancela»/«cancelas» al
        infinitivo — «cancela mi reserva» llega como «cancelar mi reserva». */
     var ordenC = /quiero cancelar|queremos cancelar|me cancelar?s?\b|nos cancelar?s?\b|cancelar?me|cancelar? (mi|nuestra|la) reserva|anular? (mi|la) reserva|no puedo ir|no podre|no vamos a poder|no podremos/.test(m);
+    /* Con un código escrito QUE NO CONSTA no se cancela nada y se dice por qué. Antes esto
+       contestaba «¡Hecho! Cancelo tu reserva ✅» a cualquier cosa con la forma de un
+       localizador —una cifra mal copiada del email bastaba—, y el viajero se iba tranquilo
+       con la reserva viva; el servidor lo tapaba después dejándole un aviso al encargado,
+       que es curar en vez de no herir. Se pasa a una persona, así que el encargado se
+       entera igual, pero al viajero no se le ha mentido por el camino. */
+    var muertoC = codMuerto(t);
+    if (muertoC){
+      registraDerivada(t, 'persona');
+      return 'Ese código («'+muertoC+'») no me consta entre las reservas de hoy, así que '+
+        'no te toco nada — no vaya a cancelar la de otra persona 🙏 Repásalo en tu email de '+
+        'confirmación y dímelo otra vez, o dime tu nombre y se lo paso al encargado, que lo '+
+        'mira contigo.\n\n<i>— Tu reserva SIGUE EN PIE: no se ha cancelado nada.</i>';
+    }
     var cod = codEscrito(t) || (ordenC ? S.codConocido : null);
     if (cod){
       anotaGuia('Reserva «'+cod+'» cancelada por el chat — plaza liberada');
@@ -4186,6 +4377,17 @@ function respuestaGuiaES(t){
        lo dicen en indicativo («somos 5», «una persona más») o nombran su código. */
     var preguntaB = /\bpuedo\b|\bpodria\b|\bpodriamos\b|se puede|es posible/.test(m) ||
       /\bcan (i|we)\b|\bcould (i|we)\b|is it possible/.test(t.toLowerCase());
+    /* El mismo peligro que la cancelación, en el cambio: con un código escrito MUERTO y el
+       teléfono conocido, el cambio se aplicaba a «la que creemos que es suya» — corregir
+       el pax de una reserva que el viajero no nombró. Quien escribe un localizador nombra
+       una reserva concreta; si no existe, se le dice. */
+    var muertoB = codMuerto(t);
+    if (muertoB){
+      registraDerivada(t, 'persona');
+      return 'Ese código («'+muertoB+'») no me consta, así que no cambio nada — no vaya a tocar '+
+        'la reserva de otra persona 🙏 Repásalo en tu email de confirmación y dímelo otra vez.'+
+        '\n\n<i>— Tu reserva sigue como estaba: no se ha cambiado nada.</i>';
+    }
     var codB = codEscrito(t) || (preguntaB ? null : S.codConocido);
     if (codB){
       var cp=paxCambioDe(m, t);
@@ -4240,8 +4442,14 @@ function respuestaGuiaES(t){
      dos y tiene que seguir entrando por retraso, que es lo urgente.
      «cuánto espera» entra aquí también: sin ella caía en la regla de precio por el
      «cuánto», y quien avisaba de que llegaba tarde recibía el modelo de propina. */
+  /* Y «tarde» tiene que ser una PALABRA, no una subcadena. Sin el límite, «atardecer» la
+     cumple —a-TARDE-cer—, así que «¿el Alcázar al atardecer sale hoy?» recibía la política
+     de espera del guía y dejaba al viajero marcado «⏰ llega tarde» en el manifiesto sin
+     haber llegado tarde ni haber preguntado nada de eso. Y «al atardecer» no es un caso
+     rebuscado: es como se llama medio catálogo de tours de pago en español.
+     Mismo fallo que «bebe» dentro de «beber», que ya costó una regla. */
   if (RE_RETRASO.test(m) || /cuanto espera|espera el guia|espera al grupo|me esperais|nos esperais|me esperan|nos esperan/.test(m) ||
-      (/tarde/.test(m) && !RE_FRANJA_TARDE.test(m))){
+      (/\btarde\b/.test(m) && !RE_FRANJA_TARDE.test(m))){
     var es=kb('espera'); if(!es) return derivaPorHueco('espera', t);
     var codT=codDe(t);
     if (codT) anotaGuia('«'+codT+'» avisa por el chat de que llega tarde — marcado ⏰ para el guía');
@@ -4490,7 +4698,19 @@ function respuestaGuiaES(t){
     var pri=kbE('privados'); if(!pri) return derivaPorHuecoEmp('privados', t);
     return pri;
   }
-  if (/que otros tours|otros tours|que mas teneis|que mas ofreceis|que mas haceis|catalogo|que tours teneis/.test(m)){
+  /* El disparador entendía la pregunta de manual —«¿qué otros tours tenéis?»— y no la
+     forma en que se pregunta de verdad. Las tres que faltaban, y lo que hacía cada una:
+       · «¿hacéis algo más aparte del free tour?» llevaba «free» dentro, así que se la
+         comía la regla de precio DOS reglas más abajo y el viajero que preguntaba por el
+         catálogo recibía el modelo de propina del tour que ya tenía delante. Es, literal,
+         el chat de muestra de la pantalla «Lo que vendes además del tour».
+       · «¿tenéis algún tour de pago?» no casaba con nada y se iba a una persona teniendo
+         la respuesta escrita.
+       · «¿qué otras visitas/rutas hacéis?» es la misma pregunta sin la palabra «tour».
+     Va ANTES que la regla de precio a propósito: quien pregunta qué MÁS vendes no está
+     preguntando cuánto cuesta lo que ya está mirando. */
+  if (/que otros tours|otros tours|que mas teneis|que mas ofreceis|que mas haceis|catalogo|que tours teneis/.test(m) ||
+      /(algo|alguno|algun|nada) mas (aparte|ademas|que hacer|que ofrec)|(aparte|ademas) del (free ?)?tour|tours? de pago|que otras (visitas|rutas|experiencias)|otras (visitas|rutas|experiencias)/.test(m)){
     var ct=kbE('catalogo'); if(!ct) return derivaPorHuecoEmp('catalogo', t);
     return ct;
   }
@@ -5003,8 +5223,15 @@ function respuestaEN(t){
      del free tour — a quien preguntaba si cancelar CUESTA algo. La regla de cancelación
      es la que sabe; el «gratis» ahí es un adjetivo de la cancelación, no una pregunta de
      precio. El gemelo español ya pone la cancelación por delante del precio. */
+  /* Y la misma cesión con el CATÁLOGO, que es la regla de más abajo. «Do you do anything
+     else besides the free tour?» lleva «free» —o sea «gratis»— y caía aquí: a quien
+     preguntaba qué MÁS vende la empresa se le contestaba el modelo de precio del walk que
+     ya tenía delante. Es literal el chat que la pantalla de extras enseña como ejemplo.
+     La condición es la misma que usa la regla del catálogo, para que no puedan discrepar:
+     si esto es una pregunta de catálogo, el precio la deja pasar. */
   if (/precio|cuesta|gratis|propina|pagar|cuanto/.test(m) && !/cuantos/.test(m) &&
-      !/\bsenal\b/.test(m) && !/cancelar|anular/.test(m)){
+      !/\bsenal\b/.test(m) && !/cancelar|anular/.test(m) &&
+      !(/catalogo|otros|mas\b/.test(m) && /tour/.test(m))){
     /* Dos marcos que NO se pueden mezclar: en un free tour el precio es la propina; en
        un walk con ticket la propina no viene al caso, y el 💛 de «aporta lo que quieras»
        suena a error. Se bifurca por el tour, no por el mercado, porque un catálogo
@@ -5069,6 +5296,18 @@ function respuestaEN(t){
     var tl = t.toLowerCase();
     var ordenCE = /\b(i|we)\s+(want|need|would like|have) to cancel|please cancel|cancel (my|our|the) booking|can'?t (make it|come|be there)|won'?t (make it|be able)/.test(tl) ||
       /quiero cancelar|no puedo ir/.test(m);
+    /* El MISMO codMuerto que el gemelo español, que se quedó solo en un idioma: en inglés
+       un código muerto no recibía el ✅ falso —caía al FAQ— pero le pedía el código a
+       quien acababa de escribir uno, sin decirle que el suyo no consta. Mismo contrato,
+       redacción propia. */
+    var muertoE = codMuerto(t);
+    if (muertoE){
+      registraDerivada(t, 'persona');
+      return 'That code (“'+muertoE+'”) doesn\'t match any of today\'s bookings, so I haven\'t '+
+        'touched anything — I\'d hate to cancel someone else\'s place 🙏 Double-check it in your '+
+        'confirmation email and send it again, or give me your name and the manager will sort '+
+        'it out with you.\n\n<i>— Your booking STILL STANDS: nothing has been cancelled.</i>';
+    }
     var codC = codEscrito(t) || (ordenCE ? S.codConocido : null);
     if (codC){
       anotaGuia('Booking “'+codC+'” cancelled over chat — place released');
@@ -5087,6 +5326,14 @@ function respuestaEN(t){
     /* La misma mordaza que el gemelo español: pedir permiso no es ordenar. */
     var preguntaB2 = /\bcan (i|we)\b|\bcould (i|we)\b|is it possible|\bmay (i|we)\b/.test(t.toLowerCase()) ||
       /\bpuedo\b|\bpodria\b|se puede/.test(m);
+    /* Paridad con el gemelo español: un código escrito muerto no redirige el cambio. */
+    var muertoB2 = codMuerto(t);
+    if (muertoB2){
+      registraDerivada(t, 'persona');
+      return 'That code (“'+muertoB2+'”) doesn\'t match any booking, so I haven\'t changed '+
+        'anything — I\'d hate to touch someone else\'s reservation 🙏 Double-check it in your '+
+        'confirmation email and send it again.\n\n<i>— Your booking is unchanged.</i>';
+    }
     var codB2 = codEscrito(t) || (preguntaB2 ? null : S.codConocido);
     if (codB2){
       var cp2=paxCambioDe(m, t);
@@ -5132,8 +5379,11 @@ function respuestaEN(t){
       ? ' I\'ve left the guide a note so they expect you right 🙂'
       : ''+(hayWeb() ? ' If you booked on our website, your manage-booking link changes date or numbers in a click; if it was through a platform, make the change there.' : ' If you booked through a platform, make the change there.')+' And if you send me your code'+ejCod()+' with the new numbers, I\'ll apply it right here.');
   }
-  /* Misma separación que en el motor español: «tarde» es hora del día o es retraso. */
-  if (/retraso|espera/.test(m) || (/tarde/.test(m) && !RE_FRANJA_TARDE.test(m))){
+  /* Misma separación que en el motor español: «tarde» es hora del día o es retraso. Y con
+     el mismo límite de palabra, que aquí hace más falta todavía: un mercado inglés escribe
+     el nombre del tour en español —«the Alcázar al atardecer tour»— y la subcadena lo
+     mandaba a la política de retrasos. */
+  if (/retraso|espera/.test(m) || (/\btarde\b/.test(m) && !RE_FRANJA_TARDE.test(m))){
     /* La NOTA va antes que el hueco de `espera` — el mismo orden que el español: aunque
        no sepamos cuánto espera el guía, que este grupo llega tarde es urgente y se
        apunta igual (y enciende el ⏰ del manifiesto). */
@@ -5724,6 +5974,10 @@ function pintaDineroEstatico(){
     el.textContent = signo + dinero(v, d);
   });
   document.querySelectorAll('[data-empresa]').forEach(function(el){ el.textContent = MK.empresa.split(' · ')[0]; });
+  /* El SÍMBOLO suelto, para los rótulos donde no hay importe que convertir: «Flat £ per
+     person to the company» en los dos botones de reparto y el «£25 a head» de la nota del
+     cuadro. Iban en libras pase lo que pase, al lado de tablas que ya decían dólares. */
+  document.querySelectorAll('[data-moneda]').forEach(function(el){ el.textContent = MK.moneda.sim; });
 }
 var LEYENDA_TENANT = 'fictional company';
 /* La tarjeta de la empresa: iniciales, nombre y ciudad, los tres a la vez.
@@ -5745,12 +5999,23 @@ function cambiaMercado(k){
   MK = MERCADOS[k];
   pintaTenant();
   pintaMkSel(); pintaDineroEstatico();
-  try{ sincronizaTickets(); pintaCerebro(); }catch(e){}
+  /* `pintaExtras` va con los tickets: el combo nombra el walk de pago con su precio, así
+     que si el mercado cambia la moneda y esta pantalla no se repinta, se queda ofreciendo
+     £24 en un mercado donde el ticket vale $32. */
+  try{ sincronizaTickets(); pintaCerebro(); tpRotulos(); pintaExtras(); }catch(e){}
   try{ pintaPropCfg(); }catch(e){}
-  ['operaciones','manifiesto','equipo','canales','liquidacion','cuadro','ahorro'].forEach(function(v){
-    try{ var f={operaciones:pintaOperaciones,manifiesto:pintaManifiesto,equipo:pintaEquipo,
-                canales:pintaCanales,liquidacion:pintaLiquidacion,cuadro:pintaCuadro,ahorro:pintaCanales}[v]; if(f) f(); }catch(e){}
-  });
+  /* CADA PINTADA CON SU PROPIO try, y por su nombre de verdad.
+     Aquí había un objeto `{liquidacion: pintaLiquidacion, cuadro: pintaCuadro, …}` con dos
+     nombres QUE NO EXISTEN —la función se llama `pintaLiq`, y del Cuadro no hay painter—,
+     y el objeto se construía DENTRO del `try{}catch(e){}`: el ReferenceError saltaba antes
+     de llamar a nadie, en la primera vuelta y en todas. O sea que cambiar de mercado no
+     repintaba NINGUNA de las siete pantallas, y la liquidación seguía en libras en Boston.
+     Un `catch` vacío alrededor de un lote entero convierte «una se ha roto» en «no se ha
+     hecho ninguna, y en silencio». Ahora se recorre una lista de funciones ya resueltas
+     —si alguna no existe, `typeof` la salta— y cada una se protege sola, así que la que
+     falle no se lleva por delante a las demás. */
+  [pintaOperaciones, pintaManifiesto, pintaEquipo, pintaCanales, pintaLiq]
+    .forEach(function(f){ try{ if (typeof f === 'function') f(); }catch(e){} });
   try{ calcProy(); }catch(e){}
   toast(MK.bandera+' '+MK.nombre+' — '+(MK.modelo==='pago'?'ticketed: paid upfront, a no-show costs you the seat'
         : MK.modelo==='mixto'?'mixed catalogue: free tours fill the funnel, ticketed tours monetise'
@@ -5908,6 +6173,24 @@ document.querySelectorAll('aside nav a').forEach(function(a){
   a.addEventListener('click', function(ev){ ev.preventDefault(); ir(a.dataset.v); });
 });
 pintaCandados(); pintaPlanSel(); pintaComplementos(); pintaEsPlus(); pintaMkSel(); pintaDineroEstatico();
+/* APLAZADO con setTimeout, por lo mismo que en la demo española: este punto del fichero se
+   ejecuta ANTES de que se asignen `S.tours` y el motor —las declaraciones de función se
+   elevan, las asignaciones de `var` no—, y llamar aquí a algo que los lee revienta la demo
+   entera al arrancar. */
+setTimeout(function(){
+  if (typeof sincronizaTickets === 'function') sincronizaTickets();   // catálogo y privado, con su moneda
+  if (typeof tpRotulos === 'function') tpRotulos();                   // tarifa del configurador
+  if (typeof pintaExtras === 'function') pintaExtras();
+  var w = document.querySelector('.tp-wrap');
+  if (w){ w.addEventListener('input', tpCalc); w.addEventListener('change', tpCalc); }
+  ['combo-a','combo-b','combo-dto'].forEach(function(id){
+    var e = document.getElementById(id); if (!e) return;
+    e.addEventListener('input', function(){
+      document.getElementById('combo-dto-v').textContent = document.getElementById('combo-dto').value;
+      pintaMsjCombo();
+    });
+  });
+}, 0);
 
 /* ===== Modo guía: el enlace personal del guía — SOLO su manifiesto y su
    disponibilidad, sin nada de la consola de la oficina. hash #guia. ===== */
@@ -7698,6 +7981,152 @@ function pintaCombosDestinatarios(){
     ') already get a review request from their own platform — the message isn’t sent twice.';
 }
 
+/* ============ el catálogo de extras, derivado del Cerebro ============
+   Gemelo de `pintaExtras` en la demo española, y aquí hacía más falta: el precio del
+   ticket sigue al mercado (£24 · €25 · $32 · $39) y esta pantalla lo tenía clavado en
+   £24, así que en el mercado americano la ficha decía $32 y el combo ofrecía £24 — moneda
+   equivocada e importe equivocado en la pantalla que vende la segunda venta.
+   Los tours de pago se conocen por `t.ticket`, que es la propiedad que ya usa
+   `sincronizaTickets`, y no por leer el precio del texto: aquí esa marca existe. */
+/* Cada pieza se guarda por separado a propósito: esta demo NO tiene la tarjeta «tu
+   catálogo de extras» que sí tiene la española —una divergencia anotada, no un olvido de
+   aquí—, y con una sola guarda arriba la ausencia de esa tarjeta dejaba los desplegables
+   del combo sin pintar, o sea vacíos. Un `return` temprano por una pieza que falta es
+   cómo una pantalla se queda en blanco sin que nadie vea un error. */
+function pintaExtras(){
+  var chat = document.getElementById('extras-chat');
+  if (chat){
+    var q = 'do you do anything else besides the free tour?';
+    var r = (typeof respuestaGuia === 'function') ? String(respuestaGuia(q)) : '';
+    chat.innerHTML = '💬 <b>Chat — a traveller asks</b>\n\n— ' + q + '\n— ' +
+      r.replace(/\n\n<i>[\s\S]*$/, '').trim();
+  }
+
+  var a = document.getElementById('combo-a'), b = document.getElementById('combo-b');
+  if (!a || !b) return;
+  var hoy = (S.agenda && S.agenda[S.agDia] && S.agenda[S.agDia].tours) || [];
+  a.innerHTML = S.tours.filter(function(t){ return !t.ticket; }).map(function(t){
+    var sale = hoy.some(function(s){ return normaliza(t.nombre).indexOf(normaliza(s.tit||''))!==-1; });
+    return '<option>'+t.nombre+(sale?' (today)':'')+'</option>';
+  }).join('');
+  b.innerHTML = S.tours.filter(function(t){ return t.ticket; }).map(function(t){
+    return '<option data-p="'+precioTicket()+'">'+t.nombre+' · '+precioTxt(precioTicket())+'</option>';
+  }).join('') || '<option data-p="0">— no ticketed walk in the Brain yet —</option>';
+  pintaMsjCombo();
+}
+function pintaMsjCombo(){
+  var caja = document.getElementById('msj-combo'); if (!caja) return;
+  var b = document.getElementById('combo-b');
+  var op = (b.options||[])[b.selectedIndex] || {};
+  var pct = +document.getElementById('combo-dto').value;
+  var base = +((op.dataset||{}).p || 0);
+  /* En CÉNTIMOS, igual que el configurador: £24 × 0,85 en coma flotante se desvía, y le
+     enseñarías un número al cliente y guardarías otro. */
+  var con = Math.round(base*100*(100-pct)/100)/100;
+  var web = (S.kbEmpresa.web||'oldtownwalks.co.uk').replace(/^https?:\/\//,'');
+  caja.innerHTML =
+    '📲 <b>Goes out 1 h after the tour — ONLY to bookings from your own site</b> (platform bookings already get a review request from the platform itself)\n\n'+
+    'Thanks for coming along this morning! 🙌 If you’re after more, this week we’re running the\n'+
+    '<b>'+String(op.textContent||'').split(' · ')[0]+'</b>'+
+    (pct ? ' with '+pct+' % off for people who’ve already walked with us: '+precioTxt(con)+' (instead of '+precioTxt(base)+')'
+         : ' at '+precioTxt(base))+'.\n'+
+    'Places held for your group for 48 h 👉 '+web+'/combo/x3f9\n'+
+    '<button class="btn mini" style="margin-top:8px;" onclick="toast(\'Combo switched on (simulated): offered after every free tour\')">Switch combo on</button>';
+}
+
+/* ============ el configurador del tour privado ============
+   Portado de la demo española. Mismas reglas, y las dos que importan están comentadas
+   donde se aplican. Todo en CÉNTIMOS hasta el último momento: en coma flotante, 19,50 × 3
+   se desvía y el cliente vería un total distinto del que se guardaría.
+
+   LO QUE AQUÍ ES DISTINTO: la tarifa entera se escala a la moneda del mercado. La española
+   vive en Sevilla y siempre en euros; esta se muda de ciudad —Edimburgo, Dublín, Boston,
+   Sídney— y una tarifa escrita en libras salía en libras en Boston. Se escala con la MISMA
+   razón que ya usa el ticket (`precioTicket()` contra los 24 £ del mercado británico, que
+   es la referencia), para que no haya dos criterios de conversión en la misma pantalla. */
+function razonMercado(){ return precioTicket() / 24; }
+function tpRedondea(v, paso){ return Math.round(v * razonMercado() / paso) * paso; }
+/* El «desde» del privado, en la moneda del mercado. Estaba escrito «£180» en la semilla y
+   no se regeneraba nunca: GuIA le decía «from £180» a un viajero de Boston. */
+function precioPrivado(){ return tpRedondea(180, 5); }
+function tarifaPrivado(){
+  return { incl:6, gestionPct:5,
+           supAd: tpRedondea(12,1), supJo: tpRedondea(8,1), pro: tpRedondea(40,5),
+           radio: tpRedondea(3,1),
+           entAd: tpRedondea(19.5,0.5), entJo: tpRedondea(11.5,0.5),
+           catAd: tpRedondea(12,1) };
+}
+function tpNum(id){ var e=document.getElementById(id); return Math.max(0, parseInt(e&&e.value,10)||0); }
+function tpEur(c){ return precioTxt(c/100); }          // céntimos → «£140» / «$4.70»
+function tpPon(id, txt){ var e=document.getElementById(id); if(e) e.textContent=txt; }
+
+function tpCalc(){
+  var caja = document.getElementById('tp-total'); if (!caja) return;
+  /* La tarifa vive DENTRO y no en un `var` de arriba: el arranque llama a esta función
+     antes de esa línea —la declaración de función se eleva, la asignación de `var` no— y
+     el configurador salía roto en la primera pintada. */
+  var T = tarifaPrivado();
+  /* EL SUELO SALE DEL CEREBRO, igual que en la española: es el hecho de empresa que GuIA
+     le dice al viajero, y con el precio escrito en dos sitios acaban discrepando. */
+  var desde = ((S.kbEmpresa.privados||'').match(/(\d+(?:[.,]\d+)?)/)||[])[1];
+  var base = desde ? parseFloat(String(desde).replace(',','.')) : precioPrivado();
+  var ad = tpNum('tp-ad'), jo = tpNum('tp-jo'), pe = tpNum('tp-pe'), pax = ad + jo + pe;
+
+  /* LAS PLAZAS INCLUIDAS SE LLENAN CON LOS QUE MÁS PAGARÍAN. Se meten dentro del cupo
+     primero los adultos, luego los jóvenes y al final los peques, así quien se sale y
+     paga suplemento es siempre el más barato. Al revés —llenando con los peques— el
+     mismo grupo, con el mismo servicio, salía más caro. */
+  var guia = Math.round(base * 100), fuera = Math.max(0, pax - T.incl);
+  [[pe, 0], [jo, T.supJo], [ad, T.supAd]].forEach(function(t){
+    var cobra = Math.min(fuera, t[0]); guia += cobra * t[1] * 100; fuera -= cobra;
+  });
+  var pro = (document.querySelector('input[name=tpdur]:checked') || {}).value === 'pro';
+  if (pro) guia += T.pro * 100;
+  tpPon('tp-guia', tpEur(guia));
+  tpPon('tp-d-guia', pax ? '(' + pax + (pax === 1 ? ' person' : ' people') + (pro ? ' · 3 h' : ' · 2 h') + ')' : '');
+
+  /* Los headsets los usan adultos y jóvenes; los peques no llevan. */
+  var usan = ad + jo;
+  var radio = document.getElementById('tp-radio').checked ? usan * T.radio * 100 : 0;
+  document.getElementById('tp-l-radio').hidden = radio <= 0;
+  tpPon('tp-radio-e', tpEur(radio));
+  tpPon('tp-d-radio', radio > 0 ? '(' + usan + (usan === 1 ? ' person' : ' people') + ')' : '');
+
+  /* Los importes de las entradas viven en el `dataset`, puestos por `tpRotulos` con la
+     tarifa del mercado: si estuvieran en el HTML volverían a ser libras en Boston. */
+  var ent = 0, n = 0;
+  document.querySelectorAll('.tp-ent').forEach(function(c){
+    if (!c.checked) return;
+    n++;
+    ent += Math.round((+c.dataset.ad || 0) * 100) * ad
+         + Math.round((+c.dataset.jo || 0) * 100) * jo
+         + Math.round((+c.dataset.pe || 0) * 100) * pe;
+  });
+  var gestion = Math.round(ent * T.gestionPct / 100);
+  document.getElementById('tp-l-ent').hidden = ent <= 0;
+  document.getElementById('tp-l-ges').hidden = ent <= 0;
+  tpPon('tp-ent', tpEur(ent));
+  tpPon('tp-ges', tpEur(gestion));
+  tpPon('tp-d-ent', n ? '(' + n + (n === 1 ? ' extra' : ' extras') + ')' : '');
+  tpPon('tp-total', tpEur(guia + radio + ent + gestion));
+}
+/* Los rótulos de la tarifa, pintados. No hay ni un importe en el HTML de esta tarjeta:
+   el HTML no sabe en qué moneda está el mercado, y en la española no hacía falta. */
+function tpRotulos(){
+  if (!document.getElementById('tp-h-pax')) return;
+  var T = tarifaPrivado();
+  tpPon('tp-h-pax', 'Up to ' + T.incl + ' people the guide costs the same. Beyond that: +' +
+    precioTxt(T.supAd) + ' per adult, +' + precioTxt(T.supJo) + ' per teen; children do not add.');
+  tpPon('tp-h-pro', '3 h · +' + precioTxt(T.pro));
+  tpPon('tp-h-radio', '+' + precioTxt(T.radio) + ' per person (adults and teens)');
+  var e1 = document.getElementById('tp-e1'), e2 = document.getElementById('tp-e2');
+  e1.dataset.ad = T.entAd; e1.dataset.jo = T.entJo; e1.dataset.pe = 0;
+  e2.dataset.ad = T.catAd; e2.dataset.jo = T.catAd; e2.dataset.pe = 0;
+  tpPon('tp-h-e1', precioTxt(T.entAd) + ' adult · ' + precioTxt(T.entJo) + ' teen · children free');
+  tpPon('tp-h-e2', precioTxt(T.catAd) + ' per person (over 12s only)');
+  tpCalc();
+}
+
 /* ============ liquidación ============ */
 /* Datos ficticios de jun-jul 2026. Incluye a propósito un tour sin recaudación
    con coste de canal: se ve la regla "el guía nunca paga" (lo absorbe la empresa,
@@ -7737,6 +8166,31 @@ var liqModo = 'pct';
 var liqCoste = 'empresa';   // POR DEFECTO: el canal lo paga quien lo contrata, no el guía
 
 function eur(x){ return dinero(x, 2); }
+/* La tabla «By guide» del Cuadro, del mismo rango y la misma fuente que la Liquidación —
+   que es lo que la nota de esa tarjeta lleva prometiendo. Gemelo de `pintaCuadroGuias` en
+   la demo española; los importes salen de `eur`, así que siguen a la moneda del mercado en
+   vez de quedarse en las libras que estaban escritas a mano. */
+function pintaCuadroGuias(){
+  var tg=document.getElementById('tabla-cuadro-guia'); if(!tg) return;
+  var del=(document.getElementById('liq-del')||{}).value,
+      al =(document.getElementById('liq-al') ||{}).value;
+  if(!del||!al) return;
+  tg.querySelectorAll('tr:not(:first-child)').forEach(function(r){ r.remove(); });
+  var por={};
+  TOURS_LIQ.filter(function(x){ return x.f>=del && x.f<=al; }).forEach(function(x){
+    if (/^[—-]/.test(x.g)) return;          // «— no guide —» no es una persona
+    var g=por[x.g]=por[x.g]||{ax:0, rec:0};
+    g.ax+=x.ax; g.rec+=x.rec;
+  });
+  Object.keys(por).sort().forEach(function(n){
+    var g=por[n], f=(S.equipo.guias||[]).filter(function(x){ return x.n===n; })[0]||{};
+    var tr=document.createElement('tr');
+    tr.innerHTML='<td><b>'+n+'</b></td><td>'+g.ax+'</td>'+
+      '<td class="num">'+(g.ax? eur(g.rec/g.ax) : '—')+'</td>'+
+      '<td>'+(f.nota? f.nota+' ⭐' : '<span class="mini muted">no ratings yet</span>')+'</td>';
+    tg.appendChild(tr);
+  });
+}
 function celdaEur(x, esGuia){
   var cls = x<0 ? ' class="num neg"' : (esGuia && x>0 ? ' class="num pos-guia"' : ' class="num"');
   return '<td'+cls+'>'+eur(x)+'</td>';
@@ -7831,6 +8285,10 @@ function pintaLiq(){
       vt.appendChild(tr);
     });
   }
+
+  /* La tabla «By guide» del Cuadro se repinta AQUÍ DENTRO, igual que en la española: así
+     sigue al rango pase lo que pase y no hay forma de dejarla mirando otro mes. */
+  if (typeof pintaCuadroGuias === 'function') pintaCuadroGuias();
 
   // por guía (como en la liquidación real: la nómina se agrega por guía)
   var tg=document.getElementById('tabla-liq-guia');

@@ -24,6 +24,47 @@
      revisar lo que no puede leer — que es justo el gesto que esta pantalla existe para
      pedirle. Por debajo de 640 px la etiqueta pasa a su propia línea y el campo ocupa el
      ancho entero menos los botones. */
+  /* El configurador del tour de pago. Dos columnas en escritorio —eliges a la izquierda,
+     ves el número a la derecha— y apilado en el móvil. */
+  .tp-wrap{ display:grid; grid-template-columns:1fr 258px; gap:16px; align-items:start; }
+  .tp-g{ margin-bottom:14px; }
+  .tp-lab{ display:block; font-size:11.5px; font-weight:800; letter-spacing:.05em;
+    text-transform:uppercase; color:var(--muted); margin-bottom:7px; }
+  .tp-nums{ display:flex; gap:8px; flex-wrap:wrap; }
+  .tp-nums label{ flex:1; min-width:76px; font-size:12px; color:var(--ink2); }
+  .tp-nums small{ display:block; color:var(--muted); font-size:10.5px; }
+  .tp-nums input{ width:100%; margin-top:3px; padding:7px 8px; border:1.5px solid var(--line);
+    border-radius:9px; font:inherit; font-size:15px; font-weight:700; text-align:center;
+    background:var(--paper); color:var(--ink); }
+  .tp-hint{ margin:7px 0 0; font-size:11.5px; line-height:1.45; color:var(--muted); }
+  .tp-pills{ display:flex; gap:8px; flex-wrap:wrap; }
+  .tp-pill{ flex:1; min-width:128px; cursor:pointer; position:relative; }
+  .tp-pill input{ position:absolute; opacity:0; pointer-events:none; }
+  .tp-pill > span{ display:block; padding:9px 11px; border:1.5px solid var(--line);
+    border-radius:11px; font-size:13px; background:var(--paper); }
+  .tp-pill > span small{ display:block; color:var(--muted); font-size:11px; font-weight:400; }
+  .tp-pill input:checked + span{ border-color:var(--acc); background:var(--acc-soft); }
+  .tp-check{ display:flex; gap:9px; align-items:flex-start; padding:8px 0; cursor:pointer;
+    font-size:13px; border-top:1px solid var(--line); }
+  .tp-check small{ display:block; color:var(--muted); font-size:11.5px; }
+  /* COLOR PROPIO Y NO HEREDADO. La caja heredaba un verde pálido de un ancestro y los
+     rótulos salían a 1,22:1 sobre su fondo — invisibles, medido. Una estimación de precio
+     que no se lee es peor que no ponerla: el cliente ve la cifra y no sabe de qué es. */
+  .tp-est{ background:var(--acc-soft); border:1.5px solid var(--acc); border-radius:13px;
+    padding:13px 14px; position:sticky; top:12px; color:var(--ink); }
+  .tp-l > span{ color:var(--ink2); }
+  .tp-est-t{ font-size:11.5px; font-weight:800; letter-spacing:.05em; text-transform:uppercase;
+    color:var(--acc2); margin-bottom:8px; }
+  .tp-l{ display:flex; justify-content:space-between; gap:10px; align-items:baseline;
+    font-size:13px; padding:5px 0; border-bottom:1px dashed rgba(18,128,95,.25); }
+  .tp-l small{ display:block; color:var(--muted); font-size:11px; }
+  .tp-l b{ font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .tp-tot{ border-bottom:0; margin-top:4px; padding-top:9px; border-top:1.5px solid var(--acc); }
+  .tp-tot b{ font-family:var(--serif); font-size:25px; color:var(--acc); }
+  .tp-nota{ margin:9px 0 0; font-size:11.5px; line-height:1.45; color:var(--ink2); }
+  .tp-cero{ margin-top:9px; padding-top:8px; border-top:1px dashed rgba(18,128,95,.25);
+    font-size:11px; color:var(--muted); }
+  @media (max-width:760px){ .tp-wrap{ grid-template-columns:1fr; } .tp-est{ position:static; } }
   .cb-fila{ display:grid; grid-template-columns:190px 1fr auto; gap:10px; padding:6px 0;
     border-bottom:1px dashed var(--line); align-items:center; }
   @media (max-width:640px){
@@ -1090,9 +1131,7 @@
   <div class="card exc" id="exc-grupo">
     <div class="fila">
       <div><b>👥 Grupo grande detectado — tour de las 10:00</b><br>
-      <span class="mini muted">«Sofía Cabrera (6p)» + «Javier Cabrera (5p)» = <b>11 personas</b> · mismo apellido,
-      reservas con 3 min de diferencia (GuruWalk). Política de adelanto avisada en su confirmación;
-      el guía tiene la observación.</span></div>
+      <span class="mini muted" data-exc-txt>—</span></div>
       <div><button class="btn mini sec" onclick="ir('manifiesto')">Ver en el manifiesto</button>
       <button class="btn mini" onclick="resolver('exc-grupo')">✓ Revisado</button></div>
     </div>
@@ -1101,8 +1140,7 @@
   <div class="card exc rojo" id="exc-guia">
     <div class="fila">
       <div><b>🧭 Falta guía por asignar — Nocturno · domingo 21:00</b><br>
-      <span class="mini muted">2 personas · sin guía. Curro marcó disponibilidad esa franja.
-      Un toque para asignar (o míralo en Equipo y disponibilidad).</span></div>
+      <span class="mini muted" data-exc-txt>—</span></div>
       <div><button class="btn mini" onclick="resolver('exc-guia', 'Curro asignado al Nocturno del domingo')">Asignar a Curro</button></div>
     </div>
   </div>
@@ -1119,8 +1157,7 @@
   <div class="card exc" id="exc-minimo">
     <div class="fila">
       <div><b>🔢 Por debajo del mínimo — Nocturno · domingo 21:00</b><br>
-      <span class="mini muted"><b>2 personas</b> (mínimo 4 para salir). Revisa el mensaje y avisa si decides
-      suspenderlo — GuIA reubica a quien había reservado.</span></div>
+      <span class="mini muted" data-exc-txt>—</span></div>
       <div><button class="btn mini sec" onclick="resolver('exc-minimo', 'Nocturno mantenido — se revisa mañana')">Mantener</button>
       <button class="btn mini" onclick="resolver('exc-minimo', 'Nocturno suspendido — avisadas 1 reserva y reubicada')">Suspender y avisar</button></div>
     </div>
@@ -1128,9 +1165,12 @@
 
   <div class="card exc ok-borde" id="exc-espera">
     <div class="fila">
-      <div><b>⏳ Lista de espera con plaza libre — hoy 17:00</b><br>
-      <span class="mini muted">Se liberaron 3 plazas (una cancelación por el chat). «Familia Novak (2p)»
-      espera y cabe: ya está marcada como avisada.</span></div>
+      <!-- LAS PLAZAS LIBERADAS SALEN DE `S.canceladas`, no de un número escrito aquí.
+           Esta tarjeta decía «se liberaron 3 plazas» y el seguimiento, treinta píxeles más
+           abajo, «1 cancelación (2 personas)»: la misma cancelación con dos tamaños, y las
+           dos frases a la vista en la misma pantalla. -->
+      <div><b data-exc-tit>⏳ Lista de espera con plaza libre</b><br>
+      <span class="mini muted" data-exc-txt>—</span></div>
       <div><button class="btn mini" onclick="resolver('exc-espera', 'Familia Novak convertida en reserva')">Convertir en reserva</button></div>
     </div>
   </div>
@@ -1421,13 +1461,85 @@
       de pago, privados, degustaciones, lo que sea. Se escribe una vez en el Cerebro y a
       partir de ahí <b>sale en tu web</b> y <b>GuIA lo cuenta</b> cuando alguien pregunta qué
       más hacéis. No hay que acordarse de nada.</p>
-    <div class="mensaje-prev" style="display:block;">💬 <b>Chat — un viajero pregunta</b>
-
-— ¿hacéis algo más aparte del free tour?
-— ¡Sí! Tenemos el <b>Tour de la Catedral al atardecer</b> (24 €) y el <b>gastronómico por
-Triana</b> (35 €). Los dos salen de la misma plaza 🙂</div>
+    <!-- ESTE CHAT NO ES UNA MAQUETA: lo escribe GuIA. Aquí había una conversación
+         inventada donde ofrecía el «Tour de la Catedral al atardecer» (24 €) y un
+         «gastronómico por Triana» (35 €) — dos tours que esta empresa no hace. La pantalla
+         que vende «GuIA lo cuenta cuando alguien pregunta» lo demostraba con tours falsos,
+         y la GuIA de la demo, tres pantallas más allá, derivaba la pregunta a una persona.
+         Ahora la pregunta se le hace al motor de verdad y se enseña lo que contesta: si el
+         Cerebro cambia, este cuadro cambia, y si GuIA dejara de saber contestarla se vería
+         aquí en vez de en una demo delante de un cliente. -->
+    <div class="mensaje-prev" id="extras-chat" style="display:block;"></div>
     <p class="mini muted" style="margin:10px 0 0;"><b>Audutor no cobra ninguno de esos
       extras.</b> Enseña lo que vendes y lleva a donde tú ya cobras.</p>
+  </div>
+
+  <!-- ══ EL TOUR DE PAGO, MODULABLE ═══════════════════════════════════════════════════
+       Portado del configurador de privados de Madrid Latido, que lleva meses en su web.
+       Lo que se trae no es el formulario: es que un tour de pago NO tiene un precio, tiene
+       una BASE y unas opciones —duración, extras, entradas— y el viajero quiere ver cómo
+       se mueve el número mientras elige.
+       Dos decisiones suyas que también se portan, y no son de gusto:
+        · Las plazas incluidas se llenan con los que MÁS pagarían (adultos primero), así
+          quien se sale del cupo y paga suplemento es el más barato. Al revés, el mismo
+          grupo salía más caro por el mismo servicio.
+        · El cálculo va en CÉNTIMOS. Con euros en coma flotante, 13,50 € × 3 se desvía un
+          céntimo: le enseñarías un número al cliente y guardarías otro.
+       Y la regla de la casa: la estimación es orientativa y quien cierra el precio es una
+       PERSONA. Audutor no cobra este tour — lleva a donde el operador ya cobra. -->
+  <div class="card">
+    <!-- DICE QUÉ TOUR CONFIGURA, que antes no. «Tu tour de pago» a secas se leía como el
+         Alcázar al atardecer, que se vende por persona a 24 € con la entrada dentro; esto
+         es el PRIVADO a medida, que se cobra por grupo. Dos modelos de precio distintos
+         bajo el mismo rótulo hacían que el número de aquí pareciera desmentir al de allí. -->
+    <h2>🎟️ Tu tour privado, modulable</h2>
+    <p class="mini muted" style="margin:0 0 12px;">Así lo ve tu cliente en <b>tu web</b>: elige y
+      el precio se mueve. Lo montas una vez en el Cerebro — el «desde» sale de tu hecho de
+      empresa <b>Tours privados</b>, el mismo que GuIA le dice a quien pregunta por el chat.</p>
+
+    <div class="tp-wrap">
+      <div class="tp-form">
+        <div class="tp-g"><span class="tp-lab">Cuántos sois</span>
+          <div class="tp-nums">
+            <label>Adultos<input type="number" id="tp-ad" min="0" max="30" value="4"></label>
+            <label>Jóvenes<small>12-17</small><input type="number" id="tp-jo" min="0" max="30" value="1"></label>
+            <label>Peques<small>-12</small><input type="number" id="tp-pe" min="0" max="30" value="1"></label>
+          </div>
+          <p class="tp-hint">Hasta <b>6</b> personas el guía cuesta lo mismo. A partir de ahí:
+            +12 € por adulto, +8 € por joven; los peques no suman.</p>
+        </div>
+
+        <div class="tp-g"><span class="tp-lab">Duración</span>
+          <div class="tp-pills">
+            <label class="tp-pill"><input type="radio" name="tpdur" value="ese" checked>
+              <span><b>Esencial</b><small>2 h · incluido</small></span></label>
+            <label class="tp-pill"><input type="radio" name="tpdur" value="pro">
+              <span><b>Ampliado ✦</b><small>3 h · +40 €</small></span></label>
+          </div>
+        </div>
+
+        <div class="tp-g"><span class="tp-lab">Extras</span>
+          <label class="tp-check"><input type="checkbox" id="tp-radio">
+            <span>Radioguía <small>+3 € por persona (adultos y jóvenes)</small></span></label>
+          <label class="tp-check"><input type="checkbox" class="tp-ent" data-ad="13.5" data-jo="6" data-pe="0">
+            <span>Entrada al Alcázar <small>13,50 € adulto · 6 € joven · peques gratis</small></span></label>
+          <label class="tp-check"><input type="checkbox" class="tp-ent" data-ad="9" data-jo="9" data-pe="0">
+            <span>Cata de vinos al final <small>9 € por persona (solo mayores de 12)</small></span></label>
+        </div>
+      </div>
+
+      <aside class="tp-est">
+        <div class="tp-est-t">Estimación</div>
+        <div class="tp-l"><span>Guía <small id="tp-d-guia"></small></span><b id="tp-guia">—</b></div>
+        <div class="tp-l" id="tp-l-radio" hidden><span>Radioguía <small id="tp-d-radio"></small></span><b id="tp-radio-e">0 €</b></div>
+        <div class="tp-l" id="tp-l-ent" hidden><span>Entradas <small id="tp-d-ent"></small></span><b id="tp-ent">0 €</b></div>
+        <div class="tp-l" id="tp-l-ges" hidden><span>Gestión <small>5 % de las entradas</small></span><b id="tp-ges">0 €</b></div>
+        <div class="tp-l tp-tot"><span>Total</span><b id="tp-total">—</b></div>
+        <p class="tp-nota">Estimación orientativa. <b>El precio cerrado lo confirma una persona</b>
+          al responder — como el ✓ verde del resto del sistema.</p>
+        <div class="tp-cero">Audutor no cobra este tour: lleva a donde tú ya cobras.</div>
+      </aside>
+    </div>
   </div>
 
   <div class="card">
@@ -1442,19 +1554,20 @@ Triana</b> (35 €). Los dos salen de la misma plaza 🙂</div>
          onclick="ir('cerebro'); setTimeout(function(){ document.getElementById('card-posttour').scrollIntoView({behavior:'smooth'}); },80); return false;">🧠
         Cerebro → 📮 Mensaje post-tour</a>.</p>
     <div class="fila">
-      <select id="combo-a"><option>Free tour Centro (hoy)</option><option>Tour del Alcázar</option></select>
+      <!-- LOS DOS DESPLEGABLES SALEN DEL CATÁLOGO. Estaban escritos a mano y ofrecían de
+           origen «Tour del Alcázar» —que es el tour de PAGO, o sea el destino— y de
+           destino dos tours inexistentes. Ahora: origen, los de propina (el free tour de
+           hoy es quien se lleva la segunda venta); destino, los que se cobran. -->
+      <select id="combo-a"></select>
       <span>→ ofrece →</span>
-      <select id="combo-b"><option>Tour de la Catedral al atardecer · 24 €</option><option>Tour gastronómico por Triana · 35 €</option></select>
-      <label class="mini">descuento <input type="range" id="combo-dto" min="0" max="30" step="5" value="15"
-        oninput="document.getElementById('combo-dto-v').textContent=this.value"> <b><span id="combo-dto-v">15</span> %</b></label>
+      <select id="combo-b"></select>
+      <label class="mini">descuento <input type="range" id="combo-dto" min="0" max="30" step="5" value="15"> <b><span id="combo-dto-v">15</span> %</b></label>
       <button class="btn mini" onclick="verMsj('msj-combo')">Vista previa</button>
     </div>
-    <div class="mensaje-prev" id="msj-combo">📲 <b>Se envía 30 min después del tour — SOLO a reservas de tu web</b> (las de plataforma ya reciben la petición de reseña de su propia plataforma)
-
-¡Gracias por venir esta mañana! 🙌 Si os quedasteis con ganas de más, esta semana tenéis el
-<b>Tour de la Catedral al atardecer</b> con un 15 % para los que ya nos conocéis: 20,40 € (en vez de 24).
-Plazas de vuestro grupo guardadas 48 h 👉 patioycompas.example/combo/x3f9
-<button class="btn mini" style="margin-top:8px;" onclick="toast('Combo activado (simulado): se ofrece tras cada free tour')">Activar combo</button></div>
+    <!-- El mensaje nombraba un tour que no existe y su cuenta («15 % → 20,40 € en vez de
+         24») estaba escrita a mano: mover el deslizador cambiaba el porcentaje de arriba y
+         dejaba el importe de abajo quieto. Se pinta con el tour y el descuento elegidos. -->
+    <div class="mensaje-prev" id="msj-combo"></div>
   </div>
 </section>
 
@@ -1733,15 +1846,16 @@ Plazas de vuestro grupo guardadas 48 h 👉 patioycompas.example/combo/x3f9
   <div class="card">
     <h2>⚖️ Conciliación con plataformas — quién asume el coste de los descuadres</h2>
     <div class="kpi-fila" style="margin:0 0 12px;">
-      <div class="kpi"><span class="v">70,00 €</span><span class="l">recuperados este mes reportando no-shows a tiempo</span></div>
-      <div class="kpi malo"><span class="v">7,50 €</span><span class="l">asumido por la empresa por no reportar a tiempo</span></div>
+      <!-- 52,00 € y no 70: es lo que suma su propia tabla (GuruWalk 50 + Civitatis 0 + Freetour 2). El KPI decía un número y el desglose de debajo, otro. -->
+      <div class="kpi"><span class="v">52,00 €</span><span class="l">recuperados este mes reportando no-shows a tiempo</span></div>
+      <div class="kpi malo"><span class="v">7,00 €</span><span class="l">asumido por la empresa por no reportar a tiempo</span></div>
     </div>
     <div class="gate-inline" id="gate-recon" style="display:none;">
       <div class="cerr">🔒</div>
       <h2 style="margin:6px 0 2px;">Conciliación con plataformas</h2>
       <p style="margin:6px 0;"><span class="chip" style="background:rgba(201,138,45,.25); color:var(--amber);">Incluido en el plan Pro · 39 €/mes</span></p>
       <p style="color:var(--ink2); max-width:48ch; margin:8px auto 0;">La conciliación es el <b>ROI en
-        negro sobre blanco</b> de Pro: este mes recuperó <b>70 €</b> en comisiones de no-show —
+        negro sobre blanco</b> de Pro: este mes recuperó <b>52 €</b> en comisiones de no-show —
         <b>casi la mensualidad entera, solo con este módulo</b>.</p>
       <div class="fila" style="gap:8px; justify-content:center; flex-wrap:wrap; margin-top:14px;">
         <button class="btn" onclick="cambiarPlan('pro')">Cambiar a Pro</button>
@@ -1795,15 +1909,15 @@ Plazas de vuestro grupo guardadas 48 h 👉 patioycompas.example/combo/x3f9
     <h2>Lo que ha entrado</h2>
     <div class="kpi-fila">
       <div class="kpi"><span class="v" id="kpi-propina" style="color:var(--coral-deep);" data-dinero="318" data-dec="0">318 €</span><span class="l">propina anotada esta semana</span></div>
-      <div class="kpi"><span class="v" data-dinero="70" data-dec="0">70 €</span><span class="l">comisiones de no-show recuperadas este mes (conciliación)</span></div>
+      <div class="kpi"><span class="v" data-dinero="52" data-dec="0">52 €</span><span class="l">comisiones de no-show recuperadas este mes (conciliación)</span></div>
     </div>
   </div>
 
   <div class="card">
     <div class="fila" style="justify-content:space-between;">
-      <span class="fila">Del <input type="date" id="liq-del" value="2026-07-01" onchange="pintaLiq()"
+      <span class="fila">Del <input type="date" id="liq-del" onchange="pintaLiq()"
           style="border:1.5px solid var(--line); border-radius:8px; padding:7px 9px; font-family:var(--mono); font-size:13px;">
-        al <input type="date" id="liq-al" value="2026-07-18" onchange="pintaLiq()"
+        al <input type="date" id="liq-al" onchange="pintaLiq()"
           style="border:1.5px solid var(--line); border-radius:8px; padding:7px 9px; font-family:var(--mono); font-size:13px;">
       </span>
       <span class="chip">invariante: recaudación = coste reservas + guía + empresa ✓</span>
@@ -1867,7 +1981,10 @@ Plazas de vuestro grupo guardadas 48 h 👉 patioycompas.example/combo/x3f9
       <label class="mini">Nº de guías <b><span id="py-ng-v">3</span></b><br>
         <input type="range" id="py-ng" min="1" max="40" step="1" value="3" oninput="calcProy()" style="width:100%;"></label>
       <label class="mini">Reservas de tu web (sin comisión) <b><span id="py-dir-v">40</span> %</b><br>
-        <input type="range" id="py-dir" min="0" max="100" step="5" value="40" oninput="calcProy()" style="width:100%;"></label>
+        <!-- paso 1 y no 5: con paso 5 el deslizador no podía valer el 36 % que el reparto
+             por canal del Cuadro calcula, y arrancaba en 35 — un punto de diferencia entre
+             dos pantallas sobre el mismo dato, que es el descuadre de siempre en pequeño. -->
+        <input type="range" id="py-dir" min="0" max="100" step="1" value="40" oninput="calcProy()" style="width:100%;"></label>
       <label class="mini">Comisión por reserva de plataforma <b><span id="py-com-v">2,50</span> €</b><br>
         <input type="range" id="py-com" min="0" max="5" step="0.25" value="2.5" oninput="calcProy()" style="width:100%;"></label>
       <label class="mini">Gastos fijos de la empresa al mes <b><span id="py-ovh-v">250</span> €</b><br>
@@ -1905,24 +2022,26 @@ Plazas de vuestro grupo guardadas 48 h 👉 patioycompas.example/combo/x3f9
   <div class="cab"><h1>Cuadro de mando</h1><span class="sub">cómo va el negocio, de un vistazo · <span data-mes-actual>este mes</span></span></div>
 
   <div class="kpi-fila" style="margin:0 0 14px;">
-    <div class="kpi"><span class="v">114</span><span class="l">personas este mes (7 salidas)</span></div>
-    <div class="kpi"><span class="v">65 %</span><span class="l">ocupación media (sobre aforo 25)</span></div>
-    <div class="kpi"><span class="v">11,60 €</span><span class="l">propina media por persona</span></div>
+    <!-- Del CICLO, no escritos a mano: decían «114 personas (7 salidas) este mes» —los de
+         la semana congelada de cinco días— mientras el ciclo produce esa cifra en una sola
+         semana. La ocupación y la propina media salían del mismo sitio. -->
+    <div class="kpi"><span class="v" id="cm-pax">—</span><span class="l" id="cm-pax-l">personas</span></div>
+    <div class="kpi"><span class="v" id="cm-ocu">—</span><span class="l">ocupación media</span></div>
+    <div class="kpi"><span class="v" id="cm-prop">—</span><span class="l">propina media por persona</span></div>
     <div class="kpi"><span class="v">17 %</span><span class="l">no-show real (38 % antes del sistema)</span></div>
     <div class="kpi"><span class="v">4,9 ⭐</span><span class="l">nota media · 32 reseñas nuevas</span></div>
   </div>
 
   <div class="card">
     <h2>Asistencia por canal</h2>
-    <div class="fila" style="gap:10px; margin:8px 0;"><span class="mini" style="width:110px;">GuruWalk</span>
-      <span style="flex:1; height:9px; background:var(--line); border-radius:6px; overflow:hidden;"><i style="display:block; height:100%; width:42%; background:var(--acc);"></i></span>
-      <b class="mini num">48 p · 42 %</b></div>
-    <div class="fila" style="gap:10px; margin:8px 0;"><span class="mini" style="width:110px;">Web propia</span>
-      <span style="flex:1; height:9px; background:var(--line); border-radius:6px; overflow:hidden;"><i style="display:block; height:100%; width:33%; background:var(--gold);"></i></span>
-      <b class="mini num">38 p · 33 %</b></div>
-    <div class="fila" style="gap:10px; margin:8px 0;"><span class="mini" style="width:110px;">Civitatis</span>
-      <span style="flex:1; height:9px; background:var(--line); border-radius:6px; overflow:hidden;"><i style="display:block; height:100%; width:25%; background:var(--acc);"></i></span>
-      <b class="mini num">28 p · 25 %</b></div>
+    <!-- DEL CICLO. Estaba escrito a mano y sumaba 48+38+28 = 114 personas: las de la semana
+         congelada de cinco días, treinta píxeles por debajo de un KPI que ya dice 273. Es
+         el resto del arreglo del 17-ago, que cambió la fila de KPI y se dejó esta tarjeta.
+         Y no era solo que las cifras fueran viejas: se dejaba fuera DOS CANALES ENTEROS
+         —Freetour y los walk-in—, así que los porcentajes eran de una operación que no
+         existe. Justo en la tarjeta que invita a abrir la Proyección para mover el % de
+         web propia: el número del que se tira estaba mal. -->
+    <div id="cm-canales"></div>
     <p class="mini muted" style="margin:8px 0 0;">Cada punto que sube la web propia es comisión que no
       se va: pruébalo en la <a href="#proyeccion" style="color:var(--acc); font-weight:700;"
       onclick="ir('proyeccion'); return false;">Proyección de ingresos</a>.</p>
@@ -1946,25 +2065,30 @@ Plazas de vuestro grupo guardadas 48 h 👉 patioycompas.example/combo/x3f9
 
   <div class="card" style="overflow-x:auto;">
     <h2>Detalle por tour · por franja horaria</h2>
-    <table>
+    <!-- DEL CICLO. Era la tercera tabla escrita a mano que sumaba 57+43+12+2 = 114
+         personas: la semana congelada otra vez, en la misma pantalla cuyo KPI dice 273 y
+         justo encima del reparto por canal que ya se arregló. Y se dejaba fuera el tour de
+         PAGO, que sale cuatro días. -->
+    <table id="tabla-cuadro-franja">
       <tr><th>Tour · hora</th><th>Salidas</th><th>Personas</th><th>Media/salida</th><th>Propina/persona</th></tr>
-      <tr><td><b>Centro · 10:00</b></td><td>3</td><td>57</td><td class="num">19,0</td><td class="num">12,10 €</td></tr>
-      <tr><td><b>Centro · 17:00</b></td><td>2</td><td>43</td><td class="num">21,5</td><td class="num">11,40 €</td></tr>
-      <tr><td><b>Triana · 18:30</b></td><td>1</td><td>12</td><td class="num">12,0</td><td class="num">25,10 €</td></tr>
-      <tr><td><b>Nocturno · 21:00</b></td><td>1</td><td>2</td><td class="num neg">2,0</td><td class="num neg">0,00 €</td></tr>
     </table>
-    <div class="mini muted" style="margin:10px 0 0;">⚠ El <b>Nocturno</b> no tracciona: 2 personas y sin
-      propina. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Muévelo de hora o descansa la salida — decidirlo con datos y no a ojo es exactamente
-      para lo que sirve este cuadro. El Triana, al revés: pocos pero propina 25 €/persona → sube
-      frecuencia.</span></details></div>
+    <!-- La lectura la escribe `pintaCuadroFranjas` con la franja MÁS FLOJA de la semana,
+         que no siempre es la misma. Aquí ponía «el Nocturno no tracciona: 2 personas y sin
+         propina» — las cifras de la semana congelada—, y en cuanto la tabla pasó a salir del
+         ciclo, el aviso señalaba números que la tabla de encima ya no decía. -->
+    <div class="mini muted" style="margin:10px 0 0;" id="cm-franja-nota"></div>
   </div>
 
   <div class="card" style="overflow-x:auto;">
     <h2>Por guía</h2>
-    <table>
+    <!-- DE LA LIQUIDACIÓN, que es lo que la nota de aquí abajo lleva prometiendo desde
+         siempre: «una sola fuente de verdad». Era la única tabla de la demo que no salía de
+         esa fuente — dos filas escritas a mano, Elena 51 y Curro 61 sobre el mismo rango en
+         que la Liquidación decía 60 y 61— y encima sin YASMINA, que guía cuatro salidas por
+         semana. Una tarjeta que promete cuadrar con otra y no cuadra es peor que una que no
+         promete nada: invita justo a la comparación que la desmiente. -->
+    <table id="tabla-cuadro-guia">
       <tr><th>Guía</th><th>Personas</th><th>Propina/persona</th><th>Valoración</th></tr>
-      <tr><td><b>Elena</b></td><td>51</td><td class="num">13,60 €</td><td>4,9 ⭐ <span class="mini muted">(«la mejor guía de Sevilla», «divertidísima»)</span></td></tr>
-      <tr><td><b>Curro</b></td><td>61</td><td class="num">10,30 €</td><td>4,8 ⭐ <span class="mini muted">(«sabe muchísimo», «muy amable»)</span></td></tr>
     </table>
     <p class="mini muted" style="margin:10px 0 0;">Mismos números que verás en la
       <a href="#liquidacion" style="color:var(--acc); font-weight:700;" onclick="ir('liquidacion'); return false;">Liquidación</a> —
@@ -1980,8 +2104,8 @@ Plazas de vuestro grupo guardadas 48 h 👉 patioycompas.example/combo/x3f9
     <div class="kpi-fila" style="margin:0 0 10px;">
       <div class="kpi"><span class="v">31</span><span class="l">personas de descuadre este mes</span></div>
       <div class="kpi"><span class="v">28</span><span class="l">no-shows reportados a tiempo (≤72 h)</span></div>
-      <div class="kpi"><span class="v">70,00 €</span><span class="l">comisión recuperada al reportarlos</span></div>
-      <div class="kpi malo"><span class="v">7,50 €</span><span class="l">asumido por no reportar 3 a tiempo</span></div>
+      <div class="kpi"><span class="v">52,00 €</span><span class="l">comisión recuperada al reportarlos</span></div>
+      <div class="kpi malo"><span class="v">7,00 €</span><span class="l">asumido por no reportar 3 a tiempo</span></div>
     </div>
     <table>
       <tr><th>Plataforma</th><th>Descuadre (pers.)</th><th>Reportados</th><th>Recuperado</th><th>Asumido</th></tr>
@@ -2295,10 +2419,22 @@ var S = {
     { n:"Sofía Cabrera",  p:6, canal:"GuruWalk",  ok:false, grupo:true, conf:true },
     { n:"Javier Cabrera",  p:5, canal:"GuruWalk",  ok:false, grupo:true, conf:true },
     { n:"Julia Keller",  p:2, canal:"Web propia", ok:true },
-    { n:"Fam. Dubois",   p:4, canal:"Civitatis", ok:true  },
-    { n:"Iker Ortiz",    p:2, canal:"Web propia", ok:false, tarde:true },
+    /* `ant` e `hist` también aquí: este manifiesto es la salida de mañana cuando la demo
+       se abre un viernes, y sin ellas la pantalla de recordatorios se quedaba ese día con
+       dos factores de riesgo apagados. */
+    { n:"Fam. Dubois",   p:4, canal:"Civitatis", ok:true, ant:true },
+    { n:"Iker Ortiz",    p:2, canal:"Web propia", ok:false, tarde:true, hist:true },
   ],
   cupo:[ {p:'GuruWalk', cerrado:false}, {p:'Civitatis', cerrado:false}, {p:'Web propia', cerrado:false} ],
+  /* LA CANCELACIÓN DE ESTA MAÑANA Y LA LISTA DE ESPERA, como estado y no como dos frases.
+     La tarjeta de la lista de espera decía «se liberaron 3 plazas» y el seguimiento «1
+     cancelación (2 personas)» — la misma cancelación con dos tamaños, treinta píxeles más
+     abajo. Ahora hay UN registro y las dos frases lo leen; y si alguien cancela por el
+     chat mientras enseñas la demo, se añade aquí y los dos números suben juntos.
+     Cancelada «esta mañana», así que NO está en el parte: una reserva cancelada no aparece
+     en el manifiesto del guía. Por eso no descuadra los totales del día. */
+  canceladas:[ { n:'Grupo Meyer', p:3, canal:'GuruWalk', hora:null, tour:null, semilla:true } ],
+  espera:[ { n:'Familia Novak', p:2 } ],
   tours:[], tourChat:0, tourKb:0, kbAbierto:null,
   plan:'esencial',    // plan activo en la demo (esencial/pro/premium)
   desbloqueado:{},    // suplementos abiertos a mano para probar (sin cambiar de plan)
@@ -2349,7 +2485,9 @@ S.tours.push(tourNuevo('Free tour centro histórico', 'semilla', {
 S.tours.push(tourNuevo('Triana con tapas', 'semilla', {
   titulo:'Triana con tapas',
   modelo:'Free tour (propina) — reserva a 0 €',
-  horas:'jueves, viernes y sábados · 18:30',
+  horas:'jueves y sábados · 18:30',   /* los MISMOS días que el ciclo: `parseDiasStr` lee
+     este texto y lo une a las franjas, así que un día de más aquí es una salida fantasma
+     que Equipo cuenta como «sin cubrir». */
   dur:'2 h',
   punto:'el Puente de Isabel II, en el lado de Triana',
   fin:'el Mercado de Triana',
@@ -2371,7 +2509,7 @@ S.tours.push(tourNuevo('Triana con tapas', 'semilla', {
 S.tours.push(tourNuevo('Nocturno de leyendas', 'semilla', {
   titulo:'Nocturno de leyendas',
   modelo:'Free tour (propina) — reserva a 0 €',
-  horas:'viernes a domingo · 21:00',
+  horas:'domingos · 21:00',           /* idem: el ciclo solo saca el Nocturno el domingo. */
   dur:'1 h 45 min',
   punto:'la Plaza del Salvador, junto a la iglesia',
   fin:'la Torre del Oro (por fuera)',
@@ -2390,10 +2528,70 @@ S.tours.push(tourNuevo('Nocturno de leyendas', 'semilla', {
   distancia:'2,5 km',
   propina:'entre 10 y 15 € por persona',
 }));
+/* EL TOUR DE PAGO, con su ficha — el cuarto tour, y el primero que no es de propina.
+   Salía cuatro días a la semana en el parte y no existía en el Cerebro, y eso no es medio
+   tour: es un tour del que GuIA no sabía NADA. No estaba en el selector del chat, no tenía
+   punto de encuentro que dar, y el único hecho de precio que encontraba era el del tour de
+   al lado — así que a «¿cuánto cuesta el del Alcázar?» contestaba «reserva a 0 €, al final
+   aportas lo que consideres» sobre una salida de 24 €. Prometer gratis lo que se cobra es
+   el peor fallo que puede tener este motor.
+   Los días, la hora y el precio NO se escriben aquí a ojo: son los que `GUION_SEMANA`
+   produce —lunes, miércoles, viernes y sábados a las 19:00, 24 €—, y el banco del corpus
+   compara las dos cosas y se pone rojo si alguien mueve una sin la otra.
+   Y es el que hace visible el «sin cruces», que hasta ahora se demostraba entre tres tours
+   que decían casi lo mismo: aquí el perro entra en el free tour y NO entra en el Alcázar,
+   se paga al reservar en vez de al final, y no hay propina que orientar. Un hecho por
+   tour, y ninguno se contagia. */
+S.tours.push(tourNuevo('Alcázar al atardecer', 'semilla', {
+  titulo:'Alcázar al atardecer',
+  modelo:'Tour con entrada: 24 € por persona, se paga al reservar',
+  horas:'lunes, miércoles, viernes y sábados · 19:00',
+  dur:'1 h 45 min',
+  punto:'la Puerta del León del Real Alcázar, en el Patio de Banderas',
+  fin:'los jardines del Alcázar, junto al Estanque de Mercurio',
+  idiomas:'Español (y en inglés si lo pides al reservar)',
+  aforo:'18',
+  senal:'cartel granate con el nombre del tour',
+  espera:'10 minutos desde la hora de salida — después el grupo entra y ya no se puede acceder',
+  lluvia:'El tour se hace igual: casi todo el recorrido es bajo techo. Si el Alcázar cerrara por causa mayor, te devolvemos la entrada entera',
+  cancelar:'Gratis hasta 24 horas antes desde tu enlace de reserva; a partir de ahí la entrada ya está emitida y no se devuelve',
+  cambios:'Sí, cambia la fecha o el número de personas hasta 24 horas antes desde tu enlace de reserva',
+  visita:'el Patio del León, el Patio de la Montería, el Palacio de Pedro I con el Salón de Embajadores, los Baños de María de Padilla y los jardines a la hora dorada',
+  minimo:'La salida está confirmada desde que reservas: con la entrada emitida, el tour sale seguro',
+  entradas:'La entrada al Alcázar va incluida en los 24 €: no hay que comprar nada aparte ni hacer cola',
+  pago:'Al reservar, con tarjeta desde nuestra web — la entrada se emite en ese momento a tu nombre',
+  corte:'24 horas antes de la salida, que es cuando cerramos las entradas con el Alcázar',
+  distancia:'1 km, casi todo dentro del recinto',
+  imprimir:'No hace falta imprimir nada: vamos con la lista y en la puerta basta tu nombre',
+  antelacion:'Llega 15 minutos antes: el control de acceso del Alcázar lleva su tiempo',
+  /* Las tres que se separan del free tour, y por eso están escritas: son las que
+     demuestran que un hecho no se contagia de un tour a otro.
+     `mascotas` es la más importante de las tres — el free tour dice que el perro es
+     bienvenido, y contestar eso aquí manda a alguien con su perro a una puerta donde no
+     va a poder entrar, con la entrada ya pagada. */
+  mascotas:'En el Alcázar solo pueden entrar perros de asistencia. Si vienes con tu perro, el free tour del centro sí lo admite 🐾',
+  acces:'El palacio y los jardines son accesibles en silla de ruedas; hay un tramo de los Baños con escalones que se puede rodear — dímelo al reservar y lo dejo preparado',
+  ninos:'Los menores de 16 entran gratis al Alcázar, así que solo pagan la parte del guía: 12 € — díselo al encargado y te ajusta la reserva',
+  /* `propina` se queda VACÍO y no es un olvido: es opcional en el catálogo, y en un tour
+     que ya se ha cobrado no hay aportación que orientar. Si llevara importe, GuIA le
+     pediría propina a quien pagó su entrada.
+     Y a propósito vacíos también (banos, comida, ritmo, llevar, fotos, equipaje, solo,
+     clima, noshow, antes, llegar, audio, grupodesde, grupomin, edadmin): el Cerebro de un
+     tour recién montado tiene huecos, y este es el que se acaba de dar de alta. */
+}));
 S.kbEmpresa = {
   quienes:'Somos Patio y Compás, empresa local de guías titulados en Sevilla, con más de 2.000 reseñas verificadas. Y sí, el free tour es de verdad: reservas gratis y al final aportas lo que consideres.',
   privados:'¡Sí! Hacemos tours privados a medida, desde 180 € por grupo. Dímelo y el encargado te prepara una propuesta sin compromiso.',
-  catalogo:'',      // vacíos a propósito: se ven huecos "de empresa"
+  /* EL CATÁLOGO, escrito. Estaba vacío «para que se vean los huecos de empresa», y el
+     precio de esa demostración era que la pantalla «Lo que vendes además del tour» promete
+     con todas las letras —«se escribe una vez en el Cerebro y GuIA lo cuenta cuando
+     alguien pregunta qué más hacéis»— algo que la GuIA de la misma demo no hacía: derivaba.
+     La demostración del hueco no se pierde: quedan cuatro vacíos de empresa (seguridad,
+     fumar, wifi, confirmación) y catorce de tour. Lo que se gana es que el complemento que
+     se vende en la web se pueda enseñar funcionando.
+     Nombra los tours que el ciclo SACA, con su precio real. Un catálogo que anuncie una
+     salida que no existe es peor que no tenerlo: GuIA la vende y no hay dónde reservarla. */
+  catalogo:'Además del free tour del centro hacemos el «Alcázar al atardecer» (24 € con la entrada incluida, lunes, miércoles, viernes y sábados a las 19:00), «Triana con tapas» y el «Nocturno de leyendas» — estos dos también de propina, como el del centro.',
   seguridad:'',
   ciudades:'De momento solo Sevilla 🙂 Si te encaja, reserva tu plaza en nuestra web.',
   resena:'g.page/patio-y-compas-sevilla/review',
@@ -2423,16 +2621,50 @@ S.equipo = {
   guias:[
     { n:'Elena', color:'#0c6b56', idiomas:'ES · EN', tours:'Centro · Triana', nota:'4,9', checkin:true,  activo:true, dispo:{} },
     { n:'Curro', color:'#3b5bdb', idiomas:'ES · EN', tours:'Centro · Nocturno',   nota:'4,8', checkin:false, activo:true, dispo:{} },
+    /* YASMINA EXISTÍA EN EL PARTE Y NO EN EL EQUIPO. El ciclo semanal le asigna cuatro
+       salidas —Triana y el Alcázar— y la pantalla de Equipo no la listaba: el encargado
+       veía un nombre guiando en el manifiesto que no estaba entre sus guías. */
+    { n:'Yasmina', color:'#c2410c', idiomas:'ES · EN · AR', tours:'Triana · Alcázar', nota:'4,9', checkin:true, activo:true, dispo:{} },
     { n:'Álvaro', color:'#9c4dcc', idiomas:'ES',      tours:'—',                   nota:'4,7', checkin:false, activo:false, dispo:{} },
   ],
   sinGuia:[ { tourNombre:'Nocturno de leyendas', hora:'21:00', dia:6, cuando:'domingo · 21:00', asignada:null } ],
   // franjas sueltas (tours especiales) con los días de la semana en que salen (0=lun..6=dom)
-  franjasExtra:[ { tour:'Triana con tapas', hora:'18:30', dias:[3,4,5] },
-                 { tour:'Nocturno de leyendas', hora:'21:00', dias:[4,5,6] } ],
+  /* SE RELLENA DEL CICLO en `seedCobertura`. Estaba escrita a mano y decía que el Triana
+     sale jueves, viernes y sábado y el Nocturno de viernes a domingo — pero el ciclo solo
+     produce el Triana el jueves y el sábado, y el Nocturno el domingo. De ahí salían las
+     «3 salidas sin cubrir» que Equipo anunciaba cuando en realidad hay una. */
+  franjasExtra:[],
 };
 /* ---- Agenda diaria del guía (formato ML): todos los tours del día, walk-in y
    recaudación. Cuadra con la Liquidación/Cuadro de julio. Hoy = sáb 18 jul. ---- */
-function resAg(defs){ return defs.map(function(d){ return {n:d[0], p:d[1], canal:d[2], ok:!!d[3], walkin:!!d[4], nsAuto:!!d[5]}; }); }
+/* Las señales de riesgo van en un objeto opcional al final —`{ant:1, hist:1, conf:1}`— y no
+   en más posiciones sueltas: con seis flags posicionales, `['X',2,'Web propia',0,0,0,1,0,1]`
+   ya no lo lee nadie, y un 1 en la casilla equivocada es un dato falso que no da error.
+     ant  reservó con más de 7 días de antelación
+     hist ya faltó a otra salida
+     conf respondió «sí voy» al recordatorio  ← NO es `ok`, y por eso es otro campo:
+          `ok` es la asistencia con la que se cierra el tour (y con la que se divide la
+          propina media); `conf` es una respuesta ANTES de salir. Meterlas en el mismo
+          campo hacía que confirmar por WhatsApp moviera la propina media de la semana. */
+/* EL LOCALIZADOR, derivado del nombre. Sin él, GuIA aceptaba cualquier «PYC-loquesea» y
+   contestaba «¡Hecho! Cancelo tu reserva ✅» sin saber CUÁL — y sin cancelar ninguna.
+   `S.locsVivos`, que el motor consulta para reconocer un localizador escrito sin prefijo,
+   estaba a `null` en la demo: esa rama entera era código muerto.
+   Se calcula del nombre y no al azar para que sea el MISMO en cada recarga: un código que
+   cambia solo no se puede enseñar en una llamada ni depurar. */
+/* «cancelaciónes» no existe: el plural de «cancelación» pierde la tilde. Pegar una «es»
+   al singular sirve para «plaza/plazas» y no para las palabras agudas acabadas en -ón, que
+   son justo las del vocabulario de esta pantalla. */
+function plural(n, uno, muchos){ return n===1 ? uno : muchos; }
+function locDe(nombre){
+  var h = 0, s = String(nombre);
+  for (var i=0;i<s.length;i++) h = (h*31 + s.charCodeAt(i)) & 0xffff;
+  return 'PYC-' + String(1000 + (h % 9000));
+}
+function resAg(defs){ return defs.map(function(d){
+  var s = d[6] || {};
+  return {n:d[0], p:d[1], canal:d[2], ok:!!d[3], walkin:!!d[4], nsAuto:!!d[5],
+          ant:!!s.ant, hist:!!s.hist, conf:!!s.conf, loc:locDe(d[0])}; }); }
 /* ══ EL CICLO SEMANAL ═══════════════════════════════════════════════════════════════
    Antes esto era UNA semana congelada: `S.agendaBase='2026-07-18'` y cinco días con la
    fecha escrita a mano («sáb 18 jul · HOY»). Dos problemas, y el segundo es el caro:
@@ -2461,50 +2693,110 @@ var MESES_CORTO = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','
    `foco` es lo que ese día viene a enseñar; sale en el rótulo de la agenda para que quien
    recorre la semana sepa qué está mirando en cada parada. */
 var GUION_SEMANA = {
+  /* MÁS CARGA, y no por adornar: con una salida y dos reservas al día, la mitad de las
+     pantallas —el cupo, la cobertura, la conciliación, el reparto por canal— salían con
+     números tan pequeños que no demostraban nada. Una empresa de verdad tiene dos o tres
+     salidas diarias y ocho o diez reservas por salida; con eso los KPI dejan de ser
+     decorativos y las excepciones (grupo grande, salida llena, guía sin cubrir) aparecen
+     solas donde tienen que aparecer.
+     El TOUR DE PAGO entra en el guion —«Alcázar al atardecer», 24 €— porque el
+     complemento se vende en la web y en la demo no se veía ni una salida suya: sin él, la
+     liquidación no tiene ticket que repartir ni comisión de canal que calcular. */
   1: { foco: 'el lunes de las cuentas', tours: [
        { hora:'10:00', tit:'Centro histórico', guia:'Elena', rec:0,
-         res:resAg([['Fam. Weber',3,'GuruWalk',0],['I. Costa',2,'Web propia',0]]) },
+         res:resAg([['Fam. Weber',3,'GuruWalk',0,0,0,{ant:1}],['I. Costa',2,'Web propia',0,0,0,{conf:1}],
+                    ['S. Lindholm',2,'Civitatis',0],['Grupo Meyer',4,'GuruWalk',0,0,0,{hist:1}],
+                    ['A. Ferreira',2,'Freetour',0],['T. Kaufmann',3,'Web propia',0]]) },
+       { hora:'17:00', tit:'Centro histórico', guia:'Curro', rec:0,
+         res:resAg([['J. Moretti',2,'GuruWalk',0],['Fam. Sanz',4,'Web propia',0],
+                    ['P. Nowak',2,'Civitatis',0]]) },
+       { hora:'19:00', tit:'Alcázar al atardecer', precio:24, guia:'Yasmina', rec:0,
+         res:resAg([['R. Delgado',2,'Web propia',0],['K. Bauer',2,'Civitatis',0]]) },
      ]},
   2: { foco: 'el buzón trabajando', tours: [
        { hora:'10:00', tit:'Centro histórico', guia:'Curro', rec:0,
-         res:resAg([['H. Lindqvist',2,'Civitatis',0],['Fam. Otero',4,'Web propia',0]]) },
+         res:resAg([['H. Lindqvist',2,'Civitatis',0,0,0,{hist:1}],['Fam. Otero',4,'Web propia',0,0,0,{conf:1}],
+                    ['M. Rossi',3,'GuruWalk',0],['Grupo Aalto',5,'GuruWalk',0,0,0,{ant:1}],
+                    ['C. Ibáñez',2,'Freetour',0],['D. Fischer',2,'Civitatis',0],
+                    ['Fam. Leroy',4,'Web propia',0]]) },
        { hora:'17:00', tit:'Centro histórico', guia:'Elena', rec:0,
-         res:resAg([['B. Rossi',2,'GuruWalk',0]]) },
+         res:resAg([['B. Rossi',2,'GuruWalk',0],['N. Halonen',3,'Civitatis',0],
+                    ['Fam. Duarte',4,'Web propia',0],['O. Petrova',2,'GuruWalk',0]]) },
      ]},
   3: { foco: 'el Cerebro a medio montar', tours: [
        { hora:'10:00', tit:'Centro histórico', guia:'Elena', rec:0,
-         res:resAg([['M. Andersen',2,'Web propia',0],['Grupo Ferrer',5,'GuruWalk',0]]) },
+         res:resAg([['M. Andersen',2,'Web propia',0,0,0,{conf:1}],['Grupo Ferrer',5,'GuruWalk',0,0,0,{ant:1}],
+                    ['L. Bianchi',2,'Civitatis',0,0,0,{hist:1}],['Fam. Navarro',4,'Web propia',0],
+                    ['S. Wagner',2,'GuruWalk',0],['V. Popescu',3,'Freetour',0]]) },
+       /* El 17:00 que le faltaba: la ficha del Centro dice «todos los días · 10:00 y
+          17:00», así que sin esta salida el miércoles quedaba un hueco fantasma que
+          Equipo contaba como «sin cubrir». */
+       { hora:'17:00', tit:'Centro histórico', guia:'Curro', rec:0,
+         res:resAg([['Fam. Quirós',3,'Web propia',0],['E. Lahti',2,'GuruWalk',0],
+                    ['R. Amato',2,'Civitatis',0]]) },
+       { hora:'19:00', tit:'Alcázar al atardecer', precio:24, guia:'Curro', rec:0,
+         res:resAg([['Fam. Ortiz',3,'Web propia',0],['G. Steiner',2,'Civitatis',0],
+                    ['H. Nakamura',2,'Web propia',0]]) },
      ]},
   4: { foco: 'los recordatorios de mañana', tours: [
        { hora:'10:00', tit:'Centro histórico', guia:'Curro', rec:0,
-         res:resAg([['S. Nakamura',2,'Civitatis',0],['Fam. Prieto',3,'Web propia',0],
-                    ['L. Dubois',2,'GuruWalk',0]]) },
-       { hora:'18:30', tit:'Triana con tapas', guia:'Elena', rec:0,
-         res:resAg([['K. Novak',2,'Web propia',0]]) },
+         res:resAg([['S. Nakamura',2,'Civitatis',0,0,0,{hist:1}],['Fam. Prieto',3,'Web propia',0,0,0,{conf:1}],
+                    ['L. Dubois',2,'GuruWalk',0],['Grupo Virtanen',6,'GuruWalk',0,0,0,{ant:1}],
+                    ['A. Molnár',2,'Freetour',0],['Fam. Roca',4,'Web propia',0],
+                    ['E. Sørensen',2,'Civitatis',0]]) },
+       { hora:'17:00', tit:'Centro histórico', guia:'Elena', rec:0,
+         res:resAg([['T. Bergman',2,'GuruWalk',0],['Fam. Gil',3,'Web propia',0],
+                    ['R. Kovács',2,'Civitatis',0]]) },
+       { hora:'18:30', tit:'Triana con tapas', guia:'Yasmina', rec:0,
+         res:resAg([['K. Novak',2,'Web propia',0],['Fam. Requena',4,'GuruWalk',0],
+                    ['P. Andersson',2,'Civitatis',0]]) },
      ]},
+  /* Sin `rec` escrito: lo calcula `montaSemana` según el día caiga en pasado o futuro.
+     Estaba puesto aquí —232 € y 267 €— porque este guion se escribió como «el viernes que
+     ya pasó», y un martes la demo enseñaba ese dinero recaudado en una salida de tres días
+     después. */
   5: { foco: 'las salidas que hay que cerrar', tours: [
-       { hora:'10:00', tit:'Centro histórico', guia:'Elena', rec:104.0,
-         res:resAg([['Fam. Serrano',3,'Web propia',1],['P. Kowalski',2,'Web propia',1],
-                    ['Grupo Hansen',4,'GuruWalk',1],['N. Berger',2,'GuruWalk',0,0,1],
-                    ['C. Vidal',2,'Civitatis',0,0,1]]) },
-       { hora:'17:00', tit:'Centro histórico', guia:'Curro', rec:214.5,
+       { hora:'10:00', tit:'Centro histórico', guia:'Elena', rec:0,
+         res:resAg([['Fam. Serrano',3,'Web propia',1,0,0,{conf:1}],['P. Kowalski',2,'Web propia',1],
+                    ['Grupo Hansen',4,'GuruWalk',1,0,0,{ant:1}],['N. Berger',2,'GuruWalk',0,0,1,{hist:1}],
+                    ['C. Vidal',2,'Civitatis',0,0,1],['M. Eriksen',3,'GuruWalk',1],
+                    ['Fam. Solís',4,'Web propia',1],['J. Kim',2,'Freetour',1]]) },
+       { hora:'17:00', tit:'Centro histórico', guia:'Curro', rec:0,
          res:resAg([['Fam. Herrera',3,'Web propia',1],['H. Meyer',2,'GuruWalk',1],
                     ['Grupo Lévy',5,'Civitatis',1],['J. Alonso',2,'Web propia',1],
                     ['T. Moreno',4,'GuruWalk',1],['Walk-in',4,'walk-in',1,1]]) },
+       { hora:'19:00', tit:'Alcázar al atardecer', precio:24, guia:'Yasmina', rec:0, ventaEfectivo:96,
+         res:resAg([['Fam. Cano',4,'Web propia',1],['L. Ricci',2,'Civitatis',1],
+                    ['S. Haddad',2,'GuruWalk',1]]) },
      ]},
   6: { foco: 'el día fuerte, en marcha', tours: [
-       { hora:'10:00', tit:'Centro histórico', guia:'Elena', live:true, rec:0, res:S.att,
+       /* Sin `live:true`: lo pone `montaSemana` mirando el reloj. Escrito aquí, el cuadro
+          del día decía «1 tour en marcha» a las once de la noche del sábado y «0» a las
+          diez y media de un martes con el grupo andando. */
+       { hora:'10:00', tit:'Centro histórico', guia:'Elena', rec:0, res:S.att,
          obs:[{ a:'GuIA', rec:false, t:'«Fam. Dubois» avisó por el chat que vendrán 3, no 4 — ajústalo al llegar' }] },
        { hora:'17:00', tit:'Centro histórico', guia:'Curro', rec:0,
-         res:resAg([['Fam. Green',4,'Web propia',0],['L. Ortega',2,'Civitatis',0],['S. Petit',3,'GuruWalk',0]]) },
-       { hora:'18:30', tit:'Triana con tapas', guia:'Elena', rec:0,
-         res:resAg([['R. Vargas',2,'Web propia',0],['Grupo Dubois',6,'GuruWalk',0]]) },
+         res:resAg([['Fam. Green',4,'Web propia',0],['L. Ortega',2,'Civitatis',0],
+                    ['S. Petit',3,'GuruWalk',0],['Grupo Jensen',5,'GuruWalk',0],
+                    ['A. Costa',2,'Freetour',0],['Fam. Bru',4,'Web propia',0]]) },
+       { hora:'18:30', tit:'Triana con tapas', guia:'Yasmina', rec:0,
+         res:resAg([['R. Vargas',2,'Web propia',0],['Grupo Dubois',6,'GuruWalk',0],
+                    ['M. Lorenzo',3,'Civitatis',0]]) },
+       { hora:'19:00', tit:'Alcázar al atardecer', precio:24, guia:'Curro', rec:0,
+         res:resAg([['Fam. Ruano',3,'Web propia',0],['T. Halla',2,'Civitatis',0],
+                    ['B. Osei',2,'Web propia',0],['Fam. Marín',4,'GuruWalk',0]]) },
      ]},
   0: { foco: 'el nocturno sin guía', tours: [
        { hora:'10:00', tit:'Centro histórico', guia:'Curro', rec:0,
-         res:resAg([['A. Novak',2,'Civitatis',0],['Fam. Ruiz',4,'Web propia',0],['K. Schmidt',2,'GuruWalk',0]]) },
+         res:resAg([['A. Novak',2,'Civitatis',0,0,0,{hist:1}],['Fam. Ruiz',4,'Web propia',0,0,0,{conf:1}],
+                    ['K. Schmidt',2,'GuruWalk',0],['Grupo Salo',5,'GuruWalk',0,0,0,{ant:1}],
+                    ['I. Marchetti',2,'Freetour',0],['Fam. Pardo',3,'Web propia',0]]) },
+       { hora:'17:00', tit:'Centro histórico', guia:'Elena', rec:0,
+         res:resAg([['D. Rivas',2,'Web propia',0],['Fam. Klein',4,'GuruWalk',0],
+                    ['Y. Tanaka',2,'Civitatis',0]]) },
        { hora:'21:00', tit:'Nocturno de leyendas', guia:'— sin asignar —', sinGuia:true, rec:0,
-         res:resAg([['P. Marín',2,'Web propia',0]]) },
+         res:resAg([['P. Marín',2,'Web propia',0],['Fam. Blasco',3,'GuruWalk',0],
+                    ['C. Amaral',2,'Civitatis',0]]) },
      ]},
 };
 
@@ -2533,6 +2825,67 @@ function clonaTours(ts){
   });
 }
 
+/* ── QUÉ SALIDA ESTÁ EN MARCHA, Y UNA SOLA DEFINICIÓN ────────────────────────────────
+   Había DOS, y se contradecían en la misma pantalla con tres centímetros de por medio:
+     · el cuadro del día contaba las salidas con el flag `live` del guion —que solo lo
+       llevaba puesto el 10:00 del sábado—, así que cualquier otro día decía «0 tours en
+       marcha»…
+     · …mientras el seguimiento, justo debajo, calculaba la salida en curso con el RELOJ y
+       anunciaba «🚶 Tour en curso: Centro histórico · 17:00 · en marcha».
+   Y el sábado, que era el único día en que los dos números coincidían, coincidían por
+   casualidad: el flag señalaba el 10:00 y el reloj el 17:00. Dos definiciones que dan el
+   mismo número señalando cosas distintas es peor que dos números distintos, porque no se
+   nota.
+   Ahora `live` se DERIVA del reloj al montar la semana, con la misma ventana que usa la
+   app del guía (`esAhora`): desde media hora antes de salir hasta dos horas y media
+   después. Un solo concepto de «ahora» en todo el producto — que es lo que el comentario
+   del seguimiento ya decía que había que hacer.
+
+   LA HORA SE PUEDE FIJAR, y hace falta por lo mismo que la fecha: con `live` saliendo del
+   reloj, el banco del corpus dependería de la hora a la que se ejecuta, y una red que pasa
+   a las diez y falla a las ocho no es una red. Cuando el día viene fijado (`__DEMO_HOY`,
+   que es el gancho de las pruebas) la hora se fija también, a las 10:30 — que es la que
+   deja el 10:00 en marcha, o sea el estado con el que se escribió el banco.
+   Con `?dia=` NO se fija: ahí la demo se está enseñando de verdad y la hora es la de quien
+   la abre. */
+var VENTANA_LIVE_ANTES = 30, VENTANA_LIVE_DESPUES = 150;
+var HORA_DEMO = (function(){
+  var fijada = (typeof window !== 'undefined' && window.__DEMO_AHORA) ||
+    (typeof window !== 'undefined' && window.__DEMO_HOY ? '10:30' : null);
+  if (fijada){ var p = String(fijada).split(':'); return (+p[0])*60 + (+p[1]||0); }
+  var n = new Date(); return n.getHours()*60 + n.getMinutes();
+})();
+function minutosDe(hora){
+  var p = String(hora||'').split(':'); return (+p[0])*60 + (+p[1]||0);
+}
+/* ¿Esta salida está en curso AHORA? Solo puede estarlo una de hoy: una salida «en marcha»
+   el jueves que viene es una contradicción, y recorrer la agenda con las flechas no puede
+   poner tours en marcha en otros días. */
+function esAhora(t, esHoy){
+  if (!esHoy) return false;
+  var dif = HORA_DEMO - minutosDe(t.hora);
+  return dif >= -VENTANA_LIVE_ANTES && dif <= VENTANA_LIVE_DESPUES;
+}
+/* ── LO QUE SE RECAUDA ES UNA CONSECUENCIA DE HABER SALIDO ──────────────────────────
+   El guion del VIERNES se escribió como día pasado: sus reservas llevan `ok:1` (asistió) y
+   sus salidas `rec` (dinero contado). Pero `montaSemana` decide qué es pasado por la
+   POSICIÓN en la ventana, no por el guion — así que un martes, un miércoles o un jueves,
+   el viernes cae en el futuro y la demo enseñaba una salida de pasado mañana con 232 €
+   YA RECAUDADOS y gente que ya había asistido. Y al revés: los otros seis guiones no
+   llevan `rec`, así que un martes la semana entera recaudaba cero.
+   Las dos caras del mismo error: la recaudación y la asistencia estaban ESCRITAS en un día
+   concreto cuando son consecuencia de que el día haya ocurrido.
+   Ahora se derivan de la posición: un día futuro no tiene ni dinero ni asistencia; uno
+   pasado los tiene todos; y hoy se queda como está —el tour de la mañana lleva su
+   check-in real y los de la tarde todavía no han salido—.
+   La tarifa por tour sale de lo que la propia demo cuenta en el cuadro por franja: el
+   Triana da 25 € por persona con grupos pequeños y el Centro ronda los 11,5. El tour de
+   PAGO no deja propina: se cobró el ticket. */
+var PROPINA_POR_TOUR = { 'Triana con tapas':25.10, 'Nocturno de leyendas':12.00, '':11.00 };
+function tarifaPropina(t){
+  if (t.precio) return 0;                       // ticket pagado: no hay bote
+  return PROPINA_POR_TOUR[t.tit] !== undefined ? PROPINA_POR_TOUR[t.tit] : PROPINA_POR_TOUR[''];
+}
 function montaSemana(hoy){
   var dias = [];
   for (var i = -VENTANA_ATRAS; i <= VENTANA_ADELANTE; i++){
@@ -2541,9 +2894,43 @@ function montaSemana(hoy){
     var dia = { fecha: rotulaDia(d, i===0), iso: isoDe(d), foco: g.foco, tours: clonaTours(g.tours) };
     if (i === 0) dia.hoy = true;
     if (i < 0) dia.pasado = true;
-    /* `live` solo tiene sentido en HOY: una salida «en marcha» el jueves que viene sería
-       una contradicción, y el guion del sábado lo lleva puesto. */
-    if (i !== 0) dia.tours.forEach(function(t){ delete t.live; });
+    /* `live` no se hereda del guion: se calcula. Si dos salidas del día caen dentro de la
+       ventana —el 17:00 y el 18:30 a las 19:00, por ejemplo—, en marcha está la PRIMERA
+       que empezó y no las dos: el grupo que sigue andando es uno. */
+    var yaHay = false;
+    dia.tours.forEach(function(t){
+      delete t.live;
+      if (!yaHay && esAhora(t, i===0)){ t.live = true; yaHay = true; }
+    });
+    /* Y el estado de cada salida, que EN HOY va por horas y no por día: a las siete de la
+       tarde el tour de las diez ya se cobró, el de las siete está andando y el de las nueve
+       no ha salido. Tratar el día entero como una sola cosa era lo que hacía que un viernes
+       —el guion que venía con `ok:1` escrito— enseñara gente asistida sin un euro contado. */
+    dia.tours.forEach(function(t){
+      var estado = i < 0 ? 'pasado'
+                 : i > 0 ? 'futuro'
+                 : (t.live ? 'curso'
+                   : (HORA_DEMO - minutosDe(t.hora) > VENTANA_LIVE_DESPUES ? 'pasado' : 'futuro'));
+      if (estado === 'futuro'){
+        /* Nadie ha ido todavía: ni dinero, ni asistencia, ni no-shows. */
+        t.rec = 0; delete t.ventaEfectivo;
+        (t.res||[]).forEach(function(r){ r.ok = false; r.nsAuto = false; });
+      } else if (estado === 'pasado'){
+        /* Vino todo el mundo menos los no-show, y se contó el bote. `cerrada` marca que ese
+           dinero YA ESTÁ contado, que es lo que distingue a esta salida de la que está
+           andando: la media de propina se divide entre la gente de las salidas cerradas y
+           no entre la que todavía va por la calle con el guía. */
+        var vinieron = 0;
+        (t.res||[]).forEach(function(r){ if (!r.nsAuto){ r.ok = true; vinieron += (+r.p||0); } });
+        t.rec = Math.round(vinieron * tarifaPropina(t) * 10) / 10;
+        t.cerrada = true;
+      } else {
+        /* EN CURSO: el `ok` que traiga es el check-in que el guía va marcando en el punto
+           de encuentro —eso es real y se respeta—, pero el bote todavía no está contado:
+           se cuenta al cerrar. */
+        t.rec = 0;
+      }
+    });
     dias.push(dia);
   }
   return dias;
@@ -2570,7 +2957,32 @@ var HOY_DEMO = (function(){
   return fijado ? new Date(fijado + 'T12:00:00') : new Date();
 })();
 S.agenda = montaSemana(HOY_DEMO);
+/* LOS LOCALIZADORES VIVOS DE HOY. El motor los consulta en `codEscrito` para reconocer un
+   código escrito sin el prefijo («cancela la 4821»), y en la demo `S.locsVivos` estaba a
+   `null`: esa rama era código muerto y solo funcionaba el «PYC-xxxx» completo — que además
+   se aceptaba aunque no fuera de nadie.
+   Se recalcula cada vez que el parte cambia, porque una reserva cancelada deja de estar
+   viva y su código no puede seguir valiendo. */
+function refrescaLocsVivos(){
+  var dia = (S.agenda||[])[S.agDia] || { tours:[] };
+  var out = [];
+  (dia.tours||[]).forEach(function(t){ (t.res||[]).forEach(function(r){
+    /* El localizador se pone aquí si falta, y no solo en `resAg`: el manifiesto de hoy
+       (`S.att`) se escribe a mano con sus cinco reservas y las que entran por el buzón se
+       hacen con un `push` suelto, así que las que más se tocan en la demo eran justo las
+       que se quedaban sin código — y sin código, GuIA no puede cancelarlas. */
+    if (!r.loc) r.loc = locDe(r.n);
+    out.push(r.loc);
+  }); });
+  S.locsVivos = out;
+}
 S.agDia = VENTANA_ATRAS;              // «hoy» siempre en medio de la ventana
+/* DESPUÉS de fijar el día, no antes: la primera versión sembraba con `S.agDia` aún sin
+   asignar, así que calculaba los vivos de un día indefinido — lista VACÍA. Y con la lista
+   vacía el motor mantiene el comportamiento antiguo: durante el primer segundo de vida de
+   la demo, un código inventado volvía a llevarse el «¡Hecho! ✅». Justo la ventana en la
+   que un comercial pega su mensaje preparado. */
+refrescaLocsVivos();
 S.agendaBase = S.agenda[S.agDia].iso; // el hoy REAL: el motor resuelve «al viernes» desde aquí
 S.mesBasePax = 76;      // personas de las semanas anteriores del mes
 S.mesBaseRec = 924.5;   // su recaudación
@@ -2885,10 +3297,22 @@ function reCod(){
    En las demos no existe y todo queda como estaba. */
 function codEscrito(t){
   var x = String(t||'');
-  var porPrefijo = (x.match(reCod()) || [])[0];
-  if (porPrefijo) return porPrefijo;
   var may = x.toUpperCase();
   var vivos = S.locsVivos || [];
+  var porPrefijo = (x.match(reCod()) || [])[0];
+  if (porPrefijo){
+    /* UN CÓDIGO CON LA FORMA BUENA NO ES UNA RESERVA. Esto devolvía cualquier «PYC-loque
+       sea» solo por casar el patrón, así que a quien escribía un código equivocado —una
+       cifra mal copiada del email— GuIA le contestaba «¡Hecho! Cancelo tu reserva ✅». No
+       cancelaba nada, porque no había nada: le decía a una persona que su reserva estaba
+       cancelada cuando seguía viva, y esa persona no se presenta.
+       Con la lista de vivos delante se comprueba; sin ella —un anfitrión que no la
+       siembre— se mantiene el comportamiento de antes, que es lo que hay. */
+    if (!vivos.length) return porPrefijo;
+    for (var j=0;j<vivos.length;j++)
+      if (String(vivos[j]).toUpperCase() === porPrefijo.toUpperCase()) return vivos[j];
+    return null;
+  }
   for (var i=0;i<vivos.length;i++){
     var l = String(vivos[i]||'').toUpperCase();
     /* Cuatro caracteres de suelo: un localizador de dos letras casaría dentro de
@@ -2898,6 +3322,18 @@ function codEscrito(t){
   return null;
 }
 function codDe(t){ return codEscrito(t) || S.codConocido || null; }
+/* UN CÓDIGO ESCRITO QUE NO ES DE NINGUNA RESERVA VIVA. Se distingue de «no ha escrito
+   código» porque son dos situaciones distintas y piden dos respuestas distintas: al que no
+   ha puesto código se le pide; al que ha puesto uno que no consta hay que DECÍRSELO, o se
+   queda pensando que lo suyo está resuelto.
+   Y no vale caer a `S.codConocido`: quien escribe un localizador está nombrando una
+   reserva concreta, y cancelarle otra «la que creemos que es la suya» porque la que
+   escribió no existe es exactamente lo que no puede pasar. */
+function codMuerto(t){
+  var esc = (String(t||'').match(reCod()) || [])[0];
+  if (!esc) return null;
+  return codEscrito(t) ? null : esc;
+}
 
 function fon(w){
   return String(w)
@@ -4456,6 +4892,20 @@ function respuestaGuiaES(t){
     /* Sobre el mensaje NORMALIZADO, donde el corrector ya bajó «cancela»/«cancelas» al
        infinitivo — «cancela mi reserva» llega como «cancelar mi reserva». */
     var ordenC = /quiero cancelar|queremos cancelar|me cancelar?s?\b|nos cancelar?s?\b|cancelar?me|cancelar? (mi|nuestra|la) reserva|anular? (mi|la) reserva|no puedo ir|no podre|no vamos a poder|no podremos/.test(m);
+    /* Con un código escrito QUE NO CONSTA no se cancela nada y se dice por qué. Antes esto
+       contestaba «¡Hecho! Cancelo tu reserva ✅» a cualquier cosa con la forma de un
+       localizador —una cifra mal copiada del email bastaba—, y el viajero se iba tranquilo
+       con la reserva viva; el servidor lo tapaba después dejándole un aviso al encargado,
+       que es curar en vez de no herir. Se pasa a una persona, así que el encargado se
+       entera igual, pero al viajero no se le ha mentido por el camino. */
+    var muertoC = codMuerto(t);
+    if (muertoC){
+      registraDerivada(t, 'persona');
+      return 'Ese código («'+muertoC+'») no me consta entre las reservas de hoy, así que '+
+        'no te toco nada — no vaya a cancelar la de otra persona 🙏 Repásalo en tu email de '+
+        'confirmación y dímelo otra vez, o dime tu nombre y se lo paso al encargado, que lo '+
+        'mira contigo.\n\n<i>— Tu reserva SIGUE EN PIE: no se ha cancelado nada.</i>';
+    }
     var cod = codEscrito(t) || (ordenC ? S.codConocido : null);
     if (cod){
       anotaGuia('Reserva «'+cod+'» cancelada por el chat — plaza liberada');
@@ -4483,6 +4933,17 @@ function respuestaGuiaES(t){
        lo dicen en indicativo («somos 5», «una persona más») o nombran su código. */
     var preguntaB = /\bpuedo\b|\bpodria\b|\bpodriamos\b|se puede|es posible/.test(m) ||
       /\bcan (i|we)\b|\bcould (i|we)\b|is it possible/.test(t.toLowerCase());
+    /* El mismo peligro que la cancelación, en el cambio: con un código escrito MUERTO y el
+       teléfono conocido, el cambio se aplicaba a «la que creemos que es suya» — corregir
+       el pax de una reserva que el viajero no nombró. Quien escribe un localizador nombra
+       una reserva concreta; si no existe, se le dice. */
+    var muertoB = codMuerto(t);
+    if (muertoB){
+      registraDerivada(t, 'persona');
+      return 'Ese código («'+muertoB+'») no me consta, así que no cambio nada — no vaya a tocar '+
+        'la reserva de otra persona 🙏 Repásalo en tu email de confirmación y dímelo otra vez.'+
+        '\n\n<i>— Tu reserva sigue como estaba: no se ha cambiado nada.</i>';
+    }
     var codB = codEscrito(t) || (preguntaB ? null : S.codConocido);
     if (codB){
       var cp=paxCambioDe(m, t);
@@ -4537,8 +4998,14 @@ function respuestaGuiaES(t){
      dos y tiene que seguir entrando por retraso, que es lo urgente.
      «cuánto espera» entra aquí también: sin ella caía en la regla de precio por el
      «cuánto», y quien avisaba de que llegaba tarde recibía el modelo de propina. */
+  /* Y «tarde» tiene que ser una PALABRA, no una subcadena. Sin el límite, «atardecer» la
+     cumple —a-TARDE-cer—, así que «¿el Alcázar al atardecer sale hoy?» recibía la política
+     de espera del guía y dejaba al viajero marcado «⏰ llega tarde» en el manifiesto sin
+     haber llegado tarde ni haber preguntado nada de eso. Y «al atardecer» no es un caso
+     rebuscado: es como se llama medio catálogo de tours de pago en español.
+     Mismo fallo que «bebe» dentro de «beber», que ya costó una regla. */
   if (RE_RETRASO.test(m) || /cuanto espera|espera el guia|espera al grupo|me esperais|nos esperais|me esperan|nos esperan/.test(m) ||
-      (/tarde/.test(m) && !RE_FRANJA_TARDE.test(m))){
+      (/\btarde\b/.test(m) && !RE_FRANJA_TARDE.test(m))){
     var es=kb('espera'); if(!es) return derivaPorHueco('espera', t);
     var codT=codDe(t);
     if (codT) anotaGuia('«'+codT+'» avisa por el chat de que llega tarde — marcado ⏰ para el guía');
@@ -4787,7 +5254,19 @@ function respuestaGuiaES(t){
     var pri=kbE('privados'); if(!pri) return derivaPorHuecoEmp('privados', t);
     return pri;
   }
-  if (/que otros tours|otros tours|que mas teneis|que mas ofreceis|que mas haceis|catalogo|que tours teneis/.test(m)){
+  /* El disparador entendía la pregunta de manual —«¿qué otros tours tenéis?»— y no la
+     forma en que se pregunta de verdad. Las tres que faltaban, y lo que hacía cada una:
+       · «¿hacéis algo más aparte del free tour?» llevaba «free» dentro, así que se la
+         comía la regla de precio DOS reglas más abajo y el viajero que preguntaba por el
+         catálogo recibía el modelo de propina del tour que ya tenía delante. Es, literal,
+         el chat de muestra de la pantalla «Lo que vendes además del tour».
+       · «¿tenéis algún tour de pago?» no casaba con nada y se iba a una persona teniendo
+         la respuesta escrita.
+       · «¿qué otras visitas/rutas hacéis?» es la misma pregunta sin la palabra «tour».
+     Va ANTES que la regla de precio a propósito: quien pregunta qué MÁS vendes no está
+     preguntando cuánto cuesta lo que ya está mirando. */
+  if (/que otros tours|otros tours|que mas teneis|que mas ofreceis|que mas haceis|catalogo|que tours teneis/.test(m) ||
+      /(algo|alguno|algun|nada) mas (aparte|ademas|que hacer|que ofrec)|(aparte|ademas) del (free ?)?tour|tours? de pago|que otras (visitas|rutas|experiencias)|otras (visitas|rutas|experiencias)/.test(m)){
     var ct=kbE('catalogo'); if(!ct) return derivaPorHuecoEmp('catalogo', t);
     return ct;
   }
@@ -5300,8 +5779,15 @@ function respuestaEN(t){
      del free tour — a quien preguntaba si cancelar CUESTA algo. La regla de cancelación
      es la que sabe; el «gratis» ahí es un adjetivo de la cancelación, no una pregunta de
      precio. El gemelo español ya pone la cancelación por delante del precio. */
+  /* Y la misma cesión con el CATÁLOGO, que es la regla de más abajo. «Do you do anything
+     else besides the free tour?» lleva «free» —o sea «gratis»— y caía aquí: a quien
+     preguntaba qué MÁS vende la empresa se le contestaba el modelo de precio del walk que
+     ya tenía delante. Es literal el chat que la pantalla de extras enseña como ejemplo.
+     La condición es la misma que usa la regla del catálogo, para que no puedan discrepar:
+     si esto es una pregunta de catálogo, el precio la deja pasar. */
   if (/precio|cuesta|gratis|propina|pagar|cuanto/.test(m) && !/cuantos/.test(m) &&
-      !/\bsenal\b/.test(m) && !/cancelar|anular/.test(m)){
+      !/\bsenal\b/.test(m) && !/cancelar|anular/.test(m) &&
+      !(/catalogo|otros|mas\b/.test(m) && /tour/.test(m))){
     /* Dos marcos que NO se pueden mezclar: en un free tour el precio es la propina; en
        un walk con ticket la propina no viene al caso, y el 💛 de «aporta lo que quieras»
        suena a error. Se bifurca por el tour, no por el mercado, porque un catálogo
@@ -5366,6 +5852,18 @@ function respuestaEN(t){
     var tl = t.toLowerCase();
     var ordenCE = /\b(i|we)\s+(want|need|would like|have) to cancel|please cancel|cancel (my|our|the) booking|can'?t (make it|come|be there)|won'?t (make it|be able)/.test(tl) ||
       /quiero cancelar|no puedo ir/.test(m);
+    /* El MISMO codMuerto que el gemelo español, que se quedó solo en un idioma: en inglés
+       un código muerto no recibía el ✅ falso —caía al FAQ— pero le pedía el código a
+       quien acababa de escribir uno, sin decirle que el suyo no consta. Mismo contrato,
+       redacción propia. */
+    var muertoE = codMuerto(t);
+    if (muertoE){
+      registraDerivada(t, 'persona');
+      return 'That code (“'+muertoE+'”) doesn\'t match any of today\'s bookings, so I haven\'t '+
+        'touched anything — I\'d hate to cancel someone else\'s place 🙏 Double-check it in your '+
+        'confirmation email and send it again, or give me your name and the manager will sort '+
+        'it out with you.\n\n<i>— Your booking STILL STANDS: nothing has been cancelled.</i>';
+    }
     var codC = codEscrito(t) || (ordenCE ? S.codConocido : null);
     if (codC){
       anotaGuia('Booking “'+codC+'” cancelled over chat — place released');
@@ -5384,6 +5882,14 @@ function respuestaEN(t){
     /* La misma mordaza que el gemelo español: pedir permiso no es ordenar. */
     var preguntaB2 = /\bcan (i|we)\b|\bcould (i|we)\b|is it possible|\bmay (i|we)\b/.test(t.toLowerCase()) ||
       /\bpuedo\b|\bpodria\b|se puede/.test(m);
+    /* Paridad con el gemelo español: un código escrito muerto no redirige el cambio. */
+    var muertoB2 = codMuerto(t);
+    if (muertoB2){
+      registraDerivada(t, 'persona');
+      return 'That code (“'+muertoB2+'”) doesn\'t match any booking, so I haven\'t changed '+
+        'anything — I\'d hate to touch someone else\'s reservation 🙏 Double-check it in your '+
+        'confirmation email and send it again.\n\n<i>— Your booking is unchanged.</i>';
+    }
     var codB2 = codEscrito(t) || (preguntaB2 ? null : S.codConocido);
     if (codB2){
       var cp2=paxCambioDe(m, t);
@@ -5429,8 +5935,11 @@ function respuestaEN(t){
       ? ' I\'ve left the guide a note so they expect you right 🙂'
       : ''+(hayWeb() ? ' If you booked on our website, your manage-booking link changes date or numbers in a click; if it was through a platform, make the change there.' : ' If you booked through a platform, make the change there.')+' And if you send me your code'+ejCod()+' with the new numbers, I\'ll apply it right here.');
   }
-  /* Misma separación que en el motor español: «tarde» es hora del día o es retraso. */
-  if (/retraso|espera/.test(m) || (/tarde/.test(m) && !RE_FRANJA_TARDE.test(m))){
+  /* Misma separación que en el motor español: «tarde» es hora del día o es retraso. Y con
+     el mismo límite de palabra, que aquí hace más falta todavía: un mercado inglés escribe
+     el nombre del tour en español —«the Alcázar al atardecer tour»— y la subcadena lo
+     mandaba a la política de retrasos. */
+  if (/retraso|espera/.test(m) || (/\btarde\b/.test(m) && !RE_FRANJA_TARDE.test(m))){
     /* La NOTA va antes que el hueco de `espera` — el mismo orden que el español: aunque
        no sepamos cuánto espera el guía, que este grupo llega tarde es urgente y se
        apunta igual (y enciende el ⏰ del manifiesto). */
@@ -6165,6 +6674,225 @@ document.querySelectorAll('aside nav a').forEach(function(a){
   a.addEventListener('click', function(ev){ ev.preventDefault(); ir(a.dataset.v); });
 });
 pintaCandados(); pintaPlanSel(); pintaComplementos(); pintaEsPlus(); pintaMkSel(); pintaDineroEstatico();
+/* La Liquidación arrancaba con el rango escrito a mano «1 a 18 de julio de 2026» — el
+   sábado de la semana congelada. Y su KPI de propina decía 318 € mientras el ciclo suma
+   otra cosa. Los dos salen ahora del ciclo.
+   APLAZADO con setTimeout: este punto del fichero se ejecuta ANTES de que se declaren las
+   tablas que `pintaLiq` necesita —las declaraciones de función se elevan, las asignaciones
+   de `var` no— y llamarlo aquí reventaba la demo entera al arrancar. Es la segunda vez que
+   me pasa hoy en este mismo fichero. */
+setTimeout(function(){
+  var d=document.getElementById('liq-del'), a=document.getElementById('liq-al');
+  if (d && a && typeof rangoRapido === 'function') rangoRapido('mes');
+  var k=document.getElementById('kpi-propina');
+  if (k && typeof agTotales === 'function'){
+    var t=agTotales();
+    k.textContent = Math.round(t.semRec) + ' €';
+    k.setAttribute('data-dinero', String(Math.round(t.semRec)));
+  }
+  pintaCuadroKpis();
+  /* El catálogo de extras va AQUÍ DENTRO por lo mismo que la Liquidación: pregunta al
+     motor y lee `S.tours`, y en el punto de arriba del fichero ninguna de las dos cosas
+     está asignada todavía. Llamarlo fuera revienta la demo entera al arrancar. */
+  if (typeof pintaExtras === 'function') pintaExtras();
+  ['combo-a','combo-b','combo-dto'].forEach(function(id){
+    var e = document.getElementById(id); if (!e) return;
+    e.addEventListener('input', function(){
+      document.getElementById('combo-dto-v').textContent = document.getElementById('combo-dto').value;
+      pintaMsjCombo();
+    });
+  });
+}, 0);
+
+/* LA OPERACIÓN QUE LA DEMO ENSEÑA, en un solo sitio. La usan el reparto por canal del
+   Cuadro y los deslizadores de la Proyección, y antes cada uno tenía su propia versión
+   escrita a mano — que es por lo que decían cosas distintas de la misma empresa. */
+function operacionDelCiclo(){
+  var o = { salidas:0, pax:0, rec:0, presentes:0, canal:{}, dias:(S.agenda||[]).length||1 };
+  (S.agenda||[]).forEach(function(d){ (d.tours||[]).forEach(function(t){
+    o.salidas++; o.pax += paxDe(t.res); o.rec += (t.rec||0);
+    (t.res||[]).forEach(function(r){
+      /* Los del tour DE PAGO no cuentan para la propina, igual que en los KPI: pagaron un
+         ticket. Pero SÍ cuentan para el canal — vinieron por GuruWalk o por la web. */
+      if (r.ok && !t.precio) o.presentes += (+r.p||0);
+      o.canal[r.canal] = (o.canal[r.canal]||0) + r.p;
+    });
+  })});
+  o.grupo    = o.salidas ? o.pax/o.salidas : 0;
+  o.salDia   = o.salidas / o.dias;
+  o.propPax  = o.presentes ? o.rec/o.presentes : 0;
+  o.guias    = (S.equipo.guias||[]).filter(function(g){ return g.activo; }).length;
+  o.pctWeb   = o.pax ? (o.canal['Web propia']||0)*100/o.pax : 0;
+  return o;
+}
+/* El reparto por canal. Los colores alternan verde/oro como antes; el ancho de la barra ES
+   el porcentaje, así que no puede desmentir al número que tiene al lado. */
+function pintaCuadroCanales(){
+  var caja = document.getElementById('cm-canales'); if(!caja) return;
+  var o = operacionDelCiclo();
+  var ks = Object.keys(o.canal).sort(function(a,b){ return o.canal[b]-o.canal[a]; });
+  caja.innerHTML = ks.map(function(k,i){
+    var p = o.canal[k], pct = Math.round(p*100/o.pax);
+    return '<div class="fila" style="gap:10px; margin:8px 0;">'+
+      '<span class="mini" style="width:110px;">'+k+'</span>'+
+      '<span style="flex:1; height:9px; background:var(--line); border-radius:6px; overflow:hidden;">'+
+        '<i style="display:block; height:100%; width:'+pct+'%; background:var('+(i%2?'--gold':'--acc')+');"></i></span>'+
+      '<b class="mini num">'+p+' p · '+pct+' %</b></div>';
+  }).join('');
+}
+/* La tabla «Por guía» del Cuadro. Mismo rango y misma fuente que la Liquidación, para que
+   la promesa de «una sola fuente de verdad» sea comprobable y no un rótulo.
+   La VALORACIÓN sale de la ficha del guía (`S.equipo.guias`), que es donde vive: escrita
+   aquí, un guía nuevo no tenía nota y uno dado de baja seguía teniéndola. */
+function pintaCuadroGuias(){
+  var tg=document.getElementById('tabla-cuadro-guia'); if(!tg) return;
+  var del=(document.getElementById('liq-del')||{}).value,
+      al =(document.getElementById('liq-al') ||{}).value;
+  if(!del||!al) return;
+  tg.querySelectorAll('tr:not(:first-child)').forEach(function(r){ r.remove(); });
+  var por={};
+  TOURS_LIQ.filter(function(x){ return x.f>=del && x.f<=al; }).forEach(function(x){
+    /* Las salidas sin guía no son un guía: la fila «— sin guía —» tiene su sitio en la
+       Liquidación (alguien paga ese coste) pero aquí sería una persona que no existe. */
+    if (/^[—-]/.test(x.g)) return;
+    var g=por[x.g]=por[x.g]||{ax:0, rec:0};
+    g.ax+=x.ax; g.rec+=x.rec;
+  });
+  Object.keys(por).sort().forEach(function(n){
+    var g=por[n], f=(S.equipo.guias||[]).filter(function(x){ return x.n===n; })[0]||{};
+    var tr=document.createElement('tr');
+    tr.innerHTML='<td><b>'+n+'</b></td><td>'+g.ax+'</td>'+
+      '<td class="num">'+(g.ax? eur(g.rec/g.ax) : '—')+'</td>'+
+      '<td>'+(f.nota? f.nota+' ⭐' : '<span class="mini muted">sin valoraciones todavía</span>')+'</td>';
+    tg.appendChild(tr);
+  });
+}
+
+/* El detalle por franja horaria, del ciclo. La propina por persona se divide entre la gente
+   de las salidas CERRADAS —igual que el KPI—, así que una franja cuyas salidas de esta
+   semana todavía no han ocurrido enseña «—» y no un cero, que se leería como «no dan
+   propina» cuando lo que pasa es que aún no han salido. */
+function pintaCuadroFranjas(){
+  var tg = document.getElementById('tabla-cuadro-franja'); if(!tg) return;
+  tg.querySelectorAll('tr:not(:first-child)').forEach(function(r){ r.remove(); });
+  var por = {}, orden = [];
+  (S.agenda||[]).forEach(function(d){ (d.tours||[]).forEach(function(t){
+    var k = t.tit + ' · ' + t.hora;
+    if (!por[k]){ por[k] = { sal:0, pax:0, rec:0, paxCerr:0, precio:t.precio||0, hora:t.hora }; orden.push(k); }
+    var f = por[k];
+    f.sal++; f.pax += paxDe(t.res); f.rec += (t.rec||0);
+    if (t.cerrada) (t.res||[]).forEach(function(r){ if (r.ok) f.paxCerr += (+r.p||0); });
+  })});
+  orden.sort(function(a,b){ return por[a].hora < por[b].hora ? -1 : (por[a].hora > por[b].hora ? 1 : (a<b?-1:1)); });
+  orden.forEach(function(k){
+    var f = por[k];
+    var media = f.sal ? (f.pax/f.sal) : 0;
+    var pp = f.precio ? '<span class="mini muted">ticket ' + f.precio + ' €</span>'
+           : (f.paxCerr ? eur(f.rec/f.paxCerr) : '<span class="mini muted">—</span>');
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td><b>'+k+'</b></td><td>'+f.sal+'</td><td>'+f.pax+'</td>'+
+      '<td class="num">'+media.toLocaleString('es-ES',{minimumFractionDigits:1,maximumFractionDigits:1})+'</td>'+
+      '<td class="num">'+pp+'</td>';
+    tg.appendChild(tr);
+  });
+
+  /* La lectura: la franja de propina más floja de las que YA HAN CERRADO, comparada con la
+     mejor. Sin salidas cerradas todavía no se dictamina nada — que es lo honesto un lunes
+     por la mañana, y mejor que un aviso con números de otra semana. */
+  var nota = document.getElementById('cm-franja-nota'); if(!nota) return;
+  var conDato = orden.filter(function(k){ return por[k].paxCerr && !por[k].precio; });
+  if (!conDato.length){
+    nota.innerHTML = 'Todavía no ha cerrado ninguna salida de esta semana: en cuanto se '+
+      'liquide la primera, aquí sale qué franja tira y cuál no.';
+    return;
+  }
+  /* Se ordena por lo que DEJA CADA SALIDA, no por la propina por persona: con la propina
+     por persona la franja más grande de todas salía señalada como «la más floja» solo
+     porque el Centro paga menos por cabeza que el Triana, y eso no es la pregunta. La
+     pregunta de esta tarjeta es si una franja se gana su hueco en el horario, y eso se
+     mide en lo que deja cada vez que sale.
+     Las franjas cuyas salidas de esta semana no han cerrado todavía se nombran aparte: no
+     tienen dato, y colarlas con un cero se leería como que no dejan nada. */
+  var porSalida = function(k){ return por[k].rec / por[k].sal; };
+  conDato.sort(function(a,b){ return porSalida(a) - porSalida(b); });
+  var peor = conDato[0], mejor = conDato[conDato.length-1];
+  var sinCerrar = orden.filter(function(k){ return !por[k].paxCerr && !por[k].precio; });
+  nota.innerHTML = (peor===mejor
+    ? '<b>'+peor+'</b> deja '+eur(porSalida(peor))+' por salida.'
+    : '⚠ <b>'+peor+'</b> es la franja que menos deja: '+eur(porSalida(peor))+' por salida, '+
+      'frente a los '+eur(porSalida(mejor))+' de <b>'+mejor+'</b>.') +
+    (sinCerrar.length ? ' <span class="mini muted">('+sinCerrar.join(' y ')+': ninguna salida '+
+      'cerrada todavía esta semana)</span>' : '') +
+    ' <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Muévela de hora o '+
+    'descansa la salida — decidirlo con datos y no a ojo es exactamente para lo que sirve '+
+    'este cuadro. Fíjate en que la que menos deja no es la que menos gente lleva: una franja '+
+    'con grupos pequeños y propina alta puede ganarle a una llena.</span></details>';
+}
+
+/* LOS DESLIZADORES DE LA PROYECCIÓN ARRANCAN CON ESTA EMPRESA. Estaban escritos en el HTML
+   —grupos de 20, 26 días al mes, 40 % de web propia— y la operación que la demo acababa de
+   enseñar iba de 13 por grupo, siete días a la semana y 36 % de web. La Proyección es la
+   pantalla que se abre DELANTE del prospecto para sustituir esos números por los suyos; que
+   arranque con otra empresa distinta de la de las cinco pantallas anteriores es lo que hace
+   que quien compara deje de creerse las dos.
+   Cada valor se redondea AL PASO DE SU DESLIZADOR: uno de paso 0,5 no puede valer 11,34, y
+   asignárselo lo deja en un estado que el control no puede reproducir al moverlo. */
+function sembrarProy(){
+  if (!document.getElementById('py-grupo')) return;
+  var o = operacionDelCiclo();
+  var pon = function(id, v, paso){
+    var e = document.getElementById(id); if(!e) return;
+    var min = +e.min, max = +e.max;
+    e.value = Math.min(max, Math.max(min, Math.round(v/paso)*paso));
+  };
+  pon('py-grupo', o.grupo,   1);
+  pon('py-tours', o.salDia,  1);
+  pon('py-prop',  o.propPax, 0.5);
+  pon('py-ng',    o.guias,   1);
+  pon('py-dir',   o.pctWeb,  1);
+  /* Días de operación: los que el ciclo saca salidas. Decía 26 y este catálogo sale los
+     siete días de la semana — un mes entero de trabajo contado como si libraran cinco. */
+  pon('py-dias', (S.agenda||[]).filter(function(d){ return (d.tours||[]).length; }).length / o.dias * 30, 1);
+  calcProy();
+}
+
+/* Los KPI del Cuadro de mando, del ciclo. La ventana es la SEMANA que la demo enseña —no
+   «el mes»—, porque es la única de la que hay datos de verdad: decir «este mes» sobre
+   siete días es la clase de rótulo que hace que un cliente reste y no le salga. */
+function pintaCuadroKpis(){
+  if (!window.S || !S.agenda) return;
+  var salidas=0, pax=0, plazas=0, rec=0, pres=0, noShow=0;
+  S.agenda.forEach(function(d){ (d.tours||[]).forEach(function(t){
+    salidas++;
+    var p = paxDe(t.res);
+    pax += p;
+    plazas += (typeof aforoDeTour==='function' ? aforoDeTour(t) : 25);
+    rec += (t.rec||0);
+    /* Los del tour DE PAGO no entran en la media de propina: pagaron un ticket, no dejan
+       bote. Es la misma separación que el servidor ya hace entre venta y propina —meterlos
+       en el denominador hunde la media con gente que nunca iba a aportar. */
+    /* El denominador es la gente de las salidas CERRADAS: las que ya dejaron el bote. Con
+       `r.ok` a secas entraban también los check-in del tour que está andando ahora mismo
+       —gente que no ha aportado todavía— y la media salía por debajo de lo que es. */
+    (t.res||[]).forEach(function(r){
+      if (r.ok && t.cerrada && !t.precio) pres += (+r.p||0);
+      if (r.nsAuto) noShow += (+r.p||0);
+    });
+  })});
+  var pon=function(id,v){ var e=document.getElementById(id); if(e) e.textContent=v; };
+  pon('cm-pax', pax);
+  pon('cm-pax-l', 'personas esta semana (' + salidas + ' salida' + (salidas===1?'':'s') + ')');
+  pon('cm-ocu', plazas ? Math.round(pax*100/plazas) + ' %' : '—');
+  /* La propina media solo sobre lo YA COBRADO y la gente que vino: dividir entre todos los
+     reservados de la semana —incluidos los de mañana, que no han dejado nada— daría una
+     media falsa y a la baja. */
+  pon('cm-prop', pres ? (rec/pres).toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' €' : '—');
+}
+(function(){
+  var w = document.querySelector('.tp-wrap'); if (!w) return;
+  w.addEventListener('input', tpCalc); w.addEventListener('change', tpCalc);
+  tpCalc();
+})();
 pintaMesActual();
 
 /* ===== Modo guía: el enlace personal del guía — SOLO su manifiesto y su
@@ -6652,18 +7380,21 @@ function estadoSeg(a){ return a.ok ? 'llego' : (a.tarde ? 'tarde' : (a.conf ? 'c
    Y si no hay ninguno, se dice. La versión anterior tenía la cabecera escrita a mano y
    afirmaba «en marcha» a las once de la noche: en una demo que se abre a cualquier hora,
    eso es lo primero que se ve. */
+/* Lee el MISMO `live` que el cuadro del día, en vez de recalcular la ventana por su cuenta:
+   dos cálculos de lo mismo es cómo se llegó a que una pantalla dijera «0 tours en marcha»
+   encima de «Tour en curso… en marcha». La ventana vive en `esAhora` y aquí no se repite. */
 function tourEnMarcha(){
   var dia = (S.agenda||[])[S.agDia];
   var lista = (dia && dia.tours) || [];
-  var ahora = new Date();
-  var min = ahora.getHours()*60 + ahora.getMinutes();
   var enMarcha = null, siguiente = null;
   lista.forEach(function(t){
-    var p = String(t.hora||'').split(':');
-    var m = (+p[0])*60 + (+p[1]||0);
-    var dif = min - m;
-    if (dif >= -30 && dif <= 150){ if (!enMarcha) enMarcha = t; }
-    else if (dif < -30 && (!siguiente || m < (+String(siguiente.hora).split(':')[0])*60)) siguiente = t;
+    if (t.live){ if (!enMarcha) enMarcha = t; return; }
+    /* La siguiente es la primera que aún no ha entrado en su ventana. Comparaba
+       `minutosDe(siguiente.hora)` mirando solo la HORA («18:30» daba 18×60), así que entre
+       dos salidas de la misma hora elegía mal. */
+    var m = minutosDe(t.hora);
+    if (HORA_DEMO - m < -VENTANA_LIVE_ANTES &&
+        (!siguiente || m < minutosDe(siguiente.hora))) siguiente = t;
   });
   return { enMarcha: enMarcha, siguiente: siguiente };
 }
@@ -6698,8 +7429,16 @@ function pintaSegCab(){
 function pintaSeguimiento(){
   pintaSegCab();
   var lista=document.getElementById('seg-lista'); if(!lista) return;
+  /* LA LISTA SALE DEL TOUR REAL, no de `S.att`. La cabecera ya usaba `tourEnMarcha()` y
+     el cuerpo seguía recorriendo `S.att` — que es la semilla del guion del SÁBADO —, así
+     que seis de cada siete días la misma tarjeta enseñaba arriba el tour de hoy y abajo
+     cinco personas del sábado que en el manifiesto no existen. Y es la pantalla de
+     aterrizaje: es lo primero que ve quien abre la demo.
+     `S.att` se queda donde le toca: alimentando el sábado en GUION_SEMANA. */
+  var _t = tourEnMarcha().enMarcha || ((S.agenda[S.agDia]||{}).tours||[])[0] || {};
+  var ATT = (_t.res||[]).filter(function(r){ return !r.walkin; });
   var llego=0, conf=0, pend=0, tarde=0;
-  S.att.forEach(function(a){ var e=estadoSeg(a);
+  ATT.forEach(function(a){ var e=estadoSeg(a);
     if(e==='llego') llego+=a.p; else if(e==='confirmado') conf++; else if(e==='tarde') tarde++; else pend++; });
   var CH={ llego:'👣 Ya está aquí', confirmado:'✅ Confirmado', tarde:'🕐 Llega tarde', pendiente:'⏳ Sin responder' };
   document.getElementById('seg-kpis').innerHTML=
@@ -6708,7 +7447,7 @@ function pintaSeguimiento(){
     '<div class="seg-kpi pend"><span class="n">'+pend+'</span><span class="l">sin responder</span></div>'+
     '<div class="seg-kpi tarde"><span class="n">'+tarde+'</span><span class="l">llegan tarde</span></div>';
   lista.innerHTML='';
-  S.att.forEach(function(a){ var e=estadoSeg(a);
+  ATT.forEach(function(a){ var e=estadoSeg(a);
     var f=document.createElement('div'); f.className='seg-fila '+e;
     f.innerHTML='<span class="seg-dot"></span>'+
       '<span class="seg-nombre">'+a.n+' <span class="mini muted" style="font-weight:400;">· '+a.p+'p</span></span>'+
@@ -6718,8 +7457,18 @@ function pintaSeguimiento(){
       f.appendChild(b); }
     lista.appendChild(f);
   });
-  document.getElementById('seg-cancel').innerHTML=
-    '🚫 <b>1 cancelación</b> (2 personas) esta mañana por el chat — su plaza liberó el hueco de la lista de espera de arriba.';
+  /* La cancelación era un dato del sábado escrito a mano. Solo se cuenta si la lista de
+     hoy tiene a quién referirse; si no, se calla — que es la regla de la casa. */
+  /* MISMO REGISTRO que la tarjeta de la lista de espera. Aquí decía «1 cancelación (2
+     personas)» y allí «se liberaron 3 plazas»: la misma cancelación con dos tamaños. */
+  var _c = document.getElementById('seg-cancel');
+  var _can = S.canceladas || [];
+  var _pax = _can.reduce(function(a,c){ return a + (+c.p||0); }, 0);
+  if (_c) _c.innerHTML = (ATT.length && _can.length)
+    ? '🚫 <b>'+_can.length+' '+plural(_can.length,'cancelación','cancelaciones')+'</b> ('+_pax+' persona'+
+      (_pax===1?'':'s')+') por el chat — '+(_can.length===1?'su plaza liberó':'sus plazas liberaron')+
+      ' el hueco de la lista de espera de arriba.'
+    : '';
 }
 function pintaCupo(){
   var c=document.getElementById('cupo-plataformas'); if(!c) return; c.innerHTML='';
@@ -6741,7 +7490,203 @@ function pintaCupo(){
     c.appendChild(b);
   });
 }
-function pintaOperaciones(){ pintaEstadoBanner(); pintaSeguimiento(); pintaCupo(); }
+/* ══ EL CONFIGURADOR DEL TOUR DE PAGO ═══════════════════════════════════════════════
+   Mismas reglas que el de Madrid Latido, y las dos que importan están comentadas donde
+   se aplican. Todo en CÉNTIMOS hasta el último momento: en coma flotante, 13,50 × 3 se
+   desvía y el cliente vería un total distinto del que se guardaría. */
+
+function tpEur(c){                       // céntimos → «140 €» / «4,70 €»
+  var n = c / 100, d = n % 1 === 0 ? 0 : 2;
+  return n.toLocaleString('es-ES', { minimumFractionDigits: d, maximumFractionDigits: d }) + ' €';
+}
+function tpNum(id){ var e=document.getElementById(id); return Math.max(0, parseInt(e&&e.value,10)||0); }
+
+function tpCalc(){
+  var caja = document.getElementById('tp-total'); if (!caja) return;
+  /* La tarifa vive DENTRO y no en un `var` de arriba: el arranque llama a esta función
+     antes de esa línea —la declaración de función se eleva, la asignación de `var` no— y
+     el configurador salía roto en la primera pintada. */
+  /* EL SUELO SALE DEL CEREBRO. Estaba escrito 120 € aquí mientras el hecho de empresa
+     «Tours privados» —que es el que GuIA le dice al viajero— decía «desde 180 € por
+     grupo». O sea: el viajero preguntaba por WhatsApp y le contestaban 180, abría el
+     configurador de la misma web y le salía 120. Es el mismo tour y son dos precios, y el
+     que se lleva el disgusto es el guía en el punto de encuentro.
+     Este configurador ES el de privados (de ahí vino, del de Madrid Latido), así que su
+     base es el «desde» que la empresa publica y se lee de ahí. */
+  var desde = ((S.kbEmpresa.privados||'').match(/(\d+(?:[.,]\d+)?)\s*€/)||[])[1];
+  var TP = { base: desde ? parseFloat(String(desde).replace(',','.')) : 120,
+             incl: 6, supAd: 12, supJo: 8, pro: 40, radio: 3, gestionPct: 5 };
+  var ad = tpNum('tp-ad'), jo = tpNum('tp-jo'), pe = tpNum('tp-pe'), pax = ad + jo + pe;
+
+  /* LAS PLAZAS INCLUIDAS SE LLENAN CON LOS QUE MÁS PAGARÍAN. Se meten dentro del cupo
+     primero los adultos, luego los jóvenes y al final los peques, así quien se sale y
+     paga suplemento es siempre el más barato. Al revés —llenando con los peques— el
+     mismo grupo, con el mismo servicio, salía más caro. */
+  var guia = TP.base * 100, fuera = Math.max(0, pax - TP.incl);
+  [[pe, 0], [jo, TP.supJo], [ad, TP.supAd]].forEach(function(t){
+    var cobra = Math.min(fuera, t[0]); guia += cobra * t[1] * 100; fuera -= cobra;
+  });
+  var pro = (document.querySelector('input[name=tpdur]:checked') || {}).value === 'pro';
+  if (pro) guia += TP.pro * 100;
+  document.getElementById('tp-guia').textContent = tpEur(guia);
+  document.getElementById('tp-d-guia').textContent = pax
+    ? '(' + pax + (pax === 1 ? ' persona' : ' personas') + (pro ? ' · 3 h' : ' · 2 h') + ')' : '';
+
+  /* La radioguía la usan adultos y jóvenes; los peques no llevan. */
+  var usan = ad + jo;
+  var radio = document.getElementById('tp-radio').checked ? usan * TP.radio * 100 : 0;
+  document.getElementById('tp-l-radio').hidden = radio <= 0;
+  document.getElementById('tp-radio-e').textContent = tpEur(radio);
+  document.getElementById('tp-d-radio').textContent = radio > 0
+    ? '(' + usan + (usan === 1 ? ' persona' : ' personas') + ')' : '';
+
+  var ent = 0, n = 0;
+  document.querySelectorAll('.tp-ent').forEach(function(c){
+    if (!c.checked) return;
+    n++;
+    ent += Math.round((+c.dataset.ad || 0) * 100) * ad
+         + Math.round((+c.dataset.jo || 0) * 100) * jo
+         + Math.round((+c.dataset.pe || 0) * 100) * pe;
+  });
+  var gestion = Math.round(ent * TP.gestionPct / 100);
+  document.getElementById('tp-l-ent').hidden = ent <= 0;
+  document.getElementById('tp-l-ges').hidden = ent <= 0;
+  document.getElementById('tp-ent').textContent = tpEur(ent);
+  document.getElementById('tp-ges').textContent = tpEur(gestion);
+  document.getElementById('tp-d-ent').textContent = n
+    ? '(' + n + (n === 1 ? ' opción' : ' opciones') + ')' : '';
+
+  caja.textContent = tpEur(guia + radio + ent + gestion);
+}
+
+/* ══ LAS EXCEPCIONES, DERIVADAS DEL DÍA ═════════════════════════════════════════════
+   Eran HTML fijo con los datos del sábado y se pintaban los siete días: el grupo de los
+   Cabrera se anunciaba a diario y solo existe el sábado; el Nocturno decía «2 personas»
+   cuando el manifiesto de ese domingo dice 7; el cupo hablaba de un Triana de las 18:30
+   que cinco de cada siete días no sale. Una excepción que no corresponde al día es peor
+   que ninguna: manda al encargado a resolver algo que no ha pasado.
+   Ahora cada tarjeta se rellena del parte del día y se ESCONDE si ese día no aplica —y
+   entonces tampoco cuenta en el marcador de «cosas por revisar». */
+function apellidoDeRes(n){
+  var w = String(n||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-zñ\s]/g,' ').split(/\s+/).filter(function(x){ return x.length>=3; });
+  return w.length ? w[w.length-1] : null;
+}
+/* El mismo criterio que el detector del servidor: mismo apellido, y a partir de 5
+   personas — por debajo no hay operador que pida adelanto. */
+function grupoDelDia(dia){
+  var out = null;
+  (dia.tours||[]).forEach(function(t){
+    if (out) return;
+    var por = {};
+    (t.res||[]).forEach(function(r){
+      if (r.walkin) return;
+      var a = apellidoDeRes(r.n); if(!a) return;
+      (por[a] = por[a] || []).push(r);
+    });
+    Object.keys(por).forEach(function(a){
+      if (out) return;
+      var l = por[a], pax = l.reduce(function(x,r){ return x + (+r.p||0); }, 0);
+      if (l.length >= 2 && pax >= 5) out = { tour:t, res:l, pax:pax };
+    });
+  });
+  return out;
+}
+function pintaExcepciones(){
+  var dia = (S.agenda||[])[S.agDia] || { tours:[] };
+  var vivas = 0;
+  var pon = function(id, hay, html){
+    var el = document.getElementById(id); if (!el) return;
+    if (!hay) { el.style.display = 'none'; return; }
+    el.style.display = ''; vivas++;
+    if (html) { var d = el.querySelector('[data-exc-txt]'); if (d) d.innerHTML = html; }
+  };
+
+  var g = grupoDelDia(dia);
+  pon('exc-grupo', !!g, g && ('«' + g.res.map(function(r){ return r.n+' ('+r.p+'p)'; }).join('» + «') +
+    '» = <b>' + g.pax + ' personas</b> · mismo apellido, reservas con minutos de diferencia. ' +
+    'Política de adelanto avisada en su confirmación; el guía tiene la observación.'));
+  var cab = document.querySelector('#exc-grupo b');
+  if (cab && g) cab.textContent = '👥 Grupo grande detectado — tour de las ' + g.tour.hora;
+
+  var sin = (dia.tours||[]).filter(function(t){ return t.sinGuia; })[0];
+  var paxSin = sin ? paxDe(sin.res) : 0;
+  pon('exc-guia', !!sin, sin && ('<b>' + paxSin + ' personas</b> · sin guía. Curro marcó disponibilidad ' +
+    'esa franja. Un toque para asignar (o míralo en Equipo y disponibilidad).'));
+  var cabG = document.querySelector('#exc-guia b');
+  if (cabG && sin) cabG.textContent = '🧭 Falta guía por asignar — ' + sin.tit + ' · ' + sin.hora;
+
+  /* El mínimo solo es excepción si de verdad no se llega: con 7 personas no hay nada que
+     decidir, y la tarjeta pedía suspender una salida que iba sobrada. */
+  var MINIMO = 4;
+  pon('exc-minimo', !!sin && paxSin < MINIMO,
+    sin && ('<b>' + paxSin + ' personas</b> (mínimo ' + MINIMO + ' para salir). Revisa el mensaje y avisa si ' +
+    'decides suspenderlo — GuIA reubica a quien había reservado.'));
+
+  /* Cupo: la salida más llena del día, y solo si de verdad le quedan pocas plazas. */
+  var lleno = null;
+  (dia.tours||[]).forEach(function(t){
+    var af = aforoDeTour(t), pax = paxDe(t.res), libres = af - pax;
+    if (libres >= 0 && libres <= 4 && (!lleno || libres < lleno.libres))
+      lleno = { t:t, af:af, pax:pax, libres:libres };
+  });
+  pon('exc-cupo', !!lleno);
+  var cc = document.querySelector('#exc-cupo .mini');
+  if (cc && lleno) {
+    var det = cc.querySelector('details');
+    cc.innerHTML = lleno.t.tit + ' · hoy ' + lleno.t.hora + ' · <b>' + lleno.pax + '/' + lleno.af +
+      '</b> — queda' + (lleno.libres===1?'':'n') + ' ' + lleno.libres + ' plaza' + (lleno.libres===1?'':'s') + '. ';
+    if (det) cc.appendChild(det);
+  }
+
+  /* LISTA DE ESPERA — plazas liberadas y quién cabe, del mismo registro que el
+     seguimiento. Solo se enseña si de verdad se ha liberado algo Y hay alguien esperando
+     que quepa: una tarjeta que diga «hay plaza» sin plaza, o «cabe» sin que quepa, es
+     justo lo que esta pantalla existe para no hacer. */
+  var libres = (S.canceladas||[]).reduce(function(a,c){ return a + (+c.p||0); }, 0);
+  var cabe = (S.espera||[]).filter(function(e){ return e.p <= libres; })[0];
+  pon('exc-espera', libres>0 && !!cabe, cabe && ('Se liberaron <b>'+libres+' plaza'+
+    (libres===1?'':'s')+'</b> ('+((S.canceladas||[]).length)+' '+
+    plural((S.canceladas||[]).length,'cancelación','cancelaciones')+' por el chat). «'+cabe.n+' ('+cabe.p+'p)» espera y '+
+    'cabe: ya está marcada como avisada.'));
+  var tE = document.querySelector('#exc-espera [data-exc-tit]');
+  if (tE){
+    /* La hora sale de la salida a la que se liberó la plaza, no de un «17:00» escrito:
+       la primera cancelación con salida conocida manda; la semilla no tiene ninguna, así
+       que se cae a la segunda salida del día, que es a la que apunta la historia. */
+    var conHora = (S.canceladas||[]).filter(function(c){ return c.hora; })[0];
+    var h = conHora ? conHora.hora : ((dia.tours||[])[1]||{}).hora;
+    tE.textContent = '⏳ Lista de espera con plaza libre' + (h ? ' — hoy '+h : '');
+  }
+
+  S.excs = vivas + 1;   // + la que no depende del parte (el privado)
+  var n = document.getElementById('n-exc');
+  if (n) { n.textContent = S.excs; n.style.display = S.excs > 0 ? '' : 'none'; }
+}
+/* El aforo de un tour: el del Cerebro si lo tiene, y si no el general. */
+/* EL AFORO SALE DE LA FICHA. Aquí ponía `/triana/i.test(t.tit) ? 20 : 25`, o sea el aforo
+   de cada tour escrito a mano en una condición — y ya discrepaba: el Cerebro del Nocturno
+   dice 20 y Operaciones le contaba 25. Con dos números, GuIA le promete al viajero plazas
+   que el cuadro del día no tiene, y la ocupación media del Cuadro de mando se calcula
+   sobre un total que la ficha desmiente.
+   El nombre del parte casa con el de la ficha por la MISMA regla asimétrica que usa
+   `salidasDeHoy` en el motor —el título del parte cabe dentro del nombre del tour, nunca
+   al revés («Free tour centro histórico» ⊃ «Centro histórico» es el mismo, abreviado)—,
+   y no por una lista de casos: dos reglas distintas para el mismo emparejamiento es el
+   siguiente descuadre esperando. */
+function aforoDeTour(t){
+  var f = (S.franjas||[]).filter(function(x){ return x.tour===t.tit && x.hora===t.hora; })[0];
+  if (f && +f.aforo) return +f.aforo;
+  var n = normaliza(t.tit||'');
+  var ficha = S.tours.filter(function(tr){ return normaliza(tr.nombre)===n; })[0] ||
+              S.tours.filter(function(tr){ return normaliza(tr.nombre).indexOf(n)!==-1; })[0];
+  var a = ficha && parseInt(ficha.kb.aforo,10);
+  /* Y si el tour del parte no tiene ficha, 25 — pero eso ya no es «el aforo general»,
+     es que falta una ficha. El corpus lo caza; esto solo evita el NaN. */
+  return a>0 ? a : 25;
+}
+
+function pintaOperaciones(){ pintaExcepciones(); pintaEstadoBanner(); pintaSeguimiento(); pintaCupo(); }
 
 /* ============ manifiesto ============ */
 
@@ -6749,11 +7694,21 @@ function pintaOperaciones(){ pintaEstadoBanner(); pintaSeguimiento(); pintaCupo(
 function euros(v){ return dinero(v, 2); }
 function paxDe(res){ return res.reduce(function(s,r){return s+r.p},0); }
 function agTotales(){
-  var sPax=0, sRec=0;
+  var sPax=0, sRec=0, sVenta=0;
   S.agenda.forEach(function(d){ d.tours.forEach(function(t){
     sPax += paxDe(t.res); sRec += (t.rec||0);
+    /* LA VENTA DEL TOUR DE PAGO también es dinero, y no llegaba a ninguna pantalla: el
+       ciclo produce cuatro salidas del Alcázar a 24 €/persona y la caja de la plaza del
+       viernes, y todo eso se quedaba fuera de los totales. Solo cuenta lo ya OCURRIDO
+       —las salidas pasadas—, igual que la recaudación: una venta futura no ha entrado. */
+    if (d.pasado) sVenta += (+t.precio||0)*paxPresente(t.res) + (+t.ventaEfectivo||0);
   })});
-  return { semPax:sPax, semRec:sRec, mesPax:S.mesBasePax+sPax, mesRec:S.mesBaseRec+sRec };
+  return { semPax:sPax, semRec:sRec, semVenta:sVenta,
+           mesPax:S.mesBasePax+sPax, mesRec:S.mesBaseRec+sRec };
+}
+/* Las personas que de verdad se presentaron: la venta se factura sobre quien vino. */
+function paxPresente(res){
+  return (res||[]).reduce(function(a,r){ return a + (r.ok ? (+r.p||0) : 0); }, 0);
 }
 function agDia(dir){
   S.agDia = Math.max(0, Math.min(S.agenda.length-1, S.agDia+dir));
@@ -7128,7 +8083,51 @@ function anotaGuia(txt){
   var d=S.agenda[S.agDia]; var t=d&&d.tours&&d.tours[0];
   if (!t) return;
   t.obs=(t.obs||[]); t.obs.unshift({ a:'GuIA', rec:false, t:txt });
+  aplicaAccionDeNota(txt);
   var v=document.getElementById('v-manifiesto'); if (v && v.classList.contains('act')) pintaManifiesto();
+}
+/* ── LO QUE GuIA DICE QUE HACE, HECHO ────────────────────────────────────────────────
+   GuIA contestaba «¡Hecho! Cancelo tu reserva ✅ … La reserva se cancela DE VERDAD y la
+   plaza vuelve a contar libre en el aforo» y no cancelaba nada: escribía la observación y
+   ahí se acababa. La reserva seguía viva, el aforo seguía ocupado y el guía tenía en su
+   manifiesto a alguien que ya no iba a venir. Lo mismo con confirmar y con el retraso: el
+   ✅ y el ⏰ del manifiesto se leían en tres pantallas y no los escribía nadie.
+   Es el fallo que le da nombre al banco `acciones-puerta-real` del servidor, que existe
+   porque la suite estuvo dos semanas verde sobre acciones que ninguna ruta escribía.
+   Se resuelve COMO EN EL SERVIDOR (`cerebro.js · aplicaAccionDeNota`): la nota que el
+   motor deja es el contrato, y el anfitrión la ejecuta. Así no hay que tocar `motor.js` ni
+   inventar un gancho nuevo, y las frases que se comprueban son las mismas en los dos
+   sitios — si alguien reescribe una nota, se cae aquí y allí a la vez. */
+function aplicaAccionDeNota(nota){
+  var cancela  = /^Reserva «(.+?)» cancelada por el chat/.exec(nota);
+  var confirma = /^«(.+?)» confirma por el chat que viene/.exec(nota);
+  var tarde    = /^«(.+?)» avisa por el chat de que llega tarde/.exec(nota);
+  var m = cancela || confirma || tarde;
+  if (!m) return;
+  var cod = String(m[1]).trim().toUpperCase();
+  var dia = S.agenda[S.agDia]; if (!dia) return;
+  (dia.tours||[]).forEach(function(t){
+    (t.res||[]).forEach(function(r, i){
+      if (String(r.loc||'').toUpperCase() !== cod) return;
+      if (cancela){
+        /* Fuera del parte. Una reserva cancelada no es una reserva con una marca: si se
+           quedara en la lista, el aforo la seguiría contando y el guía la seguiría
+           esperando, que es justo lo que había. Se guarda aparte para que la pantalla de
+           excepciones pueda decir cuántas plazas se han liberado. */
+        t.res.splice(i, 1);
+        S.canceladas = (S.canceladas||[]);
+        S.canceladas.push({ n:r.n, p:r.p, canal:r.canal, hora:t.hora, tour:t.tit });
+      }
+      else if (confirma){ r.conf = true; }
+      else if (tarde){ r.tarde = true; }
+    });
+  });
+  /* Las pantallas que cuentan personas o plazas, al día. Sin esto, cancelar por el chat
+     dejaba el cuadro del día y las excepciones con el número de antes hasta que algo
+     las repintara por otro motivo. */
+  if (typeof refrescaLocsVivos === 'function') refrescaLocsVivos();
+  ['pintaOperaciones','pintaCuadroDia','pintaCuadroKpis','pintaSeguimiento','pintaManifiesto']
+    .forEach(function(f){ try{ if (typeof window[f]==='function') window[f](); }catch(e){} });
 }
 
 /* ================= FASE A · GuIA bilingüe (ES/EN) =================
@@ -7876,13 +8875,57 @@ var FACTORES_NS=[
   { k:'historial',  l:'Ya falló otra vez',                   corto:'ya falló una vez',     max:40, def:25 },
   { k:'confirmo',   l:'Confirmó «sí voy» (resta riesgo)',    corto:'ya confirmó ✓',        max:40, def:30, resta:true },
 ];
-var RESERVAS_NS = [
-  { n:"Sofía Cabrera · 6p", canal:"GuruWalk",   f:{plataforma:1, grande:1, antelacion:1} },
-  { n:"Javier Cabrera · 5p", canal:"GuruWalk",   f:{plataforma:1, grande:1, silencio:1} },
-  { n:"Julia Keller · 2p", canal:"Web propia", f:{confirmo:1} },
-  { n:"Fam. Dubois · 4p",  canal:"Civitatis",  f:{plataforma:1} },
-  { n:"Iker Ortiz · 2p",   canal:"Web propia", f:{silencio:1, historial:1} },
-];
+/* LAS RESERVAS DE MAÑANA, del ciclo. Aquí había una lista de cinco nombres escrita a mano
+   —`RESERVAS_NS`— que era copia del manifiesto de HOY, y no de un hoy cualquiera: del tour
+   que el guion del sábado tiene EN MARCHA. La pantalla preparaba una cadencia de T-72h,
+   T-24h y T-3h para un grupo que ya estaba andando por Sevilla; y abierta cualquier otro
+   día de la semana, enseñaba a cinco personas que ese día no salían con nadie.
+   La cabecera decía «mañana 10:00» y era lo único que estaba bien — por casualidad, porque
+   todos los días del ciclo abren a las 10:00. */
+/* «Mañana» se cuenta desde el HOY de verdad —el día que `montaSemana` marcó `hoy`— y NO
+   desde `S.agDia`, que es el día que el usuario está MIRANDO: las flechas de la agenda
+   existen para recorrer la semana, y con ellas de ancla, irse al martes hacía que la
+   pantalla de recordatorios dijera «mañana» sobre el miércoles. El manifiesto se recorre;
+   los recordatorios de mañana son los de mañana. */
+function salidaDeManana(){
+  var ag = S.agenda||[], i = -1;
+  for (var k=0;k<ag.length;k++) if (ag[k].hoy){ i=k; break; }
+  var d = ag[i+1];
+  return d && (d.tours||[])[0] ? { dia:d, t:d.tours[0] } : null;
+}
+/* Quién ha faltado ya, por nombre y en la parte PASADA de la ventana. El flag `hist` de la
+   ficha se une con lo que el propio ciclo ha registrado: si un nombre repite y la primera
+   vez se cerró como no-show, el riesgo lo sabe sin que nadie lo escriba. */
+function faltoAntes(nombre){
+  return (S.agenda||[]).some(function(d){
+    return d.pasado && (d.tours||[]).some(function(t){
+      return (t.res||[]).some(function(r){ return r.nsAuto && r.n===nombre; }); });
+  });
+}
+function reservasNoshow(){
+  var s = salidaDeManana(); if(!s) return [];
+  return (s.t.res||[]).map(function(r){
+    return {
+      n: r.n + ' · ' + r.p + 'p',
+      canal: r.canal,
+      f: {
+        plataforma: (r.canal!=='Web propia' && !r.walkin) ? 1 : 0,
+        grande:     r.p>=5 ? 1 : 0,
+        antelacion: r.ant ? 1 : 0,
+        /* Silencio es la AUSENCIA de respuesta, así que se deriva de lo mismo que
+           `confirmo` y no de un flag aparte: si estuvieran separados podrían ser ciertos
+           los dos a la vez y la fila sumaría y restaría por el mismo hecho.
+           Y NO mira `ok`. `ok` es la asistencia con la que se cierra el tour, y en una
+           salida que todavía no ha salido no significa nada — el guion del viernes la trae
+           puesta porque se escribió como día pasado, y leerla aquí hacía que un jueves la
+           pantalla diera por tranquilas a personas que no habían contestado nada. */
+        silencio:   r.conf ? 0 : 1,
+        historial:  (r.hist || faltoAntes(r.n)) ? 1 : 0,
+        confirmo:   r.conf ? 1 : 0,
+      }
+    };
+  });
+}
 function pintaNoshowCfg(){
   var c=document.getElementById('ns-cfg');
   c.innerHTML=FACTORES_NS.map(function(x){
@@ -7917,7 +8960,20 @@ function pintaNoshow(){
   document.getElementById('ns-medio-v').textContent=medio;
   var tb=document.getElementById('tabla-noshow'); var suma=0;
   tb.querySelectorAll('tr:not(:first-child)').forEach(function(r){r.remove()});
-  RESERVAS_NS.forEach(function(r){
+  var LISTA = reservasNoshow();
+  /* Sin salida mañana no se inventa una tabla: se dice. Le pasa a cualquier empresa que
+     libre un día, y una pantalla que enseñe cinco reservas fantasma ese día es peor que
+     una vacía. */
+  if (!LISTA.length){
+    var vacio=document.createElement('tr');
+    vacio.innerHTML='<td colspan="4" class="mini muted">Mañana no hay ninguna salida programada — '+
+      'nada que recordar. La cadencia se reanuda con la siguiente.</td>';
+    tb.appendChild(vacio);
+    document.getElementById('kpi-prev').textContent='—';
+    document.getElementById('kpi-rec').textContent='—';
+    return;
+  }
+  LISTA.forEach(function(r){
     var riesgo=riesgoDe(r); suma+=riesgo;
     var nivel=riesgo>=alto?'alto':(riesgo>=medio?'medio':'');
     var tr=document.createElement('tr');
@@ -7928,10 +8984,16 @@ function pintaNoshow(){
       '<td class="cadencia">'+cadencia(riesgo,inteligente)+'</td>';
     tb.appendChild(tr);
   });
-  var media=suma/RESERVAS_NS.length;
+  var media=suma/LISTA.length;
   var prev= inteligente ? Math.max(8, Math.min(30, Math.round(media*0.38))) : 26;
   document.getElementById('kpi-prev').textContent = prev+' %';
   document.getElementById('kpi-rec').textContent  = '+'+Math.round((38-prev)*1.6);
+  /* La cabecera nombra la MISMA salida que la tabla. Decía «mañana 10:00» escrito a mano y
+     acertaba de casualidad —todos los días del ciclo abren a las 10:00—; el día que un
+     guion empiece a otra hora, mentiría. */
+  var s = salidaDeManana(), sub = document.querySelector('#v-noshow .sub');
+  if (s && sub) sub.textContent = 'mañana ' + s.t.hora + ' · ' + s.t.tit +
+    ' · la cadencia se adapta al riesgo de cada reserva';
 }
 
 /* ============ carrito / combos ============ */
@@ -7948,6 +9010,66 @@ function pintaCombosDestinatarios(){
     web.map(function(a){return a.n}).join(', ')+'). Las '+plat.length+' de plataforma ('+
     plat.map(function(a){return a.canal}).filter(function(v,i,arr){return arr.indexOf(v)===i}).join(', ')+
     ') ya reciben la petición de reseña de su propia plataforma — no se duplica el mensaje.';
+}
+
+/* ============ el catálogo de extras, derivado del Cerebro ============
+   Las tres piezas de la pantalla de tours de pago —el chat de muestra, los dos
+   desplegables del combo y el mensaje— estaban escritas a mano y nombraban tours que esta
+   empresa no hace: un «Tour de la Catedral al atardecer» y un «gastronómico por Triana»
+   que no salen ni un día en el ciclo. La pantalla que vende «se escribe una vez en el
+   Cerebro y GuIA lo cuenta» se demostraba con un catálogo inventado.
+   El precio sale del hecho `modelo` de cada ficha —el mismo texto que GuIA le dice al
+   viajero—, no de un número aparte: dos sitios donde escribir el precio es un sitio donde
+   se van a contradecir. */
+function precioDeFicha(t){
+  var m = (t.kb.modelo||'').match(/(\d+(?:[.,]\d+)?)\s*€/);
+  return m ? parseFloat(m[1].replace(',','.')) : 0;
+}
+function toursDePago(){ return S.tours.filter(function(t){ return precioDeFicha(t) > 0; }); }
+function toursDePropina(){ return S.tours.filter(function(t){ return !precioDeFicha(t); }); }
+
+function pintaExtras(){
+  var chat = document.getElementById('extras-chat'); if (!chat) return;
+  /* La pregunta se le hace AL MOTOR, con el mismo enrutador que el chat de verdad. Si el
+     catálogo se vaciara, aquí saldría la derivada — que es exactamente lo que hay que ver
+     antes de enseñarle la pantalla a un cliente. */
+  var q = '¿hacéis algo más aparte del free tour?';
+  var r = (typeof respuestaGuia === 'function') ? String(respuestaGuia(q)) : '';
+  chat.innerHTML = '💬 <b>Chat — un viajero pregunta</b>\n\n— ' + q + '\n— ' +
+    r.replace(/\n\n<i>[\s\S]*$/, '').trim();
+
+  var a = document.getElementById('combo-a'), b = document.getElementById('combo-b');
+  var hoy = (S.agenda && S.agenda[S.agDia] && S.agenda[S.agDia].tours) || [];
+  a.innerHTML = toursDePropina().map(function(t){
+    /* «(hoy)» solo si de verdad sale hoy: el rótulo estaba fijo y el domingo ofrecía el
+       Triana «de hoy» sin que el Triana saliera. */
+    var sale = hoy.some(function(s){ return normaliza(t.nombre).indexOf(normaliza(s.tit))!==-1; });
+    return '<option>'+t.nombre+(sale?' (hoy)':'')+'</option>';
+  }).join('');
+  b.innerHTML = toursDePago().map(function(t){
+    return '<option data-p="'+precioDeFicha(t)+'">'+t.nombre+' · '+precioDeFicha(t)+' €</option>';
+  }).join('') || '<option data-p="0">— no tienes ningún tour de pago en el Cerebro —</option>';
+  pintaMsjCombo();
+}
+function pintaMsjCombo(){
+  var caja = document.getElementById('msj-combo'); if (!caja) return;
+  var b = document.getElementById('combo-b');
+  var op = b.options[b.selectedIndex] || {};
+  var pct = +document.getElementById('combo-dto').value;
+  var base = +((op.dataset||{}).p || 0);
+  /* En CÉNTIMOS, como el configurador de al lado y por lo mismo: 24 € × 0,85 en coma
+     flotante se desvía, y le enseñarías un número al cliente y guardarías otro. */
+  var con = Math.round(base*100*(100-pct)/100)/100;
+  var eur = function(v){ return v.toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'; };
+  var web = (S.kbEmpresa.web||'patioycompas.example').replace(/^https?:\/\//,'');
+  caja.innerHTML =
+    '📲 <b>Se envía 30 min después del tour — SOLO a reservas de tu web</b> (las de plataforma ya reciben la petición de reseña de su propia plataforma)\n\n'+
+    '¡Gracias por venir esta mañana! 🙌 Si os quedasteis con ganas de más, esta semana tenéis el\n'+
+    '<b>'+(op.textContent||'').split(' · ')[0]+'</b>'+
+    (pct ? ' con un '+pct+' % para los que ya nos conocéis: '+eur(con)+' (en vez de '+eur(base)+')'
+         : ': '+eur(base))+'.\n'+
+    'Plazas de vuestro grupo guardadas 48 h 👉 '+web+'/combo/x3f9\n'+
+    '<button class="btn mini" style="margin-top:8px;" onclick="toast(\'Combo activado (simulado): se ofrece tras cada free tour\')">Activar combo</button>';
 }
 
 /* ============ la ficha de un guía ============
@@ -8113,41 +9235,74 @@ function historiaLiq(){
   var TEMPORADA={1:0.30,2:0.35,3:0.50,4:0.70,5:0.85,6:1,7:1.15,8:1.20,9:0.95,10:0.70,11:0.40,12:0.45};
   var TURNOS=[['10:00 · Centro',25],['17:00 · Centro',22],['18:30 · Triana',14],['21:00 · Nocturno',18]];
   var sem=20260814, az=function(){ sem=(sem*1103515245+12345)&0x7fffffff; return sem/0x7fffffff; };
-  var fuera=[], quien=['Elena','Curro','Álvaro'];
-  /* De septiembre de 2025 a mayo de 2026. Junio y julio NO se generan: están escritos
-     abajo y pisarlos duplicaría el mes que el usuario está mirando. */
-  for (var i=9;i<=17;i++){
-    var anio=i<=12?2025:2026, mes=i<=12?i:i-12;
-    var salidas=Math.round(14*TEMPORADA[mes]);
+  var fuera=[];
+  /* LOS DOCE MESES ANTERIORES A HOY, contados desde `HOY_DEMO`. Iban de septiembre de 2025
+     a mayo de 2026 con los años escritos en el bucle, y las once salidas recientes tenían
+     fecha fija de junio y julio de 2026. El rango que la Liquidación abre por defecto SÍ se
+     calcula desde el hoy real, así que a partir del 1 de agosto la pantalla del dinero
+     salía VACÍA —cero filas— con su KPI de propina marcando 499 € encima. En la demo que
+     se le enseña a un prospecto, y sin que nada diera error.
+     Es el mismo congelado que el ciclo semanal vino a quitar, un mes más abajo. */
+  var MESES_HISTORIA = 12;
+  for (var back=MESES_HISTORIA; back>=0; back--){
+    var d0=new Date(HOY_DEMO.getFullYear(), HOY_DEMO.getMonth()-back, 1);
+    var anio=d0.getFullYear(), mes=d0.getMonth()+1;
+    /* Del mes en curso solo lo que ya ha pasado: una liquidación no puede traer salidas
+       de la semana que viene. */
+    var diasMes=new Date(anio, mes, 0).getDate();
+    var hasta = back===0 ? HOY_DEMO.getDate() : diasMes;
+    var salidas=Math.round(14*TEMPORADA[mes]*(hasta/diasMes));
+    /* Álvaro está de baja desde hace más de medio año: solo aparece en los meses viejos, y
+       por eso su ficha se lee como la de alguien que dejó de trabajar — que es lo que su
+       estado dice. Yasmina sí guía todo el año: guía cuatro salidas por semana en el parte
+       y no aparecía en NINGUNA salida liquidada, así que el encargado le pagaba a alguien
+       que su propia pantalla de nóminas no conocía. Mismo fallo que ya tuvo Equipo. */
+    var quien = back>=7 ? ['Elena','Curro','Yasmina','Álvaro'] : ['Elena','Curro','Yasmina'];
     for (var k=0;k<salidas;k++){
       var t=TURNOS[Math.floor(az()*TURNOS.length)];
       var ax=Math.max(3,Math.round(t[1]*TEMPORADA[mes]*(0.45+az()*0.5)));
-      /* Álvaro está de baja: solo aparece hasta enero, y por eso su ficha se lee como la
-         de alguien que dejó de trabajar — que es lo que su estado dice. */
-      var g=quien[Math.floor(az()*(i<=13?3:2))];
-      fuera.push({ f:anio+'-'+String(mes).padStart(2,'0')+'-'+String(1+Math.floor(az()*27)).padStart(2,'0'),
-        /* 9-13 € por persona, que es el rango de las filas escritas a mano —198/19,
-           171,5/15, 212/21— y no uno nuevo: si el histórico generado fuera más generoso
-           que el de verdad, la media de la ficha diría algo que la liquidación desmiente. */
+      var g=quien[Math.floor(az()*quien.length)];
+      fuera.push({ f:anio+'-'+String(mes).padStart(2,'0')+'-'+String(1+Math.floor(az()*hasta)).padStart(2,'0'),
+        /* 9-13 € por persona, que es el rango de las filas recientes —198/19, 171,5/15,
+           212/21— y no uno nuevo: si el histórico generado fuera más generoso que el de
+           verdad, la media de la ficha diría algo que la liquidación desmiente. */
         t:t[0], g:g, ax:ax, rec:Math.round(ax*(9+az()*4)*10)/10,
         plat:Math.round(ax*(0.3+az()*0.35)) });
     }
   }
   return fuera.sort(function(a,b){ return a.f<b.f?-1:1; });
 }
+/* Una fecha a N días de HOY, en ISO. Las salidas recientes que cuentan las historias de
+   esta pantalla —el nocturno sin guía, los dos Triana de propina alta— se escriben con
+   esto y no con una fecha fija, que es lo que las congelaba. */
+function haceDias(n){
+  return isoDe(new Date(HOY_DEMO.getFullYear(), HOY_DEMO.getMonth(), HOY_DEMO.getDate()-n));
+}
+/* Las salidas recientes, a días de HOY. Cada una está aquí porque cuenta algo que el
+   histórico generado no garantiza: el nocturno SIN GUÍA (única fila con neto negativo para
+   la empresa — el coste de canal lo absorbe ella, nunca el guía), los dos Triana de propina
+   alta y plataforma cero, y el día con dos salidas seguidas.
+   El Triana lo guía YASMINA, que es quien lo guía en el parte: aquí ponía Elena, y era el
+   mismo nombre discutiéndose entre dos pantallas. */
 var TOURS_LIQ = historiaLiq().concat([
-  { f:'2026-06-24', t:'10:00 · Centro', g:'Elena',        ax:19, rec:198.0, plat:9  },
-  { f:'2026-06-27', t:'17:00 · Centro', g:'Curro',        ax:15, rec:171.5, plat:7  },
-  { f:'2026-06-29', t:'18:30 · Triana', g:'Elena',    ax:11, rec:240.0, plat:0  },
-  { f:'2026-07-03', t:'10:00 · Centro', g:'Elena',        ax:21, rec:212.0, plat:11 },
-  { f:'2026-07-05', t:'17:00 · Centro', g:'Curro',        ax:17, rec:156.5, plat:9  },
-  { f:'2026-07-08', t:'18:30 · Triana', g:'Elena',    ax:12, rec:301.0, plat:0  },
-  { f:'2026-07-10', t:'10:00 · Centro', g:'Curro',        ax:24, rec:255.0, plat:14 },
-  { f:'2026-07-12', t:'21:00 · Nocturno', g:'— sin guía —', ax:2, rec:0.0,  plat:2  },
-  { f:'2026-07-15', t:'10:00 · Centro', g:'Elena',        ax:18, rec:183.0, plat:8  },
-  { f:'2026-07-17', t:'10:00 · Centro', g:'Elena',        ax:9,  rec:104.0, plat:4  },
-  { f:'2026-07-17', t:'17:00 · Centro', g:'Curro',        ax:20, rec:214.5, plat:10 },
-]);
+  { f:haceDias(24), t:'10:00 · Centro',   g:'Elena',          ax:19, rec:198.0, plat:9  },
+  { f:haceDias(21), t:'17:00 · Centro',   g:'Curro',          ax:15, rec:171.5, plat:7  },
+  { f:haceDias(19), t:'18:30 · Triana',   g:'Yasmina',        ax:11, rec:240.0, plat:0  },
+  { f:haceDias(15), t:'10:00 · Centro',   g:'Elena',          ax:21, rec:212.0, plat:11 },
+  { f:haceDias(13), t:'17:00 · Centro',   g:'Curro',          ax:17, rec:156.5, plat:9  },
+  { f:haceDias(10), t:'18:30 · Triana',   g:'Yasmina',        ax:12, rec:301.0, plat:0  },
+  { f:haceDias(8),  t:'10:00 · Centro',   g:'Curro',          ax:24, rec:255.0, plat:14 },
+  { f:haceDias(6),  t:'21:00 · Nocturno', g:'— sin guía —',   ax:2,  rec:0.0,  plat:2  },
+  { f:haceDias(3),  t:'10:00 · Centro',   g:'Elena',          ax:18, rec:183.0, plat:8  },
+  { f:haceDias(1),  t:'10:00 · Centro',   g:'Elena',          ax:9,  rec:104.0, plat:4  },
+  { f:haceDias(1),  t:'17:00 · Centro',   g:'Curro',          ax:20, rec:214.5, plat:10 },
+].filter(function(x){
+  /* Si HOY cae en los primeros días del mes, algunas de estas caen en el mes anterior y el
+     rango por defecto («este mes») no las alcanza — pero siguen siendo salidas reales del
+     histórico, así que se quedan. Lo que NO puede pasar es que se cuelen dos veces: el
+     generador ya para en el día de hoy, así que no hay solape. */
+  return x.f <= isoDe(HOY_DEMO);
+}));
 var COMISION_CANAL = 2.5;
 var liqModo = 'pct';
 var liqCoste = 'empresa';   // POR DEFECTO: el canal lo paga quien lo contrata, no el guía
@@ -8174,6 +9329,16 @@ function rangoRapido(q){
   else if (q==='mes'){ del=iso(new Date(h.getFullYear(), h.getMonth(), 1)); al=iso(h); }
   else { var m=new Date(h.getFullYear(), h.getMonth()-1, 1);
          del=iso(m); al=iso(new Date(h.getFullYear(), h.getMonth(), 0)); }
+  /* EL ARRANQUE NO PUEDE ABRIR UNA TABLA VACÍA. «Este mes» un día 1 es un solo día, y ese
+     día todavía no ha cerrado ninguna salida: la pantalla del dinero abría en blanco doce
+     veces al año. Es lo que hace de verdad un encargado el día 1 — mirar el mes que acaba
+     de cerrar—, así que si el rango pedido no trae nada, se cae al mes anterior.
+     Solo en el arranque automático: si el usuario pide un rango a mano y sale vacío, se
+     respeta y se le enseña vacío, que es la respuesta correcta a su pregunta. */
+  if (q==='mes' && !TOURS_LIQ.some(function(x){ return x.f>=del && x.f<=al; })){
+    var ant=new Date(h.getFullYear(), h.getMonth()-1, 1);
+    del=iso(ant); al=iso(new Date(h.getFullYear(), h.getMonth(), 0));
+  }
   document.getElementById('liq-del').value=del;
   document.getElementById('liq-al').value=al;
   pintaLiq();
@@ -8227,6 +9392,13 @@ function pintaLiq(){
       celdaEur(x.rec)+celdaEur(-r.coste)+celdaEur(r.guia,true)+celdaEur(r.emp);
     tb.appendChild(tr);
   });
+
+  /* La tabla «Por guía» del Cuadro se repinta AQUÍ DENTRO, y no en la tanda del arranque:
+     así sigue al rango pase lo que pase —los botones de rango rápido, las dos fechas a
+     mano, el cambio de modo de reparto—, y no hay forma de dejarla mirando un mes que la
+     Liquidación ya no enseña. Es la única manera de que «una sola fuente de verdad» sea
+     una propiedad del código y no una nota al pie. */
+  if (typeof pintaCuadroGuias === 'function') pintaCuadroGuias();
 
   // por guía (como en la liquidación real: la nómina se agrega por guía)
   var tg=document.getElementById('tabla-liq-guia');
@@ -8565,13 +9737,42 @@ function seedDispo(){
   S.equipo.guias[1].dispo['Free tour centro histórico|10:00|5']=true;
 }
 /* Cobertura inicial del calendario (quién sale en cada salida, en orden de jerarquía) */
+/* LA COBERTURA SALE DEL GUION, no de una lista a mano. Antes decía que Elena guía el
+   10:00 los siete días y Curro el 17:00 los siete, y el parte del día decía otra cosa en
+   seis salidas: el encargado veía en su calendario un guía y en el manifiesto otro. Y
+   cubría un Triana el viernes que el ciclo ya no produce.
+   Ahora se recorren los siete guiones: cada salida siembra su franja y su guía, y el que
+   el guion deja `sinGuia` se queda descubierto — que es el hueco que la pantalla existe
+   para enseñar, y ahora es UNO de verdad, no tres inventados.
+   El índice del calendario es 0=lunes y `getDay()` es 0=domingo: `(getDay()+6)%7`. */
 function seedCobertura(){
   if(S.equipo.cobSeeded) return; S.equipo.cobSeeded=true;
   var C=S.equipo.cobertura, centro='Free tour centro histórico';
-  for(var d=0; d<7; d++){ C[centro+'|10:00|'+d]=[0]; C[centro+'|17:00|'+d]=[1]; }
+  var nombreFranja=function(t){ return t.tit==='Centro histórico' ? centro : t.tit; };
+  var idxGuia=function(n){
+    for(var i=0;i<S.equipo.guias.length;i++) if(S.equipo.guias[i].n===n) return i;
+    return -1;
+  };
+  var extra={};
+  Object.keys(GUION_SEMANA).forEach(function(dow){
+    var d=(Number(dow)+6)%7;                      // 0=domingo → 6; 1=lunes → 0
+    (GUION_SEMANA[dow].tours||[]).forEach(function(t){
+      var nom=nombreFranja(t), clave=nom+'|'+t.hora+'|'+d;
+      if (!t.sinGuia){
+        var i=idxGuia(t.guia);
+        if (i>=0) C[clave]=[i];
+      }
+      /* Las franjas que no son el Centro se declaran solas, con los días que el guion les
+         da de verdad. */
+      if (nom!==centro){
+        (extra[nom+'|'+t.hora] = extra[nom+'|'+t.hora] || []).push(d);
+      }
+    });
+  });
+  S.equipo.franjasExtra = Object.keys(extra).map(function(k){
+    var p=k.split('|'); return { tour:p[0], hora:p[1], dias:extra[k].sort() };
+  });
   C[centro+'|10:00|5']=[0,1];                    // sábado: Elena principal + Curro refuerzo
-  [3,4,5].forEach(function(d){ C['Triana con tapas|18:30|'+d]=[0]; });
-  // Nocturno (vie/sáb/dom · 21:00): SIN CUBRIR a propósito para demostrar el flujo
 }
 function pintaEquipo(){
   pintaCalendario();
@@ -8768,7 +9969,11 @@ CAMPOS_EMPRESA.forEach(function(c){ if ((S.kbEmpresa[c.k]||'').trim())
 S.tours.forEach(function(t){ CAMPOS_KB.forEach(function(c){ if ((t.kb[c.k]||'').trim())
   S.recientes.push({ tipo:'kb', tourId:t.id, k:c.k, seed:true }); }); });
 seedDispo(); seedCobertura();
-pintaManifiesto(); pintaNoshowCfg(); pintaNoshow(); pintaLiq(); pintaCerebro(); pintaCombosDestinatarios(); pintaPost(); calcProy(); pintaEquipo(); pintaCanales(); pintaOperaciones();
+/* `sembrarProy` sustituye al `calcProy` suelto que había aquí: siembra los deslizadores con
+   la operación del ciclo y pinta. Y va en ESTA tanda y no en el `setTimeout` del arranque
+   —donde están los KPI del Cuadro— porque aquí abajo ya está todo declarado y la pantalla
+   sale bien a la primera, sin un parpadeo con los números viejos. */
+pintaManifiesto(); pintaNoshowCfg(); pintaNoshow(); pintaLiq(); pintaCerebro(); pintaCombosDestinatarios(); pintaPost(); sembrarProy(); pintaCuadroCanales(); pintaCuadroFranjas(); pintaEquipo(); pintaCanales(); pintaOperaciones();
 pintaGatesInline(); pintaWaTope(); pintaCanalChat();
 msg('bot','¡Hola! 👋 Soy GuIA, el asistente automático que atiende este chat. Ahora respondo sobre «'+tourChat().nombre+'» — prueba los ejemplos, o crea otro tour en el 🧠 Cerebro y verás que cada uno tiene su cerebro, sin mezclas.');
 
