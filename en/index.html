@@ -585,6 +585,13 @@
   .tf-mas summary:hover{ text-decoration:underline; }
   .tf-mas ul{ margin:7px 0 0; padding-left:15px; font-size:11.5px; color:var(--muted);
     line-height:1.5; }
+  /* Un párrafo dentro de «Qué hace, exactamente» tiene que medir lo MISMO que sus
+     viñetas. Esta clase se usaba sin tener ni una regla, así que heredaba los 16,5 px del
+     body: en la única tarjeta que la lleva —la del tour de pago— el párrafo salía un 43 %
+     más grande que la lista pegada debajo, dentro de la misma caja. Era el salto de letra
+     que se veía desde lejos, y solo ahí. */
+  .tf-mas-p{ margin:7px 0 0; font-size:11.5px; line-height:1.5; color:var(--muted); }
+  .tf-mas-p b{ color:var(--ink2); }
   .tf-mas li{ margin-bottom:6px; }
   .tf-mas li:last-child{ margin-bottom:0; }
   .tf-mas b{ color:var(--ink2); }
@@ -1086,27 +1093,42 @@
         <span class="tf-p">+€9</span></label>
 
       <label class="tf-o con-mas tf-pronto"><input type="checkbox" data-c="reservas" data-eur="39" disabled>
-        <span class="tf-n">Your paid tour<small>If you sell a food walk or a night walk alongside the free tour: it books and takes payment on your own site, and the money lands in your Stripe account, not ours. Through a platform, that same ticket loses 20 to 30 % on the way</small></span>
+        <span class="tf-n">Your paid tour<small>The food walk, the ghost walk, the private one: booked on YOUR page instead of the platform that takes 20 to 30 % of every ticket. The seat is held straight away against the real capacity, and the payment goes to your gateway — never to ours</small></span>
         <span class="tf-p">€39 · <b>being built</b></span></label>
       <details class="tf-mas"><summary>What it does, exactly</summary>
-        <p class="tf-mas-p"><b>You can't buy this yet — we're building it.</b> It's here so
-        you can see where the product is going and tell us whether it would help you, not
-        so you can pay for it. When it's ready, it'll be ready.</p>
+        <p class="tf-mas-p"><b>You can't buy this yet, and here's exactly why.</b> The engine
+        is written and tested; what's missing is the screen where you set that tour's price
+        and the address where you already take payment. It's on this list so you can see
+        where the product is going and tell us whether it would help you — not so you can
+        pay for it.</p>
         <ul>
-          <li><b>Your paid tour is booked and paid for on your own page</b>, showing the
-            seats that are really left — we keep the capacity, not a spreadsheet.</li>
-          <li><b>Your Stripe account takes the money, not ours.</b> It goes straight to
-            you: we never hold it, never touch it, and take <b>no commission per
-            booking. None.</b> One click to connect, and we never see your keys.</li>
-          <li><b>The booking lands where every booking lands</b>: same daily brief, same
-            guide's manifest, same reminders. It isn't another separate program.</li>
-          <li><b>The books add up on their own</b>: what you sold, what each channel took,
-            and what the guide is owed for that tour — which on a paid tour is a fixed
-            amount (per hour, per departure or per person), never a cut of your till.</li>
+          <li><b>What this add-on opens up, and nothing else does:</b> letting a traveller
+            book a seat on a <b>paid</b> tour from your own page. On the free tour they
+            already can; on the paid one, until now, they couldn't.</li>
+          <li><b>The seat is held before any money moves, and capacity wins.</b> If three
+            are left on that departure, the fourth booking is refused on the spot. No
+            platform can stop an overbooking that happens on another one — here it never
+            happens at all.</li>
+          <li><b>The money never passes through us.</b> From the form it goes to the
+            gateway you already use. We don't touch it, don't hold it and take <b>no
+            commission per booking. None</b> — eight seats or eighty.</li>
+          <li><b>You know who still owes you.</b> Until someone has seen that money, the
+            booking is flagged “payment to confirm” on the daily brief and on the guide's
+            manifest — the person who has them standing in front of her. <b>The tick is set
+            by a person</b>, never by the system.</li>
         </ul>
-        <p class="tf-mas-p">A €25 ticket sold through a platform leaves you 17 to 20. Sold
-        on your own site it leaves you 25, less whatever Stripe charges for the card — and
-        this €39 a month is the same whether you sell eight seats or eighty.</p>
+        <p class="tf-mas-p"><b>And what we don't charge you for here, because you already
+        have it.</b> The page and the free-tour booking at €0 come with “Your website,
+        always current” (€9), which this add-on needs. The books of a paid tour come with
+        “The books, tour by tour” (€9): what you sold, what each channel took, and the
+        guide's fixed pay — which on a paid tour is a fixed amount per hour, per departure
+        or per person, never a cut of your till. Both already work today. <b>This add-on
+        adds one thing and charges for one.</b></p>
+        <p class="tf-mas-p">The sum, on your numbers: a €25 ticket sold through a platform
+        leaves you 17 to 20; sold on your page it leaves you 25, less whatever your gateway
+        charges for the card. Move <b>one sale in three</b> to your own site and, if you sell
+        around €3,000 a month of paid tours, that's roughly <b>€180 a month</b> you stop
+        giving away — four and a half times what this costs.</p>
       </details>
 
       <div class="tf-g">Platforms and the till</div>

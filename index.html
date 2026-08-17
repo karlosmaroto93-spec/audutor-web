@@ -539,6 +539,13 @@
   .tf-mas summary:hover{ text-decoration:underline; }
   .tf-mas ul{ margin:7px 0 0; padding-left:15px; font-size:11.5px; color:var(--muted);
     line-height:1.5; }
+  /* Un párrafo dentro de «Qué hace, exactamente» tiene que medir lo MISMO que sus
+     viñetas. Esta clase se usaba sin tener ni una regla, así que heredaba los 16,5 px del
+     body: en la única tarjeta que la lleva —la del tour de pago— el párrafo salía un 43 %
+     más grande que la lista pegada debajo, dentro de la misma caja. Era el salto de letra
+     que se veía desde lejos, y solo ahí. */
+  .tf-mas-p{ margin:7px 0 0; font-size:11.5px; line-height:1.5; color:var(--muted); }
+  .tf-mas-p b{ color:var(--ink2); }
   .tf-mas li{ margin-bottom:6px; }
   .tf-mas li:last-child{ margin-bottom:0; }
   .tf-mas b{ color:var(--ink2); }
@@ -1135,27 +1142,40 @@
         <span class="tf-p">+9 €</span></label>
 
       <label class="tf-o con-mas tf-pronto"><input type="checkbox" data-c="reservas" data-eur="39" disabled>
-        <span class="tf-n">Tu tour de pago<small>Si además del free tour vendes uno de tapas o uno nocturno: se reserva y se cobra en tu propia web, y el dinero entra en tu cuenta de Stripe, no en la nuestra. Por una plataforma, ese mismo ticket deja del 20 al 30 % por el camino</small></span>
+        <span class="tf-n">Tu tour de pago<small>El de tapas, el nocturno, el privado: que se reserve en TU página y no en la plataforma que se lleva del 20 al 30 % de cada ticket. La plaza se guarda al momento contra el aforo de verdad, y el cobro va a tu pasarela — nunca a la nuestra</small></span>
         <span class="tf-p">39 € · <b>en obras</b></span></label>
       <details class="tf-mas"><summary>Qué hace, exactamente</summary>
-        <p class="tf-mas-p"><b>Todavía no se puede contratar: lo estamos construyendo.</b>
-        Está aquí para que sepas por dónde va el producto y nos digas si te sirve — no para
-        que lo pagues. El día que se pueda, se podrá.</p>
+        <p class="tf-mas-p"><b>Todavía no se puede contratar, y aquí está dicho por qué.</b>
+        El motor está escrito y probado; le falta la pantalla donde pones el precio de ese
+        tour y la dirección donde ya cobras. Está en esta lista para que veas por dónde va
+        el producto y nos digas si te sirve — no para que lo pagues.</p>
         <ul>
-          <li><b>Tu tour de pago se reserva y se paga en tu página</b>, con las plazas que
-            quedan de verdad — el aforo lo llevamos nosotros, no una hoja aparte.</li>
-          <li><b>Cobra tu cuenta de Stripe, no la nuestra.</b> El dinero va directo a ti:
-            no lo tocamos, no lo retenemos y no nos llevamos comisión por reserva.
-            <b>Ni una.</b> Se conecta en un clic y nunca vemos tus claves.</li>
-          <li><b>La reserva entra donde entran todas</b>: mismo parte del día, mismo
-            manifiesto del guía, mismos recordatorios. No es otro programa más.</li>
-          <li><b>Las cuentas salen bien solas</b>: lo que vendiste, lo que se llevó cada
-            canal y lo que le toca al guía por ese tour — que en un tour de pago es un
-            fijo (por hora, por salida o por persona), no un porcentaje de tu caja.</li>
+          <li><b>Lo que abre este complemento, y no lo hace ninguna otra parte:</b> que un
+            viajero reserve una plaza de un tour <b>de pago</b> desde tu propia página.
+            Con el free tour ya puede; con el de pago, hasta ahora, no.</li>
+          <li><b>La plaza se guarda antes de cobrar, y el aforo manda.</b> Si en esa salida
+            quedan tres, la cuarta reserva se rechaza en el momento. Ninguna plataforma
+            puede impedirte un overbooking que ocurre en otra: aquí no llega a ocurrir.</li>
+          <li><b>El dinero no pasa por nosotros.</b> Del formulario sale a la pasarela donde
+            cobras hoy. Audutor no lo toca, no lo retiene y <b>no se lleva comisión por
+            reserva. Ni una</b>, vendas ocho plazas o vendas ochenta.</li>
+          <li><b>Sabes a quién le falta pagar.</b> Hasta que alguien vea ese dinero, la
+            reserva sale marcada «pago por confirmar» en el parte y en el manifiesto del
+            guía — que es quien la tiene delante en la plaza. <b>El ✓ lo pone una
+            persona</b>, nunca el sistema.</li>
         </ul>
-        <p class="tf-mas-p">Un ticket de 25 € vendido por una plataforma te deja entre 17 y
-        20 €. Vendido en tu propia web te deja 25, menos lo que te cobre Stripe por la
-        tarjeta — y estos 39 € al mes son los mismos vendas ocho plazas o vendas ochenta.</p>
+        <p class="tf-mas-p"><b>Y lo que NO te cobramos aquí, porque ya lo llevas.</b>
+        La página y la reserva del free tour a 0 € van con «Tu web, siempre al día» (9 €),
+        que este complemento necesita. Las cuentas de un tour de pago van con «Las cuentas
+        de cada tour» (9 €): lo que vendiste, lo que se llevó cada canal y el fijo del guía
+        —que en un tour de pago es un fijo por hora, por salida o por persona, nunca un
+        porcentaje de tu caja—. Las dos ya funcionan hoy. <b>Este complemento añade una
+        cosa y cobra por una.</b></p>
+        <p class="tf-mas-p">La cuenta, con tus números: un ticket de 25 € vendido por una
+        plataforma te deja entre 17 y 20 €; vendido en tu página te deja 25, menos lo que te
+        cobre tu pasarela por la tarjeta. Si mueves a tu web <b>una de cada tres ventas</b> y
+        hoy vendes unos 3.000 € al mes de tours de pago, son del orden de <b>180 € al mes</b>
+        que dejas de regalar: cuatro veces y media lo que cuesta esto.</p>
       </details>
 
       <div class="tf-g">Las plataformas y la caja</div>
