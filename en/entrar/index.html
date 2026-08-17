@@ -248,14 +248,16 @@ var APP_URL = 'https://audutor.fly.dev';
       });
     }).then(function(){
       amsg.className = 'aviso bueno';
-      amsg.textContent = 'Account created. Check your email: we have sent you the link to get in.';
-      ab.textContent = 'Account created';
+      /* "Done" rather than "Account created": the server now answers the SAME whether
+         the email had an account or not — so it can't be used to probe who's a client —
+         and in that case what lands in the inbox is the usual log-in link. This line is
+         true either way. */
+      amsg.textContent = 'Done. Check your email: we have sent you the link to get in.';
+      ab.textContent = 'Done';
     }).catch(function(e){
       ab.disabled = false; ab.textContent = 'Create the account';
       amsg.className = 'aviso malo';
-      amsg.textContent = /ya tiene cuenta|already/i.test(e.message)
-        ? 'That email already has an account. Use «Log in».'
-        : 'Could not create it: ' + e.message;
+      amsg.textContent = 'Could not do it: ' + e.message;
     });
   });
 })();

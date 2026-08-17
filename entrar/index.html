@@ -250,17 +250,16 @@ var APP_URL = 'https://audutor.fly.dev';
       });
     }).then(function(){
       amsg.className = 'aviso bueno';
-      amsg.textContent = 'Cuenta creada. Mira tu correo: te hemos mandado el enlace para entrar.';
-      ab.textContent = 'Cuenta creada';
+      /* «Hecho» y no «Cuenta creada»: el servidor contesta LO MISMO si el correo ya
+         tenía cuenta —dejó de ser un detector de clientes— y entonces lo que llega al
+         buzón es el enlace de entrar de siempre. Esta frase es verdad en los dos casos.
+         Quien ya tenía cuenta acaba dentro igual: abre el correo y entra. */
+      amsg.textContent = 'Hecho. Mira tu correo: te hemos mandado el enlace para entrar.';
+      ab.textContent = 'Hecho';
     }).catch(function(e){
       ab.disabled = false; ab.textContent = 'Crear la cuenta';
       amsg.className = 'aviso malo';
-      /* El 409 es el único caso en el que SÍ se dice qué pasa: aquí lo ha escrito quien
-         está intentando registrarse con su propio correo, así que no se le revela nada
-         que no supiera — y sin este mensaje se quedaría dando vueltas. */
-      amsg.textContent = /ya tiene cuenta/i.test(e.message)
-        ? 'Ese correo ya tiene cuenta. Entra con él desde «Entrar».'
-        : 'No se ha podido crear: ' + e.message;
+      amsg.textContent = 'No se ha podido: ' + e.message;
     });
   });
 })();

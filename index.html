@@ -10,6 +10,30 @@
 <title>Audutor — el sistema operativo de tu empresa de tours</title>
 <meta name="description" content="La capa operativa para empresas de tours y free tours: reservas multicanal, guías, no-shows, grupos, propinas y un asistente IA que no inventa. Modulable según tu tarifa y tu intensidad.">
 <style>
+  /* `color-scheme: light` NO es una preferencia estética: es lo que APAGA el
+     auto-oscurecido de los navegadores móviles. Sin esta línea, Chrome en Android (y
+     Safari en iOS con la web en modo oscuro) invierte la página por su cuenta y lo hace
+     mal: los fondos se van a negro y los textos conservan su color, así que los botones
+     salían negros con la letra ámbar encima. Esta paleta es clara a propósito —se mira al
+     sol, en la calle— y aquí se dice, en vez de dejar que lo decida el navegador. */
+  :root{ color-scheme: light; }
+  /* ── LAS NOTAS AL PIE: JUSTIFICADAS, no centradas ────────────────────────────────
+     Eran texto corrido de dos y tres líneas con `text-align:center`, y eso deja el borde
+     IZQUIERDO dentado: el ojo vuelve a un sitio distinto en cada línea y el bloque se lee
+     como si estuviera mal puesto. Centrar vale para un titular o para una línea suelta;
+     para un párrafo, no.
+     Justificado y no alineado a la izquierda porque estos bloques van centrados en la
+     página y con los dos bordes rectos el conjunto queda a plomo. Con `hyphens:auto` y el
+     `lang` de la página: en español, justificar sin partir palabras abre ríos de espacio
+     — la partición es lo que hace que justificar sea una opción y no un problema.
+     `text-wrap:pretty` donde lo haya, para que no quede una palabra sola en la última. */
+  .nota-pie{
+    text-align:justify; text-align-last:center; hyphens:auto; -webkit-hyphens:auto;
+    text-wrap:pretty;
+  }
+  /* Por debajo de 560 px la línea es tan corta que justificar sí abre ríos: ahí manda la
+     izquierda, que es lo que se lee bien en un móvil. */
+  @media (max-width:560px){ .nota-pie{ text-align:left; text-align-last:left; } }
   :root{
     --ink:#1f2a25; --ink2:#4a5d54; --muted:#5c6b64; --bg:#faf6ec; --paper:#fffdf7;
     --acc:#128a6b; --acc2:#0b6b52; --deep:#123f33; --acc-soft:#e4f2ea;
@@ -306,6 +330,25 @@
   .planes{ display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:18px; align-items:stretch; }
   .plan{ background:var(--paper); border:1.5px solid var(--line); border-radius:16px; padding:26px;
     display:flex; flex-direction:column; }
+  /* El caso de la reserva de 0 €: es la PRUEBA de «sin comisión por reserva», así que se
+     lee como una cita y no como un reclamo — fondo de papel, letra normal y el enlace a la
+     fuente a la vista. */
+  /* «incluido» no es un precio: se lee en verde y sin el peso de una cifra, porque lo que
+     dice es que ahí no hay nada que sumar. */
+  /* Lo que aún no se puede contratar. Se enseña —para poder preguntar si interesa— pero
+     con la casilla muerta y dicho en la etiqueta: una tarifa que cobra por algo que no
+     existe es la mentira más cara que puede tener esta página. */
+  .tf-o.tf-pronto{ opacity:.72; }
+  .tf-o.tf-pronto .tf-p b{ color:var(--gold); font-weight:700; }
+  .tf-p.tf-dentro{ color:var(--acc); font-weight:700; }
+  .cero{ background:var(--paper); border:1px solid var(--line); border-left:3px solid var(--acc);
+    border-radius:14px; padding:18px 20px; margin:0 0 22px; }
+  .cero > b{ display:block; font-size:17px; margin-bottom:6px; }
+  .cero-fecha{ color:var(--ink2); }
+  .cero-l{ margin:10px 0 0; padding-left:18px; }
+  .cero-l li{ margin:7px 0; line-height:1.55; }
+  .cero-l i{ color:var(--ink2); }
+  .cero-fin{ margin:12px 0 0; line-height:1.55; }
   .plan.elegido{ box-shadow:0 0 0 2px var(--acc), 0 10px 34px rgba(18,138,107,.13); }
   .plan.destacado{ border-color:var(--acc); box-shadow:0 10px 34px rgba(18,138,107,.13); position:relative; }
   .plan.destacado::before{ content:"El de la mayoría"; position:absolute; top:-12px; left:22px;
@@ -355,7 +398,11 @@
   #planes.premium-on > .wrap > p.reveal{ color:#cbd8d0; }
   #planes.premium-on .sec-head p b,
   #planes.premium-on > .wrap > p.reveal b{ color:var(--gold); }
-  #planes.premium-on .fact-toggle{ background:rgba(255,253,247,.08); border-color:rgba(201,138,45,.35); }
+  /* Con Premium el fondo era casi transparente (.08) y el aro DORADO — el mismo tono que
+     la pastilla elegida, a seis píxeles: los dos dorados se fundían y parecía que la
+     pastilla se salía del marco. Ahora el contenedor tiene fondo propio (la pastilla se
+     apoya en algo) y el aro es claro, que contrasta con el oro en vez de competir. */
+  #planes.premium-on .fact-toggle{ background:rgba(8,44,35,.55); border-color:rgba(232,240,235,.28); }
   #planes.premium-on .fact-toggle button{ color:#e8f0eb; }
   #planes.premium-on .fact-toggle button[aria-checked="true"]{ background:var(--gold); color:#231400; }
   #planes.premium-on .adorno{ color:rgba(201,138,45,.22); }
@@ -499,8 +546,10 @@
   .plan-extra b{ color:var(--amber); }
   .plan.premium .plan-extra{ background:rgba(201,138,45,.10); border-color:rgba(163,106,16,.28); }
   .fact-toggle-wrap{ text-align:center; margin:-8px 0 32px; }
+  /* Holgura de 6 y no de 4: la pastilla elegida es maciza y con 4 px casi tocaba el aro,
+     que se lee como que se solapan. */
   .fact-toggle{ display:inline-flex; background:var(--paper); border:1.5px solid var(--line);
-    border-radius:99px; padding:4px; gap:2px; }
+    border-radius:99px; padding:6px; gap:6px; }
   .fact-toggle button{ border:0; background:transparent; font:inherit; font-weight:700;
     font-size:14.5px; color:var(--ink2); padding:9px 20px; border-radius:99px; cursor:pointer;
     display:inline-flex; align-items:center; gap:8px;
@@ -727,8 +776,8 @@
       <div class="kicker reveal" style="--d:80ms" data-i18n="hero.kicker">Software de operaciones para empresas de free tours y tours a pie con equipo de guías</div>
       <h1 data-split data-i18n="hero.h1">Tu software de reservas se olvida de lo que pasa después de la reserva.</h1>
       <p class="lede reveal" style="--d:120ms">Audutor es <b>la capa operativa de tu empresa de tours</b>:
-      avisa a tus clientes por WhatsApp para que no te fallen, rescata a quien se pierde, detecta
-      los grupos grandes, liquida cada tour al céntimo y junta las reservas de todos tus canales
+      te deja los avisos de WhatsApp listos para mandar en un toque, rescata a quien se pierde,
+      responde a los grupos con tu política, liquida cada tour al céntimo y junta las reservas de todos tus canales
       en un solo sitio. <b>Modulable</b>: empiezas con dos módulos y creces cuando quieras.</p>
       <div class="hero-ctas reveal" style="--d:220ms">
         <a class="btn" href="demo/" data-demo>🖱️ Probar la demo interactiva</a>
@@ -745,8 +794,8 @@
     </div>
 
     <div class="mock reveal" style="--d:260ms" aria-hidden="true">
-      <div class="mock-pop pop1">👥 <b>Grupo grande detectado</b> — 2 reservas con el mismo teléfono
-        = 11 personas. Política de adelanto avisada en su confirmación.</div>
+      <div class="mock-pop pop1">👥 <b>Un grupo de 11 en el chat</b> — GuIA ha mirado las salidas de hoy,
+        les ha contado tu política de adelanto y te los pasa con su tamaño.</div>
       <div class="mock-card principal">
         <div class="mock-head">🕒 10:00 · Free tour centro <span class="chipv">en marcha</span></div>
         <div class="mock-sem">📨 12/14 avisadas · ✓ 9 confirmadas · <b>⏰ 1 llega tarde (3p)</b> · 2 sin responder</div>
@@ -786,9 +835,11 @@
     <div class="celda star reveal" style="--d:70ms"><span class="ico">🧭</span><h3>Rescate de rezagados</h3>
       <p>El guía comparte su ubicación con un botón y quien se ha perdido recibe el mapa
       —sin que nadie le dé su teléfono—.</p><span class="mini">solo en Audutor</span></div>
-    <div class="celda star reveal" style="--d:140ms"><span class="ico">👥</span><h3>Grupos grandes, detectados</h3>
-      <p>Las plataformas parten los grupos en varias reservas. Audutor las junta y avisa al
-      guía de que puede pedir el adelanto.</p><span class="mini">solo en Audutor</span></div>
+    <div class="celda star reveal" style="--d:140ms"><span class="ico">👥</span><h3>Grupos, con tu política</h3>
+      <p>Las plataformas parten los grupos en varias reservas: el sistema junta las del
+      mismo apellido que entraron con minutos de diferencia y se lo avisa al guía con tu
+      adelanto delante. Y si preguntan por el chat, GuIA mira si caben ese día antes de
+      decirles nada.</p></div>
     <div class="celda reveal"><span class="ico">💶</span><h3>Liquidaciones al céntimo</h3>
       <p>Propinas, comisiones de cada canal y reparto guía-empresa, tour a tour y listo para
       la gestoría.</p></div>
@@ -804,7 +855,7 @@
     <div class="celda reveal" style="--d:70ms"><span class="ico">📥</span><h3>Reservas multicanal, solas</h3>
       <p>Las reservas de tus plataformas y de tu web entran y se actualizan solas. Sin API y
       sin copiar a mano.</p>
-      <p class="mini">Y una reserva que no hayamos probado nunca entra sin que tú la mires.</p></div>
+      <p class="mini">Y una reserva que no hayamos probado no entra nunca sin que tú la mires.</p></div>
   </div>
 </div></section>
 
@@ -824,20 +875,35 @@
   </div>
   <div class="dia">
     <div class="hito reveal"><span class="hora">08:41</span><span class="punto"></span>
-      <div class="que"><b>Entran 3 reservas de GuruWalk y 1 de Civitatis.</b> Solas. Dos son el mismo
-      apellido con 4 minutos de diferencia: Audutor las junta — 9 personas — y les avisa de la
-      política de grupos en su confirmación.</div></div>
+      <div class="que"><b>Entran 3 reservas de GuruWalk y 1 de Civitatis.</b> Solas. Nadie ha copiado nada de ninguna
+      extranet: el buzón las lee y ya están en el manifiesto del guía. Dos son el mismo
+      apellido con 4 minutos de diferencia: el guía las ve juntas —9 personas— con tu
+      política de adelanto al lado.</div></div>
     <div class="hito reveal"><span class="hora">09:15</span><span class="punto"></span>
-      <div class="que"><b>Recordatorios de mañana enviados por WhatsApp.</b> Una clienta responde
-      «al final somos 5»: su reserva se actualiza sola y el guía lo ve en su manifiesto.</div></div>
+      <div class="que"><b>Los recordatorios de mañana, listos: los mandas por WhatsApp en un toque.</b> Una
+      clienta contesta por el chat «al final somos 5»: su reserva se actualiza sola y el guía
+      lo ve en su manifiesto.</div></div>
     <div class="hito clave reveal"><span class="hora">10:58</span><span class="punto"></span>
       <div class="que"><b>«Me he perdido, no encuentro al grupo».</b> GuIA verifica su código, le
       manda el mapa con la ubicación que el guía compartió en la parada, y deja nota en el tour.
       Nadie llamó a nadie.</div></div>
     <div class="hito reveal"><span class="hora">13:45</span><span class="punto"></span>
-      <div class="que"><b>Fin del tour: QR de propina.</b> El cliente paga con tarjeta y deja la
-      reseña en el mismo gesto. El semáforo marca 2 no-shows — mañana el recordatorio les llegará
-      antes.</div></div>
+      <!-- Decía «QR de propina · el cliente paga con tarjeta». NO EXISTE hoy: en el código
+           las propinas solo entran por el manifiesto del guía, no hay ninguna pasarela.
+           Anunciar en presente un cobro que no está construido es exactamente lo que se
+           retiró de la sección de la web, y estaba aquí a doscientas líneas sin que nadie
+           lo viera.
+           OJO al motivo, que no es «se descartó para siempre»: el freno de la
+           responsabilidad (contracargos) quedó RESUELTO el 10-ago al comprobar en Stripe
+           que con cuentas Standard los asume el operador. Lo que sigue sin salir es la
+           aritmética de la propina —5-20 €, por debajo del cruce con un datáfono—, no el
+           riesgo. Si algún día se construye el cobro del TICKET de un tour de pago, esta
+           frase vuelve con otra redacción.
+           Ver documentación interna §6. -->
+      <div class="que"><b>Fin del tour: el guía anota la propina.</b> La cobra como quiera —en
+      mano o con su datáfono— y la apunta en el manifiesto: <b>Audutor no toca ese dinero</b>,
+      solo lo cuadra y lo reparte. El semáforo marca 2 no-shows — mañana el recordatorio les
+      llegará antes.</div></div>
     <div class="hito reveal"><span class="hora">23:00</span><span class="punto"></span>
       <div class="que"><b>El día se liquida solo.</b> Recaudación, comisiones por canal, parte del
       guía y de la empresa — tour a tour, listo para la gestoría. Y el parte de mañana: «2 cosas
@@ -876,6 +942,30 @@
     asistente salen en el idioma en el que trabajas.</p>
   </div>
 
+  <div class="cero reveal">
+    <b>Una reserva de 0 € te cuesta 0 €. Y no es lo normal.</b>
+    <p class="fino">Un free tour se reserva a cero, así que la pregunta no es cuánto cuesta
+    el sistema: es qué te cobra por cada reserva que no te ha cobrado nada a ti. Esto es lo
+    que dicen ellos mismos, con el enlace para que lo compruebes
+    <span class="cero-fecha">(comprobado el 10-ago-2026; los precios de otros cambian sin
+    avisarnos — si ves algo desactualizado, dínoslo y lo corregimos)</span>:</p>
+    <ul class="cero-l">
+      <li><b>Los de comisión</b> —FareHarbor (~6 %), Peek Pro (6-8 %), Xola (2,39 % + 0,30 $)—
+        no saben cobrar un billete de 0 €. Por eso no se usan en free tours: su modelo
+        <i>no llega</i>, no es que te perdonen.</li>
+      <li><b>TuriTop</b> lo pone por escrito y la respuesta es que sí cobra:
+        «<i>Aunque el total de la reserva sea 0 €, si la reserva es online sí genera comisión.
+        No se aplica porcentaje, pero sí el mínimo por producto</i>» — 0,10 € por reserva en su
+        plan de entrada, sobre una cuota de 29 €/mes
+        (<a href="https://www.turitop.com/precios-de-turitop/" target="_blank" rel="noopener">su página de precios</a>).</li>
+      <li><b>Rezdy</b> y <b>TrekkSoft</b> cobran aparte cada reserva metida a mano
+        —1 $ y 1,50 € respectivamente—, que en un free tour son casi todas.</li>
+    </ul>
+    <p class="cero-fin"><b>Aquí no hay comisión por reserva, ni mínimo por reserva, ni recargo
+    por meterla a mano.</b> Pagas el bono de viajeros y ya está. Y la propina es tuya entera:
+    <b>no tocamos ni un céntimo</b> — nos salía más caro cobrarla que a ti tu datáfono.</p>
+  </div>
+
   <div class="fact-toggle-wrap reveal">
     <div class="fact-toggle" role="radiogroup" aria-label="Periodo de facturación" id="factToggle">
       <button type="button" role="radio" aria-checked="true" data-modo="mensual">Mensual</button>
@@ -894,7 +984,7 @@
       <ul>
         <li>Parte del día y manifiesto del guía en el móvil</li>
         <li>Buzón de reservas: <b>hasta 2 canales</b></li>
-        <li>Un recordatorio por WhatsApp el día antes</li>
+        <li>Un recordatorio el día antes, listo para mandar en un toque</li>
         <li>Detección de grupos grandes y rescate de rezagados</li>
         <li>2 guías · <b>150 viajeros/mes</b> · historial de 30 días</li>
         <li>Página del guía y propina con marca «con Audutor»</li>
@@ -912,10 +1002,11 @@
         <li>Sin marca «Audutor» — tu marca en la propina y la página del guía</li>
         <li><b>Cadencia anti-no-show inteligente completa</b>: se adapta al riesgo de cada
           reserva — y deja registrado quién avisó, cuándo y quién confirmó</li>
-        <li>Recordatorios por WhatsApp y SMS <b>sin límite por nuestra parte</b></li>
-        <li><b>Conciliación con plataformas</b>: reclama las comisiones de los no-shows</li>
+        <li>Recordatorios por WhatsApp y SMS <b>sin coste por mensaje</b>: salen desde tu propio WhatsApp en un toque</li>
+        <li><b>Conciliación con plataformas</b>: reclama las comisiones de los no-shows
+          <small>(con «las cuentas de cada tour», 9 € — dentro de Premium)</small></li>
       </ul>
-      <p class="plan-extra">Si pasas de 1.000 viajeros: <b>+6 €/mes por cada 100</b>, hasta 5.000.<br><b>Y desde unos 2.900 te sale más barato Premium: te lo decimos nosotros.</b></p>
+      <p class="plan-extra">Si pasas de 1.000 viajeros: <b>+<span class="imp-tramo" data-mensual="6" data-anual="5">6</span> €/mes por cada 100</b>, hasta 5.000.<br><b>Y desde unos 2.900 te sale más barato Premium: te lo decimos nosotros.</b></p>
       <a class="btn" href="#contacto">Pedir una demo</a>
     </div>
     <div class="plan premium reveal" style="--d:220ms" data-plan="premium">
@@ -925,12 +1016,20 @@
       <div class="para">Para el operador con varias salidas al día · <b>5.000 viajeros al mes</b></div>
       <ul>
         <li>Todo lo de Pro · <b>5.000 viajeros incluidos, sin tramos</b></li>
-        <li><b>Carrito abandonado y combos</b>: la segunda venta, sola</li>
-        <li><b>Cuadro de mando</b> por tour, guía, canal y franja</li>
+        <li><b>«Las cuentas de cada tour» van dentro</b> (9 € en los demás planes): liquidación
+          a guías, cuadro de mando por tour, guía, canal y franja, conciliación y proyección</li>
+        <!-- Decía «Carrito abandonado y combos: la segunda venta, sola». El carrito
+             abandonado no es una función pendiente: es IMPOSIBLE aquí. Audutor no cobra
+             reservas —decisión del 4-ago-2026—, así que no hay ninguna cesta que se pueda
+             abandonar ni que se pueda recuperar. Y «sola» tampoco: lo que hay es un
+             catálogo de lo que vendes además del tour, que sale en tu web y que GuIA
+             cuenta cuando alguien pregunta. Eso sí existe y es lo que se anuncia. -->
+        <li><b>Lo que vendes además del tour</b>: sale en tu web y GuIA lo cuenta cuando
+          preguntan qué más hacéis <small>(con GuIA)</small></li>
         <li><b>Puesta en marcha contigo</b>: montamos tu operación en una llamada, no te mandamos un manual</li>
       </ul>
-      <p class="plan-extra">Si pasas de 5.000: <b>+3 €/mes por cada 100</b> hasta 10.000, y
-      <b>+19 €/mes por cada 1.000</b> a partir de ahí.</p>
+      <p class="plan-extra">Si pasas de 5.000: <b>+<span class="imp-tramo" data-mensual="2,9" data-anual="2,4">2,9</span> €/mes por cada 100</b> hasta 10.000, y
+      <b>+<span class="imp-tramo" data-mensual="19" data-anual="16">19</span> €/mes por cada 1.000</b> a partir de ahí.</p>
       <a class="btn" href="#contacto">Quiero Premium</a>
     </div>
   </div>
@@ -969,6 +1068,30 @@
         <span class="tf-n">Tu web, siempre al día<small>La que tienes hoy enseña el horario del verano pasado. Esta sale del mismo sitio que el parte del guía: cambias el punto de encuentro una vez y cambia en los dos</small></span>
         <span class="tf-p">+9 €</span></label>
 
+      <label class="tf-o con-mas tf-pronto"><input type="checkbox" data-c="reservas" data-eur="39" disabled>
+        <span class="tf-n">Tu tour de pago<small>Si además del free tour vendes uno de tapas o uno nocturno: se reserva y se cobra en tu propia web, y el dinero entra en tu cuenta de Stripe, no en la nuestra. Por una plataforma, ese mismo ticket deja del 20 al 30 % por el camino</small></span>
+        <span class="tf-p">39 € · <b>en obras</b></span></label>
+      <details class="tf-mas"><summary>Qué hace, exactamente</summary>
+        <p class="tf-mas-p"><b>Todavía no se puede contratar: lo estamos construyendo.</b>
+        Está aquí para que sepas por dónde va el producto y nos digas si te sirve — no para
+        que lo pagues. El día que se pueda, se podrá.</p>
+        <ul>
+          <li><b>Tu tour de pago se reserva y se paga en tu página</b>, con las plazas que
+            quedan de verdad — el aforo lo llevamos nosotros, no una hoja aparte.</li>
+          <li><b>Cobra tu cuenta de Stripe, no la nuestra.</b> El dinero va directo a ti:
+            no lo tocamos, no lo retenemos y no nos llevamos comisión por reserva.
+            <b>Ni una.</b> Se conecta en un clic y nunca vemos tus claves.</li>
+          <li><b>La reserva entra donde entran todas</b>: mismo parte del día, mismo
+            manifiesto del guía, mismos recordatorios. No es otro programa más.</li>
+          <li><b>Las cuentas salen bien solas</b>: lo que vendiste, lo que se llevó cada
+            canal y lo que le toca al guía por ese tour — que en un tour de pago es un
+            fijo (por hora, por salida o por persona), no un porcentaje de tu caja.</li>
+        </ul>
+        <p class="tf-mas-p">Un ticket de 25 € vendido por una plataforma te deja entre 17 y
+        20 €. Vendido en tu propia web te deja 25, menos lo que te cobre Stripe por la
+        tarjeta — y estos 39 € al mes son los mismos vendas ocho plazas o vendas ochenta.</p>
+      </details>
+
       <div class="tf-g">Las plataformas y la caja</div>
       <label class="tf-o con-mas"><input type="checkbox" data-c="agente" data-eur="29" onchange="tarifa()">
         <span class="tf-n">El agente de plataformas<small>Tú llevas 14 en la lista; una plataforma tiene 17. Lo sabes antes de salir, no con los tres delante</small></span>
@@ -989,15 +1112,18 @@
             mire.</li>
         </ul>
       </details>
-      <label class="tf-o con-mas"><input type="checkbox" data-c="cuentas" data-eur="9" onchange="tarifa()">
+      <label class="tf-o con-mas"><input type="checkbox" data-c="cuentas" data-eur="9" data-dentro="premium" onchange="tarifa()">
         <span class="tf-n">Las cuentas de cada tour<small>El domingo por la tarde con el cuaderno y la calculadora. Aquí cada tour ya viene cuadrado y el mes se cierra solo</small></span>
         <span class="tf-p">+9 €</span></label>
       <details class="tf-mas"><summary>Qué hace, exactamente</summary>
         <ul>
           <li><b>El reparto de cada tour</b>, con tu criterio: porcentaje o tarifa fija, y
             distinto por guía si hace falta.</li>
-          <li><b>Las propinas</b>, cobres como cobres. Las de tarjeta entran solas; las de
-            mano las apunta el guía en el manifiesto y cuadran igual.</li>
+          <!-- «Las de tarjeta entran solas» era falso por el mismo motivo: no hay ninguna
+               pasarela. Las apunta el guía, vengan de donde vengan. -->
+          <li><b>Las propinas</b>, cobres como cobres: en mano, con datáfono o con el móvil. Las
+            apunta el guía en el manifiesto al cerrar el tour y cuadran igual — <b>Audutor no
+            las cobra ni se lleva nada de ellas</b>.</li>
           <li><b>Lo que se llevó cada canal</b> descontado antes del reparto — para que la
             comisión de la plataforma no salga del bolsillo del guía.</li>
           <li><b>El cierre del mes en un CSV</b>, con el formato que le sirve a tu gestoría.</li>
@@ -1010,8 +1136,9 @@
         <div id="tf-lineas"><p class="tf-vacio">Sin complementos: pagas solo el bono de viajeros.</p></div>
         <div class="tf-tot"><span>Con <b id="tf-plan">Pro</b></span><b id="tf-total">39 €</b></div>
         <p class="tf-nota">Con el primer mes gratis, esto empieza pagando solo el bono.<br><br>
-        Los complementos se suman a cualquier plan, también al gratuito.
-        El plan solo decide cuántos viajeros llevas incluidos.<br><br>
+        Los complementos se suman a cualquier plan, también al gratuito. El plan decide
+        cuántos viajeros llevas incluidos — y en Premium, además, «las cuentas de cada
+        tour» van dentro.<br><br>
         <b>Sin GuIA el sistema funciona igual</b> —el parte del día, el manifiesto, el buzón,
         los recordatorios, la liquidación—, pero los recordatorios salen y las respuestas de
         tus clientes las lees tú. GuIA es quien contesta.</p>
@@ -1020,15 +1147,16 @@
   </div>
 
   
-  <p class="reveal" style="text-align:center; color:var(--muted); font-size:13px; margin:14px 0 0; max-width:74ch; margin-inline:auto;">
+  <p class="reveal nota-pie" style="color:var(--muted); font-size:13px; margin:14px 0 0; max-width:74ch; margin-inline:auto;">
     El <b>coste por viajero</b> es para que lo compares con lo que pagas de software, no con
     la comisión de una plataforma: la plataforma te trae al cliente y nosotros no.</p>
-  <p class="reveal" style="text-align:center; color:var(--muted); font-size:13px; margin:14px 0 0;">
+  <p class="reveal nota-pie" style="color:var(--muted); font-size:13px; margin:14px 0 0; max-width:74ch; margin-inline:auto;">
     Precios <b>sin IVA</b>. Con NIF español facturamos con el 21 %; en el resto de la UE
     con VAT, con inversión del sujeto pasivo.</p>
-  <p class="reveal" style="text-align:center; color:var(--muted); font-size:14px; margin:10px 0 0; max-width:70ch; margin-inline:auto;">
-    <b>Los recordatorios los factura Meta a tu cuenta</b>, sin recargo nuestro. Y los mandamos
-    solo donde hay riesgo real de que te fallen, que es donde se va la factura.</p>
+  <p class="reveal nota-pie" style="color:var(--muted); font-size:14px; margin:10px 0 0; max-width:70ch; margin-inline:auto;">
+    <b>Los recordatorios no cuestan nada por mensaje</b>: salen desde tu propio WhatsApp
+    en un toque. Y te los preparamos solo donde hay riesgo real de que te fallen — así
+    mandas menos y mejor.</p>
   <!-- El porqué de no cobrar la propina está en documentación interna
        y NO en la página: aquí solo se dice qué hace el producto. Una web que se defiende de
        preguntas que nadie ha hecho las mete en la cabeza de quien la lee. -->
@@ -1114,9 +1242,13 @@
       del mundo sobre una lista que sabe incompleta.</p>
       <span class="mini">solo puede hacer que GuIA diga menos, nunca más</span></div>
   </div>
-  <p class="reveal" style="text-align:center; color:var(--muted); font-size:14px; margin:20px 0 0; max-width:74ch; margin-inline:auto;">
+  <p class="reveal nota-pie" style="color:var(--muted); font-size:14px; margin:20px 0 0; max-width:74ch; margin-inline:auto;">
     <b>Corre en tu ordenador y con tu sesión.</b> Audutor no guarda ninguna contraseña de ninguna
-    plataforma: el agente usa la que ya tienes abierta, como si te sentaras tú.
+    plataforma: el agente usa la que ya tienes abierta, como si te sentaras tú. Y
+    <b>no te pide mudarte</b>: los sistemas que sí propagan un cierre a las OTAs lo hacen porque
+    tú te pasas a ellos y les dejas ser la fuente de la verdad de tus reservas. Aquí sigues
+    donde estás. Y si <b>ya</b> tienes uno de esos sistemas llevándote un canal, se lo dices y
+    ahí no entramos a cerrar: solo a contar — que es justo lo que ese sistema no hace por ti.
     <a href="demo/#agente" style="color:var(--acc); font-weight:700;">Verlo en la demo →</a></p>
 </div></section>
 
@@ -1320,9 +1452,21 @@ function cambiaIdioma(){
 var TF_MODO = 'mensual';        // lo cambia el conmutador de facturación
 var TF_PLAN = 'pro';            // el plan sobre el que se enseña el total
 
-function tfExtras(){
+/* Lo que un PLAN trae dentro. Es la misma línea que `INCLUIDOS_POR_PLAN` en
+   app/servidor/clientes.js, escrita aquí porque esta página no habla con el servidor —
+   y las dos tienen que decir lo mismo o la tarifa miente. Premium trae las cuentas
+   porque ya se las prometía en su tarjeta («cuadro de mando») y el cuadro vive detrás
+   de ese complemento: o se quitaba de la tarjeta o se metía dentro. */
+var TF_DENTRO = { premium: ['cuentas'] };
+var traeElPlan = function(plan, c){ return (TF_DENTRO[plan] || []).indexOf(c) >= 0; };
+
+/* Los complementos que se le SUMAN a ese plan: lo que trae dentro no se cobra aparte.
+   Recibe el plan y no lo lee de `TF_PLAN` porque las tres tarjetas se pintan a la vez,
+   cada una con su propio precio. */
+function tfExtras(plan){
   var t = 0, piezas = [];
   document.querySelectorAll('.tf-o input:checked').forEach(function(i){
+    if (traeElPlan(plan, i.dataset.c)) return;
     t += +i.dataset.eur;
     piezas.push({ n: i.closest('.tf-o').querySelector('.tf-n').childNodes[0].textContent.trim(),
                   e: +i.dataset.eur });
@@ -1356,27 +1500,47 @@ function pintaUnidad(totalPorPlan){
 }
 
 function tarifa(){
-  var ex = tfExtras();
+  var ex = tfExtras(TF_PLAN);
   document.querySelectorAll('.plan').forEach(function(p){
     var imp = p.querySelector('.precio .imp'); if(!imp) return;
     var base = +imp.dataset.base;
-    var v = base + ex.total;
+    var v = base + tfExtras(p.dataset.plan).total;
     imp.textContent = TF_MODO === 'anual' ? tfAnual(v) : v;
+    /* Los TRAMOS también llevan el descuento anual — sin esto, el cruce Pro→Premium del
+       cliente anual caía a ~2.600 viajeros y el «desde unos 2.900» publicado era falso
+       para él. Con el tramo rebajado igual que la base, el cruce queda en ~2.840 en los
+       dos modos y la frase vuelve a ser verdad siempre. */
+    p.querySelectorAll('.imp-tramo').forEach(function(s){
+      s.textContent = TF_MODO === 'anual' ? s.dataset.anual : s.dataset.mensual;
+    });
     var nota = p.querySelector('[data-nota]');
     if (nota) nota.textContent = 'facturado anualmente · ' +
       (v*10).toLocaleString('es-ES') + ' €/año (2 meses gratis)';
   });
   /* El plan gratuito deja de ser gratuito en cuanto se le añade algo, y decir «0 €» con
      complementos marcados sería mentir en la única tarjeta que promete no cobrar. */
+  /* Y con SUS extras, no con los del plan elegido: mirando `ex` —que ya descuenta lo que
+     el plan de arriba trae dentro— la tarjeta gratuita decía «0 €» con un complemento
+     marcado solo porque el visitante estaba mirando Premium. */
   var es = document.querySelector('.plan .precio');
   if (es && !es.querySelector('.imp'))
-    es.textContent = (ex.total ? ex.total : 0) + ' €';
+    es.textContent = (tfExtras('esencial').total || 0) + ' €';
 
   var cont = document.getElementById('tf-lineas');
   if (cont) cont.innerHTML = ex.piezas.length
     ? ex.piezas.map(function(x){
         return '<div class="tf-res-l"><span>'+x.n+'</span><b>+'+x.e+' €</b></div>'; }).join('')
     : '<p class="tf-vacio">Sin complementos: pagas solo el bono de viajeros.</p>';
+
+  /* La casilla de lo que el plan trae dentro lo DICE, en vez de seguir enseñando su
+     precio: con Premium elegido, un «+9 €» al lado de algo que ya va incluido es la
+     clase de detalle que hace dudar de toda la tarifa. */
+  document.querySelectorAll('.tf-o input[data-dentro]').forEach(function(i){
+    var pr = i.closest('.tf-o').querySelector('.tf-p');
+    var dentro = traeElPlan(TF_PLAN, i.dataset.c);
+    if (pr) { pr.textContent = dentro ? 'incluido' : '+' + i.dataset.eur + ' €';
+              pr.classList.toggle('tf-dentro', dentro); }
+  });
 
   var basePlan = { esencial:0, pro:39, premium:149 }[TF_PLAN];
   var tot = basePlan + ex.total;
@@ -1385,7 +1549,9 @@ function tarifa(){
   /* Elegir Premium no puede sentirse igual que elegir Pro: la sección entera cambia. */
   var sec = document.getElementById('planes');
   if (sec) sec.classList.toggle('premium-on', TF_PLAN === 'premium');
-  pintaUnidad({ esencial: ex.total, pro: 39 + ex.total, premium: 149 + ex.total });
+  pintaUnidad({ esencial: tfExtras('esencial').total,
+                pro: 39 + tfExtras('pro').total,
+                premium: 149 + tfExtras('premium').total });
 
   var n = document.getElementById('tf-plan');
   if (n) n.textContent = { esencial:'Esencial', pro:'Pro', premium:'Premium' }[TF_PLAN];

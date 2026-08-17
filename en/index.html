@@ -10,6 +10,30 @@
 <title>Audutor — the operations layer for walking and free tour companies</title>
 <meta name="description" content="The operations layer for walking and free tour companies: bookings from every channel, guides, no-shows, split groups, tips and an assistant that never makes things up.">
 <style>
+  /* `color-scheme: light` NO es una preferencia estética: es lo que APAGA el
+     auto-oscurecido de los navegadores móviles. Sin esta línea, Chrome en Android (y
+     Safari en iOS con la web en modo oscuro) invierte la página por su cuenta y lo hace
+     mal: los fondos se van a negro y los textos conservan su color, así que los botones
+     salían negros con la letra ámbar encima. Esta paleta es clara a propósito —se mira al
+     sol, en la calle— y aquí se dice, en vez de dejar que lo decida el navegador. */
+  :root{ color-scheme: light; }
+  /* ── LAS NOTAS AL PIE: JUSTIFICADAS, no centradas ────────────────────────────────
+     Eran texto corrido de dos y tres líneas con `text-align:center`, y eso deja el borde
+     IZQUIERDO dentado: el ojo vuelve a un sitio distinto en cada línea y el bloque se lee
+     como si estuviera mal puesto. Centrar vale para un titular o para una línea suelta;
+     para un párrafo, no.
+     Justificado y no alineado a la izquierda porque estos bloques van centrados en la
+     página y con los dos bordes rectos el conjunto queda a plomo. Con `hyphens:auto` y el
+     `lang` de la página: en español, justificar sin partir palabras abre ríos de espacio
+     — la partición es lo que hace que justificar sea una opción y no un problema.
+     `text-wrap:pretty` donde lo haya, para que no quede una palabra sola en la última. */
+  .nota-pie{
+    text-align:justify; text-align-last:center; hyphens:auto; -webkit-hyphens:auto;
+    text-wrap:pretty;
+  }
+  /* Por debajo de 560 px la línea es tan corta que justificar sí abre ríos: ahí manda la
+     izquierda, que es lo que se lee bien en un móvil. */
+  @media (max-width:560px){ .nota-pie{ text-align:left; text-align-last:left; } }
   :root{
     --ink:#1f2a25; --ink2:#4a5d54; --muted:#5c6b64; --bg:#faf6ec; --paper:#fffdf7;
     --acc:#128a6b; --acc2:#0b6b52; --deep:#123f33; --acc-soft:#e4f2ea;
@@ -306,6 +330,25 @@
   .planes{ display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:18px; align-items:stretch; }
   .plan{ background:var(--paper); border:1.5px solid var(--line); border-radius:16px; padding:26px;
     display:flex; flex-direction:column; }
+  /* The €0 booking case: it is the PROOF of "no commission per booking", so it reads like
+     a citation and not like a pitch — paper background, normal type and the source link in
+     plain sight. */
+  /* "included" is not a price: green and without the weight of a figure, because what it
+     says is that there is nothing to add there. */
+  /* What can't be bought yet. It is shown —so people can tell us if they want it— but
+     with the checkbox dead and said on the label: a price list that charges for something
+     that doesn't exist is the most expensive lie this page could tell. */
+  .tf-o.tf-pronto{ opacity:.72; }
+  .tf-o.tf-pronto .tf-p b{ color:var(--gold); font-weight:700; }
+  .tf-p.tf-dentro{ color:var(--acc); font-weight:700; }
+  .cero{ background:var(--paper); border:1px solid var(--line); border-left:3px solid var(--acc);
+    border-radius:14px; padding:18px 20px; margin:0 0 22px; }
+  .cero > b{ display:block; font-size:17px; margin-bottom:6px; }
+  .cero-fecha{ color:var(--ink2); }
+  .cero-l{ margin:10px 0 0; padding-left:18px; }
+  .cero-l li{ margin:7px 0; line-height:1.55; }
+  .cero-l i{ color:var(--ink2); }
+  .cero-fin{ margin:12px 0 0; line-height:1.55; }
   .plan.elegido{ box-shadow:0 0 0 2px var(--acc), 0 10px 34px rgba(18,138,107,.13); }
   .plan.destacado{ border-color:var(--acc); box-shadow:0 10px 34px rgba(18,138,107,.13); position:relative; }
   .plan.destacado::before{ content:"Most popular"; position:absolute; top:-12px; left:22px;
@@ -355,7 +398,11 @@
   #planes.premium-on > .wrap > p.reveal{ color:#cbd8d0; }
   #planes.premium-on .sec-head p b,
   #planes.premium-on > .wrap > p.reveal b{ color:var(--gold); }
-  #planes.premium-on .fact-toggle{ background:rgba(255,253,247,.08); border-color:rgba(201,138,45,.35); }
+  /* Con Premium el fondo era casi transparente (.08) y el aro DORADO — el mismo tono que
+     la pastilla elegida, a seis píxeles: los dos dorados se fundían y parecía que la
+     pastilla se salía del marco. Ahora el contenedor tiene fondo propio (la pastilla se
+     apoya en algo) y el aro es claro, que contrasta con el oro en vez de competir. */
+  #planes.premium-on .fact-toggle{ background:rgba(8,44,35,.55); border-color:rgba(232,240,235,.28); }
   #planes.premium-on .fact-toggle button{ color:#e8f0eb; }
   #planes.premium-on .fact-toggle button[aria-checked="true"]{ background:var(--gold); color:#231400; }
   #planes.premium-on .adorno{ color:rgba(201,138,45,.22); }
@@ -494,8 +541,10 @@
     .tf-comp{ position:static; }
   }
   .fact-toggle-wrap{ text-align:center; margin:-8px 0 32px; }
+  /* Holgura de 6 y no de 4: la pastilla elegida es maciza y con 4 px casi tocaba el aro,
+     que se lee como que se solapan. */
   .fact-toggle{ display:inline-flex; background:var(--paper); border:1.5px solid var(--line);
-    border-radius:99px; padding:4px; gap:2px; }
+    border-radius:99px; padding:6px; gap:6px; }
   .fact-toggle button{ border:0; background:transparent; font:inherit; font-weight:700;
     font-size:14.5px; color:var(--ink2); padding:9px 20px; border-radius:99px; cursor:pointer;
     display:inline-flex; align-items:center; gap:8px;
@@ -720,7 +769,7 @@
       <div class="kicker reveal" style="--d:80ms" data-i18n="hero.kicker">Operations software for walking and free tour companies with a team of guides</div>
       <h1 data-split data-i18n="hero.h1">Your booking system forgets everything that happens after the booking.</h1>
       <p class="lede reveal" style="--d:120ms">Audutor is <b>your tour company’s operations layer</b>:
-      it messages your customers so they actually turn up, gets stragglers back to the group, spots the bookings that are really one group, and settles every tour to the penny. Every channel’s bookings land in one list. <b>Modular</b>: start with two modules and grow when you want to.</p>
+      it gets your WhatsApp reminders ready to send in one tap, gets stragglers back to the group, answers groups with your own policy, and settles every tour to the penny. Every channel’s bookings land in one list. <b>Modular</b>: start with two modules and grow when you want to.</p>
       <div class="hero-ctas reveal" style="--d:220ms">
         <a class="btn" href="../demo-en/" data-demo>🖱️ Try the interactive demo</a>
       <a class="btn sec" href="#contacto">Book a guided demo</a>
@@ -733,7 +782,7 @@
     </div>
 
     <div class="mock reveal" style="--d:260ms" aria-hidden="true">
-      <div class="mock-pop pop1">👥 <b>Split group detected</b> — 2 bookings, same phone number = 11 people. Deposit policy flagged in their confirmation.</div>
+      <div class="mock-pop pop1">👥 <b>A group of 11 in the chat</b> — GuIA checked today's departures, quoted your deposit policy and passed them over with their size.</div>
       <div class="mock-card principal">
         <div class="mock-head">🕒 10:00 AM · Old Town free tour <span class="chipv">running now</span></div>
         <div class="mock-sem">📨 12/14 messaged · ✓ 9 confirmed · <b>⏰ 1 running late (3 people)</b> · 2 no reply</div>
@@ -770,9 +819,11 @@
     <div class="celda star reveal" style="--d:70ms"><span class="ico">🧭</span><h3>Finding the stragglers</h3>
       <p>The guide shares their location with one tap and whoever got lost gets the map —
       without anyone handing out the guide's number.</p><span class="mini">only in Audutor</span></div>
-    <div class="celda star reveal" style="--d:140ms"><span class="ico">👥</span><h3>Big groups, spotted</h3>
-      <p>Platforms split groups across several bookings. Audutor puts them back together and
-      tells the guide they can ask for the deposit.</p><span class="mini">only in Audutor</span></div>
+    <div class="celda star reveal" style="--d:140ms"><span class="ico">👥</span><h3>Groups, with your policy</h3>
+      <p>Platforms split groups across several bookings: the system puts back together the
+      ones sharing a surname that came in minutes apart, and flags them to the guide with
+      your deposit alongside. And if they ask in the chat, GuIA checks whether they fit
+      that day before telling them anything.</p></div>
     <div class="celda reveal"><span class="ico">💶</span><h3>Settlements to the penny</h3>
       <p>Tips, each channel's commission and the guide-company split, tour by tour and ready
       for your accountant.</p></div>
@@ -807,13 +858,15 @@
   </div>
   <div class="dia">
     <div class="hito reveal"><span class="hora">8:41 AM</span><span class="punto"></span>
-      <div class="que"><b>4 bookings land from two different platforms.</b> On their own. Two share a surname, 4 minutes apart: Audutor puts them together — 9 people — and flags the group policy in their confirmation.</div></div>
+      <div class="que"><b>4 bookings land from two different platforms.</b> On their own. Nobody copied anything from an extranet: the mailbox reads them and they're already on the guide's manifest. Two share a surname, 4 minutes apart: the guide sees them together — 9 people — with your deposit policy alongside.</div></div>
     <div class="hito reveal"><span class="hora">9:15 AM</span><span class="punto"></span>
-      <div class="que"><b>Tomorrow’s reminders go out by SMS.</b> One replies “we’re 5 now” — the booking updates itself and the guide sees it on the manifest. (SMS rather than WhatsApp — it reaches their phone without an app or a data plan.)</div></div>
+      <div class="que"><b>Tomorrow’s reminders, ready: you send them in one tap each.</b> One traveller writes “we’re 5 now” in the chat — the booking updates itself and the guide sees it on the manifest.</div></div>
     <div class="hito clave reveal"><span class="hora">10:58 AM</span><span class="punto"></span>
       <div class="que"><b>“I’m lost, I can’t find the group.”</b> GuIA checks their code, sends the map with the location the guide shared at the last stop, and leaves a note on the tour. Nobody had to phone anybody.</div></div>
     <div class="hito reveal"><span class="hora">2:15 PM</span><span class="punto"></span>
-      <div class="que"><b>End of the free tour: the guide takes the tip.</b> A tap on the link GuIA sends, or the group QR — no amount is ever suggested for them. The review comes with the same tap. Two no-shows land on the board: tomorrow those reminders go out earlier.</div></div>
+      <!-- Same correction as the Spanish page (11-Aug): there is no tip link and no group
+           QR. Audutor never handles the money — the guide records the tip in the manifest. -->
+      <div class="que"><b>End of the free tour: the guide records the tip.</b> However it was taken — cash, their own card reader, whatever — it goes into the manifest at close, and <b>Audutor never touches that money</b>: it only splits it and squares it. Two no-shows land on the board: tomorrow those reminders are ready earlier.</div></div>
     <div class="hito reveal"><span class="hora">11:00 PM</span><span class="punto"></span>
       <div class="que"><b>The day settles itself.</b> Tips and ticket sales, channel fees, the guide’s share and the company’s — tour by tour, ready for your accountant. Plus tomorrow’s brief: “2 things to check”.</div></div>
   </div>
@@ -851,6 +904,31 @@
     assistant answers all come out in the language you work in.</p>
   </div>
 
+  <div class="cero reveal">
+    <b>A €0 booking costs you €0. That is not the norm.</b>
+    <p class="fino">A free tour is booked at zero, so the question isn't what the system
+    costs: it's what it charges you for each booking that charged you nothing. This is what
+    they say themselves, with the link so you can check it
+    <span class="cero-fecha">(checked 10 Aug 2026; other people's prices change without
+    telling us — if you spot something out of date, tell us and we'll fix it)</span>:</p>
+    <ul class="cero-l">
+      <li><b>The commission ones</b> —FareHarbor (~6%), Peek Pro (6-8%), Xola (2.39% + $0.30)—
+        have no way to charge a €0 ticket. That's why they aren't used for free tours: their
+        model <i>doesn't reach</i>, it isn't that they let you off.</li>
+      <li><b>TuriTop</b> puts it in writing, and the answer is that it does charge:
+        "<i>Even if the booking total is €0, an online booking does generate commission.
+        The percentage doesn't apply, but the per-product minimum does</i>" — €0.10 per booking
+        on their entry plan, on top of €29/month
+        (<a href="https://www.turitop.com/precios-de-turitop/" target="_blank" rel="noopener">their pricing page</a>).</li>
+      <li><b>Rezdy</b> and <b>TrekkSoft</b> charge separately for every manually entered
+        booking —$1 and €1.50 respectively— which in a free tour is nearly all of them.</li>
+    </ul>
+    <p class="cero-fin"><b>Here there is no per-booking commission, no per-booking minimum and
+    no surcharge for entering one by hand.</b> You pay the traveller bundle and that's it. And
+    the tip is yours, whole: <b>we don't touch a cent</b> — collecting it cost us more than
+    your card reader costs you.</p>
+  </div>
+
   <div class="fact-toggle-wrap reveal">
     <div class="fact-toggle" role="radiogroup" aria-label="Billing period" id="factToggle">
       <button type="button" role="radio" aria-checked="true" data-modo="mensual">Monthly</button>
@@ -868,7 +946,7 @@
       <ul>
         <li>Daily brief and the guide’s manifest on their phone</li>
         <li>Booking inbox: <b>up to 2 channels</b></li>
-        <li>One reminder by WhatsApp the day before</li>
+        <li>One reminder the day before, ready to send in one tap</li>
         <li>Split-group detection and rescue for stragglers</li>
         <li>2 guides · <b>150 travellers/month</b> · 30-day history</li>
         <li>A small “with Audutor” badge shows on the guide page and the tip screen</li>
@@ -886,10 +964,11 @@
         <li>No Audutor branding — your brand on the tip screen and the guide page</li>
         <li><b>The full smart anti-no-show sequence</b>: it adapts to how risky each booking looks — and
           leaves a record of who was contacted, when, and who confirmed</li>
-        <li>SMS and WhatsApp reminders <b>uncapped on our side</b> <span class="mini">— Meta bills you directly at their own rate, with nothing added by us, and the smart sequence only spends where there is real risk</span></li>
-        <li><b>Platform reconciliation</b>: claw back the fees you paid on people who never turned up — with a running total of what you have reclaimed this month</li>
+        <li>SMS and WhatsApp reminders <b>with no per-message cost</b>: they go from your own WhatsApp in one tap <span class="mini">— the smart sequence only writes where there is real risk, so you send fewer and better</span></li>
+        <li><b>Platform reconciliation</b>: claw back the fees you paid on people who never turned up — with a running total of what you have reclaimed this month
+          <small>(with "the books, tour by tour", €9 — included in Premium)</small></li>
       </ul>
-      <p class="plan-extra">Above 1,000 travellers: <b>+€6/month per extra 100</b>, up to 5,000.<br><b>And from around 2,900 Premium works out cheaper — we tell you.</b></p>
+      <p class="plan-extra">Above 1,000 travellers: <b>+€<span class="imp-tramo" data-mensual="6" data-anual="5">6</span>/month per extra 100</b>, up to 5,000.<br><b>And from around 2,900 Premium works out cheaper — we tell you.</b></p>
       <a class="btn" href="#contacto">Book a demo</a>
     </div>
     <div class="plan premium reveal" style="--d:220ms" data-plan="premium">
@@ -899,12 +978,13 @@
       <div class="para">For operators running several departures a day · <b>5,000 travellers a month</b></div>
       <ul>
         <li>Everything in Pro · <b>5,000 travellers included, no steps</b></li>
-        <li><b>Abandoned checkouts and tour bundles</b>: the follow-up sale happens without you</li>
-        <li><b>Analytics</b>: the numbers by tour, guide, channel and time slot</li>
+        <li><b>"The books, tour by tour" is included</b> (€9 on other plans): guide payouts,
+          analytics by tour, guide, channel and time slot, reconciliation and forecast</li>
+        <li><b>Abandoned checkouts and tour bundles</b>: the follow-up sale happens without you <small>(with GuIA)</small></li>
         <li><b>We set it up with you</b>: your operation goes live on a call, not from a manual</li>
       </ul>
-      <p class="plan-extra">Above 5,000: <b>+€3/month per 100</b> up to 10,000, and
-      <b>+€19/month per 1,000</b> beyond that.</p>
+      <p class="plan-extra">Above 5,000: <b>+€<span class="imp-tramo" data-mensual="2.9" data-anual="2.4">2.9</span>/month per 100</b> up to 10,000, and
+      <b>+€<span class="imp-tramo" data-mensual="19" data-anual="16">19</span>/month per 1,000</b> beyond that.</p>
       <a class="btn" href="#contacto">Talk to us about Premium</a>
     </div>
   </div>
@@ -942,6 +1022,30 @@
         <span class="tf-n">Your website, always current<small>The one you have today shows last summer’s timetable. This one reads the same data as the guide’s brief: change the meeting point once and it changes in both</small></span>
         <span class="tf-p">+€9</span></label>
 
+      <label class="tf-o con-mas tf-pronto"><input type="checkbox" data-c="reservas" data-eur="39" disabled>
+        <span class="tf-n">Your paid tour<small>If you sell a food walk or a night walk alongside the free tour: it books and takes payment on your own site, and the money lands in your Stripe account, not ours. Through a platform, that same ticket loses 20 to 30 % on the way</small></span>
+        <span class="tf-p">€39 · <b>being built</b></span></label>
+      <details class="tf-mas"><summary>What it does, exactly</summary>
+        <p class="tf-mas-p"><b>You can't buy this yet — we're building it.</b> It's here so
+        you can see where the product is going and tell us whether it would help you, not
+        so you can pay for it. When it's ready, it'll be ready.</p>
+        <ul>
+          <li><b>Your paid tour is booked and paid for on your own page</b>, showing the
+            seats that are really left — we keep the capacity, not a spreadsheet.</li>
+          <li><b>Your Stripe account takes the money, not ours.</b> It goes straight to
+            you: we never hold it, never touch it, and take <b>no commission per
+            booking. None.</b> One click to connect, and we never see your keys.</li>
+          <li><b>The booking lands where every booking lands</b>: same daily brief, same
+            guide's manifest, same reminders. It isn't another separate program.</li>
+          <li><b>The books add up on their own</b>: what you sold, what each channel took,
+            and what the guide is owed for that tour — which on a paid tour is a fixed
+            amount (per hour, per departure or per person), never a cut of your till.</li>
+        </ul>
+        <p class="tf-mas-p">A €25 ticket sold through a platform leaves you 17 to 20. Sold
+        on your own site it leaves you 25, less whatever Stripe charges for the card — and
+        this €39 a month is the same whether you sell eight seats or eighty.</p>
+      </details>
+
       <div class="tf-g">Platforms and the till</div>
       <label class="tf-o con-mas"><input type="checkbox" data-c="agente" data-eur="29" onchange="tarifa()">
         <span class="tf-n">The platform agent<small>You have 14 on your list; one platform has 17. You know before you set off, not with the three of them standing there</small></span>
@@ -962,7 +1066,7 @@
             looks.</li>
         </ul>
       </details>
-      <label class="tf-o con-mas"><input type="checkbox" data-c="cuentas" data-eur="9" onchange="tarifa()">
+      <label class="tf-o con-mas"><input type="checkbox" data-c="cuentas" data-eur="9" data-dentro="premium" onchange="tarifa()">
         <span class="tf-n">The books, tour by tour<small>Sunday afternoon with the notebook and the calculator. Here every tour arrives already settled and the month closes itself</small></span>
         <span class="tf-p">+€9</span></label>
       <details class="tf-mas"><summary>What it does, exactly</summary>
@@ -983,8 +1087,9 @@
         <div id="tf-lineas"><p class="tf-vacio">No add-ons: you pay for the traveller bundle only.</p></div>
         <div class="tf-tot"><span>With <b id="tf-plan">Pro</b></span><b id="tf-total">€39</b></div>
         <p class="tf-nota">With the first month free, this starts at the bundle price alone.<br><br>
-        Add-ons work with any plan, including the free one. The plan only
-        decides how many travellers you have included.<br><br>
+        Add-ons work with any plan, including the free one. The plan decides how many
+        travellers you have included — and on Premium, "the books, tour by tour" is
+        inside it.<br><br>
         <b>Without GuIA the system still works</b> —the daily brief, the manifest, the inbox,
         the reminders, the settlements— but the reminders go out and you read your customers'
         replies yourself. GuIA is the one that answers.</p>
@@ -993,13 +1098,13 @@
   </div>
 
   
-  <p class="reveal" style="text-align:center; color:var(--muted); font-size:13px; margin:14px 0 0; max-width:74ch; margin-inline:auto;">
+  <p class="reveal nota-pie" style="color:var(--muted); font-size:13px; margin:14px 0 0; max-width:74ch; margin-inline:auto;">
     The <b>cost per traveller</b> is there to compare against what you pay for software, not
     against a platform commission: the platform brings you the customer and we do not.</p>
-  <p class="reveal" style="text-align:center; color:var(--muted); font-size:13px; margin:14px 0 0;">Prices <b>exclude VAT</b>. With a Spanish NIF we invoice at 21 %; elsewhere in the EU with a VAT
+  <p class="reveal nota-pie" style="color:var(--muted); font-size:13px; margin:14px 0 0; max-width:74ch; margin-inline:auto;">Prices <b>exclude VAT</b>. With a Spanish NIF we invoice at 21 %; elsewhere in the EU with a VAT
     number, under the reverse charge.</p>
-  <p class="reveal" style="text-align:center; color:var(--muted); font-size:14px; margin:10px 0 0; max-width:70ch; margin-inline:auto;"><b>Reminders are billed by Meta to your own account</b>, with nothing added on top by us. And we
-    only send them where there is a real risk of a no-show, which is where the bill goes.</p>
+  <p class="reveal nota-pie" style="color:var(--muted); font-size:14px; margin:10px 0 0; max-width:70ch; margin-inline:auto;"><b>Reminders cost nothing per message</b>: they go from your own WhatsApp in one tap. And we
+    only prepare them where there is a real risk of a no-show — so you send fewer and better.</p>
   <!-- The reasoning for not taking the tip lives in the docs, NOT on the page: here we only
        say what the product does. A page that defends itself against questions nobody asked
        puts those questions in the reader's head. -->
@@ -1076,7 +1181,7 @@
       confidence, about a list it knows is incomplete.</p>
       <span class="mini">it can only make GuIA say less, never more</span></div>
   </div>
-  <p class="reveal" style="text-align:center; color:var(--muted); font-size:14px; margin:20px 0 0; max-width:74ch; margin-inline:auto;">
+  <p class="reveal nota-pie" style="color:var(--muted); font-size:14px; margin:20px 0 0; max-width:74ch; margin-inline:auto;">
     <b>It runs on your computer, with your session.</b> Audutor stores no platform passwords: the
     agent uses the one you already have open, as if you sat down yourself.
     <a href="../demo-en/" style="color:var(--acc); font-weight:700;">See it in the demo →</a></p>
@@ -1276,9 +1381,21 @@ function cambiaIdioma(){
 var TF_MODO = 'mensual';        // lo cambia el conmutador de facturación
 var TF_PLAN = 'pro';            // el plan sobre el que se enseña el total
 
-function tfExtras(){
+/* What a PLAN carries inside. Same line as `INCLUIDOS_POR_PLAN` in
+   app/servidor/clientes.js, written here because this page never talks to the server —
+   and both have to say the same thing or the pricing lies. Premium carries the books
+   because its card was already promising the analytics, and the analytics live behind
+   that add-on: either it left the card or it came inside. */
+var TF_DENTRO = { premium: ['cuentas'] };
+var traeElPlan = function(plan, c){ return (TF_DENTRO[plan] || []).indexOf(c) >= 0; };
+
+/* The add-ons that get ADDED to that plan: what it carries inside is not charged twice.
+   Takes the plan instead of reading `TF_PLAN` because the three cards are painted at
+   once, each with its own price. */
+function tfExtras(plan){
   var t = 0, piezas = [];
   document.querySelectorAll('.tf-o input:checked').forEach(function(i){
+    if (traeElPlan(plan, i.dataset.c)) return;
     t += +i.dataset.eur;
     piezas.push({ n: i.closest('.tf-o').querySelector('.tf-n').childNodes[0].textContent.trim(),
                   e: +i.dataset.eur });
@@ -1311,20 +1428,29 @@ function pintaUnidad(totalPorPlan){
 }
 
 function tarifa(){
-  var ex = tfExtras();
+  var ex = tfExtras(TF_PLAN);
   document.querySelectorAll('.plan').forEach(function(p){
     var imp = p.querySelector('.precio .imp'); if(!imp) return;
     var base = +imp.dataset.base;
-    var v = base + ex.total;
+    var v = base + tfExtras(p.dataset.plan).total;
     imp.textContent = TF_MODO === 'anual' ? tfAnual(v) : v;
+    /* Tiers get the annual discount too — without this, the annual Pro→Premium
+       crossover fell to ~2,600 travellers and the published "around 2,900" was false
+       for annual customers. */
+    p.querySelectorAll('.imp-tramo').forEach(function(s){
+      s.textContent = TF_MODO === 'anual' ? s.dataset.anual : s.dataset.mensual;
+    });
     var nota = p.querySelector('[data-nota]');
     if (nota) nota.textContent = 'billed annually · €' + (v*10).toLocaleString('en-GB') + '/year (2 months free)';
   });
   /* El plan gratuito deja de ser gratuito en cuanto se le añade algo, y decir «0 €» con
      complementos marcados sería mentir en la única tarjeta que promete no cobrar. */
+  /* And with ITS OWN extras, not the selected plan's: reading `ex` —which already
+     discounts what the chosen plan carries inside— made the free card say "€0" with an
+     add-on ticked, just because the visitor happened to be looking at Premium. */
   var es = document.querySelector('.plan .precio');
   if (es && !es.querySelector('.imp'))
-    es.textContent = '€' + (ex.total ? ex.total : 0);
+    es.textContent = '€' + (tfExtras('esencial').total || 0);
 
   var cont = document.getElementById('tf-lineas');
   /* En inglés el símbolo va DELANTE y el texto va en inglés. Las dos cosas estaban en
@@ -1336,6 +1462,16 @@ function tarifa(){
         return '<div class="tf-res-l"><span>'+x.n+'</span><b>+€'+x.e+'</b></div>'; }).join('')
     : '<p class="tf-vacio">No add-ons: you pay for the traveller bundle only.</p>';
 
+  /* The checkbox for what the plan carries inside SAYS SO, instead of still showing its
+     price: with Premium selected, a "+€9" next to something already included is exactly
+     the detail that makes people doubt the whole price list. */
+  document.querySelectorAll('.tf-o input[data-dentro]').forEach(function(i){
+    var pr = i.closest('.tf-o').querySelector('.tf-p');
+    var dentro = traeElPlan(TF_PLAN, i.dataset.c);
+    if (pr) { pr.textContent = dentro ? 'included' : '+\u20ac' + i.dataset.eur;
+              pr.classList.toggle('tf-dentro', dentro); }
+  });
+
   var basePlan = { esencial:0, pro:39, premium:149 }[TF_PLAN];
   var tot = basePlan + ex.total;
   var t = document.getElementById('tf-total');
@@ -1343,7 +1479,9 @@ function tarifa(){
   /* Elegir Premium no puede sentirse igual que elegir Pro: la sección entera cambia. */
   var sec = document.getElementById('planes');
   if (sec) sec.classList.toggle('premium-on', TF_PLAN === 'premium');
-  pintaUnidad({ esencial: ex.total, pro: 39 + ex.total, premium: 149 + ex.total });
+  pintaUnidad({ esencial: tfExtras('esencial').total,
+                pro: 39 + tfExtras('pro').total,
+                premium: 149 + tfExtras('premium').total });
 
   var n = document.getElementById('tf-plan');
   if (n) n.textContent = { esencial:'Essential', pro:'Pro', premium:'Premium' }[TF_PLAN];
