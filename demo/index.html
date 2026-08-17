@@ -1590,8 +1590,10 @@
       <div style="border:1px solid var(--line); border-radius:11px; padding:14px;">
         <b>🌐 2 · Tu propia web</b>
         <div class="mini muted" style="margin:8px 0 0;">Las páginas que Audutor monta con tu Cerebro
-        —enseñando siempre el horario de verdad— y las páginas de cada guía con su QR. Audutor
-        <b>no cobra la reserva</b>: lleva a donde tú ya vendes, sin comisión por el medio. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Es el canal que el sistema empuja a crecer —
+        —enseñando siempre el horario de verdad— y las páginas de cada guía con su QR. La
+        reserva <b>se hace aquí mismo</b>: el free tour a 0 € con su código al momento, y el
+        de pago guardando la plaza con el cobro en TU pasarela — Audutor no toca el dinero
+        ni cobra comisión por reserva. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Es el canal que el sistema empuja a crecer —
         carrito, combos y reseñas apuntan aquí.</span></details></div>
       </div>
       <div style="border:1px solid var(--line); border-radius:11px; padding:14px;">
@@ -2216,8 +2218,9 @@
       <li>💶 <b>La propina no pasa por aquí.</b> El guía la cobra como quiera y la apunta en
         el manifiesto: Audutor no toca ese dinero, solo lo cuadra y lo reparte.</li>
     </ul>
-    <p class="mini">Audutor <b>no cobra la reserva</b>: enseña las plazas y lleva a donde tú
-      ya vendes. La página real viviría en tu dominio.</p>
+    <p class="mini">La reserva se hace <b>en tu web</b> —el free tour a 0 €, con código y
+      enlace de autogestión; el de pago guarda la plaza y <b>el dinero va a tu pasarela</b>:
+      Audutor no cobra ni un euro. La página real viviría en tu dominio.</p>
   </div>
 </div>
 
@@ -2672,7 +2675,13 @@ function resAg(defs){ return defs.map(function(d){
           /* `min`: el minuto (ficticio) en que entró la reserva. Solo lo llevan algunas
              parejas de grupo, para que el RIESGO varíe: con minutos cerca sube a ~78 %,
              sin ellos se queda en ~48 % — que es la lección, riesgo y no certeza. */
-          min:(typeof s.min==='number'? s.min : null), loc:locDe(d[0])}; }); }
+          min:(typeof s.min==='number'? s.min : null),
+          /* `con`: marcador de MISMA CONEXIÓN (la IP de la reserva web, que las
+             plataformas conocen y jamás reenvían — solo la web propia la tiene). Dos
+             reservas con el mismo `con` entraron desde el mismo sitio.
+             `pw`: tour DE PAGO reservado en la web propia y pago aún sin confirmar —
+             el ✓ lo pone una persona al ver el dinero en SU pasarela (fase 2, 17-ago). */
+          con:(s.con!=null? s.con : null), pw:!!s.pw, loc:locDe(d[0])}; }); }
 /* ══ EL CICLO SEMANAL ═══════════════════════════════════════════════════════════════
    Antes esto era UNA semana congelada: `S.agendaBase='2026-07-18'` y cinco días con la
    fecha escrita a mano («sáb 18 jul · HOY»). Dos problemas, y el segundo es el caro:
@@ -2727,7 +2736,7 @@ var GUION_SEMANA = {
        { hora:'19:00', tit:'Alcázar al atardecer', precio:24, guia:'Yasmina', rec:0,
          res:resAg([['R. Delgado',2,'Web propia',0],['K. Bauer',2,'Civitatis',0],
                     ['Fam. Ponte',4,'Web propia',0],['H. Sato',2,'GuruWalk',0],
-                    ['V. Marino',3,'Web propia',0]]) },
+                    ['V. Marino',3,'Web propia',0,0,0,{pw:1}]]) },
      ]},
   2: { foco: 'el buzón trabajando', tours: [
        { hora:'10:00', tit:'Centro histórico', guia:'Curro', rec:0,
@@ -2756,9 +2765,11 @@ var GUION_SEMANA = {
                     ['G. Novak',2,'Freetour',0],['M. Castells',3,'GuruWalk',0],
                     ['Fam. Ekman',4,'Web propia',0]]) },
        { hora:'19:00', tit:'Alcázar al atardecer', precio:24, guia:'Curro', rec:0,
-         res:resAg([['Fam. Ortiz',3,'Web propia',0],['G. Steiner',2,'Civitatis',0],
+         res:resAg([['Fam. Ortiz',3,'Web propia',0,0,0,{con:1,min:41}],['G. Steiner',2,'Civitatis',0],
                     ['H. Nakamura',2,'Web propia',0],['B. Lorca',4,'GuruWalk',0],
-                    ['N. Reyes',2,'Web propia',0]]) },
+                    /* Ortiz y Reyes no comparten apellido: los une LA CONEXIÓN — la señal
+                       que solo existe porque la reserva es de la web propia. */
+                    ['N. Reyes',2,'Web propia',0,0,0,{con:1,min:47}]]) },
      ]},
   4: { foco: 'los recordatorios de mañana', tours: [
        { hora:'10:00', tit:'Centro histórico', guia:'Curro', rec:0,
@@ -2808,7 +2819,7 @@ var GUION_SEMANA = {
        { hora:'19:00', tit:'Alcázar al atardecer', precio:24, guia:'Curro', rec:0,
          res:resAg([['Fam. Ruano',3,'Web propia',0],['T. Halla',2,'Civitatis',0],
                     ['B. Osei',2,'Web propia',0],['Fam. Marín',4,'GuruWalk',0],
-                    ['N. Aumann',2,'Web propia',0],['S. Grau',3,'Civitatis',0]]) },
+                    ['N. Aumann',2,'Web propia',0,0,0,{pw:1}],['S. Grau',3,'Civitatis',0]]) },
      ]},
   0: { foco: 'el nocturno sin guía', tours: [
        { hora:'10:00', tit:'Centro histórico', guia:'Curro', rec:0,
@@ -7630,22 +7641,52 @@ function apellidoDeRes(n){
    —no la tenemos ni en producción: las plataformas no la mandan en el correo— la certeza
    no existe, así que se enseña un RIESGO con tope en 95 y sus señales delante. Umbral 45:
    el apellido solo (40) no molesta a nadie — dos familias Weber que no se conocen. */
+/* El precio de un tour, LEÍDO del guion semanal — único sitio donde vive. `null` es free
+   tour. Escribirlo también aquí sería la segunda copia que un día se desincroniza. */
+function precioDeTour(tit){
+  var dias = Object.keys(GUION_SEMANA);
+  for (var i=0;i<dias.length;i++){
+    var ts = (GUION_SEMANA[dias[i]].tours||[]);
+    for (var j=0;j<ts.length;j++){
+      if (ts[j].tit === tit) return (typeof ts[j].precio==='number') ? ts[j].precio : null;
+    }
+  }
+  return null;
+}
+
 function grupoDelDia(dia){
+  /* Mismos pesos que el servidor (`puntuaGrupo`): apellido 40 · minutos ≤10 +30 / ≤90
+     +18 · canal +8 · MISMA CONEXIÓN +90 si las reservas van seguidas (+40 si solo
+     comparten el día) · tope 95 · umbral 45. La conexión es la señal fuerte y une lo que
+     el apellido no puede — solo la tienen las reservas de la web propia, porque la IP es
+     el dato que las plataformas conocen y jamás reenvían. */
   var mejor = null;
   (dia.tours||[]).forEach(function(t){
     var por = {};
     (t.res||[]).forEach(function(r){
       if (r.walkin) return;
       var a = apellidoDeRes(r.n); if(!a) return;
-      (por[a] = por[a] || []).push(r);
+      (por['a:'+a] = por['a:'+a] || []).push(r);
+      if (r.con != null) (por['c:'+r.con] = por['c:'+r.con] || []).push(r);
     });
-    Object.keys(por).forEach(function(a){
-      var l = por[a], pax = l.reduce(function(x,r){ return x + (+r.p||0); }, 0);
+    var vistos = {};
+    Object.keys(por).forEach(function(k){
+      var l = por[k], pax = l.reduce(function(x,r){ return x + (+r.p||0); }, 0);
       if (l.length < 2 || pax < 5) return;
-      var riesgo = 40, senales = ['mismo apellido'];
+      /* El mismo par puede caer por apellido Y por conexión: se puntúa una vez. */
+      var firma = l.map(function(r){ return r.n; }).sort().join('|');
+      if (vistos[firma]) return; vistos[firma] = 1;
+      var riesgo = 0, senales = [];
+      var apes = {}; l.forEach(function(r){ apes[apellidoDeRes(r.n)]=1; });
+      if (Object.keys(apes).length === 1){ riesgo += 40; senales.push('mismo apellido'); }
       var mins = l.map(function(r){ return r.min; }).filter(function(m){ return typeof m==='number'; });
-      if (mins.length >= 2){
-        var dist = Math.max.apply(null,mins) - Math.min.apply(null,mins);
+      var dist = mins.length >= 2 ? Math.max.apply(null,mins) - Math.min.apply(null,mins) : null;
+      var cons = {}; l.forEach(function(r){ if(r.con!=null) cons[r.con]=1; });
+      if (Object.keys(cons).length === 1 && l.every(function(r){ return r.con != null; })){
+        if (dist !== null && dist <= 60){ riesgo += 90; senales.push('misma conexión, reservas seguidas'); }
+        else { riesgo += 40; senales.push('misma conexión ese día'); }
+      }
+      if (dist !== null){
         if (dist <= 10){ riesgo += 30; senales.push('reservas con minutos de diferencia'); }
         else if (dist <= 90){ riesgo += 18; senales.push('reservas en la misma hora y media'); }
       }
@@ -7882,6 +7923,7 @@ function pintaManifiestoReal(){
       d.innerHTML='<div class="info">'+(a.walkin?'➕ ':'')+a.n+' · '+a.p+'p'+
         '<small>'+a.canal+(a.tarde&&!a.ok?' · ⏰ avisó: llega tarde':'')+
         (a.nsAuto?' · <b style="color:var(--rojo);">🚫 no-show (se marcó solo)</b>':'')+
+        (a.pw?' · 💳 pago por confirmar':'')+
         (a.grupo?' · 👥 grupo':'')+(a.walkin?' · walk-in':'')+difTxt+'</small></div>'+
         '<div class="fila" style="gap:4px; align-items:center;">'+
           '<button class="pax-b" data-d="-1" title="una persona menos">−</button>'+
@@ -8813,7 +8855,7 @@ function abrirGuidePage(nombre){
     '<li>🗓 <b>Los horarios y las plazas son los de verdad</b> — salen de tu cuadrante y de lo que le consta a cada canal, no de una tabla escrita a mano.</li>'+
     '<li>📈 La página lleva el <b>nombre del guía</b>: la analítica te dice qué guías traen reservas (y eso también motiva).</li>'+
     '</ul>'+
-    '<p class="mini">Audutor <b>no cobra la reserva</b>: enseña las plazas y lleva a donde tú ya vendes. La página real viviría en tu dominio.</p>';
+    '<p class="mini">La reserva se hace <b>en tu web</b> —el free tour a 0 €; el de pago guarda la plaza y <b>el dinero va a tu pasarela</b>: Audutor no cobra ni un euro. La página real viviría en tu dominio.</p>';
   document.getElementById('viajero-overlay').classList.add('ver');
   document.body.style.overflow='hidden';
   pintaGuidePage(nombre);
@@ -8835,14 +8877,20 @@ function pintaGuidePage(nombre){
       '<span class="vj-hora">reseña verificada</span></div>'+
     '<p class="vj-tit">Sus próximas salidas</p>'+
     Object.keys(tours).map(function(t){
-      /* NO es un botón de reservar. Desde el 17-ago-2026 el motor de reservas SÍ existe
-         (tours gratuitos, sin pago — vive en la web propia que sirve publico.js), pero este
-         visor de la demo enseña otra cosa: el horario y las plazas que quedan de verdad,
-         y de ahí al sitio donde el operador ya vende. Audutor sigue sin cobrar entradas.
-         Enseñar el formulario de reserva EN LA DEMO es tarea aparte, si se decide. */
-      return '<button class="vj-cta" style="margin-top:8px;" onclick="toast(\'En producción esto lleva a donde tú ya vendes — tu web o tu plataforma. Audutor no cobra entradas: te dice qué plazas quedan de verdad\')">'+
-        t+' · '+tours[t]+' → ver plazas</button>'; }).join('')+
-    '<div class="vj-transp" style="margin-top:12px;">🗓 Los horarios y las plazas salen de <b>su cuadrante de verdad</b>: si mueve una salida, aquí cambia sola.</div>'+
+      /* SÍ es un botón de reservar, desde el 17-ago-2026: el motor de la web propia. El
+         free tour se reserva a 0 € —código al momento y enlace de autogestión—; el de
+         pago guarda la plaza y el PAGO va a la pasarela del operador (fase 2): Audutor
+         sigue sin cobrar ni un euro. El precio no se escribe aquí a ojo: sale del guion
+         semanal, que es quien manda (la lección de las tarifas). */
+      var precio = precioDeTour(t);
+      var txt = precio == null
+        ? t+' · '+tours[t]+' → Reservar — 0 €'
+        : t+' · '+tours[t]+' → Reservar · '+precio+' € en su web';
+      var msg = precio == null
+        ? 'Reserva hecha al momento: código '+locDe(t)+' y enlace para cambiar o cancelar — sin pago y sin tarjeta. La plaza descuenta del cupo al instante'
+        : 'Plaza guardada con su código al momento. El pago ('+precio+' €) va a TU pasarela — Audutor no cobra. En el manifiesto queda «💳 pago por confirmar» hasta que una persona vea el dinero';
+      return '<button class="vj-cta" style="margin-top:8px;" onclick="toast(\''+msg+'\')">'+txt+'</button>'; }).join('')+
+    '<div class="vj-transp" style="margin-top:12px;">🗓 Los horarios y las plazas salen de <b>su cuadrante de verdad</b>: la reserva descuenta del cupo al instante, y si mueve una salida, aquí cambia sola.</div>'+
     '</div>';
   pant.scrollTop=0;
 }

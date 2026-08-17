@@ -946,10 +946,12 @@
 
   <div class="card exc" id="exc-grupo">
     <div class="fila">
-      <div><b>👥 Large group detected — the 10:00 AM tour</b><br>
-      <span class="mini muted">“Sophie Maclean (6p)” + “Mark Maclean (5p)” = <b>11 people</b> · same surname,
-      booked 3 minutes apart (GuruWalk). The deposit policy went out on their confirmation, and
-      the guide has the note.</span></div>
+      <div><b>👥 Possible group (~78 %) — the 10:00 AM tour</b><br>
+      <span class="mini muted">“Sophie Maclean (6p)” + “Mark Maclean (5p)” = <b>11 people</b> · same surname ·
+      booked 3 minutes apart · same channel (GuruWalk). A percentage, not a verdict — certainty
+      would be a lie. Bookings on your own site add the strongest signal of all: the same
+      connection, which no platform ever forwards. The deposit policy went out on their
+      confirmation, and the guide has the note.</span></div>
       <div><button class="btn mini sec" onclick="ir('manifiesto')">See in the manifest</button>
       <button class="btn mini" onclick="resolver('exc-grupo')">✓ Reviewed</button></div>
     </div>
@@ -2394,7 +2396,12 @@ S.equipo = {
 };
 /* ---- Agenda diaria del guía (formato ML): todos los tours del día, walk-in y
    recaudación. Cuadra con la Liquidación/Cuadro de julio. Hoy = sáb 18 jul. ---- */
-function resAg(defs){ return defs.map(function(d){ return {n:d[0], p:d[1], canal:d[2], ok:!!d[3], walkin:!!d[4], nsAuto:!!d[5]}; }); }
+function resAg(defs){ return defs.map(function(d){
+  var s = d[6] || {};
+  /* `pw`: ticketed walk booked on the OWN site and payment not yet confirmed — the tick
+     is set by a person once the money shows in THEIR gateway (motor fase 2, 17-ago).
+     Esta demo no lleva el detector porcentual del ciclo ES: aquí solo viaja `pw`. */
+  return {n:d[0], p:d[1], canal:d[2], ok:!!d[3], walkin:!!d[4], nsAuto:!!d[5], pw:!!s.pw}; }); }
 S.agDia = 2;   // índice de "hoy" (sáb 18) en S.agenda
 /* La base ISO del parte (el «hoy» ficticio de la demo, sábado 18 de julio): con ella el
    motor resuelve «al viernes» a una fecha real y puede mover reservas de día. */
@@ -2423,7 +2430,7 @@ S.agenda = [
      { hora:'10:00', tit:'Old Town', guia:'Liam', rec:0,
        res:resAg([['A. Novak',2,'Viator',0],['Ruiz family',4,'Own site',0],['K. Schmidt',2,'GuruWalk',0]]) },
      { hora:'21:00', tit:'Ghosts & legends night walk', guia:'— unassigned —', sinGuia:true, rec:0,
-       res:resAg([['P. Marín',2,'Own site',0]]) },
+       res:resAg([['P. Marín',2,'Own site',0,0,0,{pw:1}]]) },
   ]},
   { fecha:'Mon 20 Jul', tours:[
      { hora:'10:00', tit:'Old Town', guia:'Emma', rec:0,
@@ -6496,7 +6503,7 @@ function pintaManifiestoReal(){
     // aviso de grupo (solo tour live, con el grupo Maclean si está)
     if (t.live && t.res.some(function(r){return r.grupo})){
       var av=document.createElement('div'); av.className='aviso-grupo';
-      av.innerHTML='👥 <b>Possible large group:</b> bookings under the same surname, minutes apart. '+
+      av.innerHTML='👥 <b>Possible group (~78 %):</b> bookings under the same surname, minutes apart, same channel. '+
         'Policy: you can ask for a <b>£10 per person deposit</b>.';
       mov.appendChild(av);
     }
@@ -6509,6 +6516,7 @@ function pintaManifiestoReal(){
       d.innerHTML='<div class="info">'+(a.walkin?'➕ ':'')+a.n+' · '+a.p+'p'+
         '<small>'+a.canal+(a.tarde&&!a.ok?' · ⏰ said they’re running late':'')+
         (a.nsAuto?' · <b style="color:var(--rojo);">🚫 no-show (marked automatically)</b>':'')+
+        (a.pw?' · 💳 payment to confirm':'')+
         (a.grupo?' · 👥 group':'')+(a.walkin?' · walk-in':'')+difTxt+'</small></div>'+
         '<div class="fila" style="gap:4px; align-items:center;">'+
           '<button class="pax-b" data-d="-1" title="one person fewer">−</button>'+
@@ -7761,18 +7769,27 @@ function pintaGuidePage(nombre){
             }).join('')
           : '<span class="mini muted">Nothing on this day — pick another.</span>')+
       '</div>'+
-      /* Ni contador de personas ni botón de reservar. Desde el 17-ago-2026 el motor de
-         reservas existe (tours gratuitos, sin pago, en la web propia de publico.js), pero
-         lo que este visor enseña es lo que nadie más tiene: cuántas plazas quedan DE
-         VERDAD en esa salida, contando todos los canales — y de ahí a donde el operador
-         ya vende. Audutor sigue sin cobrar entradas. */
+      /* SÍ hay botón de reservar, desde el 17-ago-2026: el motor de la web propia. El
+         free walk se reserva a £0 —código al momento y enlace de autogestión—; el
+         ticketed guarda la plaza y el PAGO va a la pasarela del operador (fase 2):
+         Audutor sigue sin cobrar ni una libra. Si el tour es ticketed lo dice
+         `S.tours[].ticket` (por `nombre`, que es como los busca gpKb). */
       '<div class="gp-resumen">'+
         '<b>'+dia.et+' '+dia.d+' '+dia.mes+(GP.hora?' · '+gpHora12(GP.hora):'')+'</b><br>'+
         gpPrecio(GP.tour)+
         (GP.hora ? ' · '+libres+' place'+(libres===1?'':'s')+' left across every channel' : '')+
       '</div>'+
-      '<button class="vj-cta" onclick="toast(\'In production this goes where you already sell — your own site or your platform. Audutor does not take the booking: it tells you what is really left\')">See places at '+empresaCorta()+'</button>'+
-      '<p class="vj-legal">Audutor does not sell tickets: it runs what you already sold. Demo with made-up data.</p>'+
+      (function(){
+        var conTicket = S.tours.some(function(t){ return t.nombre===GP.tour && t.ticket; });
+        /* «Walks’s» no existe: a un nombre acabado en s se le pega solo el apóstrofo. */
+        var emp = empresaCorta();
+        var txt = conTicket ? 'Book · pay on '+emp+(/s$/i.test(emp)?'’':'’s')+' site' : 'Book — £0';
+        var msg = conTicket
+          ? 'Seat held with a code straight away. The payment ('+gpPrecio(GP.tour)+') goes to YOUR gateway — Audutor never takes it. The manifest shows «💳 payment to confirm» until a person sees the money'
+          : 'Booked on the spot: a code and a self-manage link to change or cancel — no payment, no card. The seat comes off the real count instantly';
+        return '<button class="vj-cta" onclick="toast(\''+msg+'\')">'+txt+'</button>';
+      })()+
+      '<p class="vj-legal">Audutor does not sell tickets — the booking is free or the money goes straight to the operator. Demo with made-up data.</p>'+
       '</div>';
     pant.scrollTop=0; return;
   }
