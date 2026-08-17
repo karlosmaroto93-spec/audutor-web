@@ -7761,10 +7761,11 @@ function pintaGuidePage(nombre){
             }).join('')
           : '<span class="mini muted">Nothing on this day — pick another.</span>')+
       '</div>'+
-      /* Ni contador de personas ni botón de reservar: Audutor NO vende entradas, opera lo
-         que ya se vendió. Lo que sí es suyo —y no lo tiene nadie más— es saber cuántas
-         plazas quedan DE VERDAD en esa salida, contando todos los canales. Eso se enseña,
-         y de ahí al sitio donde el operador ya vende. */
+      /* Ni contador de personas ni botón de reservar. Desde el 17-ago-2026 el motor de
+         reservas existe (tours gratuitos, sin pago, en la web propia de publico.js), pero
+         lo que este visor enseña es lo que nadie más tiene: cuántas plazas quedan DE
+         VERDAD en esa salida, contando todos los canales — y de ahí a donde el operador
+         ya vende. Audutor sigue sin cobrar entradas. */
       '<div class="gp-resumen">'+
         '<b>'+dia.et+' '+dia.d+' '+dia.mes+(GP.hora?' · '+gpHora12(GP.hora):'')+'</b><br>'+
         gpPrecio(GP.tour)+

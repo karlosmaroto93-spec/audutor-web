@@ -8835,10 +8835,11 @@ function pintaGuidePage(nombre){
       '<span class="vj-hora">reseña verificada</span></div>'+
     '<p class="vj-tit">Sus próximas salidas</p>'+
     Object.keys(tours).map(function(t){
-      /* NO es un botón de reservar, y la diferencia no es de redacción: Audutor no vende
-         entradas —opera lo que ya se vendió— así que prometer aquí una reserva sería vender
-         un motor de reservas que no existe. Lo nuestro es el horario y las plazas que
-         quedan de verdad; de ahí, al sitio donde el operador ya vende. */
+      /* NO es un botón de reservar. Desde el 17-ago-2026 el motor de reservas SÍ existe
+         (tours gratuitos, sin pago — vive en la web propia que sirve publico.js), pero este
+         visor de la demo enseña otra cosa: el horario y las plazas que quedan de verdad,
+         y de ahí al sitio donde el operador ya vende. Audutor sigue sin cobrar entradas.
+         Enseñar el formulario de reserva EN LA DEMO es tarea aparte, si se decide. */
       return '<button class="vj-cta" style="margin-top:8px;" onclick="toast(\'En producción esto lleva a donde tú ya vendes — tu web o tu plataforma. Audutor no cobra entradas: te dice qué plazas quedan de verdad\')">'+
         t+' · '+tours[t]+' → ver plazas</button>'; }).join('')+
     '<div class="vj-transp" style="margin-top:12px;">🗓 Los horarios y las plazas salen de <b>su cuadrante de verdad</b>: si mueve una salida, aquí cambia sola.</div>'+
