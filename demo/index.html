@@ -3330,9 +3330,32 @@ function codDe(t){ return codEscrito(t) || S.codConocido || null; }
    reserva concreta, y cancelarle otra «la que creemos que es la suya» porque la que
    escribió no existe es exactamente lo que no puede pasar. */
 function codMuerto(t){
-  var esc = (String(t||'').match(reCod()) || [])[0];
-  if (!esc) return null;
-  return codEscrito(t) ? null : esc;
+  if (codEscrito(t)) return null;              // consta: no hay nada que avisar
+  var x = String(t||'');
+  var esc = (x.match(reCod()) || [])[0];
+  if (esc) return esc;
+  /* Y TAMBIÉN LOS DE PLATAFORMA. `reCod()` solo conoce el prefijo de la empresa, que en
+     un cliente real está vacío —esta casa no emite códigos—, así que quien escribía un
+     «GW-9999» mal copiado del email de GuruWalk no recibía el aviso: se le contestaba el
+     FAQ de cancelación como si no hubiera puesto código, y se iba sin saber que el suyo
+     no consta. No se le mentía —no se cancelaba nada— pero se le dejaba a medias.
+     Las familias se deducen de los localizadores VIVOS: si hay «GW-1234» en la casa,
+     entonces «GW-» es una familia conocida y un «GW-9999» que no consta es un código
+     muerto, no un texto cualquiera. Sin lista sembrada no se deduce nada y todo queda
+     como estaba. */
+  var vivos = S.locsVivos || [];
+  if (!vivos.length) return null;
+  var fam = {};
+  for (var i=0;i<vivos.length;i++){
+    var m = String(vivos[i]).toUpperCase().match(/^([A-Z]{2,6})[- ]?\d/);
+    if (m) fam[m[1]] = 1;
+  }
+  for (var pre in fam){
+    var re = new RegExp('\\b' + pre + '[- ]?[0-9][A-Z0-9-]*', 'i');
+    var hit = (x.match(re) || [])[0];
+    if (hit) return hit.toUpperCase();
+  }
+  return null;
 }
 
 function fon(w){
@@ -7711,7 +7734,14 @@ function paxPresente(res){
   return (res||[]).reduce(function(a,r){ return a + (r.ok ? (+r.p||0) : 0); }, 0);
 }
 function agDia(dir){
-  S.agDia = Math.max(0, Math.min(S.agenda.length-1, S.agDia+dir));
+  /* DA LA VUELTA, no topa. Esto recortaba con `Math.min` y la flecha se moría en el último
+     día de la ventana: llegabas al jueves y no pasaba nada más: el botón seguía ahí,
+     seguía pulsándose y la pantalla no cambiaba, que se lee como que está rota.
+     Y contradice lo que la demo ES: un CIRCUITO SEMANAL CERRADO. Siete días que se
+     recorren en círculo — del último se vuelve al primero— es justo lo que permite
+     enseñar las siete funciones seguidas sin quedarse encallado en una punta. */
+  var n = S.agenda.length;
+  S.agDia = ((S.agDia + dir) % n + n) % n;
   pintaManifiesto();
 }
 /* ── POR QUÉ ESTA ENVOLTURA ───────────────────────────────────────────────────────────
