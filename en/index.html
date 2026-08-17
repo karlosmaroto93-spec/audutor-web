@@ -29,27 +29,39 @@
      `text-wrap:pretty` donde lo haya, para que no quede una palabra sola en la última. */
 
 
-  /* La comparativa del billete de 0 €: tabla, no prosa. Dos columnas —quién y cuánto—
-     para leerla en vertical de un vistazo, con la fila de Audutor destacada al final. */
-  .cero-t{ width:100%; border-collapse:collapse; margin:14px 0 4px; font-size:14px; }
-  .cero-t th{ text-align:left; font-size:11.5px; font-weight:800; letter-spacing:.06em;
-    text-transform:uppercase; color:var(--muted); padding:0 0 7px; border-bottom:1px solid var(--line); }
-  .cero-t th:last-child{ text-align:right; }
-  .cero-t td{ padding:11px 0; border-bottom:1px solid var(--line); vertical-align:top;
-    text-align:left; hyphens:manual; }
-  .cero-t td:first-child{ font-weight:700; color:var(--ink); padding-right:14px; }
-  .cero-t td:last-child{ text-align:right; }
-  .cero-t td small{ display:block; font-weight:400; font-size:12px; color:var(--muted);
-    line-height:1.4; margin-top:2px; }
-  .cero-no{ font-weight:700; color:var(--muted); }
-  .cero-t .cero-yo td{ border-bottom:0; padding-top:14px; }
-  .cero-t .cero-yo td b{ color:var(--acc); font-size:17px; }
-  @media (max-width:520px){
-    .cero-t td:last-child, .cero-t th:last-child{ text-align:left; }
-    .cero-t td{ display:block; border:0; padding:2px 0; }
-    .cero-t tr{ display:block; border-bottom:1px solid var(--line); padding:9px 0; }
-    .cero-t thead{ display:none; }
-  }
+  /* ── LA COMPARATIVA DEL BILLETE DE 0 € ───────────────────────────────────────────────
+     Primero fue prosa (cuatro párrafos para una comparación) y luego una tabla a todo lo
+     ancho: el nombre en un extremo, la cifra en el otro y mil quinientos píxeles de vacío
+     en medio. El ojo no une «Rezdy» con «1 $» a esa distancia, así que la tabla ordenaba
+     el dato y no lo hacía legible.
+     Ahora TARJETAS en rejilla: cada competidor es un bloque pequeño con su cifra GRANDE
+     arriba y quién es debajo — la cifra es lo que se compara, así que es lo que manda.
+     Se leen en paralelo, como se compara de verdad, y en el móvil se apilan solas.
+     Audutor va aparte y a lo ancho: no es una columna más de la comparación, es la
+     conclusión. */
+  .cero-rej{ display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));
+    gap:10px; margin:16px 0 12px; }
+  .cero-c{ background:var(--paper); border:1px solid var(--line); border-radius:12px;
+    padding:13px 14px; }
+  .cero-c .n{ display:block; font-size:11px; font-weight:800; letter-spacing:.05em;
+    text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+  .cero-c .p{ display:block; font-family:var(--serif); font-size:26px; line-height:1;
+    color:var(--ink); font-variant-numeric:tabular-nums; }
+  .cero-c .p.no{ font-family:inherit; font-size:15px; font-weight:700; color:var(--muted);
+    line-height:1.25; }
+  .cero-c small{ display:block; font-size:11.5px; line-height:1.4; color:var(--muted);
+    margin-top:7px; text-align:left; hyphens:manual; }
+  .cero-c a{ color:var(--acc); }
+  /* La conclusión, a lo ancho de la rejilla y en el verde de la casa. */
+  .cero-yo{ grid-column:1 / -1; display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+    background:var(--acc-soft); border:1.5px solid var(--acc); border-radius:12px;
+    padding:14px 16px; }
+  .cero-yo .p{ font-family:var(--serif); font-size:34px; line-height:1; color:var(--acc);
+    font-variant-numeric:tabular-nums; }
+  .cero-yo .n{ font-size:15px; font-weight:800; color:var(--acc2); }
+  .cero-yo small{ flex:1; min-width:180px; font-size:12.5px; color:var(--ink2);
+    line-height:1.45; text-align:left; hyphens:manual; }
+
   /* ── TEXTO CORRIDO, JUSTIFICADO ─────────────────────────────────────────────────────
      Todo el cuerpo de la página iba en bandera (borde derecho dentado). Justificado con
      `hyphens:auto`, que es lo que lo hace viable: en español, justificar SIN partir
@@ -61,13 +73,22 @@
      Y un suelo: por debajo de 480 px la línea es tan corta que ni la partición salva los
      ríos, así que ahí manda la izquierda. */
   p, li, dd, .l, .que, .para, .tf-nota, .plan-extra, .lede, .fino, .bocadillo, .hero-nota,
-  .cero-fin, .tf-sub, .integra li{
+  .cero-fin, .tf-sub, .integra li,
+  /* Los que se quedaron fuera en la primera pasada: el `small` que explica cada
+     complemento en «Móntate tu tarifa», la nota monoespaciada al pie de cada tarjeta del
+     asistente, y las dos columnas del comparador. Todos son texto corrido. */
+  .tf-n small, .celda .mini, .bueno, .malo{
     text-align:justify; hyphens:auto; -webkit-hyphens:auto;
   }
   nav p, nav li, .btn, .chip, .tramo, footer li{ text-align:inherit; hyphens:manual; }
+  /* El correo de contacto, CENTRADO en su tarjeta. Es la única acción de la caja y estaba
+     pegado al margen izquierdo debajo de un título centrado: el ojo lo perdía. */
+  .contacto-dir, .contacto-dir + p, .contacto-fino{ text-align:center; }
   @media (max-width:480px){
     p, li, dd, .l, .que, .para, .tf-nota, .plan-extra, .lede, .fino, .bocadillo,
-    .hero-nota, .cero-fin, .tf-sub, .integra li{ text-align:left; }
+    .hero-nota, .cero-fin, .tf-sub, .integra li,
+    .tf-n small, .celda .mini, .bueno, .malo{ text-align:left; }
+    .contacto-dir, .contacto-dir + p, .contacto-fino{ text-align:center; }
   }
   .nota-pie{
     text-align:justify; text-align-last:center; hyphens:auto; -webkit-hyphens:auto;
@@ -951,19 +972,20 @@
     charges you for each booking that charged you nothing.</p>
     <!-- Table, not prose — same reasoning as the Spanish twin: this is a COMPARISON, and
          a table answers it at a glance. Every figure and source is kept. -->
-    <table class="cero-t">
-      <thead><tr><th>Per €0 booking</th><th>they charge you</th></tr></thead>
-      <tbody>
-        <tr><td>FareHarbor · Peek Pro · Xola</td>
-            <td><span class="cero-no">can't charge it at all</span><small>they run on commission: the model doesn't reach a €0 ticket</small></td></tr>
-        <tr><td>TuriTop</td>
-            <td><b>€0.10</b><small>per-booking minimum, on top of €29/month —
-              <a href="https://www.turitop.com/precios-de-turitop/" target="_blank" rel="noopener">their pricing page</a></small></td></tr>
-        <tr><td>Rezdy</td><td><b>$1</b><small>if you enter it by hand — on a free tour, nearly all of them</small></td></tr>
-        <tr><td>TrekkSoft</td><td><b>€1.50</b><small>if you enter it by hand</small></td></tr>
-        <tr class="cero-yo"><td><b>Audutor</b></td><td><b>€0</b><small>no commission, no minimum, no surcharge for entering one by hand</small></td></tr>
-      </tbody>
-    </table>
+    <div class="cero-rej">
+      <div class="cero-c"><span class="n">FareHarbor · Peek Pro · Xola</span>
+        <span class="p no">They can't charge it</span>
+        <small>They run on commission: the model doesn't reach a €0 ticket.</small></div>
+      <div class="cero-c"><span class="n">TuriTop</span><span class="p">€0.10</span>
+        <small>Per-booking minimum, on top of €29/month.
+          <a href="https://www.turitop.com/precios-de-turitop/" target="_blank" rel="noopener">Their pricing page</a></small></div>
+      <div class="cero-c"><span class="n">Rezdy</span><span class="p">$1</span>
+        <small>Per booking entered by hand — on a free tour, nearly all.</small></div>
+      <div class="cero-c"><span class="n">TrekkSoft</span><span class="p">€1.50</span>
+        <small>Per booking entered by hand.</small></div>
+      <div class="cero-yo"><span class="p">€0</span><span class="n">Audutor</span>
+        <small>No commission, no minimum, no surcharge for entering one by hand.</small></div>
+    </div>
     <p class="cero-fin">You pay the traveller bundle and that's it. And the tip is yours,
     whole: <b>we don't touch a cent</b>.
     <span class="cero-fecha">Checked 10 Aug 2026 on their own pages; if you spot something
