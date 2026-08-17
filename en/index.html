@@ -178,6 +178,43 @@
   .guia-web{ display:flex; align-items:center; gap:12px; margin-top:16px; }
   .guia-web .guia{ width:58px; animation-duration:9s; }
   .guia-web .bocadillo{ max-width:none; font-size:13px; padding:9px 14px; }
+  /* ── GuIA PRESENTANDO LA SECCIÓN DEL ASISTENTE ──
+     El titular sale de su boca, como una viñeta. Dos cosas que hacen que funcione:
+     · `align-items:center` alinea los centros de la mascota y del globo, y el pico de
+       `.bocadillo` ya está al 50 % de su altura — con la boca abierta, el 50 % del dibujo
+       cae justo en la boca, así que el pico apunta a la boca sin cuentas raras.
+     · El globo NO lleva `max-width:300px` como los otros: aquí es el titular de la
+       sección y tiene que respirar. */
+  .guia-dice{ display:flex; align-items:center; gap:22px; }
+  /* LA PROPORCIÓN, EXPLÍCITA, y sin ella la mascota no crece. El `<svg class="guia">` no
+     lleva `viewBox` propio —el viewBox está en el símbolo—, así que como caja no tiene
+     proporción intrínseca y su `height:auto` cae a los 150 px que el CSS da por defecto a
+     un elemento reemplazado. A 142 px de ancho eso no se nota (la altura que hace falta
+     son 149), y por eso el resto del sitio nunca lo vio; al pedir 238 la altura pasa a
+     mandar y el dibujo se quedaba en 142 px reales, centrado y con casi 100 px de aire a
+     los lados. Con la proporción declarada, el ancho vuelve a ser el ancho. */
+  .guia-dice .guia{ width:238px; aspect-ratio:150/158; height:auto; }
+  /* `.sec-head` lleva `max-width:64ch` y se declara MÁS ABAJO, así que con un solo punto
+     de especificidad ganaba él y el globo salía en una columna estrecha con el titular
+     partido en cinco líneas. Con las dos clases juntas gana esta, esté donde esté. */
+  .sec-head.sec-head-guia{ max-width:none; }
+  .sec-head-guia > p{ max-width:64ch; }
+  .guia-dice .bocadillo{ max-width:none; flex:1; padding:20px 28px; border-radius:24px;
+    color:var(--ink);
+    /* SIN justificar. El globo está en la lista de texto corrido de arriba, y justificar
+       un titular de cuatro palabras por línea abre ríos de espacio entre ellas. */
+    text-align:left; hyphens:manual; }
+  .guia-dice .bocadillo::before{ width:19px; height:19px; margin-top:-10px; left:-11px; }
+  /* En estrecho, GuIA se pone encima y el pico gira hacia arriba: de lado no le queda
+     ancho al titular, y un titular de 26 px en 240 px son cinco líneas. */
+  @media (max-width:760px){
+    .guia-dice{ flex-direction:column; align-items:center; gap:8px; }
+    .guia-dice .guia{ width:132px; }
+    .guia-dice .bocadillo{ align-self:stretch; }
+    .guia-dice .bocadillo::before{ left:50%; top:-9px; margin:0 0 0 -9px;
+      border-left:1.5px solid var(--line); border-top:1.5px solid var(--line);
+      border-bottom:0; border-radius:3px 0 0 0; }
+  }
   .guia-final{ display:flex; align-items:center; justify-content:center; gap:18px;
     margin-bottom:30px; }
   .guia-final .guia{ width:92px; }
@@ -796,6 +833,30 @@
       <path d="M86 78 Q97 73 103 82" fill="none" stroke="#0c6b56" stroke-width="7" stroke-linecap="round"/>
       <circle cx="103" cy="83" r="4.6" fill="#0c6b56"/>
     </symbol>
+    <!-- GuIA HABLANDO: la misma mascota con otra cara, para la sección del asistente.
+         NO se duplica el dibujo: el paraguas, el pin y la sombra llevan ids propios
+         (`capota`, `g-pin`, `g-sombra`) y dos copias con el mismo id se pisan —el
+         navegador se queda con la primera y la segunda sale sin recortar—. Se reutiliza
+         entero con `use` y se le vuelve a pintar la cara encima: el círculo tapa ojos,
+         cejas, boca y mofletes de la base, y debajo se dibujan los nuevos. -->
+    <symbol id="guia-habla" viewBox="0 0 150 158">
+      <use href="#guia"/>
+      <circle cx="52" cy="66" r="21" fill="#fdf6e8"/>
+      <!-- los ojos, iguales que la base: cambiar la mirada cambiaría de personaje -->
+      <circle cx="44.5" cy="62" r="3" fill="#1f2a25"/>
+      <circle cx="59.5" cy="62" r="3" fill="#1f2a25"/>
+      <circle cx="45.6" cy="60.8" r="1" fill="#fff"/>
+      <circle cx="60.6" cy="60.8" r="1" fill="#fff"/>
+      <!-- cejas más altas y más arqueadas: es lo que se lee como seguridad. Un punto más
+           y pasa a ser sorpresa, que es otra cosa -->
+      <path d="M40.6 54 Q44.6 50.7 48.4 53.7" fill="none" stroke="#1f2a25" stroke-width="1.7" stroke-linecap="round" opacity=".75"/>
+      <path d="M55.6 53.7 Q59.4 50.7 63.4 54" fill="none" stroke="#1f2a25" stroke-width="1.7" stroke-linecap="round" opacity=".75"/>
+      <!-- boca ABIERTA: la base tiene una sonrisa de media luna de 4,5 de alto; esta es
+           una «D» de 8,5, que es lo que se lee como «está diciendo algo» -->
+      <path d="M42.6 68.4 Q52 85.5 61.4 68.4 Z" fill="#1f2a25"/>
+      <circle cx="37" cy="68.5" r="3.4" fill="#ff8a5f" opacity=".6"/>
+      <circle cx="67" cy="68.5" r="3.4" fill="#ff8a5f" opacity=".6"/>
+    </symbol>
     <symbol id="pin-acento" viewBox="0 0 24 28">
       <path d="M12 .8C6.8.8 2.6 5 2.6 10.2 2.6 17 12 27.2 12 27.2s9.4-10.2 9.4-17C21.4 5 17.2.8 12 .8z" fill="#f4653a"/>
       <circle cx="12" cy="10" r="3.6" fill="#fff6ec"/>
@@ -1219,8 +1280,15 @@
 
 
 <section id="asistente"><div class="wrap">
-  <div class="sec-head">
-    <h2 data-split>Every booking system has an assistant now.<br>Ask them what it does when it doesn’t know.</h2>
+  <div class="sec-head sec-head-guia">
+    <!-- GuIA says it, in a speech bubble. Not decoration: the line is an awkward QUESTION
+         about the competition's assistants, and in our own assistant's mouth it reads as
+         what it is —a challenge from the one that does know what it does when it doesn't
+         know— instead of an anonymous claim from the seller. -->
+    <div class="guia-dice reveal">
+      <svg class="guia" aria-hidden="true" focusable="false"><use href="#guia-habla"/></svg>
+      <h2 data-split class="bocadillo">Every booking system has an assistant now.<br>Ask them what it does when it doesn’t know.</h2>
+    </div>
     <p class="reveal">An assistant plugged into a booking engine knows your products, your prices and your
     availability. Everything else it makes up — and everything else is most of what a customer asks.</p>
   </div>
