@@ -31,11 +31,18 @@
   .tp-lab{ display:block; font-size:11.5px; font-weight:800; letter-spacing:.05em;
     text-transform:uppercase; color:var(--muted); margin-bottom:7px; }
   .tp-nums{ display:flex; gap:8px; flex-wrap:wrap; }
-  .tp-nums label{ flex:1; min-width:76px; font-size:12px; color:var(--ink2); }
+  /* LAS TRES CASILLAS, A LA MISMA ALTURA. «Adultos» no llevaba la línea de la edad que sí
+     llevan «Jóvenes» y «Peques», así que su etiqueta medía una línea menos y su casilla
+     subía: tres cajas descuadradas en fila. Se arregla por los dos lados —abajo se le pone
+     su rango, y aquí la casilla se empuja al fondo de la columna— para que el día que una
+     etiqueta ocupe dos líneas siga cuadrando sin tocar nada. */
+  .tp-nums label{ flex:1; min-width:76px; font-size:12px; color:var(--ink2);
+    display:flex; flex-direction:column; }
   .tp-nums small{ display:block; color:var(--muted); font-size:10.5px; }
-  .tp-nums input{ width:100%; margin-top:3px; padding:7px 8px; border:1.5px solid var(--line);
+  .tp-nums input{ width:100%; margin-top:auto; padding:7px 8px; border:1.5px solid var(--line);
     border-radius:9px; font:inherit; font-size:15px; font-weight:700; text-align:center;
-    background:var(--paper); color:var(--ink); }
+    background:var(--paper); color:var(--ink); box-sizing:border-box; }
+  .tp-nums label > *:not(input){ margin-bottom:3px; }
   .tp-hint{ margin:7px 0 0; font-size:11.5px; line-height:1.45; color:var(--muted); }
   .tp-pills{ display:flex; gap:8px; flex-wrap:wrap; }
   .tp-pill{ flex:1; min-width:128px; cursor:pointer; position:relative; }
@@ -1501,7 +1508,7 @@
       <div class="tp-form">
         <div class="tp-g"><span class="tp-lab">Cuántos sois</span>
           <div class="tp-nums">
-            <label>Adultos<input type="number" id="tp-ad" min="0" max="30" value="4"></label>
+            <label>Adultos<small>18+</small><input type="number" id="tp-ad" min="0" max="30" value="4"></label>
             <label>Jóvenes<small>12-17</small><input type="number" id="tp-jo" min="0" max="30" value="1"></label>
             <label>Peques<small>-12</small><input type="number" id="tp-pe" min="0" max="30" value="1"></label>
           </div>
