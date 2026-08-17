@@ -2668,7 +2668,11 @@ function locDe(nombre){
 function resAg(defs){ return defs.map(function(d){
   var s = d[6] || {};
   return {n:d[0], p:d[1], canal:d[2], ok:!!d[3], walkin:!!d[4], nsAuto:!!d[5],
-          ant:!!s.ant, hist:!!s.hist, conf:!!s.conf, loc:locDe(d[0])}; }); }
+          ant:!!s.ant, hist:!!s.hist, conf:!!s.conf,
+          /* `min`: el minuto (ficticio) en que entró la reserva. Solo lo llevan algunas
+             parejas de grupo, para que el RIESGO varíe: con minutos cerca sube a ~78 %,
+             sin ellos se queda en ~48 % — que es la lección, riesgo y no certeza. */
+          min:(typeof s.min==='number'? s.min : null), loc:locDe(d[0])}; }); }
 /* ══ EL CICLO SEMANAL ═══════════════════════════════════════════════════════════════
    Antes esto era UNA semana congelada: `S.agendaBase='2026-07-18'` y cinco días con la
    fecha escrita a mano («sáb 18 jul · HOY»). Dos problemas, y el segundo es el caro:
@@ -2710,11 +2714,11 @@ var GUION_SEMANA = {
      partidos desde las plataformas. */
   1: { foco: 'el lunes de las cuentas', tours: [
        { hora:'10:00', tit:'Centro histórico', guia:'Elena', rec:0,
-         res:resAg([['Fam. Weber',3,'GuruWalk',0],['I. Costa',2,'Web propia',0],
+         res:resAg([['Fam. Weber',3,'GuruWalk',0,0,0,{min:12}],['I. Costa',2,'Web propia',0],
                     ['S. Lindholm',2,'Civitatis',0],['Grupo Meyer',4,'GuruWalk',0],
                     ['A. Ferreira',2,'Freetour',0],['T. Kaufmann',3,'Web propia',0],
                     ['M. Halvorsen',2,'GuruWalk',0],['Fam. Iglesias',4,'Web propia',0],
-                    ['D. Cruz',2,'Civitatis',0],['R. Weber',3,'GuruWalk',0]]) },
+                    ['D. Cruz',2,'Civitatis',0],['R. Weber',3,'GuruWalk',0,0,0,{min:15}]]) },
        { hora:'17:00', tit:'Centro histórico', guia:'Curro', rec:0,
          res:resAg([['J. Moretti',2,'GuruWalk',0],['Fam. Sanz',4,'Web propia',0],
                     ['P. Nowak',2,'Civitatis',0],['L. Sarmiento',3,'GuruWalk',0],
@@ -2759,9 +2763,9 @@ var GUION_SEMANA = {
   4: { foco: 'los recordatorios de mañana', tours: [
        { hora:'10:00', tit:'Centro histórico', guia:'Curro', rec:0,
          res:resAg([['S. Nakamura',2,'Civitatis',0],['Fam. Prieto',3,'Web propia',0],
-                    ['L. Dubois',2,'GuruWalk',0],['Grupo Virtanen',6,'GuruWalk',0],
+                    ['L. Dubois',2,'GuruWalk',0],['Grupo Virtanen',6,'GuruWalk',0,0,0,{min:40}],
                     ['A. Molnár',2,'Freetour',0],['Fam. Roca',4,'Web propia',0],
-                    ['E. Sørensen',2,'Civitatis',0],['T. Virtanen',3,'GuruWalk',0]]) },
+                    ['E. Sørensen',2,'Civitatis',0],['T. Virtanen',3,'GuruWalk',0,0,0,{min:44}]]) },
        { hora:'17:00', tit:'Centro histórico', guia:'Elena', rec:0,
          res:resAg([['T. Bergman',2,'GuruWalk',0],['Fam. Gil',3,'Web propia',0],
                     ['R. Kovács',2,'Civitatis',0],['Fam. Bonet',4,'Web propia',0],
@@ -2775,10 +2779,10 @@ var GUION_SEMANA = {
   5: { foco: 'las salidas que hay que cerrar', tours: [
        { hora:'10:00', tit:'Centro histórico', guia:'Elena', rec:0,
          res:resAg([['Fam. Serrano',3,'Web propia',1],['P. Kowalski',2,'Web propia',1],
-                    ['Grupo Hansen',4,'GuruWalk',1],['N. Berger',2,'GuruWalk',0,0,1],
+                    ['Grupo Hansen',4,'GuruWalk',1,0,0,{min:5}],['N. Berger',2,'GuruWalk',0,0,1],
                     ['C. Vidal',2,'Civitatis',0,0,1],['M. Eriksen',3,'GuruWalk',1],
                     ['Fam. Solís',4,'Web propia',1],['J. Kim',2,'Freetour',1],
-                    ['L. Hansen',3,'GuruWalk',1]]) },
+                    ['L. Hansen',3,'GuruWalk',1,0,0,{min:9}]]) },
        { hora:'17:00', tit:'Centro histórico', guia:'Curro', rec:0,
          res:resAg([['Fam. Herrera',3,'Web propia',1],['H. Meyer',2,'GuruWalk',1],
                     ['Grupo Lévy',5,'Civitatis',1],['J. Alonso',2,'Web propia',1],
@@ -2794,9 +2798,9 @@ var GUION_SEMANA = {
          obs:[{ a:'GuIA', rec:false, t:'«Fam. Dubois» avisó por el chat que vendrán 3, no 4 — ajústalo al llegar' }] },
        { hora:'17:00', tit:'Centro histórico', guia:'Curro', rec:0,
          res:resAg([['Fam. Green',4,'Web propia',0],['L. Ortega',2,'Civitatis',0],
-                    ['S. Petit',3,'GuruWalk',0],['Grupo Jensen',5,'GuruWalk',0],
+                    ['S. Petit',3,'GuruWalk',0],['Grupo Jensen',5,'GuruWalk',0,0,0,{min:22}],
                     ['A. Costa',2,'Freetour',0],['Fam. Bru',4,'Web propia',0],
-                    ['M. Jensen',3,'GuruWalk',0]]) },
+                    ['M. Jensen',3,'GuruWalk',0,0,0,{min:27}]]) },
        { hora:'18:30', tit:'Triana con tapas', guia:'Yasmina', rec:0,
          res:resAg([['R. Vargas',2,'Web propia',0],['Grupo Dubois',6,'GuruWalk',0],
                     ['M. Lorenzo',3,'Civitatis',0],['Fam. Serra',4,'Web propia',0],
@@ -7621,10 +7625,14 @@ function apellidoDeRes(n){
 }
 /* El mismo criterio que el detector del servidor: mismo apellido, y a partir de 5
    personas — por debajo no hay operador que pida adelanto. */
+/* EL MISMO PUNTUADOR QUE EL SERVIDOR, con las señales que la demo tiene: apellido (40),
+   minutos de distancia entre reservas (+30 si ≤10, +18 si ≤90), mismo canal (+8). Sin IP
+   —no la tenemos ni en producción: las plataformas no la mandan en el correo— la certeza
+   no existe, así que se enseña un RIESGO con tope en 95 y sus señales delante. Umbral 45:
+   el apellido solo (40) no molesta a nadie — dos familias Weber que no se conocen. */
 function grupoDelDia(dia){
-  var out = null;
+  var mejor = null;
   (dia.tours||[]).forEach(function(t){
-    if (out) return;
     var por = {};
     (t.res||[]).forEach(function(r){
       if (r.walkin) return;
@@ -7632,12 +7640,23 @@ function grupoDelDia(dia){
       (por[a] = por[a] || []).push(r);
     });
     Object.keys(por).forEach(function(a){
-      if (out) return;
       var l = por[a], pax = l.reduce(function(x,r){ return x + (+r.p||0); }, 0);
-      if (l.length >= 2 && pax >= 5) out = { tour:t, res:l, pax:pax };
+      if (l.length < 2 || pax < 5) return;
+      var riesgo = 40, senales = ['mismo apellido'];
+      var mins = l.map(function(r){ return r.min; }).filter(function(m){ return typeof m==='number'; });
+      if (mins.length >= 2){
+        var dist = Math.max.apply(null,mins) - Math.min.apply(null,mins);
+        if (dist <= 10){ riesgo += 30; senales.push('reservas con minutos de diferencia'); }
+        else if (dist <= 90){ riesgo += 18; senales.push('reservas en la misma hora y media'); }
+      }
+      var canales = {}; l.forEach(function(r){ canales[r.canal]=1; });
+      if (Object.keys(canales).length === 1){ riesgo += 8; senales.push('mismo canal'); }
+      riesgo = Math.min(95, riesgo);
+      if (riesgo >= 45 && (!mejor || riesgo > mejor.riesgo))
+        mejor = { tour:t, res:l, pax:pax, riesgo:riesgo, senales:senales };
     });
   });
-  return out;
+  return mejor;
 }
 function pintaExcepciones(){
   var dia = (S.agenda||[])[S.agDia] || { tours:[] };
@@ -7651,10 +7670,10 @@ function pintaExcepciones(){
 
   var g = grupoDelDia(dia);
   pon('exc-grupo', !!g, g && ('«' + g.res.map(function(r){ return r.n+' ('+r.p+'p)'; }).join('» + «') +
-    '» = <b>' + g.pax + ' personas</b> · mismo apellido, reservas con minutos de diferencia. ' +
-    'Política de adelanto avisada en su confirmación; el guía tiene la observación.'));
+    '» = <b>' + g.pax + ' personas</b> · ' + g.senales.join(' · ') + '. ' +
+    'El guía tiene la observación con la política de adelanto.'));
   var cab = document.querySelector('#exc-grupo b');
-  if (cab && g) cab.textContent = '👥 Grupo grande detectado — tour de las ' + g.tour.hora;
+  if (cab && g) cab.textContent = '👥 Posible grupo (~' + g.riesgo + ' %) — tour de las ' + g.tour.hora;
 
   var sin = (dia.tours||[]).filter(function(t){ return t.sinGuia; })[0];
   var paxSin = sin ? paxDe(sin.res) : 0;
