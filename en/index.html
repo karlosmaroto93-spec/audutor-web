@@ -27,6 +27,48 @@
      `lang` de la página: en español, justificar sin partir palabras abre ríos de espacio
      — la partición es lo que hace que justificar sea una opción y no un problema.
      `text-wrap:pretty` donde lo haya, para que no quede una palabra sola en la última. */
+
+
+  /* La comparativa del billete de 0 €: tabla, no prosa. Dos columnas —quién y cuánto—
+     para leerla en vertical de un vistazo, con la fila de Audutor destacada al final. */
+  .cero-t{ width:100%; border-collapse:collapse; margin:14px 0 4px; font-size:14px; }
+  .cero-t th{ text-align:left; font-size:11.5px; font-weight:800; letter-spacing:.06em;
+    text-transform:uppercase; color:var(--muted); padding:0 0 7px; border-bottom:1px solid var(--line); }
+  .cero-t th:last-child{ text-align:right; }
+  .cero-t td{ padding:11px 0; border-bottom:1px solid var(--line); vertical-align:top;
+    text-align:left; hyphens:manual; }
+  .cero-t td:first-child{ font-weight:700; color:var(--ink); padding-right:14px; }
+  .cero-t td:last-child{ text-align:right; }
+  .cero-t td small{ display:block; font-weight:400; font-size:12px; color:var(--muted);
+    line-height:1.4; margin-top:2px; }
+  .cero-no{ font-weight:700; color:var(--muted); }
+  .cero-t .cero-yo td{ border-bottom:0; padding-top:14px; }
+  .cero-t .cero-yo td b{ color:var(--acc); font-size:17px; }
+  @media (max-width:520px){
+    .cero-t td:last-child, .cero-t th:last-child{ text-align:left; }
+    .cero-t td{ display:block; border:0; padding:2px 0; }
+    .cero-t tr{ display:block; border-bottom:1px solid var(--line); padding:9px 0; }
+    .cero-t thead{ display:none; }
+  }
+  /* ── TEXTO CORRIDO, JUSTIFICADO ─────────────────────────────────────────────────────
+     Todo el cuerpo de la página iba en bandera (borde derecho dentado). Justificado con
+     `hyphens:auto`, que es lo que lo hace viable: en español, justificar SIN partir
+     palabras abre ríos de espacio, y en las columnas estrechas de las tarjetas de plan
+     los abriría de par en par. Con partición, hasta una columna de 250 px queda pareja.
+     Selectores de ELEMENTO a propósito, poca especificidad: lo que ya está centrado a
+     conciencia —los pies de sección, las llamadas a la acción— lleva clase o estilo en
+     línea y sigue ganando. La última línea no se estira (`auto` = al inicio).
+     Y un suelo: por debajo de 480 px la línea es tan corta que ni la partición salva los
+     ríos, así que ahí manda la izquierda. */
+  p, li, dd, .l, .que, .para, .tf-nota, .plan-extra, .lede, .fino, .bocadillo, .hero-nota,
+  .cero-fin, .tf-sub, .integra li{
+    text-align:justify; hyphens:auto; -webkit-hyphens:auto;
+  }
+  nav p, nav li, .btn, .chip, .tramo, footer li{ text-align:inherit; hyphens:manual; }
+  @media (max-width:480px){
+    p, li, dd, .l, .que, .para, .tf-nota, .plan-extra, .lede, .fino, .bocadillo,
+    .hero-nota, .cero-fin, .tf-sub, .integra li{ text-align:left; }
+  }
   .nota-pie{
     text-align:justify; text-align-last:center; hyphens:auto; -webkit-hyphens:auto;
     text-wrap:pretty;
@@ -905,27 +947,27 @@
 
   <div class="cero reveal">
     <b>A €0 booking costs you €0. That is not the norm.</b>
-    <p class="fino">A free tour is booked at zero, so the question isn't what the system
-    costs: it's what it charges you for each booking that charged you nothing. This is what
-    they say themselves, with the link so you can check it
-    <span class="cero-fecha">(checked 10 Aug 2026; other people's prices change without
-    telling us — if you spot something out of date, tell us and we'll fix it)</span>:</p>
-    <ul class="cero-l">
-      <li><b>The commission ones</b> —FareHarbor (~6%), Peek Pro (6-8%), Xola (2.39% + $0.30)—
-        have no way to charge a €0 ticket. That's why they aren't used for free tours: their
-        model <i>doesn't reach</i>, it isn't that they let you off.</li>
-      <li><b>TuriTop</b> puts it in writing, and the answer is that it does charge:
-        "<i>Even if the booking total is €0, an online booking does generate commission.
-        The percentage doesn't apply, but the per-product minimum does</i>" — €0.10 per booking
-        on their entry plan, on top of €29/month
-        (<a href="https://www.turitop.com/precios-de-turitop/" target="_blank" rel="noopener">their pricing page</a>).</li>
-      <li><b>Rezdy</b> and <b>TrekkSoft</b> charge separately for every manually entered
-        booking —$1 and €1.50 respectively— which in a free tour is nearly all of them.</li>
-    </ul>
-    <p class="cero-fin"><b>Here there is no per-booking commission, no per-booking minimum and
-    no surcharge for entering one by hand.</b> You pay the traveller bundle and that's it. And
-    the tip is yours, whole: <b>we don't touch a cent</b> — collecting it cost us more than
-    your card reader costs you.</p>
+    <p class="fino">On a free tour the question isn't what the system costs: it's what it
+    charges you for each booking that charged you nothing.</p>
+    <!-- Table, not prose — same reasoning as the Spanish twin: this is a COMPARISON, and
+         a table answers it at a glance. Every figure and source is kept. -->
+    <table class="cero-t">
+      <thead><tr><th>Per €0 booking</th><th>they charge you</th></tr></thead>
+      <tbody>
+        <tr><td>FareHarbor · Peek Pro · Xola</td>
+            <td><span class="cero-no">can't charge it at all</span><small>they run on commission: the model doesn't reach a €0 ticket</small></td></tr>
+        <tr><td>TuriTop</td>
+            <td><b>€0.10</b><small>per-booking minimum, on top of €29/month —
+              <a href="https://www.turitop.com/precios-de-turitop/" target="_blank" rel="noopener">their pricing page</a></small></td></tr>
+        <tr><td>Rezdy</td><td><b>$1</b><small>if you enter it by hand — on a free tour, nearly all of them</small></td></tr>
+        <tr><td>TrekkSoft</td><td><b>€1.50</b><small>if you enter it by hand</small></td></tr>
+        <tr class="cero-yo"><td><b>Audutor</b></td><td><b>€0</b><small>no commission, no minimum, no surcharge for entering one by hand</small></td></tr>
+      </tbody>
+    </table>
+    <p class="cero-fin">You pay the traveller bundle and that's it. And the tip is yours,
+    whole: <b>we don't touch a cent</b>.
+    <span class="cero-fecha">Checked 10 Aug 2026 on their own pages; if you spot something
+    out of date, tell us.</span></p>
   </div>
 
   <div class="fact-toggle-wrap reveal">
@@ -1248,18 +1290,29 @@
 
   // Los titulares se "construyen": cada letra aparece y se coloca con un pelín
   // de rebote. Palabras envueltas para que nunca se parta una a mitad de línea.
+  /* EL <br> SOBREVIVE AL PARTIDO. Esto hacía `h.textContent`, y textContent DESCARTA los
+     elementos: en un titular de dos frases separadas por <br> —«…tienen asistente.<br>
+     Pregúntales qué hace…»— el salto desaparecía y las dos frases salían pegadas sin ni
+     un espacio: «asistente.Pregúntales». Se ve en la página y parece una falta de
+     ortografía nuestra.
+     Ahora se recorren los HIJOS: el texto se parte en letras como antes y cada <br> se
+     vuelve a poner. Cualquier otro elemento que alguien meta dentro se conserva tal cual
+     en vez de evaporarse. */
   document.querySelectorAll('[data-split]').forEach(function (h) {
-    var texto = h.textContent, i = 0;
+    var hijos = Array.prototype.slice.call(h.childNodes), i = 0;
     h.textContent = '';
-    texto.split(/(\s+)/).forEach(function (tok) {
-      if (!tok) return;
-      if (/^\s+$/.test(tok)) { h.appendChild(document.createTextNode(' ')); return; }
-      var w = document.createElement('span'); w.className = 'w';
-      tok.split('').forEach(function (ch) {
-        var s = document.createElement('span'); s.className = 'ch';
-        s.style.setProperty('--i', i++); s.textContent = ch; w.appendChild(s);
+    hijos.forEach(function (nodo) {
+      if (nodo.nodeType !== 3) { h.appendChild(nodo.cloneNode(true)); return; }
+      nodo.nodeValue.split(/(\s+)/).forEach(function (tok) {
+        if (!tok) return;
+        if (/^\s+$/.test(tok)) { h.appendChild(document.createTextNode(' ')); return; }
+        var w = document.createElement('span'); w.className = 'w';
+        tok.split('').forEach(function (ch) {
+          var s = document.createElement('span'); s.className = 'ch';
+          s.style.setProperty('--i', i++); s.textContent = ch; w.appendChild(s);
+        });
+        h.appendChild(w);
       });
-      h.appendChild(w);
     });
   });
 
