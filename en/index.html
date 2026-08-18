@@ -1086,8 +1086,8 @@
       <a class="btn sec" href="#contacto">Start free</a>
     </div>
     <div class="plan destacado reveal elegido" style="--d:110ms" data-plan="pro">
-      <h3>Pro</h3><div class="precio">€<span class="imp" data-base="39" data-mensual="39" data-anual="32">39</span><small>/month</small></div>
-      <div class="fact-nota" data-nota hidden>billed annually · €390/year (2 months free)</div>
+      <h3>Pro</h3><div class="precio">€<span class="imp" data-base="45" data-mensual="45" data-anual="37">45</span><small>/month</small></div>
+      <div class="fact-nota" data-nota hidden>billed annually · €450/year (2 months free)</div>
       <div class="plan-unit" data-bono="1000"></div>
       <div class="para">For companies running a team of guides · <b>1,000 travellers a month</b> · unlimited tours and guides</div>
       <ul>
@@ -1099,22 +1099,31 @@
         <li><b>Platform reconciliation</b>: claw back the fees you paid on people who never turned up — with a running total of what you have reclaimed this month
           <small>(with "the books, tour by tour", €9 — included in Premium)</small></li>
       </ul>
-      <p class="plan-extra">Above 1,000 travellers: <b>+€<span class="imp-tramo" data-mensual="6" data-anual="5">6</span>/month per extra 100</b>, up to 5,000.<br><b>And from around 2,900 Premium works out cheaper — we tell you.</b></p>
+      <p class="plan-extra">Above 1,000 travellers: <b>+€<span class="imp-tramo" data-mensual="6" data-anual="5">6</span>/month per extra 100</b>, up to 4,000.<br><b>And from around 2,800 Premium works out cheaper — we tell you.</b></p>
       <a class="btn" href="#contacto">Book a demo</a>
     </div>
     <div class="plan premium reveal" style="--d:220ms" data-plan="premium">
       <h3>Premium</h3><div class="precio">€<span class="imp" data-base="149" data-mensual="149" data-anual="124">149</span><small>/month</small></div>
       <div class="fact-nota" data-nota hidden>billed annually · €1,490/year (2 months free)</div>
-      <div class="plan-unit" data-bono="5000"></div>
-      <div class="para">For operators running several departures a day · <b>5,000 travellers a month</b></div>
+      <div class="plan-unit" data-bono="4000"></div>
+      <div class="para">For operators running several departures a day · <b>4,000 travellers a month</b></div>
       <ul>
-        <li>Everything in Pro · <b>5,000 travellers included, no steps</b></li>
+        <li>Everything in Pro · <b>4,000 travellers included, no steps</b></li>
         <li><b>"The books, tour by tour" is included</b> (€9 on other plans): guide payouts,
           analytics by tour, guide, channel and time slot, reconciliation and forecast</li>
-        <li><b>Abandoned checkouts and tour bundles</b>: the follow-up sale happens without you <small>(with GuIA)</small></li>
+        <!-- Decía «Abandoned checkouts and tour bundles». La española retiró esa promesa
+             el 16-ago y dejó escrito el motivo; esta tarjeta se quedó vendiéndola —el
+             gemelo olvidado—. El carrito abandonado no es una función pendiente: es
+             IMPOSIBLE aquí. Audutor no cobra reservas —decisión del 4-ago-2026—, así que
+             no hay ninguna cesta que se pueda abandonar ni recuperar. Y «sin que hagas
+             nada» tampoco: lo que hay es el catálogo de lo que vendes además del tour,
+             que sale en tu web y que GuIA cuenta cuando alguien pregunta. Eso sí existe,
+             se llama igual en la demo inglesa, y es lo que se anuncia. -->
+        <li><b>What you sell besides the tour</b>: it goes on your site and GuIA tells
+          people about it when they ask what else you do <small>(with GuIA)</small></li>
         <li><b>We set it up with you</b>: your operation goes live on a call, not from a manual</li>
       </ul>
-      <p class="plan-extra">Above 5,000: <b>+€<span class="imp-tramo" data-mensual="2.9" data-anual="2.4">2.9</span>/month per 100</b> up to 10,000, and
+      <p class="plan-extra">Above 4,000: <b>+€<span class="imp-tramo" data-mensual="2.9" data-anual="2.4">2.9</span>/month per 100</b> up to 10,000, and
       <b>+€<span class="imp-tramo" data-mensual="19" data-anual="16">19</span>/month per 1,000</b> beyond that.</p>
       <a class="btn" href="#contacto">Talk to us about Premium</a>
     </div>
@@ -1575,9 +1584,10 @@ function tarifa(){
     var base = +imp.dataset.base;
     var v = base + tfExtras(p.dataset.plan).total;
     imp.textContent = TF_MODO === 'anual' ? tfAnual(v) : v;
-    /* Tiers get the annual discount too — without this, the annual Pro→Premium
-       crossover fell to ~2,600 travellers and the published "around 2,900" was false
-       for annual customers. */
+    /* Los TRAMOS también llevan el descuento anual — sin esto, el cruce anual
+       Pro→Premium caía por debajo del publicado y la frase era falsa para el cliente
+       anual. Con el tramo rebajado igual que la base, el cruce sale en el MISMO punto
+       en los dos modos (hoy 2.800), y lo vigila `tarifa-cinco-copias.test.mjs`. */
     p.querySelectorAll('.imp-tramo').forEach(function(s){
       s.textContent = TF_MODO === 'anual' ? s.dataset.anual : s.dataset.mensual;
     });

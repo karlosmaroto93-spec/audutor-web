@@ -985,14 +985,15 @@
     </div>
   </div>
 
-  <div class="card exc ok-borde" id="exc-espera">
-    <div class="fila">
-      <div><b>⏳ Waiting list with a free place — today 5:00 PM</b><br>
-      <span class="mini muted">3 places opened up (a cancellation over chat). “Novak family (2p)”
-      is waiting and fits: already marked as told.</span></div>
-      <div><button class="btn mini" onclick="resolver('exc-espera', 'Novak family turned into a booking')">Turn into a booking</button></div>
-    </div>
-  </div>
+  <!-- AQUÍ HABÍA UNA TARJETA «⏳ Lista de espera con plaza libre», con su botón
+       «Convertir en reserva». NO existe ninguna lista de espera en el servidor: no hay
+       dónde apuntarse, nada que revisar y nadie a quien convertir. Se retiró del motor de
+       GuIA el 16-ago —prometía «se revisa sola»— y esta pantalla siguió enseñándola dos
+       días más, que es lo que pasa cuando la promesa vive en dos sitios y solo se arregla
+       el que se está mirando.
+       Lo que SÍ queda es lo cierto: la cancelación por el chat liberó plazas, y eso se
+       cuenta en el seguimiento de abajo. El día que se construya una lista de espera de
+       verdad, esta tarjeta vuelve CON su código. -->
 
   <div class="card exc" id="exc-privado">
     <div class="fila">
@@ -1228,11 +1229,11 @@
   <div class="gate-inline" id="gate-noshow" style="display:none;">
     <div class="cerr">🔒</div>
     <h2 style="margin:6px 0 2px;">The smart anti-no-show sequence</h2>
-    <p style="margin:6px 0;"><span class="chip" style="background:rgba(201,138,45,.25); color:var(--amber);">Included in the Pro plan · €39/month</span></p>
+    <p style="margin:6px 0;"><span class="chip" style="background:rgba(201,138,45,.25); color:var(--amber);">Included in the Pro plan · €45/month</span></p>
     <p style="color:var(--ink2); max-width:52ch; margin:8px auto 0;">Your plan includes the <b>basic
       confirmation reminder</b> (one nudge: the text the day before). The smart sequence
       adapts to how risky each booking looks — last month it brought back <b>+34 people ≈ £410</b> in tips.
-      <b>€39/month</b> keeps it.</p>
+      <b>€45/month</b> keeps it.</p>
     <div class="fila" style="gap:8px; justify-content:center; flex-wrap:wrap; margin-top:14px;">
       <button class="btn" onclick="cambiarPlan('pro')">Upgrade to Pro</button>
       <button class="btn sec" onclick="desbloquear('noshowSmart')">🔓 Just try it (demo)</button>
@@ -1304,17 +1305,13 @@
 
   <div class="card">
     <h2>🧺 Your catalogue of extras</h2>
-    <p class="mini muted" style="margin:0 0 10px;">What you sell besides the free walk: ticketed
-      walks, private tours, tastings, whatever it is. You write it once in the Brain and from
-      then on it <b>shows on your site</b> and <b>GuIA tells people about it</b> when they ask
-      what else you do. Nothing to remember.</p>
+    <p class="mini muted" style="margin:0 0 10px;">Ticketed walks, private tours, tastings.
+      You write it once in the Brain and it <b>shows on your site</b> and <b>GuIA tells people</b>.</p>
     <!-- ESTE CHAT NO ES UNA MAQUETA: lo escribe GuIA. Gemelo del de la demo española, y
          aquí la pregunta importa doble: «besides the free tour» lleva «free» dentro y la
          regla de precio se la comía, así que este cuadro habría enseñado el modelo de
          precio del walk gratis como respuesta a «¿qué más vendéis?». -->
     <div class="mensaje-prev" id="extras-chat" style="display:block;"></div>
-    <p class="mini muted" style="margin:10px 0 0;"><b>Audutor takes no cut of any of those
-      extras.</b> It shows what you sell and points to where you already charge.</p>
   </div>
 
   <!-- ══ EL TOUR PRIVADO, MODULABLE ═══════════════════════════════════════════════════
@@ -1337,9 +1334,7 @@
   <div class="card">
     <h2>🎟️ Your private tour, modular</h2>
     <p class="mini muted" style="margin:0 0 12px;">This is how your customer sees it on <b>your
-      site</b>: they choose and the price moves. You set it up once in the Brain — the “from”
-      comes from your company fact <b>Private tours</b>, the same one GuIA quotes to anyone who
-      asks in the chat.</p>
+      site</b>: they choose and the price moves. The “from” comes from your Brain.</p>
 
     <div class="tp-wrap">
       <div class="tp-form">
@@ -1378,8 +1373,7 @@
         <div class="tp-l" id="tp-l-ent" hidden><span>Entries <small id="tp-d-ent"></small></span><b id="tp-ent">0</b></div>
         <div class="tp-l" id="tp-l-ges" hidden><span>Handling <small>5 % of the entries</small></span><b id="tp-ges">0</b></div>
         <div class="tp-l tp-tot"><span>Total</span><b id="tp-total">—</b></div>
-        <p class="tp-nota">Rough estimate. <b>A person confirms the final price</b> when they
-          reply — like the green ✓ everywhere else in the system.</p>
+        <p class="tp-nota">Rough estimate: <b>a person settles the price</b> when they reply.</p>
         <div class="tp-cero">Audutor takes no cut of this tour: it points to where you already charge.</div>
       </aside>
     </div>
@@ -1391,8 +1385,7 @@
       this week’s ticketed walk — at no cost to acquire.</p>
     <div style="background:var(--acc-soft); border-radius:10px; padding:10px 14px; font-size:12.5px; margin:0 0 12px;"
          id="combo-destinatarios"></div>
-    <p class="mini muted" style="margin:0 0 10px;">✍️ What the message says (thank-you + review +
-      private-tour discount + offer) is set by answering 4 quick questions under
+    <p class="mini muted" style="margin:0 0 10px;">✍️ The wording of the message is set under
       <a href="#cerebro" style="color:var(--acc); font-weight:700;"
          onclick="ir('cerebro'); setTimeout(function(){ document.getElementById('card-posttour').scrollIntoView({behavior:'smooth'}); },80); return false;">🧠
         Brain → 📮 Post-tour message</a>.</p>
@@ -1691,7 +1684,7 @@
     <div class="gate-inline" id="gate-recon" style="display:none;">
       <div class="cerr">🔒</div>
       <h2 style="margin:6px 0 2px;">Platform reconciliation</h2>
-      <p style="margin:6px 0;"><span class="chip" style="background:rgba(201,138,45,.25); color:var(--amber);">Included in the Pro plan · €39/month</span></p>
+      <p style="margin:6px 0;"><span class="chip" style="background:rgba(201,138,45,.25); color:var(--amber);">With "the books, tour by tour" · €9/month — included in Premium</span></p>
       <p style="color:var(--ink2); max-width:48ch; margin:8px auto 0;">Reconciliation is Pro’s <b>return on
         investment in black and white</b>: this month it clawed back <b>£70</b> in no-show fees —
         <b>nearly the whole subscription, from this one module</b>.</p>
@@ -1715,8 +1708,8 @@
   <div class="card" style="background:linear-gradient(115deg, var(--acc-soft), #f4f8f2); border-color:var(--acc);">
     <h2>💚 Your direct channel — the saving that pays for Audutor</h2>
     <p class="mini muted" style="margin:0 0 10px;">Every person who books on <b>your own site</b> instead of a
-      platform saves you their fee (~£2.50 per person on GuruWalk, and it varies by city). Abandoned checkout,
-      combos, reviews and the guide’s QR all push this way. Drag the slider:</p>
+      platform saves you their fee (~£2.50 per person on GuruWalk, and it varies by city). What you sell
+      besides the tour, bundles, reviews and the guide’s QR all push this way. Drag the slider:</p>
     <div class="fila" style="gap:12px; align-items:center; flex-wrap:wrap;">
       <label class="mini" style="flex:1; min-width:260px;">If you shift
         <b><span id="cd-pct-v">20</span> %</b> of your platform bookings to the direct channel…<br>
@@ -5930,8 +5923,8 @@ cerebro:   { n:'GuIA’s brain', plan:'Pro', d:'The per-tour fact sheet that fee
 /* Planes de la demo (precios congruentes con la landing) y qué desbloquea cada uno. */
 /* Los planes son BONOS DE VIAJEROS; lo que decide las funciones son los COMPLEMENTOS. */
 var PLANES={ esencial:{orden:0, n:'Essential', precio:'€0',   bono:150,  base:0},
-             pro:     {orden:1, n:'Pro',      precio:'€39',  bono:1000, base:39},
-             premium: {orden:2, n:'Premium',  precio:'€149', bono:5000, base:149} };
+             pro:     {orden:1, n:'Pro',      precio:'€45',  bono:1000, base:45},
+             premium: {orden:2, n:'Premium',  precio:'€149', bono:4000, base:149} };
 /* Esta demo no tiene la vista del agente, así que su complemento no abre nada aquí: se
    ofrece igual para que el precio que se ve sea el mismo que el de la web inglesa. */
 var COMPLEMENTOS = {

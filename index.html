@@ -1128,8 +1128,8 @@
       <a class="btn sec" href="#contacto">Empezar gratis</a>
     </div>
     <div class="plan destacado reveal elegido" style="--d:110ms" data-plan="pro">
-      <h3>Pro</h3><div class="precio"><span class="imp" data-base="39" data-mensual="39" data-anual="32">39</span> €<small>/mes</small></div>
-      <div class="fact-nota" data-nota hidden>facturado anualmente · 390 €/año (2 meses gratis)</div>
+      <h3>Pro</h3><div class="precio"><span class="imp" data-base="45" data-mensual="45" data-anual="37">45</span> €<small>/mes</small></div>
+      <div class="fact-nota" data-nota hidden>facturado anualmente · 450 €/año (2 meses gratis)</div>
       <div class="plan-unit" data-bono="1000"></div>
       <div class="para">Para la empresa con equipo · <b>1.000 viajeros al mes</b> · tours y guías ilimitados</div>
       <ul>
@@ -1141,16 +1141,16 @@
         <li><b>Conciliación con plataformas</b>: reclama las comisiones de los no-shows
           <small>(con «las cuentas de cada tour», 9 € — dentro de Premium)</small></li>
       </ul>
-      <p class="plan-extra">Si pasas de 1.000 viajeros: <b>+<span class="imp-tramo" data-mensual="6" data-anual="5">6</span> €/mes por cada 100</b>, hasta 5.000.<br><b>Y desde unos 2.900 te sale más barato Premium: te lo decimos nosotros.</b></p>
+      <p class="plan-extra">Si pasas de 1.000 viajeros: <b>+<span class="imp-tramo" data-mensual="6" data-anual="5">6</span> €/mes por cada 100</b>, hasta 4.000.<br><b>Y desde unos 2.800 te sale más barato Premium: te lo decimos nosotros.</b></p>
       <a class="btn" href="#contacto">Pedir una demo</a>
     </div>
     <div class="plan premium reveal" style="--d:220ms" data-plan="premium">
       <h3>Premium</h3><div class="precio"><span class="imp" data-base="149" data-mensual="149" data-anual="124">149</span> €<small>/mes</small></div>
       <div class="fact-nota" data-nota hidden>facturado anualmente · 1.490 €/año (2 meses gratis)</div>
-      <div class="plan-unit" data-bono="5000"></div>
-      <div class="para">Para el operador con varias salidas al día · <b>5.000 viajeros al mes</b></div>
+      <div class="plan-unit" data-bono="4000"></div>
+      <div class="para">Para el operador con varias salidas al día · <b>4.000 viajeros al mes</b></div>
       <ul>
-        <li>Todo lo de Pro · <b>5.000 viajeros incluidos, sin tramos</b></li>
+        <li>Todo lo de Pro · <b>4.000 viajeros incluidos, sin tramos</b></li>
         <li><b>«Las cuentas de cada tour» van dentro</b> (9 € en los demás planes): liquidación
           a guías, cuadro de mando por tour, guía, canal y franja, conciliación y proyección</li>
         <!-- Decía «Carrito abandonado y combos: la segunda venta, sola». El carrito
@@ -1163,7 +1163,7 @@
           preguntan qué más hacéis <small>(con GuIA)</small></li>
         <li><b>Puesta en marcha contigo</b>: montamos tu operación en una llamada, no te mandamos un manual</li>
       </ul>
-      <p class="plan-extra">Si pasas de 5.000: <b>+<span class="imp-tramo" data-mensual="2,9" data-anual="2,4">2,9</span> €/mes por cada 100</b> hasta 10.000, y
+      <p class="plan-extra">Si pasas de 4.000: <b>+<span class="imp-tramo" data-mensual="2,9" data-anual="2,4">2,9</span> €/mes por cada 100</b> hasta 10.000, y
       <b>+<span class="imp-tramo" data-mensual="19" data-anual="16">19</span> €/mes por cada 1.000</b> a partir de ahí.</p>
       <a class="btn" href="#contacto">Quiero Premium</a>
     </div>
@@ -1652,9 +1652,10 @@ function tarifa(){
     var v = base + tfExtras(p.dataset.plan).total;
     imp.textContent = TF_MODO === 'anual' ? tfAnual(v) : v;
     /* Los TRAMOS también llevan el descuento anual — sin esto, el cruce Pro→Premium del
-       cliente anual caía a ~2.600 viajeros y el «desde unos 2.900» publicado era falso
-       para él. Con el tramo rebajado igual que la base, el cruce queda en ~2.840 en los
-       dos modos y la frase vuelve a ser verdad siempre. */
+       cliente anual caía por debajo del publicado y la frase era falsa para él. Con el
+       tramo rebajado igual que la base, el cruce sale en el MISMO punto en los dos modos
+       —hoy 2.800, comprobado en `tarifa-cinco-copias.test.mjs`, que lo recalcula en vez
+       de compararlo con una constante— y la frase vuelve a ser verdad siempre. */
     p.querySelectorAll('.imp-tramo').forEach(function(s){
       s.textContent = TF_MODO === 'anual' ? s.dataset.anual : s.dataset.mensual;
     });

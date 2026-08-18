@@ -1170,17 +1170,15 @@
     </div>
   </div>
 
-  <div class="card exc ok-borde" id="exc-espera">
-    <div class="fila">
-      <!-- LAS PLAZAS LIBERADAS SALEN DE `S.canceladas`, no de un número escrito aquí.
-           Esta tarjeta decía «se liberaron 3 plazas» y el seguimiento, treinta píxeles más
-           abajo, «1 cancelación (2 personas)»: la misma cancelación con dos tamaños, y las
-           dos frases a la vista en la misma pantalla. -->
-      <div><b data-exc-tit>⏳ Lista de espera con plaza libre</b><br>
-      <span class="mini muted" data-exc-txt>—</span></div>
-      <div><button class="btn mini" onclick="resolver('exc-espera', 'Familia Novak convertida en reserva')">Convertir en reserva</button></div>
-    </div>
-  </div>
+  <!-- AQUÍ HABÍA UNA TARJETA «⏳ Lista de espera con plaza libre», con su botón
+       «Convertir en reserva». NO existe ninguna lista de espera en el servidor: no hay
+       dónde apuntarse, nada que revisar y nadie a quien convertir. Se retiró del motor de
+       GuIA el 16-ago —prometía «se revisa sola»— y esta pantalla siguió enseñándola dos
+       días más, que es lo que pasa cuando la promesa vive en dos sitios y solo se arregla
+       el que se está mirando.
+       Lo que SÍ queda es lo cierto: la cancelación por el chat liberó plazas, y eso se
+       cuenta en el seguimiento de abajo. El día que se construya una lista de espera de
+       verdad, esta tarjeta vuelve CON su código. -->
 
   <div class="card exc" id="exc-privado">
     <div class="fila">
@@ -1393,11 +1391,11 @@
   <div class="gate-inline" id="gate-noshow" style="display:none;">
     <div class="cerr">🔒</div>
     <h2 style="margin:6px 0 2px;">Cadencia anti-no-show inteligente</h2>
-    <p style="margin:6px 0;"><span class="chip" style="background:rgba(201,138,45,.25); color:var(--amber);">Incluido en el plan Pro · 39 €/mes</span></p>
+    <p style="margin:6px 0;"><span class="chip" style="background:rgba(201,138,45,.25); color:var(--amber);">Incluido en el plan Pro · 45 €/mes</span></p>
     <p style="color:var(--ink2); max-width:52ch; margin:8px auto 0;">Tu plan incluye el <b>recordatorio de
       confirmación básico</b> (1 toque: el WhatsApp de confirmación del día antes). La cadencia inteligente
       se adapta al riesgo de cada reserva — el mes pasado recuperó <b>+34 personas ≈ 410 €</b> en propinas.
-      Por <b>39 €/mes</b> la mantienes.</p>
+      Por <b>45 €/mes</b> la mantienes.</p>
     <div class="fila" style="gap:8px; justify-content:center; flex-wrap:wrap; margin-top:14px;">
       <button class="btn" onclick="cambiarPlan('pro')">Cambiar a Pro</button>
       <button class="btn sec" onclick="desbloquear('noshowSmart')">🔓 Solo probarlo (demo)</button>
@@ -1464,10 +1462,8 @@
        cuenta cuando preguntan; y el mensaje de después del tour, que sí tiene despachador. -->
   <div class="card">
     <h2>🧺 Tu catálogo de extras</h2>
-    <p class="mini muted" style="margin:0 0 10px;">Lo que ofreces además del free tour: tours
-      de pago, privados, degustaciones, lo que sea. Se escribe una vez en el Cerebro y a
-      partir de ahí <b>sale en tu web</b> y <b>GuIA lo cuenta</b> cuando alguien pregunta qué
-      más hacéis. No hay que acordarse de nada.</p>
+    <p class="mini muted" style="margin:0 0 10px;">Tours de pago, privados, degustaciones.
+      Lo escribes una vez en el Cerebro y ya <b>sale en tu web</b> y <b>lo cuenta GuIA</b>.</p>
     <!-- ESTE CHAT NO ES UNA MAQUETA: lo escribe GuIA. Aquí había una conversación
          inventada donde ofrecía el «Tour de la Catedral al atardecer» (24 €) y un
          «gastronómico por Triana» (35 €) — dos tours que esta empresa no hace. La pantalla
@@ -1477,8 +1473,6 @@
          Cerebro cambia, este cuadro cambia, y si GuIA dejara de saber contestarla se vería
          aquí en vez de en una demo delante de un cliente. -->
     <div class="mensaje-prev" id="extras-chat" style="display:block;"></div>
-    <p class="mini muted" style="margin:10px 0 0;"><b>Audutor no cobra ninguno de esos
-      extras.</b> Enseña lo que vendes y lleva a donde tú ya cobras.</p>
   </div>
 
   <!-- ══ EL TOUR DE PAGO, MODULABLE ═══════════════════════════════════════════════════
@@ -1501,8 +1495,7 @@
          bajo el mismo rótulo hacían que el número de aquí pareciera desmentir al de allí. -->
     <h2>🎟️ Tu tour privado, modulable</h2>
     <p class="mini muted" style="margin:0 0 12px;">Así lo ve tu cliente en <b>tu web</b>: elige y
-      el precio se mueve. Lo montas una vez en el Cerebro — el «desde» sale de tu hecho de
-      empresa <b>Tours privados</b>, el mismo que GuIA le dice a quien pregunta por el chat.</p>
+      el precio se mueve. El «desde» sale de tu Cerebro.</p>
 
     <div class="tp-wrap">
       <div class="tp-form">
@@ -1542,8 +1535,7 @@
         <div class="tp-l" id="tp-l-ent" hidden><span>Entradas <small id="tp-d-ent"></small></span><b id="tp-ent">0 €</b></div>
         <div class="tp-l" id="tp-l-ges" hidden><span>Gestión <small>5 % de las entradas</small></span><b id="tp-ges">0 €</b></div>
         <div class="tp-l tp-tot"><span>Total</span><b id="tp-total">—</b></div>
-        <p class="tp-nota">Estimación orientativa. <b>El precio cerrado lo confirma una persona</b>
-          al responder — como el ✓ verde del resto del sistema.</p>
+        <p class="tp-nota">Orientativa: <b>el precio lo cierra una persona</b> al responder.</p>
         <div class="tp-cero">Audutor no cobra este tour: lleva a donde tú ya cobras.</div>
       </aside>
     </div>
@@ -1555,8 +1547,7 @@
       el tour de pago de esta semana — sin coste de adquisición.</p>
     <div style="background:var(--acc-soft); border-radius:10px; padding:10px 14px; font-size:12.5px; margin:0 0 12px;"
          id="combo-destinatarios"></div>
-    <p class="mini muted" style="margin:0 0 10px;">✍️ El contenido del mensaje (gracias + reseña +
-      descuento en privados + oferta) se configura respondiendo 4 preguntas rápidas en
+    <p class="mini muted" style="margin:0 0 10px;">✍️ El texto del mensaje se escribe en
       <a href="#cerebro" style="color:var(--acc); font-weight:700;"
          onclick="ir('cerebro'); setTimeout(function(){ document.getElementById('card-posttour').scrollIntoView({behavior:'smooth'}); },80); return false;">🧠
         Cerebro → 📮 Mensaje post-tour</a>.</p>
@@ -1862,12 +1853,12 @@
     <div class="gate-inline" id="gate-recon" style="display:none;">
       <div class="cerr">🔒</div>
       <h2 style="margin:6px 0 2px;">Conciliación con plataformas</h2>
-      <p style="margin:6px 0;"><span class="chip" style="background:rgba(201,138,45,.25); color:var(--amber);">Incluido en el plan Pro · 39 €/mes</span></p>
+      <p style="margin:6px 0;"><span class="chip" style="background:rgba(201,138,45,.25); color:var(--amber);">Con «las cuentas de cada tour» · 9 €/mes — dentro de Premium</span></p>
       <p style="color:var(--ink2); max-width:48ch; margin:8px auto 0;">La conciliación es el <b>ROI en
-        negro sobre blanco</b> de Pro: este mes recuperó <b>52 €</b> en comisiones de no-show —
-        <b>casi la mensualidad entera, solo con este módulo</b>.</p>
+        negro sobre blanco</b> de este complemento: este mes recuperó <b>52 €</b> en comisiones de
+        no-show — <b>casi seis veces lo que cuesta, solo con este módulo</b>.</p>
       <div class="fila" style="gap:8px; justify-content:center; flex-wrap:wrap; margin-top:14px;">
-        <button class="btn" onclick="cambiarPlan('pro')">Cambiar a Pro</button>
+        <button class="btn" onclick="cambiarPlan('premium')">Cambiar a Premium</button>
         <button class="btn sec" onclick="desbloquear('conciliacion')">🔓 Solo probarlo (demo)</button>
       </div>
     </div>
@@ -1886,8 +1877,8 @@
   <div class="card" style="background:linear-gradient(115deg, var(--acc-soft), #f4f8f2); border-color:var(--acc);">
     <h2>💚 Tu canal directo — el ahorro que paga Audutor</h2>
     <p class="mini muted" style="margin:0 0 10px;">Cada persona que reserva en <b>tu web</b> en vez de en
-      una plataforma te ahorra su comisión (~2,50 €/persona en GuruWalk, dinámica por ciudad). Carrito,
-      combos, reseñas y el QR del guía empujan hacia aquí. Mueve el deslizador:</p>
+      una plataforma te ahorra su comisión (~2,50 €/persona en GuruWalk, dinámica por ciudad). Lo que
+      vendes además, los combos, las reseñas y el QR del guía empujan hacia aquí. Mueve el deslizador:</p>
     <div class="fila" style="gap:12px; align-items:center; flex-wrap:wrap;">
       <label class="mini" style="flex:1; min-width:260px;">Si desplazas un
         <b><span id="cd-pct-v">20</span> %</b> de tus reservas de plataforma al canal directo…<br>
@@ -2444,7 +2435,6 @@ var S = {
      Cancelada «esta mañana», así que NO está en el parte: una reserva cancelada no aparece
      en el manifiesto del guía. Por eso no descuadra los totales del día. */
   canceladas:[ { n:'Grupo Meyer', p:3, canal:'GuruWalk', hora:null, tour:null, semilla:true } ],
-  espera:[ { n:'Familia Novak', p:2 } ],
   tours:[], tourChat:0, tourKb:0, kbAbierto:null,
   plan:'esencial',    // plan activo en la demo (esencial/pro/premium)
   desbloqueado:{},    // suplementos abiertos a mano para probar (sin cambiar de plan)
@@ -6464,7 +6454,7 @@ var SUPLEMENTOS={
   /* Claves de gating INLINE (sin vista propia ni enlace de nav): las usa pintaGatesInline()
      para difuminar bloques dentro de vistas accesibles en todos los planes. */
   noshowSmart:{ n:'Cadencia anti-no-show inteligente', plan:'Pro', d:'La cadencia de recordatorios se adapta al riesgo de cada reserva: más toques donde más peligro de no-show hay, sin saturar al que ya confirmó.' },
-  conciliacion:{ n:'Conciliación con plataformas', plan:'Pro', d:'La lista de no-shows a reportar dentro del plazo de cada plataforma, montada sola con los ajustes del guía, para recuperar las comisiones.' },
+  conciliacion:{ n:'Conciliación con plataformas', plan:'Premium', d:'La lista de no-shows a reportar dentro del plazo de cada plataforma, montada sola con los ajustes del guía, para recuperar las comisiones.' },
 };
 /* Planes de la demo (precios congruentes con la landing) y qué desbloquea cada uno. */
 /* Los planes ya no son «qué funciones tienes»: son BONOS DE VIAJEROS. Lo que decide qué
@@ -6472,15 +6462,19 @@ var SUPLEMENTOS={
    el 81 % del mercado no llega ni a 3.000 viajeros: vender el plan por volumen dejaba a
    Premium sin más argumento que un tope que a casi nadie le aprieta. */
 var PLANES={ esencial:{orden:0, n:'Esencial', precio:'0 €',   bono:150,  base:0},
-             pro:     {orden:1, n:'Pro',      precio:'39 €',  bono:1000, base:39},
-             premium: {orden:2, n:'Premium',  precio:'149 €', bono:5000, base:149} };
+             pro:     {orden:1, n:'Pro',      precio:'45 €',  bono:1000, base:45},
+             premium: {orden:2, n:'Premium',  precio:'149 €', bono:4000, base:149} };
 /* Qué cuesta cada complemento y qué desbloquea. Una clave por complemento, y la lista de
    vistas que abre — así añadir uno nuevo es una línea y no hay que tocar el gating. */
 var COMPLEMENTOS = {
   guia:     { n:'GuIA, el asistente', precio:39, abre:['chat','cerebro'] },
   agente:   { n:'El agente de plataformas', precio:29, abre:['agente'] },
   web:      { n:'Tu web, siempre al día', precio:9, abre:[] },
-  cuentas:  { n:'Las cuentas de cada tour', precio:9, abre:['liquidacion'] },
+  /* `conciliacion` estaba fuera de aquí y caía al gating por PLAN, así que la demo la
+     enseñaba «incluida en Pro» y ofrecía «Cambiar a Pro». En el servidor vive detrás de
+     este complemento —`exigeComplemento('cuentas')` en las cuatro rutas de /api/cuentas—,
+     así que quien pagara Pro por ella se encontraría un 402 en la pantalla que compró. */
+  cuentas:  { n:'Las cuentas de cada tour', precio:9, abre:['liquidacion','conciliacion'] },
 };
 S.comp = { guia:false, agente:false, web:false, cuentas:false };
 
@@ -7528,15 +7522,16 @@ function pintaSeguimiento(){
   });
   /* La cancelación era un dato del sábado escrito a mano. Solo se cuenta si la lista de
      hoy tiene a quién referirse; si no, se calla — que es la regla de la casa. */
-  /* MISMO REGISTRO que la tarjeta de la lista de espera. Aquí decía «1 cancelación (2
-     personas)» y allí «se liberaron 3 plazas»: la misma cancelación con dos tamaños. */
+  /* Las cancelaciones del día, del registro `S.canceladas`. Aquí vivía además una
+     tarjeta de lista de espera que leía este mismo registro; se retiró porque esa lista
+     no existe en el servidor. Lo que queda es lo que sí pasa: la plaza vuelve al aforo. */
   var _c = document.getElementById('seg-cancel');
   var _can = S.canceladas || [];
   var _pax = _can.reduce(function(a,c){ return a + (+c.p||0); }, 0);
   if (_c) _c.innerHTML = (ATT.length && _can.length)
     ? '🚫 <b>'+_can.length+' '+plural(_can.length,'cancelación','cancelaciones')+'</b> ('+_pax+' persona'+
       (_pax===1?'':'s')+') por el chat — '+(_can.length===1?'su plaza liberó':'sus plazas liberaron')+
-      ' el hueco de la lista de espera de arriba.'
+      ' esas plazas, que vuelven a contar libres en el aforo.'
     : '';
 }
 function pintaCupo(){
@@ -7751,26 +7746,6 @@ function pintaExcepciones(){
     cc.innerHTML = lleno.t.tit + ' · hoy ' + lleno.t.hora + ' · <b>' + lleno.pax + '/' + lleno.af +
       '</b> — queda' + (lleno.libres===1?'':'n') + ' ' + lleno.libres + ' plaza' + (lleno.libres===1?'':'s') + '. ';
     if (det) cc.appendChild(det);
-  }
-
-  /* LISTA DE ESPERA — plazas liberadas y quién cabe, del mismo registro que el
-     seguimiento. Solo se enseña si de verdad se ha liberado algo Y hay alguien esperando
-     que quepa: una tarjeta que diga «hay plaza» sin plaza, o «cabe» sin que quepa, es
-     justo lo que esta pantalla existe para no hacer. */
-  var libres = (S.canceladas||[]).reduce(function(a,c){ return a + (+c.p||0); }, 0);
-  var cabe = (S.espera||[]).filter(function(e){ return e.p <= libres; })[0];
-  pon('exc-espera', libres>0 && !!cabe, cabe && ('Se liberaron <b>'+libres+' plaza'+
-    (libres===1?'':'s')+'</b> ('+((S.canceladas||[]).length)+' '+
-    plural((S.canceladas||[]).length,'cancelación','cancelaciones')+' por el chat). «'+cabe.n+' ('+cabe.p+'p)» espera y '+
-    'cabe: ya está marcada como avisada.'));
-  var tE = document.querySelector('#exc-espera [data-exc-tit]');
-  if (tE){
-    /* La hora sale de la salida a la que se liberó la plaza, no de un «17:00» escrito:
-       la primera cancelación con salida conocida manda; la semilla no tiene ninguna, así
-       que se cae a la segunda salida del día, que es a la que apunta la historia. */
-    var conHora = (S.canceladas||[]).filter(function(c){ return c.hora; })[0];
-    var h = conHora ? conHora.hora : ((dia.tours||[])[1]||{}).hora;
-    tE.textContent = '⏳ Lista de espera con plaza libre' + (h ? ' — hoy '+h : '');
   }
 
   S.excs = vivas + 1;   // + la que no depende del parte (el privado)
