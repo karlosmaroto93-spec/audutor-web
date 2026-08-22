@@ -1065,7 +1065,11 @@
       <button type="button" role="radio" aria-checked="true" data-modo="mensual">Monthly</button>
       <button type="button" role="radio" aria-checked="false" data-modo="anual">Annual <span class="dto">Save 17%</span></button>
     </div>
-    <p class="pausa">Pay annually and it’s one decision instead of twelve. In the off-season you can pause for up to 2 months and keep all your data.</p>
+    <!-- El gemelo: la pausa prometida aquí tampoco existía. Ver el comentario de la web
+         española. Queda lo que sí cumple el servidor. -->
+    <p class="pausa">Pay annually and it’s one decision instead of twelve: you pay for
+    <b>ten months</b> and get the year.</p>
+    <p class="pausa"><b>Your first month is free</b>, on any plan: run your real tours with it and decide afterwards.</p>
   </div>
   <div class="tarifador">
   <div class="tf-planes">
@@ -1218,7 +1222,7 @@
 
       <div class="tf-res">
         <div id="tf-lineas"><p class="tf-vacio">No add-ons: you pay for the traveller bundle only.</p></div>
-        <div class="tf-tot"><span>With <b id="tf-plan">Pro</b></span><b id="tf-total">€39</b></div>
+        <div class="tf-tot"><span>With <b id="tf-plan">Pro</b></span><b id="tf-total">€45</b></div>
         <p class="tf-nota">With the first month free, this starts at the bundle price alone.<br><br>
         Add-ons work with any plan, including the free one. The plan decides how many
         travellers you have included.<br><br>
@@ -1623,7 +1627,12 @@ function tarifa(){
               pr.classList.toggle('tf-dentro', dentro); }
   });
 
-  var basePlan = { esencial:0, pro:39, premium:149 }[TF_PLAN];
+  /* 45 y no 39: el Pro cuesta 45 €, lo dice su propia tarjeta tres pantallas más arriba y
+     lo factura `clientes.js`. Este 39 era de una tarifa vieja y hacía que la web se
+     contradijera a sí misma — quien comparaba las dos cifras dejaba de fiarse del resto, y
+     quien se fiaba del calculador se llevaba la sorpresa en la primera factura.
+     Lo vigila `precio-planes.test.js`, que lee este objeto y lo compara con el catálogo. */
+  var basePlan = { esencial:0, pro:45, premium:149 }[TF_PLAN];
   var tot = basePlan + ex.total;
   var t = document.getElementById('tf-total');
   if (t) t.textContent = '€' + (TF_MODO === 'anual' ? tfAnual(tot) : tot);
@@ -1631,7 +1640,7 @@ function tarifa(){
   var sec = document.getElementById('planes');
   if (sec) sec.classList.toggle('premium-on', TF_PLAN === 'premium');
   pintaUnidad({ esencial: tfExtras('esencial').total,
-                pro: 39 + tfExtras('pro').total,
+                pro: 45 + tfExtras('pro').total,
                 premium: 149 + tfExtras('premium').total });
 
   var n = document.getElementById('tf-plan');

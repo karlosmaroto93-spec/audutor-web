@@ -1059,7 +1059,7 @@
       </div>
       <div class="plan-sel" id="plan-sel">
         <button data-plan="esencial" onclick="cambiarPlan('esencial')"><b>Esencial</b>0 €</button>
-        <button data-plan="pro" onclick="cambiarPlan('pro')"><b>Pro</b>39 €</button>
+        <button data-plan="pro" onclick="cambiarPlan('pro')"><b>Pro</b>45 €</button>
         <button data-plan="premium" onclick="cambiarPlan('premium')"><b>Premium</b>149 €</button>
       </div>
       <!-- LOS COMPLEMENTOS. El plan es un BONO de viajeros; esto es lo que le sumas encima.
@@ -1437,7 +1437,7 @@
   <div class="kpi-fila" style="margin:14px 0;">
     <div class="kpi malo"><span class="v">38 %</span><span class="l">no-show histórico SIN sistema</span></div>
     <div class="kpi"><span class="v" id="kpi-prev">17 %</span><span class="l">no-show previsto con esta cadencia</span></div>
-    <div class="kpi"><span class="v" id="kpi-rec">+34</span><span class="l">personas/mes recuperadas (≈ propina +410 €)</span></div>
+    <div class="kpi"><span class="v" id="kpi-rec">+34</span><span class="l">personas/mes recuperadas (≈ propina +<span data-dinero="410" data-dec="0">410 €</span>)</span></div>
   </div>
   <div class="card" style="overflow-x:auto;" id="ns-tabla-card">
     <table id="tabla-noshow">
@@ -1505,8 +1505,8 @@
             <label>Jóvenes<small>12-17</small><input type="number" id="tp-jo" min="0" max="30" value="1"></label>
             <label>Peques<small>-12</small><input type="number" id="tp-pe" min="0" max="30" value="1"></label>
           </div>
-          <p class="tp-hint">Hasta <b>6</b> personas el guía cuesta lo mismo. A partir de ahí:
-            +12 € por adulto, +8 € por joven; los peques no suman.</p>
+          <p class="tp-hint">Hasta <b>6</b> personas el guía cuesta lo mismo. <span id="tp-h-pax">A partir de ahí:
+            +12 € por adulto, +8 € por joven; los peques no suman.</span></p>
         </div>
 
         <div class="tp-g"><span class="tp-lab">Duración</span>
@@ -1514,17 +1514,17 @@
             <label class="tp-pill"><input type="radio" name="tpdur" value="ese" checked>
               <span><b>Esencial</b><small>2 h · incluido</small></span></label>
             <label class="tp-pill"><input type="radio" name="tpdur" value="pro">
-              <span><b>Ampliado ✦</b><small>3 h · +40 €</small></span></label>
+              <span><b>Ampliado ✦</b><small id="tp-h-pro">3 h · +40 €</small></span></label>
           </div>
         </div>
 
         <div class="tp-g"><span class="tp-lab">Extras</span>
           <label class="tp-check"><input type="checkbox" id="tp-radio">
-            <span>Radioguía <small>+3 € por persona (adultos y jóvenes)</small></span></label>
-          <label class="tp-check"><input type="checkbox" class="tp-ent" data-ad="13.5" data-jo="6" data-pe="0">
-            <span>Entrada al Alcázar <small>13,50 € adulto · 6 € joven · peques gratis</small></span></label>
-          <label class="tp-check"><input type="checkbox" class="tp-ent" data-ad="9" data-jo="9" data-pe="0">
-            <span>Cata de vinos al final <small>9 € por persona (solo mayores de 12)</small></span></label>
+            <span>Radioguía <small id="tp-h-radio">+3 € por persona (adultos y jóvenes)</small></span></label>
+          <label class="tp-check"><input type="checkbox" class="tp-ent" id="tp-e1" data-ad="13.5" data-jo="6" data-pe="0">
+            <span>Entrada al Alcázar <small id="tp-h-e1">13,50 € adulto · 6 € joven · peques gratis</small></span></label>
+          <label class="tp-check"><input type="checkbox" class="tp-ent" id="tp-e2" data-ad="9" data-jo="9" data-pe="0">
+            <span>Cata de vinos al final <small id="tp-h-e2">9 € por persona (solo mayores de 12)</small></span></label>
         </div>
       </div>
 
@@ -1589,7 +1589,7 @@
         <b>🌐 2 · Tu propia web</b>
         <div class="mini muted" style="margin:8px 0 0;">Las páginas que Audutor monta con tu Cerebro
         —enseñando siempre el horario de verdad— y las páginas de cada guía con su QR. La
-        reserva <b>se hace aquí mismo</b>: el free tour a 0 € con su código al momento, y el
+        reserva <b>se hace aquí mismo</b>: el free tour a <span data-dinero="0" data-dec="0">0 €</span> con su código al momento, y el
         de pago guardando la plaza con el cobro en TU pasarela — Audutor no toca el dinero
         ni cobra comisión por reserva. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Es el canal que el sistema empuja a crecer —
         carrito, combos y reseñas apuntan aquí.</span></details></div>
@@ -1847,8 +1847,8 @@
     <h2>⚖️ Conciliación con plataformas — quién asume el coste de los descuadres</h2>
     <div class="kpi-fila" style="margin:0 0 12px;">
       <!-- 52,00 € y no 70: es lo que suma su propia tabla (GuruWalk 50 + Civitatis 0 + Freetour 2). El KPI decía un número y el desglose de debajo, otro. -->
-      <div class="kpi"><span class="v">52,00 €</span><span class="l">recuperados este mes reportando no-shows a tiempo</span></div>
-      <div class="kpi malo"><span class="v">7,00 €</span><span class="l">asumido por la empresa por no reportar a tiempo</span></div>
+      <div class="kpi"><span class="v" data-dinero="52" data-dec="2">52,00 €</span><span class="l">recuperados este mes reportando no-shows a tiempo</span></div>
+      <div class="kpi malo"><span class="v" data-dinero="7" data-dec="2">7,00 €</span><span class="l">asumido por la empresa por no reportar a tiempo</span></div>
     </div>
     <div class="gate-inline" id="gate-recon" style="display:none;">
       <div class="cerr">🔒</div>
@@ -1877,7 +1877,7 @@
   <div class="card" style="background:linear-gradient(115deg, var(--acc-soft), #f4f8f2); border-color:var(--acc);">
     <h2>💚 Tu canal directo — el ahorro que paga Audutor</h2>
     <p class="mini muted" style="margin:0 0 10px;">Cada persona que reserva en <b>tu web</b> en vez de en
-      una plataforma te ahorra su comisión (~2,50 €/persona en GuruWalk, dinámica por ciudad). Lo que
+      una plataforma te ahorra su comisión (~<span data-dinero="2.5" data-dec="2">2,50 €</span>/persona en GuruWalk, dinámica por ciudad). Lo que
       vendes además, los combos, las reseñas y el QR del guía empujan hacia aquí. Mueve el deslizador:</p>
     <div class="fila" style="gap:12px; align-items:center; flex-wrap:wrap;">
       <label class="mini" style="flex:1; min-width:260px;">Si desplazas un
@@ -1930,13 +1930,13 @@
     <div class="fila" style="margin-top:12px; gap:8px;">
       <b class="mini">Modo de reparto:</b>
       <button class="btn mini" id="tab-pct" onclick="modoLiq('pct')">% de la propina para el guía</button>
-      <button class="btn mini sec" id="tab-fijo" onclick="modoLiq('fijo')">€ fijos por persona para la empresa</button>
+      <button class="btn mini sec" id="tab-fijo" onclick="modoLiq('fijo')"><span data-moneda>€</span> fijos por persona para la empresa</button>
       <label class="mini" id="ctl-pct">el guía se queda
         <input type="range" min="50" max="80" step="1" value="67" id="rep-pct" oninput="pintaLiq()">
         <b><span id="rep-v">67</span> %</b> del neto</label>
       <label class="mini" id="ctl-fijo" style="display:none;">la empresa se queda
         <input type="range" min="1" max="10" step="0.5" value="2.5" id="rep-fijo" oninput="pintaLiq()">
-        <b><span id="fijo-v">2,50</span> €</b> × asistente; el guía, el resto</label>
+        <b><span id="fijo-v">2,50</span> <span data-moneda>€</span></b> × asistente; el guía, el resto</label>
     </div>
   </div>
 
@@ -1976,8 +1976,8 @@
         <input type="range" id="py-grupo" min="5" max="40" step="1" value="20" oninput="calcProy()" style="width:100%;"></label>
       <label class="mini">Tours al día <b><span id="py-tours-v">3</span></b><br>
         <input type="range" id="py-tours" min="1" max="20" step="1" value="3" oninput="calcProy()" style="width:100%;"></label>
-      <label class="mini">Propina media por persona <b><span id="py-prop-v">11,50</span> €</b><br>
-        <input type="range" id="py-prop" min="4" max="16" step="0.5" value="11.5" oninput="calcProy()" style="width:100%;"></label>
+      <label class="mini">Propina media por persona <b><span id="py-prop-v">11,50</span> <span data-moneda>€</span></b><br>
+        <input type="range" id="py-prop" min="4" max="16" step="0.01" value="11.5" oninput="calcProy()" style="width:100%;"></label>
       <label class="mini">Nº de guías <b><span id="py-ng-v">3</span></b><br>
         <input type="range" id="py-ng" min="1" max="40" step="1" value="3" oninput="calcProy()" style="width:100%;"></label>
       <label class="mini">Reservas de tu web (sin comisión) <b><span id="py-dir-v">40</span> %</b><br>
@@ -1985,9 +1985,9 @@
              por canal del Cuadro calcula, y arrancaba en 35 — un punto de diferencia entre
              dos pantallas sobre el mismo dato, que es el descuadre de siempre en pequeño. -->
         <input type="range" id="py-dir" min="0" max="100" step="1" value="40" oninput="calcProy()" style="width:100%;"></label>
-      <label class="mini">Comisión por reserva de plataforma <b><span id="py-com-v">2,50</span> €</b><br>
+      <label class="mini">Comisión por reserva de plataforma <b><span id="py-com-v">2,50</span> <span data-moneda>€</span></b><br>
         <input type="range" id="py-com" min="0" max="5" step="0.25" value="2.5" oninput="calcProy()" style="width:100%;"></label>
-      <label class="mini">Gastos fijos de la empresa al mes <b><span id="py-ovh-v">250</span> €</b><br>
+      <label class="mini">Gastos fijos de la empresa al mes <b><span id="py-ovh-v">250</span> <span data-moneda>€</span></b><br>
         <input type="range" id="py-ovh" min="0" max="8000" step="100" value="250" oninput="calcProy()" style="width:100%;"></label>
       <label class="mini">Días de operación al mes <b><span id="py-dias-v">26</span></b><br>
         <input type="range" id="py-dias" min="12" max="31" step="1" value="26" oninput="calcProy()" style="width:100%;"></label>
@@ -1995,13 +1995,13 @@
     <div class="fila" style="margin-top:14px; gap:8px;">
       <b class="mini">Modo de reparto:</b>
       <button class="btn mini" id="py-tab-pct" onclick="proyModo('pct')">% de la propina para el guía</button>
-      <button class="btn mini sec" id="py-tab-fijo" onclick="proyModo('fijo')">€ fijos por persona para la empresa</button>
+      <button class="btn mini sec" id="py-tab-fijo" onclick="proyModo('fijo')"><span data-moneda>€</span> fijos por persona para la empresa</button>
       <label class="mini" id="py-ctl-pct">el guía se queda
         <input type="range" id="py-rep" min="50" max="80" step="1" value="67" oninput="calcProy()">
         <b><span id="py-rep-v">67</span> %</b></label>
       <label class="mini" id="py-ctl-fijo" style="display:none;">la empresa se queda
         <input type="range" id="py-fijo" min="1" max="10" step="0.5" value="2.5" oninput="calcProy()">
-        <b><span id="py-fijo-v">2,50</span> €</b> × persona</label>
+        <b><span id="py-fijo-v">2,50</span> <span data-moneda>€</span></b> × persona</label>
     </div>
     <div class="fila" style="margin-top:10px; gap:8px;">
       <b class="mini">Comisión de plataforma:</b>
@@ -2104,14 +2104,14 @@
     <div class="kpi-fila" style="margin:0 0 10px;">
       <div class="kpi"><span class="v">31</span><span class="l">personas de descuadre este mes</span></div>
       <div class="kpi"><span class="v">28</span><span class="l">no-shows reportados a tiempo (≤72 h)</span></div>
-      <div class="kpi"><span class="v">52,00 €</span><span class="l">comisión recuperada al reportarlos</span></div>
-      <div class="kpi malo"><span class="v">7,00 €</span><span class="l">asumido por no reportar 3 a tiempo</span></div>
+      <div class="kpi"><span class="v" data-dinero="52" data-dec="2">52,00 €</span><span class="l">comisión recuperada al reportarlos</span></div>
+      <div class="kpi malo"><span class="v" data-dinero="7" data-dec="2">7,00 €</span><span class="l">asumido por no reportar 3 a tiempo</span></div>
     </div>
     <table>
       <tr><th>Plataforma</th><th>Descuadre (pers.)</th><th>Reportados</th><th>Recuperado</th><th>Asumido</th></tr>
-      <tr><td><b>GuruWalk</b></td><td>22</td><td>20</td><td class="num pos-guia">50,00 €</td><td class="num neg">5,00 €</td></tr>
-      <tr><td><b>Civitatis</b></td><td>7</td><td>7</td><td class="num">— <span class="mini muted">(sin fee/persona)</span></td><td class="num">0,00 €</td></tr>
-      <tr><td><b>Freetour</b></td><td>2</td><td>1</td><td class="num pos-guia">2,00 €</td><td class="num neg">2,00 €</td></tr>
+      <tr><td><b>GuruWalk</b></td><td>22</td><td>20</td><td class="num pos-guia" data-dinero="50" data-dec="2">50,00 €</td><td class="num neg" data-dinero="5" data-dec="2">5,00 €</td></tr>
+      <tr><td><b>Civitatis</b></td><td>7</td><td>7</td><td class="num">— <span class="mini muted">(sin fee/persona)</span></td><td class="num" data-dinero="0" data-dec="2">0,00 €</td></tr>
+      <tr><td><b>Freetour</b></td><td>2</td><td>1</td><td class="num pos-guia" data-dinero="2" data-dec="2">2,00 €</td><td class="num neg" data-dinero="2" data-dec="2">2,00 €</td></tr>
     </table>
     <p class="mini muted" style="margin:10px 0 0;">La regla de cada plataforma se configura en
       <a href="#canales" style="color:var(--acc); font-weight:700;" onclick="ir('canales'); return false;">🔌 Canales → Conciliación</a>.
@@ -2272,7 +2272,7 @@ var MERCADOS = {
     modelo:'free',                       // el viajero no paga por reservar; hay propina
     canales:['GuruWalk','Civitatis','Freetour','Web propia'],
     aviso:['whatsapp'],                  // ~90 % de penetración
-    propinaPax:11.6, pagoP2P:true,       // hay app de pago P2P popular → fuga de propina en mano
+    propinaPax:11.6, precioTicket:24, pagoP2P:true,   // hay app de pago P2P popular → fuga de propina en mano
     nota:'El clásico: reserva a 0 €, propina al final, plataformas cobran por persona reservada.'
   },
   'ar-free': {
@@ -2282,7 +2282,7 @@ var MERCADOS = {
     modelo:'free',
     canales:['GuruWalk','Freetour','Web propia'],
     aviso:['whatsapp'],                  // penetración altísima en LATAM
-    propinaPax:9000, pagoP2P:true,       // transferencias/Mercado Pago instantáneas
+    propinaPax:9000, precioTicket:19000, pagoP2P:true,   // transferencias/Mercado Pago instantáneas
     nota:'Mismo modelo que España pero con moneda inestable: la propina se fija en el día y muchos turistas pagan en divisa.'
   },
   'uk-mixto': {
@@ -2292,7 +2292,7 @@ var MERCADOS = {
     modelo:'mixto',                      // free tours + tours de pago en el mismo catálogo
     canales:['GuruWalk','FreeTour.com','Viator','GetYourGuide','Own site'],
     aviso:['sms','email','whatsapp'],    // WhatsApp NO es el canal por defecto
-    propinaPax:14, pagoP2P:false,        // sin app P2P dominante → el enlace de Audutor tiene más sentido
+    propinaPax:14, precioTicket:24, pagoP2P:false,    // sin app P2P dominante → el enlace de Audutor tiene más sentido
     nota:'Catálogo mixto: el free tour capta y el tour de pago monetiza. Aviso por SMS/email, no WhatsApp.'
   },
   'ie-pago': {
@@ -2398,11 +2398,49 @@ var CAMPOS_EMPRESA = [
 var PERFIL_GURUWALK = 'Free Tour Sevilla Imprescindible\nPublicado en GuruWalk\nIdiomas: Español, English\n\nDescubre el corazón de Sevilla: visitaremos la Catedral y la Giralda, el Real Alcázar por fuera, el barrio de Santa Cruz y la Plaza de España.\n\nHorario: todos los días, salidas a las 10:00 y a las 17:00\nPunto de encuentro: la Plaza Nueva, junto a la estatua del Rey San Fernando. Busca el paraguas amarillo.\nDuración: 2 h 30 min\nGrupos: máx. 25 personas. La salida está garantizada aunque haya pocas reservas.\nEste es un tour basado en propinas — la reserva es gratis.\nCancelación gratuita hasta la hora de salida.\nAccesible en silla de ruedas. Se admiten mascotas con correa.\nEl tour termina en la Plaza de España.';
 var PERFIL_CIVITATIS = 'Free tour por Triana\nPublicado en Civitatis\nGratis — ¡reserva ya!\n\nRecorreremos Triana: el Mercado, la calle Betis, la capilla del Carmen y los rincones del barrio más marinero de Sevilla.\n\nDuración: 2 horas\nIdioma: el tour se realiza en español\nHorario: viernes y sábados a las 18:30\nPunto de encuentro: el Puente de Isabel II, en el lado de Triana. El guía llevará un chaleco naranja.\nMáximo 20 personas por grupo.\nLos niños son bienvenidos; los menores de 12 años no aportan.\nEl recorrido finaliza en el Mercado de Triana.\nCancelación gratuita hasta 24 horas antes.';
 
+/* ── EL PRECIO DEL TICKET SIGUE AL MERCADO ──────────────────────────────────────────
+   Port de la demo inglesa (decisión del 20-ago). Los hechos del Cerebro que nombran un
+   precio —el modelo del tour de pago, sus entradas, el catálogo y el «desde» del
+   privado— estaban escritos a mano en euros, y al pasar el mercado a Reino Unido o
+   Argentina GuIA seguía contestando en euros a un viajero que paga en libras o pesos.
+   Ahora se GENERAN de `precioTicket()` en cada cambio de mercado, con el texto exacto de
+   la semilla en el mercado español — el corpus de 404 respuestas asienta sobre él. */
+function precioTicket(){ return MK.precioTicket || 24; }
+/* Un precio de entrada se escribe «24 €», no «24,00 €»: los decimales solo si los hay. */
+function precioTxt(v){ return dinero(v, v % 1 === 0 ? 0 : 2); }
+function TICKET_MODELO(){
+  return 'Tour con entrada: ' + precioTxt(precioTicket()) + ' por persona, se paga al reservar';
+}
+function TICKET_ENTRADAS(){
+  return 'La entrada al Alcázar va incluida en los ' + precioTxt(precioTicket()) +
+    ': no hay que comprar nada aparte ni hacer cola';
+}
+/* Al cambiar de mercado, los tours con ticket se reescriben en la moneda nueva. */
+function sincronizaTickets(){
+  S.tours.forEach(function(t){
+    if (!t.ticket) return;
+    t.kb.modelo   = TICKET_MODELO();
+    t.kb.entradas = TICKET_ENTRADAS();
+  });
+  /* El «desde» del privado TAMBIÉN sigue a la moneda: el configurador parte de este
+     número y GuIA se lo dice al viajero. */
+  S.kbEmpresa.privados = '¡Sí! Hacemos tours privados a medida, desde ' +
+    precioTxt(precioPrivado()) +
+    ' por grupo. Dímelo y el encargado te prepara una propuesta sin compromiso.';
+  /* El catálogo es el único hecho de empresa que nombra un precio. La frase es la de la
+     semilla, con el precio generado; el resto no se toca porque son sus palabras. */
+  S.kbEmpresa.catalogo = 'Además del free tour del centro hacemos el «Alcázar al atardecer» (' +
+    precioTxt(precioTicket()) +
+    ' con la entrada incluida, lunes, miércoles, viernes y sábados a las 19:00), «Triana con tapas» y el «Nocturno de leyendas» — estos dos también de propina, como el del centro.';
+}
 function tourNuevo(nombre, fuente, valores){
   var kb={}; CAMPOS_KB.forEach(function(c){ kb[c.k]=(valores&&valores[c.k])||''; });
   return {
     /* cada tour nace con SU pantalla de propina, copiada del defecto */
-    id:'t'+(S?S.tours.length+1:1), nombre:nombre, fuente:fuente, kb:kb };
+    /* `ticket` no es un hecho del Cerebro, es una propiedad del tour: marca los que se
+       venden con entrada para que su precio siga a la moneda del mercado. */
+    id:'t'+(S?S.tours.length+1:1), nombre:nombre, fuente:fuente, kb:kb,
+    ticket: !!(valores && valores.ticket) };
 }
 
 var S = {
@@ -2544,6 +2582,7 @@ S.tours.push(tourNuevo('Nocturno de leyendas', 'semilla', {
    tour, y ninguno se contagia. */
 S.tours.push(tourNuevo('Alcázar al atardecer', 'semilla', {
   titulo:'Alcázar al atardecer',
+  ticket:true,
   modelo:'Tour con entrada: 24 € por persona, se paga al reservar',
   horas:'lunes, martes, miércoles, viernes y sábados · 19:00',
   /* ENUMERADOS y no «de lunes a miércoles»: `parseDiasStr` busca subcadenas —«lun»,
@@ -3349,13 +3388,33 @@ function codEscrito(t){
       if (String(vivos[j]).toUpperCase() === porPrefijo.toUpperCase()) return vivos[j];
     return null;
   }
+  /* ENTERO, o no es una mención. Esto era `may.indexOf(l)!==-1` —subcadena a secas— y
+     devolvía el PRIMERO de la lista que encajara: con `PYC-1` de Ana y `PYC-12` de Beto
+     vivas el mismo día, «cancela mi reserva PYC-12» casaba `PYC-1` y cancelaba la de
+     Ana. Beto pedía la suya, GuIA contestaba «¡Hecho!», y desaparecía la de otra
+     persona — que no se entera hasta el punto de encuentro. Las plataformas numeran
+     correlativo (GW-1, GW-12, GW-123), así que el choque no es raro: es lo normal en una
+     empresa con salidas diarias.
+     La comprobación es de frontera: a los lados del localizador no puede haber letra,
+     dígito ni guion. El guion cuenta como parte del código —`PYC-1` dentro de `PYC-1-A`
+     no es `PYC-1`— y ante la duda se prefiere no reconocer: pedir el código otra vez
+     cuesta un mensaje, cancelar la reserva de otro no tiene vuelta. */
   for (var i=0;i<vivos.length;i++){
     var l = String(vivos[i]||'').toUpperCase();
-    /* Cuatro caracteres de suelo: un localizador de dos letras casaría dentro de
-       cualquier palabra y una coincidencia así no es una mención. */
-    if (l.length>=4 && may.indexOf(l)!==-1) return l;
+    if (l.length>=4 && mencionEntera(may, l)) return l;
   }
   return null;
+}
+/* ¿Aparece `l` como pieza entera dentro de `may`? Se recorren TODAS las apariciones: la
+   primera puede estar pegada a algo y una posterior no. */
+function mencionEntera(may, l){
+  var i = -1;
+  while ((i = may.indexOf(l, i+1)) !== -1){
+    var antes = i > 0 ? may.charAt(i-1) : '';
+    var despues = may.charAt(i + l.length);
+    if (!/[A-Z0-9-]/.test(antes) && !/[A-Z0-9-]/.test(despues)) return true;
+  }
+  return false;
 }
 function codDe(t){ return codEscrito(t) || S.codConocido || null; }
 /* UN CÓDIGO ESCRITO QUE NO ES DE NINGUNA RESERVA VIVA. Se distingue de «no ha escrito
@@ -4965,7 +5024,32 @@ function respuestaGuiaES(t){
         'confirmación y dímelo otra vez, o dime tu nombre y se lo paso al encargado, que lo '+
         'mira contigo.\n\n<i>— Tu reserva SIGUE EN PIE: no se ha cancelado nada.</i>';
     }
-    var cod = codEscrito(t) || (ordenC ? S.codConocido : null);
+    /* PREGUNTAR NO ES ORDENAR, aunque el código venga escrito. Esto era
+       `codEscrito(t) || (ordenC ? …)`: con el localizador delante, `ordenC` no se miraba
+       y bastaba NOMBRAR la reserva para ejecutar. Así que «¿puedo cancelar mi reserva
+       PYC-12?» la cancelaba — la misma avería del 18-ago que se cerró para el código
+       CONOCIDO, colándose por la puerta del código ESCRITO.
+       La señal es la PERSONA: «¿puedo cancelar?» pregunta por la política; «¿me la
+       cancelas?» te lo está pidiendo a ti, y eso sí es una orden. Ante la duda no se
+       ejecuta: pedir que lo repita cuesta un mensaje y cancelar de más no tiene vuelta. */
+    /* EL SIGNO NO PUEDE SER REQUISITO, y esto era un agujero medido: con `/[?¿]/` delante,
+       «¿puedo cancelar mi reserva?» no tocaba nada y «puedo cancelar mi reserva» —las
+       mismas palabras sin el signo— CANCELABA. En un chat de móvil el signo es lo primero
+       que se cae: nadie abre interrogaciones escribiendo en la calle, así que la guarda
+       protegía justo el caso que menos ocurre.
+
+       La señal es LA PERSONA del verbo, como dice el comentario de arriba, y eso no
+       depende de la puntuación. El signo se queda como refuerzo —si está, es pregunta
+       seguro— pero ya no hace falta para que la guarda se arme. */
+    /* EL MODAL TIENE QUE GOBERNAR AL VERBO. Quitar el signo dejó suelto el «puedo», y
+       «cancela mi reserva PYC-12, NO PUEDO IR» pasó a leerse como pregunta: la excusa de
+       quien cancela lleva casi siempre un «no puedo». Se exige que el modal vaya seguido
+       de «cancelar»/«anular» —con un par de palabras de holgura para «puedo cancelar YA
+       mi reserva»— y así «no puedo ir» vuelve a ser lo que es, un motivo. */
+    var preguntaC = (/\b(puedo|podemos|podria|podriamos|se puede|es posible)\b(\s+\S+){0,2}\s+(cancelar|anular)\b/.test(m) ||
+                     /\b(hasta cuando|que pasa si|politica de cancelacion)\b/.test(m)) &&
+      !/\b(puedes|podrias|me la|nos la|me lo|cancelamela)\b/.test(m);
+    var cod = preguntaC ? null : (codEscrito(t) || (ordenC ? S.codConocido : null));
     if (cod){
       anotaGuia('Reserva «'+cod+'» cancelada por el chat — plaza liberada');
       return '¡Hecho! Cancelo tu reserva ✅ Tu plaza queda libre al instante.\n\n<i>— La reserva se cancela de verdad y la plaza vuelve a contar libre en el aforo. Queda apuntado en las observaciones del tour de hoy.</i>';
@@ -5923,7 +6007,22 @@ function respuestaEN(t){
         'confirmation email and send it again, or give me your name and the manager will sort '+
         'it out with you.\n\n<i>— Your booking STILL STANDS: nothing has been cancelled.</i>';
     }
-    var codC = codEscrito(t) || (ordenCE ? S.codConocido : null);
+    /* MISMA GUARDA QUE EN ESPAÑOL, y por el mismo motivo: con el localizador escrito
+       `ordenCE` no se miraba, así que «can I cancel my booking PYC-12?» la cancelaba.
+       La señal vuelve a ser la persona: «can I cancel?» pregunta por la política; «can
+       you cancel it?» te lo está pidiendo a ti. Ante la duda, no se ejecuta. */
+    /* Se mira el texto CRUDO y no el normalizado: `EN_ES` traduce «can» a «puedo» sin
+       distinguir persona, así que después de normalizar «can I cancel» y «can you cancel»
+       son la misma cadena y la señal que separa preguntar de ordenar se ha perdido. */
+    var crudoE = String(t||'').toLowerCase();
+    /* Sin exigir el «?», por lo mismo que en la rama española: «can I cancel my booking»
+       sin signo cancelaba, y con signo no. La señal es la persona, no la puntuación. */
+    /* Mismo criterio que en la rama española: el modal gobierna al verbo. Sin esto,
+       «cancel my booking, I can't make it» se leería como pregunta por el «can». */
+    var preguntaE = (/\b(can i|could i|can we|could we|am i able|is it possible)\b(\s+\S+){0,2}\s+cancel\b/.test(crudoE) ||
+                     /\b(until when|what if i cancel|cancellation policy|do i have to)\b/.test(crudoE)) &&
+      !/\b(can you|could you|please cancel|cancel it)\b/.test(crudoE);
+    var codC = preguntaE ? null : (codEscrito(t) || (ordenCE ? S.codConocido : null));
     if (codC){
       anotaGuia('Booking “'+codC+'” cancelled over chat — place released');
       return 'Done! Your booking is cancelled ✅ Thanks for letting us know in good time: your place is free again straight away.\n\n<i>— The booking is cancelled for real and the place counts free again. It is written into today\'s tour notes.</i>';
@@ -6474,7 +6573,11 @@ var COMPLEMENTOS = {
      enseñaba «incluida en Pro» y ofrecía «Cambiar a Pro». En el servidor vive detrás de
      este complemento —`exigeComplemento('cuentas')` en las cuatro rutas de /api/cuentas—,
      así que quien pagara Pro por ella se encontraría un 402 en la pantalla que compró. */
-  cuentas:  { n:'Las cuentas de cada tour', precio:9, abre:['liquidacion','conciliacion'] },
+  /* Las CUATRO que en el panel salen del mismo plato —`cuentas.resumen()`— y por eso
+     cuelgan del mismo complemento (`app/guia/encargado.js`, «van detrás del mismo
+     complemento»). El cuadro y la proyección se pedían aquí por PLAN Premium, así que un
+     Pro que paga «las cuentas» las tenía en su panel y con candado en esta demo. */
+  cuentas:  { n:'Las cuentas de cada tour', precio:9, abre:['liquidacion','cuadro','conciliacion','proyeccion'] },
 };
 S.comp = { guia:false, agente:false, web:false, cuentas:false };
 
@@ -6482,7 +6585,13 @@ S.comp = { guia:false, agente:false, web:false, cuentas:false };
    colgando del plan (cuadro de mando, proyección: esos se quedan como estaban). */
 function abiertoPorComplemento(v){
   for (var k in COMPLEMENTOS)
-    if (S.comp[k] && COMPLEMENTOS[k].abre.indexOf(v) !== -1) return true;
+    /* `loTraeElPlan(k)` cuenta igual que tenerlo marcado. `INCLUIDOS_POR_PLAN` es un solo
+       hecho con dos consecuencias —lo que el plan trae no se vuelve a cobrar Y está
+       abierto— y aquí sólo se honraba la primera: un Premium recién elegido, con la casilla
+       sin marcar, veía candado en la liquidación y en la conciliación mientras la app se las
+       da gratis (`tiene()` mira primero si lo trae el plan). Y el aviso de `cambiarPlan()`,
+       en esa misma pantalla, dice «se desbloquean los módulos incluidos». */
+    if ((S.comp[k] || loTraeElPlan(k)) && COMPLEMENTOS[k].abre.indexOf(v) !== -1) return true;
   return false;
 }
 function reqOrden(v){ return SUPLEMENTOS[v].plan==='Premium' ? 2 : 1; }   // plan mínimo que lo incluye
@@ -6504,15 +6613,31 @@ function disponible(v){ if(!SUPLEMENTOS[v]) return true;
 
 /* El total de la cesta: el bono del plan más lo que se le sume. Es lo que se ve moverse
    al tocar un interruptor, y es la razón de que los complementos vivan pegados al selector. */
+/* LO QUE EL PLAN YA TRAE NO SE COBRA APARTE. Premium incluye «las cuentas de cada tour»
+   —así lo factura el servidor, que mira primero si lo trae el plan— y aquí se sumaban sus
+   9 € igual: Premium con esa casilla marcada salía a 158 € cuando la factura dice 149.
+   Nueve euros de más, y en la dirección peor: en la pantalla que alguien mira para decidir
+   si compra, haciendo el producto más caro de lo que es. */
+var INCLUIDOS_POR_PLAN = { premium: ['cuentas'] };
+function loTraeElPlan(k){ return (INCLUIDOS_POR_PLAN[S.plan] || []).indexOf(k) >= 0; }
+
 function totalCesta(){
   var t = PLANES[S.plan].base, piezas = [];
-  for (var k in COMPLEMENTOS) if (S.comp[k]) { t += COMPLEMENTOS[k].precio; piezas.push(COMPLEMENTOS[k].n); }
+  for (var k in COMPLEMENTOS) if (S.comp[k]) {
+    if (loTraeElPlan(k)) { piezas.push(COMPLEMENTOS[k].n + ' (incluido)'); continue; }
+    t += COMPLEMENTOS[k].precio; piezas.push(COMPLEMENTOS[k].n);
+  }
   return { total:t, piezas:piezas };
 }
 function compTog(k, el){ S.comp[k] = el.checked; pintaComplementos(); pintaCandados(); ir((location.hash.slice(1))||'operaciones'); }
 function pintaComplementos(){
   var c = totalCesta(), t = document.getElementById('comp-tot');
-  if (t) t.textContent = dinero(c.total, 0);
+  /* En EUROS, no en la moneda del mercado. `dinero()` formatea con la divisa del mercado
+     activo —libras en el preset británico— y la cuota se factura siempre en euros. Con £
+     el total contradecía a los botones de al lado, que dicen 45 € y 149 €, y cotizaba la
+     suscripción en una moneda en la que no se cobra. Es la misma decisión que ya llevaba
+     la demo inglesa. */
+  if (t) t.textContent = c.total + ' €';
   var d = document.getElementById('comp-desglose');
   var bono = String(PLANES[S.plan].bono).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   if (d) d.textContent = c.piezas.length
@@ -6538,6 +6663,11 @@ function pintaDineroEstatico(){
     var signo = /^\+/.test(el.textContent) ? '+' : '';
     el.textContent = signo + dinero(v, d);
   });
+  /* El símbolo SUELTO. Hay rótulos donde el € no va pegado a su número —«<b>2,50</b> € ×
+     asistente», «€ fijos por persona»— y `data-dinero` no sirve, porque reescribiría el
+     elemento entero. Estos se quedaban en euros en Edimburgo. Se llama `data-moneda`
+     porque así se llama ya en la demo inglesa: un nombre, no dos. */
+  document.querySelectorAll('[data-moneda]').forEach(function(el){ el.textContent = MK.moneda.sim; });
   document.querySelectorAll('[data-empresa]').forEach(function(el){
     el.textContent = MK.empresa.split(' · ')[0];
   });
@@ -6574,20 +6704,36 @@ function cambiaMercado(k){
   MK = MERCADOS[k];
   pintaTenant();
   pintaMkSel(); pintaDineroEstatico();
-  // repintar todo lo que muestra dinero o canales
-  ['operaciones','manifiesto','equipo','canales','liquidacion','cuadro','ahorro'].forEach(function(v){
-    try{ var f={operaciones:pintaOperaciones,manifiesto:pintaManifiesto,equipo:pintaEquipo,
-                canales:pintaCanales,liquidacion:pintaLiquidacion,cuadro:pintaCuadro,
-                ahorro:pintaCanales}[v]; if(f) f(); }catch(e){}
-  });
+  /* Los hechos del Cerebro que nombran un precio y los rótulos del configurador se
+     regeneran ANTES de repintar: son la fuente de lo que las pantallas enseñan. */
+  try{ sincronizaTickets(); pintaCerebro(); tpRotulos(); pintaExtras(); }catch(e){}
+  /* CADA PINTADA CON SU PROPIO try, y por su nombre de verdad.
+     Aquí había un objeto `{liquidacion: pintaLiquidacion, cuadro: pintaCuadro, …}` con dos
+     nombres QUE NO EXISTEN —la función se llama `pintaLiq`, y el Cuadro se pinta en cinco
+     trozos—, y el objeto se construía DENTRO del `try{}catch(e){}`: el ReferenceError
+     saltaba antes de llamar a nadie, en la primera vuelta y en todas. O sea que cambiar de
+     mercado no repintaba NINGUNA de las siete pantallas, y la liquidación seguía en euros
+     en Edimburgo —94 importes clavados en una sola pantalla—. Un `catch` vacío alrededor
+     de un lote entero convierte «una se ha roto» en «no se ha hecho ninguna, y en
+     silencio». Es el mismo arreglo que ya llevaba la demo inglesa. */
+  [pintaOperaciones, pintaManifiesto, pintaEquipo, pintaCanales, pintaLiq,
+   pintaCuadroCanales, pintaCuadroGuias, pintaCuadroFranjas, pintaCuadroKpis, pintaCuadroDia]
+    .forEach(function(f){ try{ if (typeof f === 'function') f(); }catch(e){} });
   try{ calcProy(); }catch(e){}
   toast(MK.bandera+' '+MK.nombre+' — '+(MK.modelo==='pago'?'tour de pago: hay cobro por adelantado y el no-show cuesta la plaza'
         : MK.modelo==='mixto'?'catálogo mixto: free tour para captar, tour de pago para monetizar'
-        : 'free tour: reserva a 0 € y propina al final')+'. Avisos por '+canalAviso()+'.');
+        : 'free tour: reserva a '+dinero(0,0)+' y propina al final')+'. Avisos por '+canalAviso()+'.');
 }
 
 function pintaPlanSel(){
+  /* El PRECIO SALE DE `PLANES`, no del HTML. Estaba escrito a mano en cada botón y era
+     una copia más de la tarifa: al subir Pro de 39 a 45 € se actualizó `PLANES` y los
+     candados, y estos tres botones se quedaron con el 39 — en vivo, a dos centímetros de
+     un candado que decía 45. Escribiéndolo aquí, la cifra tiene un solo dueño y la
+     desincronización deja de ser posible en vez de quedar vigilada. */
   document.querySelectorAll('#plan-sel button').forEach(function(b){
+    var P = PLANES[b.dataset.plan];
+    if (P) b.innerHTML = '<b>' + P.n + '</b>' + P.precio;
     b.classList.toggle('on', b.dataset.plan===S.plan); });
 }
 /* El botón del cartel: marca el complemento y repinta, que es exactamente lo que hace la
@@ -6750,13 +6896,15 @@ setTimeout(function(){
   var k=document.getElementById('kpi-propina');
   if (k && typeof agTotales === 'function'){
     var t=agTotales();
-    k.textContent = Math.round(t.semRec) + ' €';
+    k.textContent = dinero(Math.round(t.semRec), 0);
     k.setAttribute('data-dinero', String(Math.round(t.semRec)));
   }
   pintaCuadroKpis();
   /* El catálogo de extras va AQUÍ DENTRO por lo mismo que la Liquidación: pregunta al
      motor y lee `S.tours`, y en el punto de arriba del fichero ninguna de las dos cosas
      está asignada todavía. Llamarlo fuera revienta la demo entera al arrancar. */
+  if (typeof sincronizaTickets === 'function') sincronizaTickets();   // hechos con precio, en su moneda
+  if (typeof tpRotulos === 'function') tpRotulos();                   // rótulos del configurador
   if (typeof pintaExtras === 'function') pintaExtras();
   ['combo-a','combo-b','combo-dto'].forEach(function(id){
     var e = document.getElementById(id); if (!e) return;
@@ -6776,8 +6924,13 @@ function operacionDelCiclo(){
     o.salidas++; o.pax += paxDe(t.res); o.rec += (t.rec||0);
     (t.res||[]).forEach(function(r){
       /* Los del tour DE PAGO no cuentan para la propina, igual que en los KPI: pagaron un
-         ticket. Pero SÍ cuentan para el canal — vinieron por GuruWalk o por la web. */
-      if (r.ok && !t.precio) o.presentes += (+r.p||0);
+         ticket. Pero SÍ cuentan para el canal — vinieron por GuruWalk o por la web.
+         Y `t.cerrada`, igual que el KPI del Cuadro y por lo mismo: la gente de un tour que
+         todavía no ha salido no ha dejado nada, y meterla en el divisor baja la media. Sin
+         esta condición esta cuenta daba 12,00 y la del Cuadro 12,40 —dos propinas medias
+         del mismo negocio en dos pantallas a un clic la una de la otra—, y la que se cree
+         es la de la Proyección, que es la que promete dinero. */
+      if (r.ok && t.cerrada && !t.precio) o.presentes += (+r.p||0);
       o.canal[r.canal] = (o.canal[r.canal]||0) + r.p;
     });
   })});
@@ -6850,7 +7003,7 @@ function pintaCuadroFranjas(){
   orden.forEach(function(k){
     var f = por[k];
     var media = f.sal ? (f.pax/f.sal) : 0;
-    var pp = f.precio ? '<span class="mini muted">ticket ' + f.precio + ' €</span>'
+    var pp = f.precio ? '<span class="mini muted">ticket ' + dinero(f.precio, 0) + '</span>'
            : (f.paxCerr ? eur(f.rec/f.paxCerr) : '<span class="mini muted">—</span>');
     var tr = document.createElement('tr');
     tr.innerHTML = '<td><b>'+k+'</b></td><td>'+f.sal+'</td><td>'+f.pax+'</td>'+
@@ -6903,19 +7056,23 @@ function pintaCuadroFranjas(){
 function sembrarProy(){
   if (!document.getElementById('py-grupo')) return;
   var o = operacionDelCiclo();
-  var pon = function(id, v, paso){
+  /* EL PASO SALE DEL PROPIO CONTROL. Estaba escrito aquí otra vez, y las dos copias se
+     separaron: a `py-dir` se le sembraba redondeando a 1 cuando su paso es 5, así que el
+     navegador ajustaba el 33 a 35 y el deslizador arrancaba diciendo un número que la
+     operación no da. Un hecho, un sitio. */
+  var pon = function(id, v){
     var e = document.getElementById(id); if(!e) return;
-    var min = +e.min, max = +e.max;
+    var paso = +e.step || 1, min = +e.min, max = +e.max;
     e.value = Math.min(max, Math.max(min, Math.round(v/paso)*paso));
   };
-  pon('py-grupo', o.grupo,   1);
-  pon('py-tours', o.salDia,  1);
-  pon('py-prop',  o.propPax, 0.5);
-  pon('py-ng',    o.guias,   1);
-  pon('py-dir',   o.pctWeb,  1);
+  pon('py-grupo', o.grupo);
+  pon('py-tours', o.salDia);
+  pon('py-prop',  o.propPax);   // su paso es de céntimo: la media medida cabe entera
+  pon('py-ng',    o.guias);
+  pon('py-dir',   o.pctWeb);
   /* Días de operación: los que el ciclo saca salidas. Decía 26 y este catálogo sale los
      siete días de la semana — un mes entero de trabajo contado como si libraran cinco. */
-  pon('py-dias', (S.agenda||[]).filter(function(d){ return (d.tours||[]).length; }).length / o.dias * 30, 1);
+  pon('py-dias', (S.agenda||[]).filter(function(d){ return (d.tours||[]).length; }).length / o.dias * 30);
   calcProy();
 }
 
@@ -6949,7 +7106,7 @@ function pintaCuadroKpis(){
   /* La propina media solo sobre lo YA COBRADO y la gente que vino: dividir entre todos los
      reservados de la semana —incluidos los de mañana, que no han dejado nada— daría una
      media falsa y a la baja. */
-  pon('cm-prop', pres ? (rec/pres).toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' €' : '—');
+  pon('cm-prop', pres ? dinero(rec/pres, 2) : '—');
 }
 (function(){
   var w = document.querySelector('.tp-wrap'); if (!w) return;
@@ -7559,11 +7716,48 @@ function pintaCupo(){
    se aplican. Todo en CÉNTIMOS hasta el último momento: en coma flotante, 13,50 × 3 se
    desvía y el cliente vería un total distinto del que se guardaría. */
 
-function tpEur(c){                       // céntimos → «140 €» / «4,70 €»
-  var n = c / 100, d = n % 1 === 0 ? 0 : 2;
-  return n.toLocaleString('es-ES', { minimumFractionDigits: d, maximumFractionDigits: d }) + ' €';
+function tpEur(c){                       // céntimos → «140 €» / «4,70 €» (o £/$ según mercado)
+  /* Por `dinero()` y no con el símbolo escrito: es dinero de OPERACIÓN —lo que cobra el
+     operador—, no nuestra cuota, así que sigue a la moneda del mercado activo. */
+  var n = c / 100;
+  return dinero(n, n % 1 === 0 ? 0 : 2);
 }
 function tpNum(id){ var e=document.getElementById(id); return Math.max(0, parseInt(e&&e.value,10)||0); }
+function tpPon(id, txt){ var e=document.getElementById(id); if(e) e.textContent=txt; }
+/* LA TARIFA ENTERA SE ESCALA A LA MONEDA DEL MERCADO, con la MISMA razón que el ticket
+   (`precioTicket()` contra los 24 € del mercado español, que es la referencia): un solo
+   criterio de conversión en toda la pantalla. En España la razón es 1 y todo queda
+   exactamente como la semilla. Port de la demo inglesa. */
+function razonMercado(){ return precioTicket() / 24; }
+function tpRedondea(v, paso){ return Math.round(v * razonMercado() / paso) * paso; }
+/* El «desde» del privado, en la moneda del mercado. Estaba escrito «180 €» en la semilla
+   y no lo regeneraba nadie: GuIA seguía diciendo euros en Edimburgo. */
+function precioPrivado(){ return tpRedondea(180, 5); }
+function tarifaPrivado(){
+  return { base: precioPrivado(), incl:6, gestionPct:5,
+           supAd: tpRedondea(12,1), supJo: tpRedondea(8,1), pro: tpRedondea(40,5),
+           radio: tpRedondea(3,1),
+           entAd: tpRedondea(13.5,0.5), entJo: tpRedondea(6,0.5),
+           cata: tpRedondea(9,1) };
+}
+/* Los rótulos del configurador llevaban los importes escritos en el HTML: «+40 €»,
+   «13,50 € adulto» — catorce importes que se quedaban en euros al cambiar de mercado.
+   Ahora se escriben desde la tarifa, y los `data-ad/jo/pe` de las entradas también, para
+   que el rótulo y el cálculo no puedan separarse. */
+function tpRotulos(){
+  if (!document.getElementById('tp-h-pro')) return;
+  var T = tarifaPrivado();
+  tpPon('tp-h-pax', 'A partir de ahí: +' + precioTxt(T.supAd) + ' por adulto, +' +
+    precioTxt(T.supJo) + ' por joven; los peques no suman.');
+  tpPon('tp-h-pro', '3 h · +' + precioTxt(T.pro));
+  tpPon('tp-h-radio', '+' + precioTxt(T.radio) + ' por persona (adultos y jóvenes)');
+  var e1 = document.getElementById('tp-e1'), e2 = document.getElementById('tp-e2');
+  if (e1){ e1.dataset.ad = T.entAd; e1.dataset.jo = T.entJo; e1.dataset.pe = 0; }
+  if (e2){ e2.dataset.ad = T.cata; e2.dataset.jo = T.cata; e2.dataset.pe = 0; }
+  tpPon('tp-h-e1', precioTxt(T.entAd) + ' adulto · ' + precioTxt(T.entJo) + ' joven · peques gratis');
+  tpPon('tp-h-e2', precioTxt(T.cata) + ' por persona (solo mayores de 12)');
+  tpCalc();
+}
 
 function tpCalc(){
   var caja = document.getElementById('tp-total'); if (!caja) return;
@@ -7577,9 +7771,7 @@ function tpCalc(){
      que se lleva el disgusto es el guía en el punto de encuentro.
      Este configurador ES el de privados (de ahí vino, del de Madrid Latido), así que su
      base es el «desde» que la empresa publica y se lee de ahí. */
-  var desde = ((S.kbEmpresa.privados||'').match(/(\d+(?:[.,]\d+)?)\s*€/)||[])[1];
-  var TP = { base: desde ? parseFloat(String(desde).replace(',','.')) : 120,
-             incl: 6, supAd: 12, supJo: 8, pro: 40, radio: 3, gestionPct: 5 };
+  var TP = tarifaPrivado();
   var ad = tpNum('tp-ad'), jo = tpNum('tp-jo'), pe = tpNum('tp-pe'), pax = ad + jo + pe;
 
   /* LAS PLAZAS INCLUIDAS SE LLENAN CON LOS QUE MÁS PAGARÍAN. Se meten dentro del cupo
@@ -7893,7 +8085,7 @@ function pintaManifiestoReal(){
       var paxG=enG.reduce(function(a,r){return a+(+r.p||0)},0);
       av.innerHTML='👥 <b>Posible grupo grande:</b> '+enG.length+
         ' reservas del mismo apellido con minutos de diferencia, '+paxG+' personas en total. '+
-        'Puedes pedirles un <b>adelanto de 10 € por persona</b> al empezar.';
+        'Puedes pedirles un <b>adelanto de '+dinero(10,0)+' por persona</b> al empezar.';
       mov.appendChild(av);
     }
     // lista de reservas con check-in + ajuste de nº de personas por el guía
@@ -7963,7 +8155,7 @@ function pintaManifiestoReal(){
     var media = t.rec && pres ? ' · media '+euros(t.rec/pres)+'/persona' : '';
     caja.innerHTML='<strong>💶 Ingresos del tour</strong>'+
       '<div class="fila" style="gap:8px; margin-top:8px; align-items:center;">'+
-        '<input class="rec-in" inputmode="decimal" placeholder="0,00" value="'+(t.rec?String(t.rec).replace('.',','):'')+'" style="width:110px;"> €'+
+        '<input class="rec-in" inputmode="decimal" placeholder="0,00" value="'+(t.rec?String(t.rec).replace('.',','):'')+'" style="width:110px;"> '+MK.moneda.sim+
         '<button class="btn mini rec-save">Guardar</button>'+
         '<span class="mini muted rec-media">'+(t.rec?media:'')+'</span>'+
       '</div>'+
@@ -8866,8 +9058,8 @@ function pintaGuidePage(nombre){
          semanal, que es quien manda (la lección de las tarifas). */
       var precio = precioDeTour(t);
       var txt = precio == null
-        ? t+' · '+tours[t]+' → Reservar — 0 €'
-        : t+' · '+tours[t]+' → Reservar · '+precio+' € en su web';
+        ? t+' · '+tours[t]+' → Reservar — '+precioTxt(0)+''
+        : t+' · '+tours[t]+' → Reservar · '+precioTxt(precio)+' en su web';
       var msg = precio == null
         ? 'Reserva hecha al momento: código '+locDe(t)+' y enlace para cambiar o cancelar — sin pago y sin tarjeta. La plaza descuenta del cupo al instante'
         : 'Plaza guardada con su código al momento. El pago ('+precio+' €) va a TU pasarela — Audutor no cobra. En el manifiesto queda «💳 pago por confirmar» hasta que una persona vea el dinero';
@@ -9126,6 +9318,10 @@ function pintaCombosDestinatarios(){
    viajero—, no de un número aparte: dos sitios donde escribir el precio es un sitio donde
    se van a contradecir. */
 function precioDeFicha(t){
+  /* Con la marca `ticket` ya no hay que adivinar el precio del texto — y el texto ya no
+     está en euros siempre: en Reino Unido dice «£24» y la regex de «€» devolvía 0, con lo
+     que el tour de pago desaparecía del combo. */
+  if (t.ticket) return precioTicket();
   var m = (t.kb.modelo||'').match(/(\d+(?:[.,]\d+)?)\s*€/);
   return m ? parseFloat(m[1].replace(',','.')) : 0;
 }
@@ -9151,7 +9347,7 @@ function pintaExtras(){
     return '<option>'+t.nombre+(sale?' (hoy)':'')+'</option>';
   }).join('');
   b.innerHTML = toursDePago().map(function(t){
-    return '<option data-p="'+precioDeFicha(t)+'">'+t.nombre+' · '+precioDeFicha(t)+' €</option>';
+    return '<option data-p="'+precioDeFicha(t)+'">'+t.nombre+' · '+precioTxt(precioDeFicha(t))+'</option>';
   }).join('') || '<option data-p="0">— no tienes ningún tour de pago en el Cerebro —</option>';
   pintaMsjCombo();
 }
@@ -9164,7 +9360,7 @@ function pintaMsjCombo(){
   /* En CÉNTIMOS, como el configurador de al lado y por lo mismo: 24 € × 0,85 en coma
      flotante se desvía, y le enseñarías un número al cliente y guardarías otro. */
   var con = Math.round(base*100*(100-pct)/100)/100;
-  var eur = function(v){ return v.toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'; };
+  var eur = function(v){ return dinero(v, 2); };
   var web = (S.kbEmpresa.web||'patioycompas.example').replace(/^https?:\/\//,'');
   caja.innerHTML =
     '📲 <b>Se envía 30 min después del tour — SOLO a reservas de tu web</b> (las de plataforma ya reciben la petición de reseña de su propia plataforma)\n\n'+
@@ -9411,7 +9607,9 @@ var COMISION_CANAL = 2.5;
 var liqModo = 'pct';
 var liqCoste = 'empresa';   // POR DEFECTO: el canal lo paga quien lo contrata, no el guía
 
-function eur(x){ return x.toFixed(2).replace('.',',')+' €'; }
+/* La liquidación entera pasa por aquí: era el sitio con más importes clavados en euros
+   de las dos demos (94 en una sola pantalla al pasar al mercado británico). */
+function eur(x){ return dinero(x, 2); }
 function celdaEur(x, esGuia){
   var cls = x<0 ? ' class="num neg"' : (esGuia && x>0 ? ' class="num pos-guia"' : ' class="num"');
   return '<td'+cls+'>'+eur(x)+'</td>';
@@ -9558,7 +9756,7 @@ S.canales={ email:'reservas@patioycompas.example', wa:'+34 6XX XX XX XX',
     { plat:'GuruWalk',  base:'por persona reservada', coste:2.5, ventanaH:72, nota:'reportar el no-show ≤72 h o lo pagas' },
     { plat:'Freetour',  base:'por persona reservada', coste:2.0, ventanaH:48, nota:'ventana estimada — confirmar' },
     { plat:'Civitatis', base:'comisión sobre venta',  coste:0,   ventanaH:0,  nota:'free tour sin fee/persona; cambios en su panel' },
-    { plat:'Web propia', base:'sin coste',            coste:0,   ventanaH:0,  nota:'reserva directa: 0 € de comisión' },
+    { plat:'Web propia', base:'sin coste',            coste:0,   ventanaH:0,  nota:'reserva directa: sin comisión' },
   ] };
 function pintaCanales(){
   var c=document.getElementById('cn-remitentes');
@@ -9575,7 +9773,7 @@ function pintaCanales(){
     var h='<tr><th>Plataforma</th><th>Cómo cobra</th><th>Coste/persona</th><th>Reportar no-show</th><th>Si no lo reportas</th></tr>';
     S.canales.recon.forEach(function(r, i){
       h+='<tr><td><b>'+r.plat+'</b></td><td>'+r.base+'</td>'+
-        '<td>'+(r.coste?'<input value="'+String(r.coste).replace('.',',')+'" onchange="setRecon('+i+',\'coste\',this.value)" style="width:52px; border:1.5px solid var(--line); border-radius:6px; padding:4px 6px; font-family:var(--mono); font-size:12.5px;"> €':'—')+'</td>'+
+        '<td>'+(r.coste?'<input value="'+String(r.coste).replace('.',',')+'" onchange="setRecon('+i+',\'coste\',this.value)" style="width:52px; border:1.5px solid var(--line); border-radius:6px; padding:4px 6px; font-family:var(--mono); font-size:12.5px;"> '+MK.moneda.sim+'':'—')+'</td>'+
         '<td>'+(r.ventanaH?'<input value="'+r.ventanaH+'" onchange="setRecon('+i+',\'ventanaH\',this.value)" style="width:44px; border:1.5px solid var(--line); border-radius:6px; padding:4px 6px; font-family:var(--mono); font-size:12.5px;"> h':'—')+'</td>'+
         '<td class="mini muted">'+r.nota+'</td></tr>';
     });
@@ -9622,11 +9820,11 @@ function calcDirecto(){
   var base = 48*(S.canales.recon[0].coste||0) + 6*(S.canales.recon[1].coste||0);
   var anual = base*12*pct/100;
   document.getElementById('cd-ahorro').textContent =
-    anual.toLocaleString('es-ES',{maximumFractionDigits:0})+' €';
+    dinero(anual, 0);
   document.getElementById('cd-nota').innerHTML =
     'Con el volumen de Patio y Compás (54 p/mes en plataformas con fee por persona). Una agencia de '+
     '4 tours/día (~1.100 p/mes de plataforma) ahorraría <b>~'+
-    Math.round(1100*2.5*12*pct/100).toLocaleString('es-ES')+' €/año</b> con el mismo desplazamiento — '+
+    dinero(Math.round(1100*2.5*12*pct/100), 0)+'/año</b> con el mismo desplazamiento — '+
     'más que el coste anual de Audutor. La comisión usada sale de la conciliación de abajo (configurable).';
 }
 function setRecon(i, campo, val){
@@ -10048,7 +10246,7 @@ function calcProy(){
     '<div class="kpi"><span class="v">'+paxDia+'</span><span class="l">personas / día</span></div>'+
     '<div class="kpi"><span class="v">'+eur0(brutoMes)+'</span><span class="l">propina bruta / mes</span></div>'+
     '<div class="kpi"><span class="v">'+eur0(comMes)+'</span><span class="l">comisiones de plataforma / mes</span></div>'+
-    '<div class="kpi"><span class="v">'+margen.toLocaleString('es-ES',d2)+' €</span><span class="l">margen de la empresa por persona</span></div>';
+    '<div class="kpi"><span class="v">'+dinero(margen, 2)+'</span><span class="l">margen de la empresa por persona</span></div>';
   document.getElementById('py-nota').innerHTML=
     (proyModoV==='pct'
       ? 'El guía se queda el <b>'+Math.round(rep*100)+' %</b> de lo que se reparte; la empresa, el resto. '

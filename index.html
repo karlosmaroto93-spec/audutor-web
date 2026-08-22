@@ -1106,8 +1106,16 @@
       <button type="button" role="radio" aria-checked="true" data-modo="mensual">Mensual</button>
       <button type="button" role="radio" aria-checked="false" data-modo="anual">Anual <span class="dto">−17 %</span></button>
     </div>
-    <p class="pausa">El plan anual convierte 12 decisiones en 1 — y en temporada baja puedes pausar
-    tu suscripción hasta 2 meses conservando todos tus datos.</p>
+    <!-- FUERA LA PAUSA. Prometía «puedes pausar tu suscripción hasta 2 meses conservando
+         todos tus datos» y no existía: ni el código ni la política —¿dos meses seguidos o
+         sueltos?, ¿el año se alarga?, ¿mantiene acceso o solo datos?—. Decisión del dueño
+         el 22-ago: se retira hasta que exista. Lo que se queda es lo que sí es verdad: el
+         anual son diez meses por doce, y lo cobra el servidor.
+         La regla es la de siempre: no se promete lo que el producto no hace, y menos en la
+         página donde alguien decide comprar. -->
+    <p class="pausa">El plan anual convierte 12 decisiones en 1: pagas <b>diez meses</b> y
+    tienes doce.</p>
+    <p class="pausa"><b>El primer mes es gratis</b>, en cualquier tarifa: pruébalo operando de verdad y decide después.</p>
   </div>
   <div class="tarifador">
   <div class="tf-planes">
@@ -1261,7 +1269,7 @@
 
       <div class="tf-res">
         <div id="tf-lineas"><p class="tf-vacio">Sin complementos: pagas solo el bono de viajeros.</p></div>
-        <div class="tf-tot"><span>Con <b id="tf-plan">Pro</b></span><b id="tf-total">39 €</b></div>
+        <div class="tf-tot"><span>Con <b id="tf-plan">Pro</b></span><b id="tf-total">45 €</b></div>
         <p class="tf-nota">Con el primer mes gratis, esto empieza pagando solo el bono.<br><br>
         Los complementos se suman a cualquier plan, también al gratuito. El plan decide
         cuántos viajeros llevas incluidos — y en Premium, además, «las cuentas de cada
@@ -1688,7 +1696,12 @@ function tarifa(){
               pr.classList.toggle('tf-dentro', dentro); }
   });
 
-  var basePlan = { esencial:0, pro:39, premium:149 }[TF_PLAN];
+  /* 45 y no 39: el Pro cuesta 45 €, lo dice su propia tarjeta tres pantallas más arriba y
+     lo factura `clientes.js`. Este 39 era de una tarifa vieja y hacía que la web se
+     contradijera a sí misma — quien comparaba las dos cifras dejaba de fiarse del resto, y
+     quien se fiaba del calculador se llevaba la sorpresa en la primera factura.
+     Lo vigila `precio-planes.test.js`, que lee este objeto y lo compara con el catálogo. */
+  var basePlan = { esencial:0, pro:45, premium:149 }[TF_PLAN];
   var tot = basePlan + ex.total;
   var t = document.getElementById('tf-total');
   if (t) t.textContent = (TF_MODO === 'anual' ? tfAnual(tot) : tot) + ' €';
@@ -1696,7 +1709,7 @@ function tarifa(){
   var sec = document.getElementById('planes');
   if (sec) sec.classList.toggle('premium-on', TF_PLAN === 'premium');
   pintaUnidad({ esencial: tfExtras('esencial').total,
-                pro: 39 + tfExtras('pro').total,
+                pro: 45 + tfExtras('pro').total,
                 premium: 149 + tfExtras('premium').total });
 
   var n = document.getElementById('tf-plan');

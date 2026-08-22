@@ -47,18 +47,23 @@
 
   /* ---------- marco de app ---------- */
   .app{ display:grid; grid-template-columns:225px 1fr; min-height:100vh; }
-  /* Sidebar claro: crema cálido con texto bosque — el verde profundo queda
-     para la marca y el elemento activo, no para grandes superficies. */
-  aside{ background:#f3ecdb; color:#43564e; padding:18px 14px; position:sticky; top:0;
-         height:100vh; overflow:auto; border-right:1px solid #e6dcc2; }
-  .marca{ font-family:var(--serif); font-size:20px; font-weight:700; color:#0d4d3d;
+  /* Lateral OSCURO, como la demo española. Aquí decía «sidebar claro: crema cálido con
+     texto bosque», y el resultado medido era menú #f3ecdb sobre fondo #f7f2e8 — el mismo
+     color a un palmo del ojo: el menú no se despegaba de la página. Decisión del dueño el
+     20-ago: paridad con la española, que es la referencia. Cada regla de abajo que asumía
+     fondo claro se portó con esta. */
+  aside{ background:linear-gradient(180deg, #14634c, #0e4a3a 60%, #0c4133);
+         color:#c9ddd4; padding:18px 14px; position:sticky; top:0;
+         height:100vh; overflow:auto; border-right:1px solid rgba(0,0,0,.18);
+         box-shadow:inset -12px 0 24px -18px rgba(0,0,0,.55); }
+  .marca{ font-family:var(--serif); font-size:20px; font-weight:700; color:#fdf9ee;
           display:flex; gap:8px; align-items:center; padding:12px 10px 14px; }
   /* El wordmark es el enlace a la web (logo → inicio). No cambia de aspecto; solo cursor
      y una pista sutil al pasar por encima. */
   .marca-link{ text-decoration:none; color:inherit; display:inline-flex; align-items:flex-end;
     border-radius:8px; transition:opacity .15s ease; }
   .marca-link:hover{ opacity:.72; }
-  .marca-link:focus-visible{ outline:2px solid var(--acc); outline-offset:3px; }
+  .marca-link:focus-visible{ outline:2px solid #7ee0b8; outline-offset:3px; }
   /* Wordmark Audutor: bajo la palabra corre la ruta punteada y termina en el pin
      de ubicación — toda ruta acaba en un punto de encuentro. */
   .marca .wm{ display:inline-flex; flex-direction:column; }
@@ -79,23 +84,29 @@
      «fictional company» stays small UNDERNEATH, which is what it is: a disclaimer, not a
      fact. (This sidebar is the light one; the Spanish demo has the same card on dark.) */
   .tenant{ display:flex; gap:9px; align-items:center; margin:0 8px 12px; padding:9px 10px;
-           background:#fffdf5; border:1px solid #e0d3b4; border-radius:11px;
-           box-shadow:0 1px 3px rgba(90,70,30,.07); }
+           background:rgba(255,255,255,.11); border:1px solid rgba(255,255,255,.16);
+           border-radius:11px; }
   .tenant .ini-emp{ flex:0 0 auto; width:30px; height:30px; border-radius:9px;
            background:var(--acc); color:#fff; font-weight:800; font-size:12.5px;
            display:flex; align-items:center; justify-content:center; letter-spacing:-.02em; }
   .tenant .txt{ min-width:0; }
-  .tenant b{ color:#0d4d3d; display:block; font-size:15px; font-weight:800; line-height:1.2;
+  .tenant b{ color:#fff; display:block; font-size:15px; font-weight:800; line-height:1.2;
            letter-spacing:-.01em; }
-  .tenant small{ display:block; color:#8a7f63; font-size:11px; margin-top:2px; }
-  aside nav a{ display:flex; gap:10px; align-items:center; color:#3d5a4e; text-decoration:none;
-    padding:9px 10px; border-radius:9px; font-size:14px; font-weight:600; margin-bottom:2px; }
-  aside nav a:hover{ background:#eae1c9; }
-  aside nav a.act{ background:var(--acc); color:#fff; }
+  .tenant small{ display:block; color:#93b3a7; font-size:11px; margin-top:2px; }
+  aside nav a{ display:flex; gap:10px; align-items:center; color:#cfe3da; text-decoration:none;
+    padding:9px 10px; border-radius:9px; font-size:14px; font-weight:600; margin-bottom:2px;
+    transition:background .14s, color .14s; }
+  aside nav a:hover{ background:rgba(255,255,255,.09); color:#fff; }
+  /* El activo, en CREMA y no en más verde: sobre fondo verde, un verde más claro es un
+     matiz y el ojo no lo pilla de reojo. El crema es el mismo tono del área de contenido,
+     así que el activo dice algo además de destacar: es la página en la que estás, del
+     mismo material que lo que abre. Igual que en la demo española. */
+  aside nav a.act{ background:var(--bg); color:#0c4133; font-weight:700; }
   /* Operaciones: la entrada destacada — es donde se vive cada mañana */
-  aside nav a.destacada{ font-size:16.5px; padding:14px 12px; border:1.5px solid var(--acc);
-    background:#fdf8ec; margin-bottom:12px; border-radius:11px; }
-  aside nav a.destacada.act{ background:var(--acc); border-color:var(--acc); }
+  aside nav a.destacada{ font-size:16.5px; padding:14px 12px;
+    border:1.5px solid rgba(255,255,255,.28); background:rgba(255,255,255,.08);
+    margin-bottom:12px; border-radius:11px; color:#eaf4ef; }
+  aside nav a.destacada.act{ background:var(--bg); border-color:var(--bg); color:#0c4133; }
   /* grupos desplegables del menú, por temas */
   /* ── El menú, plegable en móvil ────────────────────────────────────────────────────
      En móvil el lateral deja de ser lateral: se apila arriba y, con el menú entero
@@ -137,9 +148,10 @@
 
   }
   .nav-g-cab{ display:flex; gap:10px; align-items:center; width:100%; text-align:left; border:0;
-    background:transparent; color:#3d5a4e; padding:9px 10px; border-radius:9px; font-size:14px;
-    font-weight:600; margin-bottom:2px; cursor:pointer; font-family:inherit; }
-  .nav-g-cab:hover{ background:#eae1c9; }
+    background:transparent; color:#cfe3da; padding:9px 10px; border-radius:9px; font-size:14px;
+    font-weight:600; margin-bottom:2px; cursor:pointer; font-family:inherit;
+    transition:background .14s, color .14s; }
+  .nav-g-cab:hover{ background:rgba(255,255,255,.09); color:#fff; }
   /* ── LA FLECHA DEL MENÚ ───────────────────────────────────────────────────────────
      Era el carácter «▾» a 11 px y en el gris del texto: sobre el verde de la barra casi no
      se veía, y a un palmo del ojo no se distinguía si el grupo estaba abierto o cerrado.
@@ -152,21 +164,22 @@
   .nav-g-cab .flecha{ margin-left:auto; flex:0 0 auto; width:16px; height:16px;
     position:relative; font-size:0; color:transparent; transition:transform .22s ease; }
   .nav-g-cab .flecha::before{ content:''; position:absolute; left:3px; top:4px;
-    width:8px; height:8px; border-right:2px solid #7d9a8e; border-bottom:2px solid #7d9a8e;
+    width:8px; height:8px; border-right:2px solid #9dc4b6; border-bottom:2px solid #9dc4b6;
     transform:rotate(45deg); border-radius:1px; transition:border-color .14s; }
-  .nav-g-cab:hover .flecha::before{ border-color:#0d4d3d; }
+  .nav-g-cab:hover .flecha::before{ border-color:#fff; }
   .nav-g.abierto .nav-g-cab .flecha{ transform:rotate(180deg); }
   /* Abierto además en dorado: si el único cambio fuera el giro, con el menú a media
      pantalla hay que mirar dos veces para saber cuál está desplegado. */
   .nav-g.abierto .nav-g-cab .flecha::before{ border-color:var(--gold); }
-  .nav-g.abierto .nav-g-cab{ color:#0d4d3d; }
-  .nav-g-hijos{ display:none; padding-left:10px; border-left:1px solid #dfd2b2; margin:0 0 4px 14px; }
+  .nav-g.abierto .nav-g-cab{ color:#fff; }
+  .nav-g-hijos{ display:none; padding-left:10px; border-left:1px dashed rgba(255,255,255,.22);
+    margin:0 0 4px 14px; }
   .nav-g.abierto .nav-g-hijos{ display:block; animation:aparece .25s ease; }
   aside nav a .n{ margin-left:auto; background:var(--rojo); color:#fff; font-size:10.5px;
     font-weight:800; border-radius:99px; padding:1px 7px; }
-  .pie-demo{ font-size:11px; color:#8a8368; padding:14px 10px 4px; line-height:1.5; }
-  .pie-demo button{ background:none; border:1px solid #cbbd97; color:#7a7156; border-radius:7px;
-    padding:4px 10px; font-size:11px; cursor:pointer; margin-top:6px; }
+  .pie-demo{ font-size:11px; color:#8faea2; padding:14px 10px 4px; line-height:1.5; }
+  .pie-demo button{ background:none; border:1px solid rgba(255,255,255,.24); color:#b6cfc5;
+    border-radius:7px; padding:4px 10px; font-size:11px; cursor:pointer; margin-top:6px; }
 
   /* ===== Modo guía: el guía abre su enlace personal y ve SOLO su día ===== */
   #guia-cab, #guia-dispo{ display:none; }
@@ -504,9 +517,10 @@
   aside nav a .n{ margin-left:auto; }
   .sup-chip{ font-size:8.5px; font-weight:800; letter-spacing:.04em; text-transform:uppercase;
     background:rgba(217,154,51,.18); color:var(--amber); padding:1px 5px; border-radius:5px; margin-left:6px; }
-  .leyenda-planes{ background:#fbf5e6; border:1px solid #e5d7b4; border-radius:9px; padding:9px 11px;
-    font-size:11.5px; line-height:1.5; color:#5c6653; margin-bottom:12px; }
-  .leyenda-planes b{ color:#2f443b; }
+  .leyenda-planes{ background:rgba(0,0,0,.20); border:1px solid rgba(255,255,255,.12);
+    border-radius:9px; padding:9px 11px; font-size:11.5px; line-height:1.5;
+    color:#a9c6ba; margin-bottom:12px; }
+  .leyenda-planes b{ color:#e4efe9; }
   .lock-gate{ text-align:center; max-width:520px; margin:20px auto; padding:34px 26px;
     border:1.5px dashed var(--gold); border-radius:16px; background:var(--gold-soft); }
   .lock-gate .cerr{ font-size:52px; }
@@ -864,7 +878,7 @@
       </div>
       <div class="plan-sel" id="plan-sel">
         <button data-plan="esencial" onclick="cambiarPlan('esencial')"><b>Essential</b>€0</button>
-        <button data-plan="pro" onclick="cambiarPlan('pro')"><b>Pro</b>€39</button>
+        <button data-plan="pro" onclick="cambiarPlan('pro')"><b>Pro</b>€45</button>
         <button data-plan="premium" onclick="cambiarPlan('premium')"><b>Premium</b>€149</button>
       </div>
       <div class="comp-sel" id="comp-sel">
@@ -919,8 +933,8 @@
       <div class="kpi"><span class="v">4</span><span class="l">tours today (1 live)</span></div>
       <div class="kpi"><span class="v">36</span><span class="l">people booked · 9 channels→1 system</span></div>
       <div class="kpi"><span class="v" style="color:var(--turq-deep);">91 %</span><span class="l">confirmed after the reminder</span></div>
-      <div class="kpi"><span class="v" id="kpi-propina" style="color:var(--coral-deep);">£318</span><span class="l">digital tips collected this week</span></div>
-      <div class="kpi"><span class="v">£70</span><span class="l">no-show fees recovered this month (reconciliation)</span></div>
+      <div class="kpi"><span class="v" id="kpi-propina" style="color:var(--coral-deep);" data-dinero="318" data-dec="0">£318</span><span class="l">digital tips collected this week</span></div>
+      <div class="kpi"><span class="v" data-dinero="70" data-dec="0">£70</span><span class="l">no-show fees recovered this month (reconciliation)</span></div>
       <div class="kpi"><span class="v">2</span><span class="l">no-shows marked automatically when yesterday’s 10:00 AM tour closed — no message sent to anyone</span></div>
     </div>
   </div>
@@ -1275,7 +1289,7 @@
   <div class="kpi-fila" style="margin:14px 0;">
     <div class="kpi malo"><span class="v">38 %</span><span class="l">historic no-show rate with NO system</span></div>
     <div class="kpi"><span class="v" id="kpi-prev">17 %</span><span class="l">expected no-show rate with this sequence</span></div>
-    <div class="kpi"><span class="v" id="kpi-rec">+34</span><span class="l">people/month brought back (≈ +£410 in tips)</span></div>
+    <div class="kpi"><span class="v" id="kpi-rec">+34</span><span class="l">people/month brought back (≈ +<span data-dinero="410" data-dec="0">£410</span> in tips)</span></div>
   </div>
   <div class="card" style="overflow-x:auto;" id="ns-tabla-card">
     <table id="tabla-noshow">
@@ -1678,8 +1692,8 @@
   <div class="card">
     <h2>⚖️ Platform reconciliation — who ends up paying for the gaps</h2>
     <div class="kpi-fila" style="margin:0 0 12px;">
-      <div class="kpi"><span class="v">£70.00</span><span class="l">clawed back this month by reporting no-shows in time</span></div>
-      <div class="kpi malo"><span class="v">£7.50</span><span class="l">absorbed by the company for reporting too late</span></div>
+      <div class="kpi"><span class="v" data-dinero="70" data-dec="2">£70.00</span><span class="l">clawed back this month by reporting no-shows in time</span></div>
+      <div class="kpi malo"><span class="v" data-dinero="7.50" data-dec="2">£7.50</span><span class="l">absorbed by the company for reporting too late</span></div>
     </div>
     <div class="gate-inline" id="gate-recon" style="display:none;">
       <div class="cerr">🔒</div>
@@ -1708,7 +1722,7 @@
   <div class="card" style="background:linear-gradient(115deg, var(--acc-soft), #f4f8f2); border-color:var(--acc);">
     <h2>💚 Your direct channel — the saving that pays for Audutor</h2>
     <p class="mini muted" style="margin:0 0 10px;">Every person who books on <b>your own site</b> instead of a
-      platform saves you their fee (~£2.50 per person on GuruWalk, and it varies by city). What you sell
+      platform saves you their fee (~<span data-dinero="2.5" data-dec="2">£2.50</span> per person on GuruWalk, and it varies by city). What you sell
       besides the tour, bundles, reviews and the guide’s QR all push this way. Drag the slider:</p>
     <div class="fila" style="gap:12px; align-items:center; flex-wrap:wrap;">
       <label class="mini" style="flex:1; min-width:260px;">If you shift
@@ -1808,15 +1822,15 @@
         <input type="range" id="py-grupo" min="5" max="40" step="1" value="20" oninput="calcProy()" style="width:100%;"></label>
       <label class="mini">Tours per day <b><span id="py-tours-v">3</span></b><br>
         <input type="range" id="py-tours" min="1" max="20" step="1" value="3" oninput="calcProy()" style="width:100%;"></label>
-      <label class="mini">Average tip per person <b>£<span id="py-prop-v">11.50</span></b><br>
-        <input type="range" id="py-prop" min="4" max="16" step="0.5" value="11.5" oninput="calcProy()" style="width:100%;"></label>
+      <label class="mini">Average tip per person <b><span data-moneda>£</span><span id="py-prop-v">11.50</span></b><br>
+        <input type="range" id="py-prop" min="4" max="16" step="0.01" value="11.5" oninput="calcProy()" style="width:100%;"></label>
       <label class="mini">Number of guides <b><span id="py-ng-v">3</span></b><br>
         <input type="range" id="py-ng" min="1" max="40" step="1" value="3" oninput="calcProy()" style="width:100%;"></label>
       <label class="mini">Bookings from your own site (no commission) <b><span id="py-dir-v">40</span> %</b><br>
         <input type="range" id="py-dir" min="0" max="100" step="5" value="40" oninput="calcProy()" style="width:100%;"></label>
-      <label class="mini">Platform fee per booking <b><span id="py-com-v">2,50</span> £</b><br>
+      <label class="mini">Platform fee per booking <b><span data-moneda>£</span><span id="py-com-v">2.50</span></b><br>
         <input type="range" id="py-com" min="0" max="5" step="0.25" value="2.5" oninput="calcProy()" style="width:100%;"></label>
-      <label class="mini">Company fixed costs per month <b><span id="py-ovh-v">250</span> £</b><br>
+      <label class="mini">Company fixed costs per month <b><span data-moneda>£</span><span id="py-ovh-v">250</span></b><br>
         <input type="range" id="py-ovh" min="0" max="8000" step="100" value="250" oninput="calcProy()" style="width:100%;"></label>
       <label class="mini">Operating days per month <b><span id="py-dias-v">26</span></b><br>
         <input type="range" id="py-dias" min="12" max="31" step="1" value="26" oninput="calcProy()" style="width:100%;"></label>
@@ -1830,7 +1844,7 @@
         <b><span id="py-rep-v">67</span> %</b></label>
       <label class="mini" id="py-ctl-fijo" style="display:none;">the company keeps
         <input type="range" id="py-fijo" min="1" max="10" step="0.5" value="2.5" oninput="calcProy()">
-        <b>£<span id="py-fijo-v">2.50</span></b> per person</label>
+        <b><span data-moneda>£</span><span id="py-fijo-v">2.50</span></b> per person</label>
     </div>
     <div class="fila" style="margin-top:10px; gap:8px;">
       <b class="mini">Platform fee:</b>
@@ -2757,13 +2771,33 @@ function codEscrito(t){
       if (String(vivos[j]).toUpperCase() === porPrefijo.toUpperCase()) return vivos[j];
     return null;
   }
+  /* ENTERO, o no es una mención. Esto era `may.indexOf(l)!==-1` —subcadena a secas— y
+     devolvía el PRIMERO de la lista que encajara: con `PYC-1` de Ana y `PYC-12` de Beto
+     vivas el mismo día, «cancela mi reserva PYC-12» casaba `PYC-1` y cancelaba la de
+     Ana. Beto pedía la suya, GuIA contestaba «¡Hecho!», y desaparecía la de otra
+     persona — que no se entera hasta el punto de encuentro. Las plataformas numeran
+     correlativo (GW-1, GW-12, GW-123), así que el choque no es raro: es lo normal en una
+     empresa con salidas diarias.
+     La comprobación es de frontera: a los lados del localizador no puede haber letra,
+     dígito ni guion. El guion cuenta como parte del código —`PYC-1` dentro de `PYC-1-A`
+     no es `PYC-1`— y ante la duda se prefiere no reconocer: pedir el código otra vez
+     cuesta un mensaje, cancelar la reserva de otro no tiene vuelta. */
   for (var i=0;i<vivos.length;i++){
     var l = String(vivos[i]||'').toUpperCase();
-    /* Cuatro caracteres de suelo: un localizador de dos letras casaría dentro de
-       cualquier palabra y una coincidencia así no es una mención. */
-    if (l.length>=4 && may.indexOf(l)!==-1) return l;
+    if (l.length>=4 && mencionEntera(may, l)) return l;
   }
   return null;
+}
+/* ¿Aparece `l` como pieza entera dentro de `may`? Se recorren TODAS las apariciones: la
+   primera puede estar pegada a algo y una posterior no. */
+function mencionEntera(may, l){
+  var i = -1;
+  while ((i = may.indexOf(l, i+1)) !== -1){
+    var antes = i > 0 ? may.charAt(i-1) : '';
+    var despues = may.charAt(i + l.length);
+    if (!/[A-Z0-9-]/.test(antes) && !/[A-Z0-9-]/.test(despues)) return true;
+  }
+  return false;
 }
 function codDe(t){ return codEscrito(t) || S.codConocido || null; }
 /* UN CÓDIGO ESCRITO QUE NO ES DE NINGUNA RESERVA VIVA. Se distingue de «no ha escrito
@@ -4373,7 +4407,32 @@ function respuestaGuiaES(t){
         'confirmación y dímelo otra vez, o dime tu nombre y se lo paso al encargado, que lo '+
         'mira contigo.\n\n<i>— Tu reserva SIGUE EN PIE: no se ha cancelado nada.</i>';
     }
-    var cod = codEscrito(t) || (ordenC ? S.codConocido : null);
+    /* PREGUNTAR NO ES ORDENAR, aunque el código venga escrito. Esto era
+       `codEscrito(t) || (ordenC ? …)`: con el localizador delante, `ordenC` no se miraba
+       y bastaba NOMBRAR la reserva para ejecutar. Así que «¿puedo cancelar mi reserva
+       PYC-12?» la cancelaba — la misma avería del 18-ago que se cerró para el código
+       CONOCIDO, colándose por la puerta del código ESCRITO.
+       La señal es la PERSONA: «¿puedo cancelar?» pregunta por la política; «¿me la
+       cancelas?» te lo está pidiendo a ti, y eso sí es una orden. Ante la duda no se
+       ejecuta: pedir que lo repita cuesta un mensaje y cancelar de más no tiene vuelta. */
+    /* EL SIGNO NO PUEDE SER REQUISITO, y esto era un agujero medido: con `/[?¿]/` delante,
+       «¿puedo cancelar mi reserva?» no tocaba nada y «puedo cancelar mi reserva» —las
+       mismas palabras sin el signo— CANCELABA. En un chat de móvil el signo es lo primero
+       que se cae: nadie abre interrogaciones escribiendo en la calle, así que la guarda
+       protegía justo el caso que menos ocurre.
+
+       La señal es LA PERSONA del verbo, como dice el comentario de arriba, y eso no
+       depende de la puntuación. El signo se queda como refuerzo —si está, es pregunta
+       seguro— pero ya no hace falta para que la guarda se arme. */
+    /* EL MODAL TIENE QUE GOBERNAR AL VERBO. Quitar el signo dejó suelto el «puedo», y
+       «cancela mi reserva PYC-12, NO PUEDO IR» pasó a leerse como pregunta: la excusa de
+       quien cancela lleva casi siempre un «no puedo». Se exige que el modal vaya seguido
+       de «cancelar»/«anular» —con un par de palabras de holgura para «puedo cancelar YA
+       mi reserva»— y así «no puedo ir» vuelve a ser lo que es, un motivo. */
+    var preguntaC = (/\b(puedo|podemos|podria|podriamos|se puede|es posible)\b(\s+\S+){0,2}\s+(cancelar|anular)\b/.test(m) ||
+                     /\b(hasta cuando|que pasa si|politica de cancelacion)\b/.test(m)) &&
+      !/\b(puedes|podrias|me la|nos la|me lo|cancelamela)\b/.test(m);
+    var cod = preguntaC ? null : (codEscrito(t) || (ordenC ? S.codConocido : null));
     if (cod){
       anotaGuia('Reserva «'+cod+'» cancelada por el chat — plaza liberada');
       return '¡Hecho! Cancelo tu reserva ✅ Tu plaza queda libre al instante.\n\n<i>— La reserva se cancela de verdad y la plaza vuelve a contar libre en el aforo. Queda apuntado en las observaciones del tour de hoy.</i>';
@@ -5331,7 +5390,22 @@ function respuestaEN(t){
         'confirmation email and send it again, or give me your name and the manager will sort '+
         'it out with you.\n\n<i>— Your booking STILL STANDS: nothing has been cancelled.</i>';
     }
-    var codC = codEscrito(t) || (ordenCE ? S.codConocido : null);
+    /* MISMA GUARDA QUE EN ESPAÑOL, y por el mismo motivo: con el localizador escrito
+       `ordenCE` no se miraba, así que «can I cancel my booking PYC-12?» la cancelaba.
+       La señal vuelve a ser la persona: «can I cancel?» pregunta por la política; «can
+       you cancel it?» te lo está pidiendo a ti. Ante la duda, no se ejecuta. */
+    /* Se mira el texto CRUDO y no el normalizado: `EN_ES` traduce «can» a «puedo» sin
+       distinguir persona, así que después de normalizar «can I cancel» y «can you cancel»
+       son la misma cadena y la señal que separa preguntar de ordenar se ha perdido. */
+    var crudoE = String(t||'').toLowerCase();
+    /* Sin exigir el «?», por lo mismo que en la rama española: «can I cancel my booking»
+       sin signo cancelaba, y con signo no. La señal es la persona, no la puntuación. */
+    /* Mismo criterio que en la rama española: el modal gobierna al verbo. Sin esto,
+       «cancel my booking, I can't make it» se leería como pregunta por el «can». */
+    var preguntaE = (/\b(can i|could i|can we|could we|am i able|is it possible)\b(\s+\S+){0,2}\s+cancel\b/.test(crudoE) ||
+                     /\b(until when|what if i cancel|cancellation policy|do i have to)\b/.test(crudoE)) &&
+      !/\b(can you|could you|please cancel|cancel it)\b/.test(crudoE);
+    var codC = preguntaE ? null : (codEscrito(t) || (ordenCE ? S.codConocido : null));
     if (codC){
       anotaGuia('Booking “'+codC+'” cancelled over chat — place released');
       return 'Done! Your booking is cancelled ✅ Thanks for letting us know in good time: your place is free again straight away.\n\n<i>— The booking is cancelled for real and the place counts free again. It is written into today\'s tour notes.</i>';
@@ -5931,17 +6005,36 @@ var COMPLEMENTOS = {
   guia:     { n:'GuIA, the assistant', precio:39, abre:['chat','cerebro'] },
   agente:   { n:'The platform agent', precio:29, abre:['agente'] },
   web:      { n:'Your website, always current', precio:9, abre:[] },
-  cuentas:  { n:'The books, tour by tour', precio:9, abre:['liquidacion'] },
+  /* `conciliacion` también, como en la demo española. Sin ella aquí, la reconciliación con
+     plataformas no colgaba de ningún complemento y caía al criterio de respaldo —el orden
+     del plan—, así que el Pro pelado la REGALABA mientras la app la cobra 9 €. Enseñarle a
+     un cliente una función dentro de su plan y luego cobrársela aparte no es un fallo
+     técnico: es una promesa rota. */
+  /* Las CUATRO que en el panel salen del mismo plato (`cuentas.resumen()`): ver el
+     comentario de la demo española. */
+  cuentas:  { n:'The books, tour by tour', precio:9, abre:['liquidacion','cuadro','conciliacion','proyeccion'] },
 };
 S.comp = { guia:false, agente:false, web:false, cuentas:false };
 function abiertoPorComplemento(v){
   for (var k in COMPLEMENTOS)
-    if (S.comp[k] && COMPLEMENTOS[k].abre.indexOf(v) !== -1) return true;
+    /* Tenerlo por el plan cuenta igual que tenerlo marcado: ver `INCLUIDOS_POR_PLAN`. */
+    if ((S.comp[k] || loTraeElPlan(k)) && COMPLEMENTOS[k].abre.indexOf(v) !== -1) return true;
   return false;
 }
+/* Lo que un PLAN trae dentro. Es la misma línea que `INCLUIDOS_POR_PLAN` en
+   `app/servidor/clientes.js` y que la de la demo española, y tiene dos consecuencias: lo
+   incluido NO se vuelve a cobrar y está ABIERTO. Aquí no existía ninguna de las dos, así
+   que Premium con «the books» marcado salía a 158 € —la app factura 149— y además ponía
+   candado en la liquidación y la conciliación, que el producto da gratis con ese plan. */
+var INCLUIDOS_POR_PLAN = { premium: ['cuentas'] };
+function loTraeElPlan(k){ return (INCLUIDOS_POR_PLAN[S.plan] || []).indexOf(k) >= 0; }
+
 function totalCesta(){
   var t = PLANES[S.plan].base, piezas = [];
-  for (var k in COMPLEMENTOS) if (S.comp[k]) { t += COMPLEMENTOS[k].precio; piezas.push(COMPLEMENTOS[k].n); }
+  for (var k in COMPLEMENTOS) if (S.comp[k]) {
+    if (loTraeElPlan(k)) { piezas.push(COMPLEMENTOS[k].n + ' (included)'); continue; }
+    t += COMPLEMENTOS[k].precio; piezas.push(COMPLEMENTOS[k].n);
+  }
   return { total:t, piezas:piezas };
 }
 function compTog(k, el){ S.comp[k] = el.checked; pintaComplementos(); pintaCandados(); ir((location.hash.slice(1))||'operaciones'); }
@@ -6046,7 +6139,14 @@ function cambiaMercado(k){
 }
 
 function pintaPlanSel(){
+  /* El PRECIO SALE DE `PLANES`, no del HTML. Estaba escrito a mano en cada botón y era
+     una copia más de la tarifa: al subir Pro de 39 a 45 € se actualizó `PLANES` y los
+     candados, y estos tres botones se quedaron con el 39 — en vivo, a dos centímetros de
+     un candado que decía 45. Escribiéndolo aquí, la cifra tiene un solo dueño y la
+     desincronización deja de ser posible en vez de quedar vigilada. */
   document.querySelectorAll('#plan-sel button').forEach(function(b){
+    var P = PLANES[b.dataset.plan];
+    if (P) b.innerHTML = '<b>' + P.n + '</b>' + P.precio;
     b.classList.toggle('on', b.dataset.plan===S.plan); });
 }
 /* El botón del cartel: marca el complemento y repinta, que es exactamente lo que hace la
@@ -6497,7 +6597,7 @@ function pintaManifiestoReal(){
     if (t.live && t.res.some(function(r){return r.grupo})){
       var av=document.createElement('div'); av.className='aviso-grupo';
       av.innerHTML='👥 <b>Possible group (~78 %):</b> bookings under the same surname, minutes apart, same channel. '+
-        'Policy: you can ask for a <b>£10 per person deposit</b>.';
+        'Policy: you can ask for a <b>'+dinero(10,0)+' per person deposit</b>.';
       mov.appendChild(av);
     }
     // lista de reservas con check-in + ajuste de nº de personas por el guía
@@ -6561,7 +6661,7 @@ function pintaManifiestoReal(){
     var media = t.rec && pres ? ' · average '+euros(t.rec/pres)+'/person' : '';
     caja.innerHTML='<strong>💶 Tour takings</strong>'+
       '<div class="fila" style="gap:8px; margin-top:8px; align-items:center;">'+
-        '£ <input class="rec-in" inputmode="decimal" placeholder="0.00" value="'+(t.rec?String(t.rec):'')+'" style="width:110px;">'+
+        MK.moneda.sim+' <input class="rec-in" inputmode="decimal" placeholder="0.00" value="'+(t.rec?String(t.rec):'')+'" style="width:110px;">'+
         '<button class="btn mini rec-save">Save</button>'+
         '<span class="mini muted rec-media">'+(t.rec?media:'')+'</span>'+
       '</div>'+
@@ -8383,7 +8483,7 @@ S.canales={ email:'bookings@oldtownwalks.co.uk', wa:'+44 7700 900 812',
     { plat:'GuruWalk',  base:'per person booked', coste:2.5, ventanaH:72, nota:'report the no-show within 72 h or you pay it' },
     { plat:'FreeTour.com',  base:'per person booked', coste:2.0, ventanaH:48, nota:'estimated window — confirm it' },
     { plat:'Viator', base:'commission on the sale',  coste:0,   ventanaH:0,  nota:'free tour, no per-person fee; changes in their own dashboard' },
-    { plat:'Own site', base:'no cost',            coste:0,   ventanaH:0,  nota:'direct booking: £0 commission' },
+    { plat:'Own site', base:'no cost',            coste:0,   ventanaH:0,  nota:'direct booking: no commission' },
   ] };
 function pintaCanales(){
   var c=document.getElementById('cn-remitentes');
@@ -8400,7 +8500,7 @@ function pintaCanales(){
     var h='<tr><th>Platform</th><th>How it charges</th><th>Cost per person</th><th>No-show deadline</th><th>If you miss it</th></tr>';
     S.canales.recon.forEach(function(r, i){
       h+='<tr><td><b>'+r.plat+'</b></td><td>'+r.base+'</td>'+
-        '<td>'+(r.coste?'<input value="'+String(r.coste).replace('.',',')+'" onchange="setRecon('+i+',\'coste\',this.value)" style="width:52px; border:1.5px solid var(--line); border-radius:6px; padding:4px 6px; font-family:var(--mono); font-size:12.5px;"> £':'—')+'</td>'+
+        '<td>'+(r.coste?'<input value="'+String(r.coste).replace('.',',')+'" onchange="setRecon('+i+',\'coste\',this.value)" style="width:52px; border:1.5px solid var(--line); border-radius:6px; padding:4px 6px; font-family:var(--mono); font-size:12.5px;"> '+MK.moneda.sim+'':'—')+'</td>'+
         '<td>'+(r.ventanaH?'<input value="'+r.ventanaH+'" onchange="setRecon('+i+',\'ventanaH\',this.value)" style="width:44px; border:1.5px solid var(--line); border-radius:6px; padding:4px 6px; font-family:var(--mono); font-size:12.5px;"> h':'—')+'</td>'+
         '<td class="mini muted">'+r.nota+'</td></tr>';
     });
@@ -8447,11 +8547,11 @@ function calcDirecto(){
   var base = 48*(S.canales.recon[0].coste||0) + 6*(S.canales.recon[1].coste||0);
   var anual = base*12*pct/100;
   document.getElementById('cd-ahorro').textContent =
-    '£'+anual.toLocaleString('en-GB',{maximumFractionDigits:0});
+    dinero(anual, 0);
   document.getElementById('cd-nota').innerHTML =
     'At Old Town Walks’ volume (54 people/month on platforms that charge per person). An operator of '+
     '4 tours a day (~1,100 platform bookings a month) would save <b>~'+
-    Math.round(1100*2.5*12*pct/100).toLocaleString('es-ES')+' £/year</b> with the same shift — '+
+    dinero(Math.round(1100*2.5*12*pct/100), 0)+'/year</b> with the same shift — '+
     'more than what Audutor costs for a year. The fee used comes from the reconciliation below (configurable).';
 }
 function setRecon(i, campo, val){
@@ -8849,11 +8949,11 @@ function calcProy(){
   document.getElementById('py-prop-v').textContent=prop.toLocaleString(MK.moneda.loc,d2);
   document.getElementById('py-ng-v').textContent=ng;
   document.getElementById('py-dir-v').textContent=Math.round(dir*100);
-  document.getElementById('py-com-v').textContent=com.toLocaleString('es-ES',d2);
-  document.getElementById('py-ovh-v').textContent=ovh.toLocaleString('es-ES');
+  document.getElementById('py-com-v').textContent=com.toLocaleString(MK.moneda.loc,d2);
+  document.getElementById('py-ovh-v').textContent=ovh.toLocaleString(MK.moneda.loc);
   document.getElementById('py-dias-v').textContent=dias;
   document.getElementById('py-rep-v').textContent=Math.round(rep*100);
-  document.getElementById('py-fijo-v').textContent=fijo.toLocaleString('es-ES',d2);
+  document.getElementById('py-fijo-v').textContent=fijo.toLocaleString(MK.moneda.loc,d2);
   var paxDia=grupo*tours, paxMes=paxDia*dias, brutoMes=paxDia*prop*dias;
   var comMes=com*paxMes*(1-dir);
   var base = brutoMes - (proyCosteV==='ingreso' ? comMes : 0);
@@ -8868,7 +8968,7 @@ function calcProy(){
     '<div class="kpi"><span class="v">'+paxDia+'</span><span class="l">people / day</span></div>'+
     '<div class="kpi"><span class="v">'+eur0(brutoMes)+'</span><span class="l">gross tips / month</span></div>'+
     '<div class="kpi"><span class="v">'+eur0(comMes)+'</span><span class="l">platform fees / month</span></div>'+
-    '<div class="kpi"><span class="v">'+margen.toLocaleString('es-ES',d2)+' £</span><span class="l">company margin per person</span></div>';
+    '<div class="kpi"><span class="v">'+dinero(margen, 2)+'</span><span class="l">company margin per person</span></div>';
   document.getElementById('py-nota').innerHTML=
     (proyModoV==='pct'
       ? 'The guide keeps <b>'+Math.round(rep*100)+' %</b> of what gets split; the company keeps the rest. '
@@ -8880,11 +8980,11 @@ function calcProy(){
     (guiaMes<0 ? ' <b style="color:var(--rojo);">⚠️ On this flat fee the guide would be out of pocket: lower the fee or raise the average tip.</b>' : '')+
     /* Realismo de plantilla: al crecer, el cuello de botella deja de ser la demanda
        y pasa a ser el equipo. Un guía sostiene ~2-3 salidas al día como mucho. */
-    (tpg>3 ? ' <b style="color:var(--rojo);">⚠️ '+tpg.toLocaleString('es-ES',{maximumFractionDigits:1})+
+    (tpg>3 ? ' <b style="color:var(--rojo);">⚠️ '+tpg.toLocaleString(MK.moneda.loc,{maximumFractionDigits:1})+
              ' tours per guide per day: that doesn’t add up. With '+tours+' departures you need at least '+
              Math.ceil(tours/3)+' guides (and more once you allow for breaks and days off).</b>'
            : (tpg>2 ? ' <span class="mini" style="color:var(--amber);">Team stretched thin: '+
-               tpg.toLocaleString('en-GB',{maximumFractionDigits:1})+' tours per guide per day.</span>' : ''));
+               tpg.toLocaleString(MK.moneda.loc,{maximumFractionDigits:1})+' tours per guide per day.</span>' : ''));
 }
 
 // registro inicial del panel de respuestas: lo confirmado de fábrica (sin chip “nuevo”)
@@ -8893,7 +8993,58 @@ CAMPOS_EMPRESA.forEach(function(c){ if ((S.kbEmpresa[c.k]||'').trim())
 S.tours.forEach(function(t){ CAMPOS_KB.forEach(function(c){ if ((t.kb[c.k]||'').trim())
   S.recientes.push({ tipo:'kb', tourId:t.id, k:c.k, seed:true }); }); });
 seedDispo(); seedCobertura();
-pintaManifiesto(); pintaNoshowCfg(); pintaNoshow(); pintaLiq(); pintaCerebro(); pintaCombosDestinatarios(); pintaPost(); calcProy(); pintaEquipo(); pintaCanales(); pintaOperaciones();
+/* LOS DESLIZADORES DE LA PROYECCIÓN ARRANCAN CON ESTA EMPRESA. Estaban escritos en el HTML
+   —grupos de 20, 3 tours al día, 3 guías, 40 % de web propia— y la operación que la demo
+   acababa de enseñar iba de 11 por grupo, 2 salidas al día, 2 guías y 33 % de web. La
+   Proyección es la pantalla que se abre DELANTE del prospecto para sustituir esos números
+   por los suyos; que arranque con otra empresa distinta de la de las cinco pantallas
+   anteriores es lo que hace que quien compara deje de creerse las dos.
+
+   Es el port de `sembrarProy()` de la demo española, con una diferencia: aquí «cerrada» no
+   es una marca del tour —esta demo no tiene ciclo semanal— sino el `pasado` del día. La
+   regla de fondo es la misma y es la que importa: en el divisor de la propina media solo
+   entra quien YA vino, porque quien no ha salido todavía no ha dejado nada y bajaría la
+   media.
+
+   Cada valor se redondea AL PASO DE SU DESLIZADOR: uno de paso 1 no puede valer 11,4, y
+   asignárselo lo deja en un estado que el control no puede reproducir al moverlo. */
+function operacionDelCiclo(){
+  var o = { salidas:0, pax:0, rec:0, presentes:0, web:0, dias:(S.agenda||[]).length||1 };
+  (S.agenda||[]).forEach(function(d){ (d.tours||[]).forEach(function(t){
+    o.salidas++; o.pax += paxDe(t.res); o.rec += (t.rec||0);
+    (t.res||[]).forEach(function(r){
+      if (r.ok && d.pasado) o.presentes += (+r.p||0);
+      if (r.canal === 'Own site') o.web += (+r.p||0);
+    });
+  })});
+  o.grupo   = o.salidas ? o.pax/o.salidas : 0;
+  o.salDia  = o.salidas / o.dias;
+  o.propPax = o.presentes ? o.rec/o.presentes : 0;
+  o.guias   = (S.equipo.guias||[]).filter(function(g){ return g.activo; }).length;
+  o.pctWeb  = o.pax ? o.web*100/o.pax : 0;
+  return o;
+}
+function sembrarProy(){
+  if (!document.getElementById('py-grupo')) return;
+  var o = operacionDelCiclo();
+  /* EL PASO SALE DEL PROPIO CONTROL. Estaba escrito aquí otra vez, y las dos copias se
+     separaron: a `py-dir` se le sembraba redondeando a 1 cuando su paso es 5, así que el
+     navegador ajustaba el 33 a 35 y el deslizador arrancaba diciendo un número que la
+     operación no da. Un hecho, un sitio. */
+  var pon = function(id, v){
+    var e = document.getElementById(id); if(!e) return;
+    var paso = +e.step || 1, min = +e.min, max = +e.max;
+    e.value = Math.min(max, Math.max(min, Math.round(v/paso)*paso));
+  };
+  pon('py-grupo', o.grupo);
+  pon('py-tours', o.salDia);
+  pon('py-prop',  o.propPax);   // su paso es de céntimo: la media medida cabe entera
+  pon('py-ng',    o.guias);
+  pon('py-dir',   o.pctWeb);
+  calcProy();
+}
+
+pintaManifiesto(); pintaNoshowCfg(); pintaNoshow(); pintaLiq(); pintaCerebro(); pintaCombosDestinatarios(); pintaPost(); sembrarProy(); pintaEquipo(); pintaCanales(); pintaOperaciones();
 pintaGatesInline(); pintaWaTope(); pintaCanalChat(); pintaPropCfg(); pintaCoste();
 msg('bot','Hi! 👋 I’m GuIA, the automated assistant answering this chat. Right now I answer about “'+tourChat().nombre+'” — try the examples, or create another tour under 🧠 Brain and you’ll see each one has its own brain, with nothing mixed in.');
 </script>
