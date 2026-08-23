@@ -6683,7 +6683,7 @@ var COMPLEMENTOS = {
      un complemento que no se ve en la demo no se vende.
      `necesita:'web'` no es preferencia comercial: sin página no hay dónde reservar.
      Lo vigila `app/tests/las-tres-superficies.test.mjs`. */
-  reservas: { n:'Tu tour de pago', precio:19, abre:['carrito'], necesita:'web' },
+  reservas: { n:'Tu tour de pago', precio:19, abre:['carrito'] },
 };
 S.comp = { guia:false, agente:false, web:false, cuentas:false };
 
@@ -6736,21 +6736,10 @@ function totalCesta(){
    esto, la demo dejaría contratar «Tu tour de pago» sin «Tu web» —y el operador se
    encontraría el 409 el día que lo hiciera de verdad en su panel—. */
 function compTog(k, el){
-  var req = COMPLEMENTOS[k].necesita;
-  if (el.checked && req && !S.comp[req]) {
-    el.checked = false;
-    toast('«' + COMPLEMENTOS[k].n + '» necesita «' + COMPLEMENTOS[req].n + '»: sin página no hay dónde reservar.');
-    return;
-  }
-  if (!el.checked) {
-    var colgado = null;
-    for (var o in COMPLEMENTOS) if (COMPLEMENTOS[o].necesita === k && S.comp[o]) colgado = o;
-    if (colgado) {
-      el.checked = true;
-      toast('No puedes quitar «' + COMPLEMENTOS[k].n + '» mientras tengas «' + COMPLEMENTOS[colgado].n + '», que la necesita.');
-      return;
-    }
-  }
+  /* Aquí vivía la comprobación de dependencias: «Tu tour de pago» necesitaba «Tu web», y
+     esto marcaba una al tocar la otra y bloqueaba quitarla. Desde el 23-ago-2026 ningún
+     complemento necesita a otro —hay dos superficies donde reservar, la nuestra y la del
+     propio operador— así que marcar una casilla ya no arrastra a ninguna. */
   S.comp[k] = el.checked; pintaComplementos(); pintaCandados(); ir((location.hash.slice(1))||'operaciones');
 }
 function pintaComplementos(){

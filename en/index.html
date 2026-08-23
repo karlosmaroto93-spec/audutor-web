@@ -1251,7 +1251,7 @@
         </ul>
       </details>
       <label class="tf-o con-mas"><input type="checkbox" data-c="web" data-eur="9" onchange="tarifa()">
-        <span class="tf-n">Your website, always current <b style="font-weight:600">(and the key to "Your paid tour")</b><small>The one you have today shows last summer’s timetable. This one reads the same data as the guide’s brief: change the meeting point once and it changes in both</small></span>
+        <span class="tf-n">Your website, always current<small>The one you have today shows last summer’s timetable. This one reads the same data as the guide’s brief: change the meeting point once and it changes in both</small></span>
         <span class="tf-p">+€9</span></label>
       <details class="tf-mas"><summary>What it does, exactly</summary>
         <ul>
@@ -1283,8 +1283,8 @@
           below — and that one needs this. Together they are €28.</p>
       </details>
 
-      <label class="tf-o con-mas"><input type="checkbox" data-c="reservas" data-eur="19" data-nec="web" onchange="tarifa()">
-        <span class="tf-n">Your paid tour <b style="font-weight:600">(needs “Your website”)</b><small>The food walk, the ghost walk, the private one: booked on YOUR page instead of the platform that takes 20 to 30 % of every ticket. The seat is held straight away against the real capacity, and the payment goes to your gateway — never to ours</small></span>
+      <label class="tf-o con-mas"><input type="checkbox" data-c="reservas" data-eur="19" onchange="tarifa()">
+        <span class="tf-n">Your paid tour<small>The food walk, the ghost walk, the private one: booked on YOUR page instead of the platform that takes 20 to 30 % of every ticket. The seat is held straight away against the real capacity, and the payment goes to your gateway — never to ours</small></span>
         <span class="tf-p">+€19</span></label>
       <details class="tf-mas"><summary>What it does, exactly</summary>
         <ul>
@@ -1327,7 +1327,6 @@
             looks.</li>
         </ul>
       </details>
-      <p id="tf-aviso" hidden class="mini" style="margin:8px 0 0;color:var(--acc,#1f6f52);font-weight:600"></p>
 
       <div class="tf-res">
         <div id="tf-lineas"><p class="tf-vacio">No add-ons: you pay for the traveller bundle only.</p></div>
@@ -1652,20 +1651,9 @@ var TF_PLAN = 'pro';            // el plan sobre el que se enseña el total
 /* The add-ons that get ADDED to that plan: what it carries inside is not charged twice.
    Takes the plan instead of reading `TF_PLAN` because the three cards are painted at
    once, each with its own price. */
-/* ── LO QUE NECESITA A OTRO ───────────────────────────────────────────────────────────
-   Gemelo de la web española. «Your paid tour» NECESITA «Your website»: la reserva de pago
-   vive EN la página que da «Your website», y `clientes.contrata()` lo hace cumplir con un
-   409. Esta calculadora sumaba toda casilla marcada sin mirarlo, así que enseñaba 45 + 19
-   = 64 €/mes por una tarifa que no se puede contratar. Se marca el requisito SOLO, como
-   hace `compTog` en las demos, y la casilla lo anuncia antes de que pase. */
-function tfNecesarios(){
-  var marca = false;
-  document.querySelectorAll('.tf-o input[data-nec]:checked').forEach(function(i){
-    var req = document.querySelector('.tf-o input[data-c="' + i.dataset.nec + '"]');
-    if (req && !req.checked) { req.checked = true; marca = true; }
-  });
-  return marca;
-}
+/* Aquí vivía `tfNecesarios()`, que marcaba sola la casilla que otra necesitaba. «Tu tour
+   de pago» dejó de necesitar «Tu web» el 23-ago-2026 —desde la puerta de entrada hay otra
+   superficie donde reservar—, así que ya no hay ninguna casilla que arrastre a otra. */
 
 function tfExtras(plan){
   var t = 0, piezas = [];
@@ -1767,14 +1755,6 @@ function pintaUnidad(totalPorPlan){
 }
 
 function tarifa(){
-  /* ANTES de contar. Si alguien marcó algo que necesita otra cosa, se marca la otra y se
-     dice: un precio que sube 9 € sin explicación se lee como que la página engaña. */
-  if (tfNecesarios()) {
-    var av = document.getElementById('tf-aviso');
-    if (av) { av.textContent = 'I have ticked “Your website” too: without a page there is nowhere to book.'; av.hidden = false;
-              clearTimeout(window.__tfAv);
-              window.__tfAv = setTimeout(function(){ av.hidden = true; }, 6000); }
-  }
   var ex = tfExtras(TF_PLAN);
   document.querySelectorAll('.plan').forEach(function(p){
     var imp = p.querySelector('.precio .imp'); if(!imp) return;
