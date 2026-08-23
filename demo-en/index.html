@@ -851,6 +851,7 @@
     <div class="nav-g" id="ng-ventas">
       <button class="nav-g-cab" onclick="this.parentElement.classList.toggle('abierto')">📣 Bookings &amp; sales <span class="flecha">▾</span></button>
       <div class="nav-g-hijos">
+        <a href="#web" data-v="web">🌍 Your website <span class="cand">🔒</span></a>
         <a href="#canales" data-v="canales">🔌 Channels &amp; sync</a>
         <a href="#agente" data-v="agente">🤖 The platform agent <span class="cand">🔒</span></a>
         <a href="#noshow" data-v="noshow">📉 Anti no-show</a>
@@ -858,7 +859,7 @@
       </div>
     </div>
     <div class="nav-g" id="nav-eco">
-      <button class="nav-g-cab" onclick="this.parentElement.classList.toggle('abierto')">💼 Money <span class="sup-chip">add-on</span><span class="flecha">▾</span></button>
+      <button class="nav-g-cab" onclick="this.parentElement.classList.toggle('abierto')">💼 Money <span class="flecha">▾</span></button>
       <div class="nav-g-hijos">
         <a href="#ahorro" data-v="ahorro">⚖️ Reconciliation &amp; savings</a>
         <a href="#cuadro" data-v="cuadro">📈 Analytics <span class="cand">🔒</span></a>
@@ -887,7 +888,6 @@
         <label><input type="checkbox" id="c-guia" onchange="compTog('guia',this)"><span>GuIA, the assistant</span><b>+€39</b></label>
         <label><input type="checkbox" id="c-agente" onchange="compTog('agente',this)"><span>The platform agent</span><b>+€29</b></label>
         <label><input type="checkbox" id="c-web" onchange="compTog('web',this)"><span>Your website, always current</span><b>+€9</b></label>
-        <label><input type="checkbox" id="c-cuentas" onchange="compTog('cuentas',this)"><span>The books, tour by tour</span><b>+€9</b></label>
         <div class="comp-total">Your plan: <b id="comp-tot">€39</b><span id="comp-desglose"></span></div>
       </div>
       <div style="font-size:10.5px; margin-top:8px; opacity:.85; line-height:1.5;">💶 Tips: <b>0 %</b>. Audutor does not take the tip nor a penny of it — it records it and squares it.</div>
@@ -1698,7 +1698,7 @@
     <div class="gate-inline" id="gate-recon" style="display:none;">
       <div class="cerr">🔒</div>
       <h2 style="margin:6px 0 2px;">Platform reconciliation</h2>
-      <p style="margin:6px 0;"><span class="chip" style="background:rgba(201,138,45,.25); color:var(--amber);">With "the books, tour by tour" · €9/month — included in Premium</span></p>
+      <p style="margin:6px 0;"><span class="chip" style="background:rgba(201,138,45,.25); color:var(--amber);">In every plan, at no extra cost</span></p>
       <p style="color:var(--ink2); max-width:48ch; margin:8px auto 0;">Reconciliation is Pro’s <b>return on
         investment in black and white</b>: this month it clawed back <b>£70</b> in no-show fees —
         <b>nearly the whole subscription, from this one module</b>.</p>
@@ -1961,6 +1961,48 @@
   </div>
 </section>
 
+<!-- ================= YOUR WEBSITE =================
+     «Tu web» costaba 9 €/mes y no abría NINGUNA vista (`abre: []`): quien se planteaba
+     pagarla no veía qué compraba. Esta pantalla es lo que faltaba, y no inventa nada —
+     reproduce lo que `app/servidor/web.js` genera de verdad, con los mismos bloques, el
+     mismo orden y las mismas tres reglas. -->
+<section class="vista" id="v-web">
+  <div class="cab"><h1>Your website</h1><span class="sub">it comes from what you already wrote in the Brain — which is why it cannot go stale</span></div>
+
+  <div class="card">
+    <h2>🕳️ What it still needs</h2>
+    <div id="web-falta"></div>
+    <p class="mini muted" style="margin:8px 0 0;">An empty field <b>does not appear</b>: no label,
+      no dash, no "ask us". If you did not say it, your page does not say it — same as GuIA.
+      <button class="btn mini" onclick="ir('cerebro')">Fill it in the Brain</button></p>
+  </div>
+
+  <div class="card">
+    <h2>👁️ How it will look</h2>
+    <div class="fila" style="gap:8px; flex-wrap:wrap; margin:0 0 10px; align-items:center;">
+      <select id="web-pagina" onchange="pintaWeb()" style="border:1.5px solid var(--line); border-radius:8px; padding:7px 10px; font-size:13px; font-family:inherit;"></select>
+      <span class="chip gris" id="web-marca"></span>
+    </div>
+    <div id="web-previa" style="border:1.5px solid var(--line); border-radius:10px; background:#fff; color:#1a1a1a; padding:18px 20px; max-height:460px; overflow:auto;"></div>
+    <p class="mini muted" style="margin:10px 0 0;">This is what a traveller sees. <b>No photos</b>,
+      and it says why: the page holds up without them instead of leaving grey gaps. And <b>no AI</b>:
+      these are your words, you sign the page.</p>
+  </div>
+
+  <div class="card">
+    <h2>🌍 Publishing it</h2>
+    <div class="fila" style="gap:6px; align-items:center; margin:0 0 8px; flex-wrap:wrap;">
+      <span class="mini">audutor.com/w/</span>
+      <input id="web-slug" value="old-town-walks" style="flex:1; min-width:140px; border:1.5px solid var(--line); border-radius:8px; padding:7px 10px; font-size:13px; font-family:var(--mono);">
+      <button class="btn mini" onclick="publicaWeb()" id="web-pub">Publish it now</button>
+    </div>
+    <p class="mini muted" style="margin:0;">Choose the address carefully: it will end up on posters
+      and QR codes, and if you change it <b>the links you already handed out stop working</b>. What
+      goes out to the street is put out by a person: choosing the address and flipping the switch are
+      <b>two gestures</b>, never a side effect of saving a fact in the Brain.</p>
+  </div>
+</section>
+
 <!-- ================= EQUIPO Y DISPONIBILIDAD ================= -->
 <section class="vista" id="v-equipo">
   <div class="cab"><h1>Team &amp; availability</h1><span class="sub">who guides, when they can, and which departures need cover</span></div>
@@ -1973,6 +2015,15 @@
     <p class="mini muted" style="margin:10px 0 0;">“Guide can check in”: a permission you set guide by guide — switch it
       on and that guide can check people in from their own manifest; leave it off and only the manager can. Guides
       <b>never see customer phone numbers</b>: GuIA sits in between.</p>
+    <p class="mini muted" style="margin:8px 0 0;"><b>If someone loses their email</b>, you change
+      it from their row and they're back in. <details class="mas"><summary>ⓘ more</summary><span class="mas-p">Everything
+      about signing in hangs off the email address — the sign-in link, the code, and the way back
+      if a phone with a passkey is lost — so a guide who leaves the company where their mailbox
+      lived would be locked out for good. Changing it closes their open sessions and notifies the
+      old address: if someone ever took an account over by changing its email, the owner hears
+      about it from that notice rather than the day they can't get in. Your own address you change
+      yourself, in your own row. And if it's you who's locked out, we change it for you once we've
+      confirmed it by phone.</span></details></p>
   </div>
 
   <div class="card">
@@ -1997,6 +2048,14 @@
       have nobody covering them.</span></details></div>
     <div style="overflow-x:auto;"><div class="cal" id="eq-cal"></div></div>
     <div class="cal-leyenda" id="eq-cal-leyenda"></div>
+    <p class="mini muted" style="margin:8px 0 0;"><b>You do this once.</b> The rota is a
+      weekly pattern, not a list of dates: you set it and it stays that way next week.
+      <details class="mas"><summary>ⓘ more</summary><span class="mas-p">When something changes — someone off
+      sick, high season, a new guide — you only touch what changed. The real panel also has
+      a “↺ Repeat last week” that copies who led each tour on the same day at the same time:
+      it tells you how many it will touch before touching them, never overwrites what you
+      set by hand, and skips anyone who said they can't or would end up in two places at
+      once.</span></details></p>
     <div id="eq-cal-picker" style="display:none; margin-top:14px;"></div>
     <div class="fila" style="margin-top:14px; gap:8px;">
       <input id="eq-nf-tour" placeholder="Special tour" style="border:1.5px solid var(--line); border-radius:8px; padding:7px 10px; font-size:13px; font-family:inherit;">
@@ -5984,15 +6043,16 @@ function agComprueba(b){
 var SUPLEMENTOS={
   chat:      { n:'GuIA · Customer chat', plan:'Pro', d:'The assistant that handles your customers in the chat on your site: it answers with the facts of each tour and hands over anything it does not know. It never makes things up.' },
 cerebro:   { n:'GuIA’s brain', plan:'Pro', d:'The per-tour fact sheet that feeds the assistant, with AI filling it in from the tour’s own page and drafts you can edit.' },   // y L1991: n:'Smart anti-no-show sequence'
+  web:       { n:'Your website', plan:'Pro', d:'Your public page, built from what you already wrote in the Brain: one block per kind of question, and an empty field does not appear. No photos and no AI — these are your words.' },
   agente:    { n:'The platform agent', plan:'Premium', d:'Signs into your platform dashboards with YOUR session —Audutor stores no password—, counts how many people each one has on record and closes full departures. And even when it says it closed one, it stays unticked here until you check it yourself.' },
   carrito:   { n:'What you sell beyond the tour', plan:'Premium', d:'Your catalogue of extras — ticketed walks, private tours, tastings — shows on your site and GuIA mentions it when people ask what else you do. Audutor charges for none of it: it sends people to where you already take payment.' },
-  cuadro:    { n:'Analytics', plan:'Premium', d:'The numbers behind the business: occupancy, channels, tips by guide and time slot, no-shows. So you decide on data, not on a hunch.' },
-  liquidacion:{ n:'Guide payouts', plan:'Pro', d:'Every tour’s books balanced: split by percentage or flat fee, channel cost, CSV and print. The guide never pays.' },
-  proyeccion:{ n:'Revenue projection', plan:'Premium', d:'The business-plan simulator: drag the sliders and see what each guide and the company earn per month.' },
+  cuadro:    { n:'Analytics', plan:'todos', d:'The numbers behind the business: occupancy, channels, tips by guide and time slot, no-shows. So you decide on data, not on a hunch.' },
+  liquidacion:{ n:'Guide payouts', plan:'todos', d:'Every tour’s books balanced: split by percentage or flat fee, channel cost, CSV and print. The guide never pays.' },
+  proyeccion:{ n:'Revenue projection', plan:'todos', d:'The business-plan simulator: drag the sliders and see what each guide and the company earn per month.' },
   /* Claves de gating INLINE (sin vista propia ni enlace de nav): las usa pintaGatesInline()
      para difuminar bloques dentro de vistas accesibles en todos los planes. */
   noshowSmart:{ n:'Smart no-show reminders', plan:'Pro', d:'The reminder sequence adapts to how risky each booking looks: more nudges where the no-show risk is highest, without pestering anyone who already confirmed.' },
-  conciliacion:{ n:'Platform reconciliation', plan:'Pro', d:'The list of no-shows to report inside each platform’s deadline, built for you from the guide’s own head count, so you claw the fees back.' },
+  conciliacion:{ n:'Platform reconciliation', plan:'todos', d:'The list of no-shows to report inside each platform’s deadline, built for you from the guide’s own head count, so you claw the fees back.' },
 };
 /* Planes de la demo (precios congruentes con la landing) y qué desbloquea cada uno. */
 /* Los planes son BONOS DE VIAJEROS; lo que decide las funciones son los COMPLEMENTOS. */
@@ -6004,7 +6064,7 @@ var PLANES={ esencial:{orden:0, n:'Essential', precio:'€0',   bono:150,  base:
 var COMPLEMENTOS = {
   guia:     { n:'GuIA, the assistant', precio:39, abre:['chat','cerebro'] },
   agente:   { n:'The platform agent', precio:29, abre:['agente'] },
-  web:      { n:'Your website, always current', precio:9, abre:[] },
+  web:      { n:'Your website, always current', precio:9, abre:['web'] },
   /* `conciliacion` también, como en la demo española. Sin ella aquí, la reconciliación con
      plataformas no colgaba de ningún complemento y caía al criterio de respaldo —el orden
      del plan—, así que el Pro pelado la REGALABA mientras la app la cobra 9 €. Enseñarle a
@@ -6012,32 +6072,57 @@ var COMPLEMENTOS = {
      técnico: es una promesa rota. */
   /* Las CUATRO que en el panel salen del mismo plato (`cuentas.resumen()`): ver el
      comentario de la demo española. */
-  cuentas:  { n:'The books, tour by tour', precio:9, abre:['liquidacion','cuadro','conciliacion','proyeccion'] },
+  /* «TU TOUR DE PAGO», QUE FALTABA. El servidor lo cobra como complemento
+     (`clientes.COMPLEMENTOS.reservas`, 19 €) y aquí el carrito se abría por PLAN: es
+     exactamente el mismo descuadre que ya se corrigió para `conciliacion` —la demo
+     ofrecía «cambiar a Premium» por algo que en el servidor vive detrás de un
+     complemento, así que quien pagara el plan se encontraría un 402 en la pantalla
+     que compró—. Y peor: al no estar en el selector, el operador no lo descubría, y
+     un complemento que no se ve en la demo no se vende.
+     `necesita:'web'` no es preferencia comercial: sin página no hay dónde reservar.
+     Lo vigila `app/tests/las-tres-superficies.test.mjs`. */
+  reservas: { n:'Your paid tour', precio:19, abre:['carrito'], necesita:'web' },
 };
 S.comp = { guia:false, agente:false, web:false, cuentas:false };
 function abiertoPorComplemento(v){
   for (var k in COMPLEMENTOS)
-    /* Tenerlo por el plan cuenta igual que tenerlo marcado: ver `INCLUIDOS_POR_PLAN`. */
-    if ((S.comp[k] || loTraeElPlan(k)) && COMPLEMENTOS[k].abre.indexOf(v) !== -1) return true;
+    if (S.comp[k] && COMPLEMENTOS[k].abre.indexOf(v) !== -1) return true;
   return false;
 }
-/* Lo que un PLAN trae dentro. Es la misma línea que `INCLUIDOS_POR_PLAN` en
-   `app/servidor/clientes.js` y que la de la demo española, y tiene dos consecuencias: lo
-   incluido NO se vuelve a cobrar y está ABIERTO. Aquí no existía ninguna de las dos, así
-   que Premium con «the books» marcado salía a 158 € —la app factura 149— y además ponía
-   candado en la liquidación y la conciliación, que el producto da gratis con ese plan. */
-var INCLUIDOS_POR_PLAN = { premium: ['cuentas'] };
-function loTraeElPlan(k){ return (INCLUIDOS_POR_PLAN[S.plan] || []).indexOf(k) >= 0; }
+/* Aquí vivía `INCLUIDOS_POR_PLAN = { premium:['cuentas'] }` con su `loTraeElPlan`. Era la
+   única cosa que un plan traía dentro, y desde el 23-ago-2026 «las cuentas de cada tour»
+   está en TODOS los planes: la idea se quedó sin contenido. Se fue de las cinco superficies
+   a la vez, que era el motivo de quitarla. */
 
 function totalCesta(){
   var t = PLANES[S.plan].base, piezas = [];
   for (var k in COMPLEMENTOS) if (S.comp[k]) {
-    if (loTraeElPlan(k)) { piezas.push(COMPLEMENTOS[k].n + ' (included)'); continue; }
     t += COMPLEMENTOS[k].precio; piezas.push(COMPLEMENTOS[k].n);
   }
   return { total:t, piezas:piezas };
 }
-function compTog(k, el){ S.comp[k] = el.checked; pintaComplementos(); pintaCandados(); ir((location.hash.slice(1))||'operaciones'); }
+/* LA DEPENDENCIA, EN LOS DOS SENTIDOS, como en el servidor (`clientes.contrata`): no se
+   enciende lo que no puede funcionar solo, y no se apaga aquello de lo que otro cuelga. Sin
+   esto, la demo dejaría contratar «Tu tour de pago» sin «Tu web» —y el operador se
+   encontraría el 409 el día que lo hiciera de verdad en su panel—. */
+function compTog(k, el){
+  var req = COMPLEMENTOS[k].necesita;
+  if (el.checked && req && !S.comp[req]) {
+    el.checked = false;
+    toast('«' + COMPLEMENTOS[k].n + '» needs «' + COMPLEMENTOS[req].n + '»: without a page there is nowhere to book.');
+    return;
+  }
+  if (!el.checked) {
+    var colgado = null;
+    for (var o in COMPLEMENTOS) if (COMPLEMENTOS[o].necesita === k && S.comp[o]) colgado = o;
+    if (colgado) {
+      el.checked = true;
+      toast('You cannot switch off «' + COMPLEMENTOS[k].n + '» while «' + COMPLEMENTOS[colgado].n + '» needs it.');
+      return;
+    }
+  }
+  S.comp[k] = el.checked; pintaComplementos(); pintaCandados(); ir((location.hash.slice(1))||'operaciones');
+}
 function pintaComplementos(){
   var c = totalCesta(), t = document.getElementById('comp-tot');
   /* En EUROS, no en la moneda del mercado. `dinero()` formatea con la divisa del mercado
@@ -6052,7 +6137,13 @@ function pintaComplementos(){
     : PLANES[S.plan].n + ' · ' + bono + ' travellers included';
   for (var k in COMPLEMENTOS){ var el = document.getElementById('c-'+k); if (el) el.checked = !!S.comp[k]; }
 }
-function reqOrden(v){ return SUPLEMENTOS[v].plan==='Premium' ? 2 : 1; }   // plan mínimo que lo incluye
+/* Plan mínimo que lo incluye. `plan:'todos'` da CERO —el orden de Esencial— y es lo que
+   hace real esa etiqueta: sin ella, las cuatro pantallas de las cuentas seguían pidiendo
+   orden 1 y salían con candado en el plan gratuito, que es donde más se mira la demo. */
+function reqOrden(v){
+  var p = SUPLEMENTOS[v].plan;
+  return p==='Premium' ? 2 : p==='todos' ? 0 : 1;
+}
 /* Qué complemento abre esta vista, o null si la abre el plan. Existe porque el cartel del
    candado ofrecía «Cambiar a Pro» para vistas que el plan NO abre —GuIA y la liquidación—:
    se pulsaba, se cambiaba de plan y el candado seguía puesto. Un botón que no hace nada es
@@ -6183,6 +6274,121 @@ function pintaGate(v){
       '<button class="btn sec" onclick="desbloquear(\''+v+'\')">🔓 Just try it (demo)</button>'+
     '</div>';
 }
+/* ── TU WEB ───────────────────────────────────────────────────────────────────────────
+   Los bloques, el orden y los imprescindibles son COPIA LITERAL de `app/servidor/web.js`.
+   No es duplicación por comodidad: esta demo no habla con el servidor, y si divergieran,
+   la pantalla que se usa para vender el complemento enseñaría una página distinta de la
+   que se entrega. Las claves coinciden una a una con CAMPOS_KB / CAMPOS_EMPRESA.
+
+   Las tres reglas de `web.js`, respetadas aquí: (1) un campo vacío NO sale —ni etiqueta, ni
+   guion, ni «consultar»—; (2) nada de fotos, y se dice por qué; (3) el botón de reservar no
+   vive en esta pantalla. */
+var WEB_BLOQUES = [
+  { t:'What it is',   campos:['visita','dur','ritmo','distancia'] },
+  { t:'When and where',    campos:['horas','punto','llegar','senal','espera','fin'] },
+  { t:'Before you come',     campos:['idiomas','llevar','audio','imprimir','equipaje'] },
+  { t:'Is it for me?',   campos:['acces','ninos','mascotas','solo','fotos','banos','comida'] },
+  { t:'If something changes',  campos:['lluvia','clima','cancelar','cambios','antes'] },
+  { t:'Money',    campos:['modelo','pago','entradas','noshow'] },
+];
+var WEB_EMPRESA = { t:'About us', campos:['quienes','catalogo','ciudades','privados','seguridad'] };
+var WEB_IMPRESCINDIBLES = ['visita','horas','punto','dur'];
+var S_WEB = { pagina:'', publicada:false };
+
+function webEtiqueta(k){
+  var t = CAMPOS_KB.filter(function(c){ return c.k===k; })[0];
+  if (t) return t.l;
+  var e = CAMPOS_EMPRESA.filter(function(c){ return c.k===k; })[0];
+  return e ? e.l : k;
+}
+/* El mismo filtro que el servidor: vacío o plantilla sin tocar es NO DICHO. */
+function webHecho(kb, k){
+  var v = String((kb && kb[k]) || '').trim();
+  return (v && !esPlantilla(v)) ? v : '';
+}
+
+function pintaWeb(){
+  var sel = document.getElementById('web-pagina');
+  if (!sel) return;
+  if (!sel.options.length) {
+    var o = document.createElement('option');
+    o.value = ''; o.textContent = 'The front page';
+    sel.appendChild(o);
+    S.tours.forEach(function(t, i){
+      var op = document.createElement('option');
+      op.value = String(i); op.textContent = t.nombre || webHecho(t.kb,'titulo') || ('Tour ' + (i+1));
+      sel.appendChild(op);
+    });
+    sel.value = S_WEB.pagina;
+  }
+  S_WEB.pagina = sel.value;
+
+  /* LO QUE FALTA, arriba: es lo único accionable de esta pantalla. */
+  var falta = document.getElementById('web-falta');
+  var cojos = [];
+  S.tours.forEach(function(t){
+    var sin = WEB_IMPRESCINDIBLES.filter(function(k){ return !webHecho(t.kb, k); });
+    if (sin.length) cojos.push({ n: t.nombre, campos: sin.map(webEtiqueta) });
+  });
+  falta.innerHTML = cojos.length
+    ? cojos.map(function(c){
+        return '<div class="fila" style="justify-content:space-between; gap:8px; padding:6px 0; border-bottom:1px dashed var(--line);">' +
+          '<b>' + c.n + '</b><span class="mini" style="color:var(--amber);">missing: ' + c.campos.join(', ') + '</span></div>';
+      }).join('')
+    : '<p class="mini" style="margin:0; color:var(--verde,#2e7d5b);">✓ Nothing. All four essentials are filled in on every tour.</p>';
+
+  /* LA PÁGINA. Se pinta con los MISMOS bloques del servidor, en el mismo orden. */
+  var caja = document.getElementById('web-previa');
+  var emp = document.querySelector('[data-empresa]');
+  var nombre = emp ? emp.textContent.trim() : 'Audutor';
+  var html = '<h2 style="margin:0 0 4px; font-size:22px;">' + nombre + '</h2>';
+  var partes = [];
+  if (S_WEB.pagina === '') {
+    html += '<p style="margin:0 0 16px; color:#666; font-size:13px;">Guided walks — real availability, no middlemen</p>';
+    S.tours.forEach(function(t){
+      var d = webHecho(t.kb,'visita') || webHecho(t.kb,'dur') || '';
+      partes.push('<div style="border-top:1px solid #e6e6e6; padding:10px 0;">' +
+        '<b>' + (t.nombre||'') + '</b>' + (d ? '<div style="color:#555; font-size:13px; margin-top:2px;">' + d + '</div>' : '') + '</div>');
+    });
+    var e = WEB_EMPRESA.campos.map(function(k){
+      var v = webHecho(S.kbEmpresa, k);
+      return v ? '<p style="margin:6px 0; font-size:13.5px;"><b>' + webEtiqueta(k) + ':</b> ' + v + '</p>' : '';
+    }).filter(Boolean).join('');
+    if (e) partes.push('<h3 style="margin:16px 0 4px; font-size:15px;">' + WEB_EMPRESA.t + '</h3>' + e);
+  } else {
+    var t = S.tours[+S_WEB.pagina];
+    html += '<p style="margin:0 0 16px; color:#666; font-size:13px;">' + (t.nombre||'') + '</p>';
+    WEB_BLOQUES.forEach(function(b){
+      var dentro = b.campos.map(function(k){
+        var v = webHecho(t.kb, k);
+        return v ? '<p style="margin:6px 0; font-size:13.5px;"><b>' + webEtiqueta(k) + ':</b> ' + v + '</p>' : '';
+      }).filter(Boolean).join('');
+      /* Un bloque cuyos campos están todos vacíos no sale: ni su título. */
+      if (dentro) partes.push('<h3 style="margin:16px 0 4px; font-size:15px;">' + b.t + '</h3>' + dentro);
+    });
+  }
+  html += partes.join('') ||
+    '<p style="color:#a3402f; font-size:13.5px;">This page would come out empty: fill in the Brain first.</p>';
+  /* El pie con marca: solo lo quitan Pro y Premium, igual que `conMarca()` en el servidor. */
+  var marca = (S.plan === 'pro' || S.plan === 'premium');
+  html += '<p style="margin:20px 0 0; border-top:1px solid #e6e6e6; padding-top:8px; color:#999; font-size:11px;">' +
+    (marca ? '' : 'Made with Audutor') + '</p>';
+  caja.innerHTML = html;
+
+  var ch = document.getElementById('web-marca');
+  if (ch) ch.textContent = marca ? 'no Audutor mark (Pro and Premium)' : 'with "Made with Audutor" in the footer';
+  var bp = document.getElementById('web-pub');
+  if (bp) bp.textContent = S_WEB.publicada ? 'Take it down' : 'Publish it now';
+}
+
+function publicaWeb(){
+  S_WEB.publicada = !S_WEB.publicada;
+  toast(S_WEB.publicada
+    ? 'Live at audutor.com/w/' + document.getElementById('web-slug').value
+    : 'Taken down. The links you handed out stop working.');
+  pintaWeb();
+}
+
 /* ---- gating inline: vistas accesibles en todo plan con bloques Pro difuminados ----
    (el DOM no se elimina, solo se difumina: pintaNoshow()/pintaCanales() siguen igual) */
 function pintaGatesInline(){
@@ -6290,6 +6496,7 @@ function ir(v){
   pintaGatesInline();   // gates inline de la vista (noshow / conciliación), según el plan activo
   if (v==='agente') pintaAgente();             // el censo y las órdenes cambian con lo que se toque en otras vistas
   if (v==='operaciones') pintaOperaciones();   // refresca el seguimiento con lo marcado en el manifiesto
+  if (v==='web') pintaWeb();
   if (v==='equipo') pintaEquipo();             // refresca estados (p. ej. propina activada desde el móvil del guía)
 }
 document.querySelectorAll('aside nav a').forEach(function(a){

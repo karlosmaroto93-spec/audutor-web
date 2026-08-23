@@ -641,6 +641,51 @@
   @media (max-width:820px){
     .addon{ grid-template-columns:1fr; gap:20px; padding:22px; }
   }
+  /* ── LA CALCULADORA ────────────────────────────────────────────────────────────────
+     La jerarquía es la que hace que se entienda de un vistazo, y es lo que se aprendió
+     mirando la de TourMan: el número que TÚ controlas grande antes de tocar nada, y la
+     respuesta MÁS grande todavía. Todo lo demás en gris. */
+  .calc{ background:var(--paper); border:1px solid var(--line); border-radius:18px;
+    padding:clamp(18px,3.5vw,30px); margin:0 0 26px; box-shadow:0 10px 30px -22px rgba(18,63,51,.5); }
+  .calc-cab h3{ margin:0 0 3px; font-size:clamp(1.15rem,2.6vw,1.4rem); }
+  .calc-sub{ margin:0 0 20px; color:var(--muted); font-size:.93rem; }
+  .calc-pregunta{ display:flex; justify-content:space-between; align-items:baseline; gap:12px; }
+  .calc-pregunta label{ font-size:.9rem; color:var(--ink2); font-weight:600; }
+  .calc-pregunta output{ font-size:clamp(1.4rem,3.4vw,1.75rem); font-weight:800;
+    color:var(--acc2); font-variant-numeric:tabular-nums; letter-spacing:-.02em; }
+  /* El relleno del recorrido: sin él la barra no dice cuánto has movido. */
+  #calc-v{ --llenado:50%; width:100%; margin:10px 0 2px; height:8px; -webkit-appearance:none;
+    appearance:none; border-radius:99px; background:linear-gradient(90deg,
+      var(--acc) 0 var(--llenado), var(--acc-soft) var(--llenado) 100%); }
+  #calc-v::-webkit-slider-thumb{ -webkit-appearance:none; width:24px; height:24px;
+    border-radius:50%; background:var(--acc2); border:3px solid #fff;
+    box-shadow:0 2px 8px rgba(18,63,51,.35); cursor:pointer; }
+  #calc-v::-moz-range-thumb{ width:24px; height:24px; border-radius:50%; background:var(--acc2);
+    border:3px solid #fff; box-shadow:0 2px 8px rgba(18,63,51,.35); cursor:pointer; }
+  #calc-v:focus-visible{ outline:2px solid var(--acc2); outline-offset:4px; }
+  .calc-topes{ display:flex; justify-content:space-between; font-size:.75rem; color:var(--muted);
+    font-variant-numeric:tabular-nums; margin-bottom:20px; }
+  .calc-res{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; }
+  .calc-res > div{ background:var(--bg); border-radius:12px; padding:12px 14px;
+    display:flex; flex-direction:column; gap:2px; }
+  .calc-et{ font-size:.7rem; text-transform:uppercase; letter-spacing:.09em; color:var(--muted); }
+  .calc-res b{ font-size:1.35rem; letter-spacing:-.02em; }
+  .calc-fino{ font-size:.78rem; color:var(--muted); }
+  /* EL REMATE. Es la única pieza grande de la página, y a propósito: es la respuesta a la
+     pregunta que trajo aquí al visitante. */
+  .calc-total{ background:linear-gradient(135deg, var(--acc2), var(--deep));
+    color:#fff; border-radius:14px; padding:18px 20px; display:flex; flex-wrap:wrap;
+    align-items:baseline; gap:4px 12px; }
+  .calc-total-et{ font-size:.8rem; opacity:.82; width:100%; }
+  .calc-total b{ font-size:clamp(2.4rem,7vw,3.1rem); font-weight:800; line-height:1;
+    letter-spacing:-.03em; font-variant-numeric:tabular-nums; }
+  .calc-total-mes{ font-size:.95rem; opacity:.85; }
+  .calc-anual{ width:100%; margin:8px 0 0; font-size:.86rem; opacity:.9; }
+  .calc-anual b{ font-size:inherit; font-weight:700; }
+  .calc-pie{ margin:12px 0 0; font-size:.8rem; color:var(--muted); }
+  @media (max-width:520px){ .calc-res{ grid-template-columns:1fr; } }
+  @media (prefers-reduced-motion:reduce){ #calc-v{ transition:none; } }
+
   /* ---- facturación mensual / anual ---- */
   /* El cobro por encima del plan. Va DEBAJO de la lista y con su propio aire, no metido
      en un bullet: la lista dice qué incluye el plan y esto dice qué pasa cuando te lo
@@ -1066,7 +1111,7 @@
         una cosa cada vez.</li>
       <li><b>No cambias dónde vendes.</b> Tus reservas siguen entrando por los canales de
         siempre; Audutor las recoge de tu correo y las junta en un solo parte del día.</li>
-      <li><b>Nada que instalar.</b> Se abre en el móvil del guía como una app, funciona
+      <li><b>Se añade a la pantalla de inicio</b> en dos toques, sin tienda ni descarga. Se abre en el móvil del guía como una app, funciona
         sin cobertura y se actualiza sola.</li>
     </ul>
     <p class="fino">En español y en inglés: tu ficha, tu web y lo que contesta el
@@ -1116,6 +1161,59 @@
     tienes doce.</p>
     <p class="pausa"><b>El primer mes es gratis</b>, en cualquier tarifa: pruébalo operando de verdad y decide después.</p>
   </div>
+  <!-- ── LA CALCULADORA ────────────────────────────────────────────────────────────────
+       Existe porque el tarifador no PREGUNTABA nada: enseñaba el bono de cada plan y
+       dejaba la aritmética del tramo en prosa —«si pasas de 1.000 viajeros: +6 €/mes por
+       cada 100»—, así que un operador de 2.000 tenía que calcular 45 + 10×6 = 105 € de
+       cabeza, de pie, en la página donde decide si compra.
+
+       La forma está tomada de la de TourMan, que es mejor por una razón que no es de
+       diseño: pide UN dato y hace la cuenta él. Una pregunta, el número que controlas
+       visible antes de tocar nada, y una respuesta grande.
+
+       Lo que NO se copia es su número. El suyo es falso: moviendo su slider a 10, 200,
+       1.000 y 5.000 reservas al mes dice siempre «€89», mientras su propia página de
+       tarifas cobra 5 € por cada 100 reservas de exceso sobre 18.000 al año — a ese
+       volumen serían unos 264 €/mes. Enseñan un ahorro del 92 % que no existe.
+
+       Aquí la cuenta es la de la tarifa publicada, y `app/tests/calculadora-tarifa.test.js`
+       la ata a ella: si un día dejan de coincidir, se pone roja. -->
+  <div class="calc reveal">
+    <div class="calc-cab">
+      <h3 id="calc-tit">¿Cuánto te costaría?</h3>
+      <p class="calc-sub">Dinos cuántos viajeros llevas al mes. La cuenta la hacemos nosotros.</p>
+    </div>
+    <div class="calc-pregunta">
+      <label for="calc-v">Viajeros al mes</label>
+      <output id="calc-v-val" for="calc-v">1.000</output>
+    </div>
+    <input type="range" id="calc-v" min="50" max="12000" step="50" value="1000"
+           aria-describedby="calc-tit">
+    <div class="calc-topes"><span>50</span><span>12.000</span></div>
+
+    <div class="calc-res">
+      <div class="calc-plan">
+        <span class="calc-et">Tu plan</span>
+        <b id="calc-plan">Pro</b>
+        <span class="calc-fino" id="calc-porque">Tu bono son 1.000 viajeros</span>
+      </div>
+      <div class="calc-pv">
+        <span class="calc-et">Por viajero</span>
+        <b id="calc-pv">0,05 €</b>
+        <span class="calc-fino">sobre TU volumen</span>
+      </div>
+    </div>
+
+    <div class="calc-total">
+      <span class="calc-total-et">Te costaría</span>
+      <b id="calc-eur">45 €</b>
+      <span class="calc-total-mes">al mes</span>
+      <p class="calc-anual" id="calc-anual">Pagándolo por años: <b>450 €</b> — diez meses por doce.</p>
+    </div>
+    <p class="calc-pie">Sin complementos. El primer mes es gratis en cualquier tarifa, y
+    puedes cambiar de plan o apagar lo que no uses cuando quieras.</p>
+  </div>
+
   <div class="tarifador">
   <div class="tf-planes">
   <div class="planes">
@@ -1145,8 +1243,7 @@
         <li><b>Cadencia anti-no-show inteligente completa</b>: se adapta al riesgo de cada
           reserva — y deja registrado quién avisó, cuándo y quién confirmó</li>
         <li>Recordatorios por WhatsApp y SMS <b>sin coste por mensaje</b>: salen desde tu propio WhatsApp en un toque</li>
-        <li><b>Conciliación con plataformas</b>: reclama las comisiones de los no-shows
-          <small>(con «las cuentas de cada tour», 9 € — dentro de Premium)</small></li>
+        <li><b>Conciliación con plataformas</b>: reclama las comisiones de los no-shows</li>
       </ul>
       <p class="plan-extra">Si pasas de 1.000 viajeros: <b>+<span class="imp-tramo" data-mensual="6" data-anual="5">6</span> €/mes por cada 100</b>, hasta 4.000.<br><b>Y desde unos 2.800 te sale más barato Premium: te lo decimos nosotros.</b></p>
       <a class="btn" href="#contacto">Pedir una demo</a>
@@ -1158,8 +1255,13 @@
       <div class="para">Para el operador con varias salidas al día · <b>4.000 viajeros al mes</b></div>
       <ul>
         <li>Todo lo de Pro · <b>4.000 viajeros incluidos, sin tramos</b></li>
-        <li><b>«Las cuentas de cada tour» van dentro</b> (9 € en los demás planes): liquidación
-          a guías, cuadro de mando por tour, guía, canal y franja, conciliación y proyección</li>
+        <!-- Esta viñeta sustituye a «Las cuentas de cada tour van dentro», que se cayó el
+             23-ago-2026 al pasar las cuentas a todos los planes. No se borró sin más: la
+             tarjeta más cara de la página se quedaba con tres viñetas frente a las siete de
+             Pro, y en una comparativa de tres columnas la longitud se lee antes que el
+             contenido. Y lo que dice es verdad y sale de la propia tarifa. -->
+        <li><b>Tu factura deja de moverse</b>: en Pro, 3.500 viajeros son 45 € + 25 tramos
+          de 6 € = <b>195 €</b>. Aquí son 149 € y no vuelves a mirar el contador</li>
         <!-- Decía «Carrito abandonado y combos: la segunda venta, sola». El carrito
              abandonado no es una función pendiente: es IMPOSIBLE aquí. Audutor no cobra
              reservas —decisión del 4-ago-2026—, así que no hay ninguna cesta que se pueda
@@ -1209,8 +1311,8 @@
         <span class="tf-n">Tu web, siempre al día<small>La que tienes hoy enseña el horario del verano pasado. Esta sale del mismo sitio que el parte del guía: cambias el punto de encuentro una vez y cambia en los dos</small></span>
         <span class="tf-p">+9 €</span></label>
 
-      <label class="tf-o con-mas"><input type="checkbox" data-c="reservas" data-eur="19" onchange="tarifa()">
-        <span class="tf-n">Tu tour de pago<small>El de tapas, el nocturno, el privado: que se reserve en TU página y no en la plataforma que se lleva del 20 al 30 % de cada ticket. La plaza se guarda al momento contra el aforo de verdad, y el cobro va a tu pasarela — nunca a la nuestra</small></span>
+      <label class="tf-o con-mas"><input type="checkbox" data-c="reservas" data-eur="19" data-nec="web" onchange="tarifa()">
+        <span class="tf-n">Tu tour de pago <b style="font-weight:600">(necesita «Tu web»)</b><small>El de tapas, el nocturno, el privado: que se reserve en TU página y no en la plataforma que se lleva del 20 al 30 % de cada ticket. La plaza se guarda al momento contra el aforo de verdad, y el cobro va a tu pasarela — nunca a la nuestra</small></span>
         <span class="tf-p">+19 €</span></label>
       <details class="tf-mas"><summary>Qué hace, exactamente</summary>
         <ul>
@@ -1246,33 +1348,15 @@
             mire.</li>
         </ul>
       </details>
-      <label class="tf-o con-mas"><input type="checkbox" data-c="cuentas" data-eur="9" data-dentro="premium" onchange="tarifa()">
-        <span class="tf-n">Las cuentas de cada tour<small>El domingo por la tarde con el cuaderno y la calculadora. Aquí cada tour ya viene cuadrado y el mes se cierra solo</small></span>
-        <span class="tf-p">+9 €</span></label>
-      <details class="tf-mas"><summary>Qué hace, exactamente</summary>
-        <ul>
-          <li><b>El reparto de cada tour</b>, con tu criterio: porcentaje o tarifa fija, y
-            distinto por guía si hace falta.</li>
-          <!-- «Las de tarjeta entran solas» era falso por el mismo motivo: no hay ninguna
-               pasarela. Las apunta el guía, vengan de donde vengan. -->
-          <li><b>Las propinas</b>, cobres como cobres: en mano, con datáfono o con el móvil. Las
-            apunta el guía en el manifiesto al cerrar el tour y cuadran igual — <b>Audutor no
-            las cobra ni se lleva nada de ellas</b>.</li>
-          <li><b>Lo que se llevó cada canal</b> descontado antes del reparto — para que la
-            comisión de la plataforma no salga del bolsillo del guía.</li>
-          <li><b>El cierre del mes en un CSV</b>, con el formato que le sirve a tu gestoría.</li>
-          <li>Y <b>lo que se pagó a cada guía y cuándo</b>, para no discutirlo de memoria en
-            febrero.</li>
-        </ul>
-      </details>
+      <p id="tf-aviso" hidden class="mini" style="margin:8px 0 0;color:var(--acc,#1f6f52);font-weight:600"></p>
 
       <div class="tf-res">
         <div id="tf-lineas"><p class="tf-vacio">Sin complementos: pagas solo el bono de viajeros.</p></div>
         <div class="tf-tot"><span>Con <b id="tf-plan">Pro</b></span><b id="tf-total">45 €</b></div>
         <p class="tf-nota">Con el primer mes gratis, esto empieza pagando solo el bono.<br><br>
         Los complementos se suman a cualquier plan, también al gratuito. El plan decide
-        cuántos viajeros llevas incluidos — y en Premium, además, «las cuentas de cada
-        tour» van dentro.<br><br>
+        cuántos viajeros llevas incluidos, y nada más: las cuentas de cada tour —liquidación,
+        cuadro de mando, conciliación y proyección— van en todos, también en el gratuito.<br><br>
         <b>Sin GuIA el sistema funciona igual</b> —el parte del día, el manifiesto, el buzón,
         los recordatorios, la liquidación—, pero los recordatorios salen y las respuestas de
         tus clientes las lees tú. GuIA es quien contesta.</p>
@@ -1604,21 +1688,39 @@ function cambiaIdioma(){
 var TF_MODO = 'mensual';        // lo cambia el conmutador de facturación
 var TF_PLAN = 'pro';            // el plan sobre el que se enseña el total
 
-/* Lo que un PLAN trae dentro. Es la misma línea que `INCLUIDOS_POR_PLAN` en
-   app/servidor/clientes.js, escrita aquí porque esta página no habla con el servidor —
-   y las dos tienen que decir lo mismo o la tarifa miente. Premium trae las cuentas
-   porque ya se las prometía en su tarjeta («cuadro de mando») y el cuadro vive detrás
-   de ese complemento: o se quitaba de la tarjeta o se metía dentro. */
-var TF_DENTRO = { premium: ['cuentas'] };
-var traeElPlan = function(plan, c){ return (TF_DENTRO[plan] || []).indexOf(c) >= 0; };
+/* Aquí vivían `TF_DENTRO = { premium:['cuentas'] }` y su `traeElPlan`, la copia de esta
+   página del `INCLUIDOS_POR_PLAN` del servidor. Era la única cosa que un plan traía dentro,
+   y desde el 23-ago-2026 «las cuentas de cada tour» está en TODOS los planes: la idea se
+   quedó sin contenido y se fue de las cinco superficies a la vez. */
 
 /* Los complementos que se le SUMAN a ese plan: lo que trae dentro no se cobra aparte.
    Recibe el plan y no lo lee de `TF_PLAN` porque las tres tarjetas se pintan a la vez,
    cada una con su propio precio. */
+/* ── LO QUE NECESITA A OTRO ───────────────────────────────────────────────────────────
+   «Tu tour de pago» NECESITA «Tu web», y no es una preferencia de venta: la reserva de
+   pago vive EN la página que da «Tu web». `clientes.contrata()` lo hace cumplir con un 409.
+
+   Esta calculadora sumaba toda casilla marcada sin mirarlo, así que a quien marcaba solo
+   «Tu tour de pago» le decía 45 + 19 = 64 €/mes — una tarifa que NO SE PUEDE CONTRATAR. Se
+   enteraba al pagar, y con un complemento de 9 € que nadie le había nombrado. Es el fallo
+   que más caro sale: no rompe nada por dentro, promete un precio, y lo hace en la única
+   pantalla donde alguien está decidiendo si paga.
+
+   Se marca el requisito SOLO, como hace `compTog` en las demos, y se dice por qué: si el
+   precio subiera 9 € sin explicación, el visitante creería que la página le ha engañado.
+   Y la casilla ya lo anuncia antes de que pase, que es donde de verdad se evita. */
+function tfNecesarios(){
+  var marca = false;
+  document.querySelectorAll('.tf-o input[data-nec]:checked').forEach(function(i){
+    var req = document.querySelector('.tf-o input[data-c="' + i.dataset.nec + '"]');
+    if (req && !req.checked) { req.checked = true; marca = true; }
+  });
+  return marca;
+}
+
 function tfExtras(plan){
   var t = 0, piezas = [];
   document.querySelectorAll('.tf-o input:checked').forEach(function(i){
-    if (traeElPlan(plan, i.dataset.c)) return;
     t += +i.dataset.eur;
     piezas.push({ n: i.closest('.tf-o').querySelector('.tf-n').childNodes[0].textContent.trim(),
                   e: +i.dataset.eur });
@@ -1636,6 +1738,71 @@ function tfAnual(v){ return Math.round(v * 10 / 12); }
 
    Dos decimales SIEMPRE, aunque salga «0,05»: redondear a un decimal convertiría 0,05 y
    0,16 en «0,1» y «0,2», que es donde la comparación deja de existir. */
+/* ── LA CUENTA DE LA TARIFA, EN UN SOLO SITIO ────────────────────────────────────────
+   Es la aritmética que hasta hoy estaba en prosa y hacía el visitante de cabeza. Las
+   reglas son exactamente las publicadas tres párrafos más abajo, y hay una prueba
+   (`app/tests/calculadora-tarifa.test.js`) que EXTRAE esta función del HTML y la mide
+   contra ellas: si alguien cambia un precio en las tarjetas y no aquí, se pone roja.
+
+   El cruce a Premium se decide por PRECIO y no por un número escrito a mano: se calculan
+   los dos y gana el barato. Así la frase «desde unos 2.800 te sale más barato Premium» no
+   puede quedarse vieja — sale sola de la tarifa. */
+function costeMes(v){
+  var n = Math.max(0, Number(v) || 0);
+  if (n <= 150) return { plan:'esencial', nombre:'Esencial', euros:0, bono:150,
+                         porViajero:0, porque:'Tu bono son 150 viajeros' };
+  /* Pro: 45 € hasta 1.000, y +6 € por cada 100 (o fracción) por encima. */
+  var pro = 45 + (n > 1000 ? Math.ceil((n - 1000) / 100) * 6 : 0);
+  /* Premium: 149 € hasta 4.000; +2,90 € por cada 100 hasta 10.000; +19 € por cada 1.000
+     a partir de ahí. */
+  var pre = 149;
+  if (n > 4000) pre += Math.ceil((Math.min(n, 10000) - 4000) / 100) * 2.9;
+  if (n > 10000) pre += Math.ceil((n - 10000) / 1000) * 19;
+  pro = Math.round(pro); pre = Math.round(pre);
+  var premium = pre <= pro;
+  var euros = premium ? pre : pro;
+  return {
+    plan: premium ? 'premium' : 'pro',
+    nombre: premium ? 'Premium' : 'Pro',
+    euros: euros,
+    bono: premium ? 4000 : 1000,
+    /* SOBRE SU VOLUMEN, no sobre el bono del plan. Dividiendo por el bono, a un operador
+       de 300 viajeros se le enseñaba Premium a «0,04 €/viajero» — que es el coste de
+       alguien que lleva 4.000, no el suyo. */
+    porViajero: n ? euros / n : 0,
+    porque: premium
+      ? (n > 4000 ? 'Por encima de tu bono de 4.000' : 'Tu bono son 4.000 viajeros')
+      : (n > 1000 ? 'Por encima de tu bono de 1.000' : 'Tu bono son 1.000 viajeros'),
+  };
+}
+
+function pintaCalc(){
+  var r = document.getElementById('calc-v');
+  if (!r) return;
+  var n = +r.value;
+  var c = costeMes(n);
+  var mil = function(x){ return x.toLocaleString('es-ES'); };
+  document.getElementById('calc-v-val').textContent = mil(n);
+  document.getElementById('calc-plan').textContent = c.nombre;
+  document.getElementById('calc-porque').textContent = c.porque;
+  document.getElementById('calc-eur').textContent = mil(c.euros) + ' €';
+  /* Redondeo a céntimo con `Math.round` y no con `toFixed`: 45/1000 son 0,045 y
+     `toFixed(2)` devuelve «0.04» —el binario no representa 0,045 exacto y cae hacia
+     abajo—. En una página de precios, un céntimo mal redondeado es la primera cifra que
+     alguien comprueba con la calculadora del móvil. */
+  document.getElementById('calc-pv').textContent = c.porViajero
+    ? (Math.round(c.porViajero * 100) / 100).toFixed(2).replace('.', ',') + ' €'
+    : '—';
+  var an = document.getElementById('calc-anual');
+  an.innerHTML = c.euros
+    ? 'Pagándolo por años: <b>' + mil(c.euros * 10) + ' €</b> — diez meses por doce.'
+    : 'Gratis, sin tarjeta y sin caducidad.';
+  /* El relleno de la barra del slider, para que se vea cuánto has movido: es la mitad de
+     por qué la de TourMan se siente viva. */
+  var pct = (n - r.min) / (r.max - r.min) * 100;
+  r.style.setProperty('--llenado', pct + '%');
+}
+
 function porViajero(euros, bono){
   if (!bono) return '';
   var v = euros / bono;
@@ -1652,6 +1819,14 @@ function pintaUnidad(totalPorPlan){
 }
 
 function tarifa(){
+  /* ANTES de contar. Si alguien marcó algo que necesita otra cosa, se marca la otra y se
+     dice: un precio que sube 9 € sin explicación se lee como que la página engaña. */
+  if (tfNecesarios()) {
+    var av = document.getElementById('tf-aviso');
+    if (av) { av.textContent = 'Le he marcado «Tu web» también: sin página no hay dónde reservar.'; av.hidden = false;
+              clearTimeout(window.__tfAv);
+              window.__tfAv = setTimeout(function(){ av.hidden = true; }, 6000); }
+  }
   var ex = tfExtras(TF_PLAN);
   document.querySelectorAll('.plan').forEach(function(p){
     var imp = p.querySelector('.precio .imp'); if(!imp) return;
@@ -1685,15 +1860,6 @@ function tarifa(){
         return '<div class="tf-res-l"><span>'+x.n+'</span><b>+'+x.e+' €</b></div>'; }).join('')
     : '<p class="tf-vacio">Sin complementos: pagas solo el bono de viajeros.</p>';
 
-  /* La casilla de lo que el plan trae dentro lo DICE, en vez de seguir enseñando su
-     precio: con Premium elegido, un «+9 €» al lado de algo que ya va incluido es la
-     clase de detalle que hace dudar de toda la tarifa. */
-  document.querySelectorAll('.tf-o input[data-dentro]').forEach(function(i){
-    var pr = i.closest('.tf-o').querySelector('.tf-p');
-    var dentro = traeElPlan(TF_PLAN, i.dataset.c);
-    if (pr) { pr.textContent = dentro ? 'incluido' : '+' + i.dataset.eur + ' €';
-              pr.classList.toggle('tf-dentro', dentro); }
-  });
 
   /* 45 y no 39: el Pro cuesta 45 €, lo dice su propia tarjeta tres pantallas más arriba y
      lo factura `clientes.js`. Este 39 era de una tarifa vieja y hacía que la web se
@@ -1718,6 +1884,9 @@ function tarifa(){
 /* Elegir plan pinchando la tarjeta. Es lo que hace que el total de la derecha signifique
    algo: sin esto habría que decidir por cuál se enseña y acertar para todo el mundo. */
 document.addEventListener('DOMContentLoaded', function(){
+  /* La calculadora, cableada aquí: pinta al abrir y a cada movimiento. */
+  var rc = document.getElementById('calc-v');
+  if (rc) { rc.addEventListener('input', pintaCalc); pintaCalc(); }
   document.querySelectorAll('.plan').forEach(function(p){
     p.style.cursor = 'pointer';
     p.addEventListener('click', function(ev){
