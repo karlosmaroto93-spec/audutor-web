@@ -9589,7 +9589,7 @@ function pintaMsjCombo(){
   var eur = function(v){ return dinero(v, 2); };
   var web = (S.kbEmpresa.web||'patioycompas.example').replace(/^https?:\/\//,'');
   caja.innerHTML =
-    '📲 <b>Se envía 30 min después del tour — SOLO a reservas de tu web</b> (las de plataforma ya reciben la petición de reseña de su propia plataforma)\n\n'+
+    '📲 <b>Se envía 30 min después del tour, a todos.</b> El <b>enlace de reseña</b> solo se añade a las reservas de tu web y con su permiso: las de plataforma ya reciben la petición de reseña de la suya, y pedirla dos veces el mismo día compite con ella\n\n'+
     '¡Gracias por venir esta mañana! 🙌 Si os quedasteis con ganas de más, esta semana tenéis el\n'+
     '<b>'+(op.textContent||'').split(' · ')[0]+'</b>'+
     (pct ? ' con un '+pct+' % para los que ya nos conocéis: '+eur(con)+' (en vez de '+eur(base)+')'
