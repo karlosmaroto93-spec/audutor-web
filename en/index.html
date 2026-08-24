@@ -43,9 +43,9 @@
     gap:10px; margin:16px 0 12px; }
   .cero-c{ background:var(--paper); border:1px solid var(--line); border-radius:12px;
     padding:13px 14px; }
-  .cero-c .n{ display:block; font-size:11px; font-weight:800; letter-spacing:.05em;
+  .cero-c .n{ display:block; font-size:11.5px; font-weight:800; letter-spacing:.05em;
     text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
-  .cero-c .p{ display:block; font-family:var(--serif); font-size:26px; line-height:1;
+  .cero-c .p{ display:block; font-family:var(--serif); font-size:27px; line-height:1;
     color:var(--ink); font-variant-numeric:tabular-nums; }
   .cero-c .p.no{ font-family:inherit; font-size:15px; font-weight:700; color:var(--muted);
     line-height:1.25; }
@@ -59,7 +59,7 @@
   .cero-yo .p{ font-family:var(--serif); font-size:34px; line-height:1; color:var(--acc);
     font-variant-numeric:tabular-nums; }
   .cero-yo .n{ font-size:15px; font-weight:800; color:var(--acc2); }
-  .cero-yo small{ flex:1; min-width:180px; font-size:12.5px; color:var(--ink2);
+  .cero-yo small{ flex:1; min-width:180px; font-size:13px; color:var(--ink2);
     line-height:1.45; text-align:left; hyphens:manual; }
 
   /* ── TEXTO CORRIDO, JUSTIFICADO ─────────────────────────────────────────────────────
@@ -115,7 +115,7 @@
   *{ box-sizing:border-box; }
   html{ scroll-behavior:smooth; }
   body{ margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans);
-        font-size:16.5px; line-height:1.6; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+        font-size:17px; line-height:1.6; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
   .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
   /* Un solo interlineado para tres tamaños muy distintos: 1,16 es correcto a 50 px y
      asfixiante a 18,5. Cada nivel el suyo. */
@@ -160,7 +160,7 @@
   /* ================= mascota GuIA ================= */
   .guia{ width:142px; height:auto; flex:none; animation:flota 8s ease-in-out infinite; }
   .bocadillo{ position:relative; background:var(--paper); border:1.5px solid var(--line);
-    border-radius:16px; padding:13px 18px; font-size:14.5px; line-height:1.5;
+    border-radius:16px; padding:13px 18px; font-size:15px; line-height:1.5;
     color:var(--ink2); box-shadow:0 10px 26px rgba(28,38,34,.10); max-width:300px; margin:0; }
   .bocadillo b{ color:var(--ink); }
   .bocadillo::before{ content:""; position:absolute; left:-8px; top:50%; margin-top:-8px;
@@ -226,7 +226,7 @@
   /* ================= nav ================= */
   nav{ position:sticky; top:0; z-index:50; }
   nav .wrap{ display:flex; align-items:center; gap:26px; padding:14px 24px; }
-  .logo{ font-family:var(--serif); font-weight:700; font-size:21px; color:var(--ink);
+  .logo{ font-family:var(--serif); font-weight:700; font-size:20px; color:var(--ink);
          text-decoration:none; line-height:1.05; }
   .logo .wm{ position:relative; display:inline-block; }
   /* Wordmark Audutor: bajo la palabra corre la ruta punteada y TERMINA en el pin
@@ -236,7 +236,7 @@
                     stroke-dasharray:.1 6.5; }
   .logo .ruta .rpin{ fill:var(--acc); stroke:none; }
   .logo .ruta .rhueco{ fill:var(--bg); }
-  .logo.pie{ font-size:16px; color:var(--ink2); }
+  .logo.pie{ font-size:15px; color:var(--ink2); }
   /* selector de idioma: bandera del idioma AL QUE se cambia */
   .lang-sw{ display:inline-flex; align-items:center; gap:6px; background:var(--paper);
     border:1.5px solid var(--line); border-radius:99px; padding:6px 12px; cursor:pointer;
@@ -245,7 +245,7 @@
   .lang-sw .bandera{ font-size:15px; line-height:1; }
   @media (max-width:640px){ .lang-sw .lbl{ display:none; } }
   nav .links{ margin-left:auto; display:flex; gap:20px; align-items:center; }
-  nav .links a{ text-decoration:none; color:var(--ink2); font-size:14.5px; font-weight:600; }
+  nav .links a{ text-decoration:none; color:var(--ink2); font-size:15px; font-weight:600; }
   nav .links a:hover{ color:var(--acc); }
   /* `hidden` lo pone el navegador con `display:none`, que es CSS de USUARIO: cualquier
      regla nuestra que fije `display` lo pisa. El «Entrar» del menú es `.btn`, así que
@@ -302,8 +302,8 @@
   @media (max-width:560px){
     nav .wrap{ gap:10px; padding:11px 14px; }
     nav .links{ gap:8px; }
-    nav .links a.btn{ padding:10px 15px; font-size:14px; white-space:nowrap; }
-    nav .logo{ font-size:19px; }
+    nav .links a.btn{ padding:10px 15px; font-size:13px; white-space:nowrap; }
+    nav .logo{ font-size:20px; }
   }
 
   /* ================= hero ================= */
@@ -315,7 +315,7 @@
       radial-gradient(420px 280px at 55% 42%, rgba(201,138,45,.09), transparent 65%); }
   .hero-grid{ display:grid; grid-template-columns:1.05fr .95fr; gap:44px; align-items:center; position:relative; }
   @media (max-width:900px){ .hero-grid{ grid-template-columns:1fr; } }
-  .kicker{ font-size:12.5px; letter-spacing:.14em; text-transform:uppercase; font-weight:800;
+  .kicker{ font-size:13px; letter-spacing:.14em; text-transform:uppercase; font-weight:800;
            color:var(--acc); margin-bottom:14px; }
   /* PESO 400, no 600. Iowan Old Style tiene Roman, Bold y Black: no hay un 600, así
      que el navegador redondeaba a Bold y salía un titular de 50 px en negrita donde se
@@ -324,9 +324,9 @@
      los móviles el h1 medía 33 y el h2 medía 28 — cinco píxeles de jerarquía entre el
      título de la página y el de una sección. Anclado en rem+vw, en un móvil de 375 sube
      a ~37 y la distancia se nota. */
-  h1{ font-size:clamp(2.125rem, 1.4rem + 3.1vw, 3.125rem); font-weight:400;
+  h1{ font-size:clamp(34px,5vw,50px); font-weight:400;
       line-height:1.06; letter-spacing:-.012em; max-width:20ch; }
-  .lede{ font-size:19px; color:var(--ink2); max-width:54ch; margin:20px 0 28px; }
+  .lede{ font-size:20px; color:var(--ink2); max-width:54ch; margin:20px 0 28px; }
   .lede b{ color:var(--ink); }
   .hero-ctas{ display:flex; gap:14px; flex-wrap:wrap; align-items:center; }
   .hero-nota{ font-size:13px; color:var(--muted); margin-top:14px; }
@@ -334,14 +334,14 @@
   /* ---- mockup del producto (CSS puro) ---- */
   .mock{ position:relative; min-height:430px; }
   .mock-card{ background:var(--paper); border:1px solid var(--line); border-radius:16px;
-    box-shadow:0 18px 50px rgba(31,42,37,.12); padding:18px 20px; font-size:13.5px;
+    box-shadow:0 18px 50px rgba(31,42,37,.12); padding:18px 20px; font-size:13px;
     animation:flota 7s ease-in-out infinite; }
   .mock-card.principal{ max-width:380px; margin-left:auto; }
   .mock-head{ display:flex; justify-content:space-between; align-items:center; gap:8px;
-    font-weight:800; font-size:14.5px; margin-bottom:6px; }
-  .chipv{ font-size:10.5px; font-weight:800; letter-spacing:.05em; text-transform:uppercase;
+    font-weight:800; font-size:15px; margin-bottom:6px; }
+  .chipv{ font-size:11.5px; font-weight:800; letter-spacing:.05em; text-transform:uppercase;
     background:var(--teal-soft); color:var(--teal-ink); padding:3px 9px; border-radius:99px; white-space:nowrap; }
-  .mock-sem{ font-size:12px; color:var(--ink2); border-bottom:1px solid var(--line); padding-bottom:9px;
+  .mock-sem{ font-size:11.5px; color:var(--ink2); border-bottom:1px solid var(--line); padding-bottom:9px;
     margin-bottom:4px; }
   .mock-sem b{ color:var(--amber); }
   .mock-row{ display:flex; justify-content:space-between; gap:10px; padding:8px 8px; border-radius:8px;
@@ -350,9 +350,9 @@
   .mock-row.ok{ background:#ecf7ef; color:#14532d; }
   .mock-row.ok span{ color:#16a34a; font-weight:700; }
   .mock-card button{ width:100%; margin-top:10px; border:1.5px solid var(--acc); background:var(--acc-soft);
-    color:var(--acc); font-weight:800; font-size:12.5px; border-radius:9px; padding:9px; cursor:default; }
+    color:var(--acc); font-weight:800; font-size:13px; border-radius:9px; padding:9px; cursor:default; }
   .mock-pop{ position:absolute; z-index:2; background:var(--paper); border:1px solid var(--line);
-    border-left:4px solid var(--gold); border-radius:12px; padding:11px 14px; font-size:12.5px;
+    border-left:4px solid var(--gold); border-radius:12px; padding:11px 14px; font-size:13px;
     color:var(--ink2); box-shadow:0 14px 34px rgba(31,42,37,.14); max-width:270px; }
   .mock-pop b{ color:var(--ink); }
   .pop1{ left:0; top:12px; animation:flota 8s ease-in-out infinite reverse; }
@@ -363,7 +363,7 @@
 
   .cifras{ display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:14px; margin:58px 0 0; }
   .cifra{ background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:18px 20px; }
-  .cifra .v{ font-family:var(--serif); font-size:30px; font-weight:600; color:var(--acc); display:block; }
+  .cifra .v{ font-family:var(--serif); font-size:27px; font-weight:600; color:var(--acc); display:block; }
   .cifra:nth-child(1) .v{ color:var(--coral2); }
   .cifra:nth-child(3) .v{ color:var(--teal-ink); }
   .cifra:nth-child(4) .v{ color:var(--amber); }
@@ -373,8 +373,8 @@
   section{ padding:72px 0; position:relative; }
   section.alt{ background:var(--paper); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
   .sec-head{ max-width:64ch; margin-bottom:38px; position:relative; }
-  .sec-head h2{ font-size:clamp(26px,3.6vw,36px); }
-  .sec-head p{ color:var(--ink2); font-size:17.5px; margin:12px 0 0; }
+  .sec-head h2{ font-size:clamp(26px,3.4vw,34px); }
+  .sec-head p{ color:var(--ink2); font-size:17px; margin:12px 0 0; }
 
   .grid3{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px; }
   .celda{ background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:22px 24px;
@@ -382,23 +382,23 @@
   .celda:hover{ transform:translateY(-3px); box-shadow:0 12px 30px rgba(31,42,37,.08); }
   section.alt .celda{ background:var(--bg); }
   .celda.star{ border-color:var(--acc); box-shadow:0 6px 22px rgba(18,138,107,.12); }
-  .celda .ico{ font-size:24px; }
-  .celda h3{ font-size:18.5px; margin:10px 0 6px; font-family:var(--sans); font-weight:700; }
-  .celda p{ font-size:14.8px; color:var(--ink2); margin:0; }
-  .celda .mini{ font-size:12.5px; color:var(--muted); display:block; margin-top:10px; font-family:var(--mono); }
+  .celda .ico{ font-size:27px; }
+  .celda h3{ font-size:17px; margin:10px 0 6px; font-family:var(--sans); font-weight:700; }
+  .celda p{ font-size:15px; color:var(--ink2); margin:0; }
+  .celda .mini{ font-size:13px; color:var(--muted); display:block; margin-top:10px; font-family:var(--mono); }
 
   /* ---- contacto ---- */
   .contacto-caja{ background:var(--paper); border:1.5px solid var(--acc); border-radius:16px;
     padding:38px; max-width:620px; margin:0 auto; text-align:center;
     box-shadow:0 14px 40px rgba(18,138,107,.10); }
-  .contacto-caja h2{ font-size:clamp(23px,3vw,30px); margin:0 0 10px; }
-  .contacto-caja p{ color:var(--ink2); font-size:16px; margin:0 0 14px; }
-  .contacto-dir{ font-size:19px !important; font-weight:800; margin:18px 0 10px !important; }
+  .contacto-caja h2{ font-size:clamp(26px,3.4vw,34px); margin:0 0 10px; }
+  .contacto-caja p{ color:var(--ink2); font-size:15px; margin:0 0 14px; }
+  .contacto-dir{ font-size:20px !important; font-weight:800; margin:18px 0 10px !important; }
   .contacto-dir a{ color:var(--acc); text-decoration:none; border-bottom:2px solid var(--acc-soft); }
   .contacto-dir a:hover{ border-bottom-color:var(--acc); }
   .contacto-caja .mini{ font-size:13px; color:var(--muted); margin:0 !important; }
   .contacto-pend{ display:inline-block; background:var(--gold-soft); border:1px solid #ecd9b0;
-    border-radius:10px; padding:10px 16px; font-size:14.5px; color:var(--amber); font-weight:700; }
+    border-radius:10px; padding:10px 16px; font-size:15px; color:var(--amber); font-weight:700; }
 
   /* ---- un día con Audutor ---- */
   /* La línea de la ruta y los puntos salen del MISMO cálculo. Estaban a ojo: el centro
@@ -421,7 +421,7 @@
      el que sí. */
   .hito.clave .punto{ border-color:var(--coral); box-shadow:0 0 0 4px var(--coral-soft); }
   .hito .que{ background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:13px 17px;
-    font-size:14.8px; color:var(--ink2); }
+    font-size:15px; color:var(--ink2); }
   .hito .que b{ color:var(--ink); }
   section.alt .hito .que{ background:var(--bg); }
   @media (max-width:640px){ .dia{ --c1:48px; } }
@@ -515,15 +515,15 @@
   /* El coste por viajero, debajo del precio. Es el número con el que un operador compara
      de verdad: la cuota mensual no le dice nada hasta que la divide por su volumen, y
      dividir de cabeza es justo lo que no va a hacer. */
-  .plan-unit{ font-size:12.5px; font-weight:700; color:var(--amber); margin:0 0 10px;
+  .plan-unit{ font-size:13px; font-weight:700; color:var(--amber); margin:0 0 10px;
     font-variant-numeric:tabular-nums; }
   .plan.premium .plan-unit{ color:#8a5c0a; }
   #planes.premium-on .plan-unit{ color:var(--amber); }
   .plan h3{ font-size:20px; font-family:var(--sans); font-weight:800; }
-  .plan .precio{ font-family:var(--serif); font-size:38px; font-weight:600; margin:10px 0 2px; }
+  .plan .precio{ font-family:var(--serif); font-size:34px; font-weight:600; margin:10px 0 2px; }
   .plan .precio small{ font-size:15px; color:var(--muted); font-family:var(--sans); font-weight:600; }
-  .plan .para{ color:var(--muted); font-size:13.5px; margin-bottom:14px; }
-  .plan ul{ margin:0 0 20px; padding:0; list-style:none; font-size:14.5px; color:var(--ink2); flex:1; }
+  .plan .para{ color:var(--muted); font-size:13px; margin-bottom:14px; }
+  .plan ul{ margin:0 0 20px; padding:0; list-style:none; font-size:15px; color:var(--ink2); flex:1; }
   /* Una lista con punteado no puede acabar cortada al aire. El remate no es otro filete:
      es el pin. Es la misma frase que ya lleva dentro el icono de la app — toda ruta
      acaba en un sitio donde alguien te espera. Va como máscara sobre un fondo verde: si
@@ -548,9 +548,9 @@
   .addon{ display:grid; grid-template-columns:1.35fr 1fr; gap:28px; align-items:start;
     background:var(--paper); border:1.5px solid var(--gold); border-radius:16px;
     padding:26px; margin-top:34px; box-shadow:0 10px 34px rgba(201,138,45,.10); }
-  .addon .t h3{ font-size:19px; font-family:var(--sans); font-weight:800; color:var(--deep);
+  .addon .t h3{ font-size:20px; font-family:var(--sans); font-weight:800; color:var(--deep);
     margin:0 0 12px; line-height:1.3; }
-  .addon .t p{ font-size:14.5px; color:var(--ink2); margin:0 0 12px; line-height:1.62; }
+  .addon .t p{ font-size:15px; color:var(--ink2); margin:0 0 12px; line-height:1.62; }
   .addon .t p:last-child{ margin-bottom:0; }
   .addon .tramos{ display:grid; grid-template-columns:auto 1fr;
     background:var(--gold-soft); border-radius:12px; padding:18px 20px; }
@@ -563,8 +563,8 @@
   .addon .tramo:first-child{ padding-top:0; }
   .addon .tramo .p{ font-family:var(--serif); font-size:27px; font-weight:600;
     color:var(--amber); font-variant-numeric:tabular-nums; white-space:nowrap; }
-  .addon .tramo .n{ font-size:13.5px; color:#6b5a35; line-height:1.45; }
-  .addon .nota{ grid-column:1 / -1; display:block; margin-top:14px; font-size:12.5px;
+  .addon .tramo .n{ font-size:13px; color:#6b5a35; line-height:1.45; }
+  .addon .nota{ grid-column:1 / -1; display:block; margin-top:14px; font-size:13px;
     color:#6b5a35; line-height:1.55; }
   .addon .nota b{ color:var(--amber); }
   @media (max-width:820px){
@@ -576,11 +576,11 @@
      respuesta MÁS grande todavía. Todo lo demás en gris. */
   .calc{ background:var(--paper); border:1px solid var(--line); border-radius:18px;
     padding:clamp(18px,3.5vw,30px); margin:0 0 26px; box-shadow:0 10px 30px -22px rgba(18,63,51,.5); }
-  .calc-cab h3{ margin:0 0 3px; font-size:clamp(1.15rem,2.6vw,1.4rem); }
-  .calc-sub{ margin:0 0 20px; color:var(--muted); font-size:.93rem; }
+  .calc-cab h3{ margin:0 0 3px; font-size:clamp(17px,2.2vw,20px); }
+  .calc-sub{ margin:0 0 20px; color:var(--muted); font-size:15px; }
   .calc-pregunta{ display:flex; justify-content:space-between; align-items:baseline; gap:12px; }
-  .calc-pregunta label{ font-size:.9rem; color:var(--ink2); font-weight:600; }
-  .calc-pregunta output{ font-size:clamp(1.4rem,3.4vw,1.75rem); font-weight:800;
+  .calc-pregunta label{ font-size:15px; color:var(--ink2); font-weight:600; }
+  .calc-pregunta output{ font-size:clamp(20px,2.8vw,27px); font-weight:800;
     color:var(--acc2); font-variant-numeric:tabular-nums; letter-spacing:-.02em; }
   /* El relleno del recorrido: sin él la barra no dice cuánto has movido. */
   #calc-v{ --llenado:50%; width:100%; margin:10px 0 2px; height:8px; -webkit-appearance:none;
@@ -592,26 +592,26 @@
   #calc-v::-moz-range-thumb{ width:24px; height:24px; border-radius:50%; background:var(--acc2);
     border:3px solid #fff; box-shadow:0 2px 8px rgba(18,63,51,.35); cursor:pointer; }
   #calc-v:focus-visible{ outline:2px solid var(--acc2); outline-offset:4px; }
-  .calc-topes{ display:flex; justify-content:space-between; font-size:.75rem; color:var(--muted);
+  .calc-topes{ display:flex; justify-content:space-between; font-size:11.5px; color:var(--muted);
     font-variant-numeric:tabular-nums; margin-bottom:20px; }
   .calc-res{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; }
   .calc-res > div{ background:var(--bg); border-radius:12px; padding:12px 14px;
     display:flex; flex-direction:column; gap:2px; }
-  .calc-et{ font-size:.7rem; text-transform:uppercase; letter-spacing:.09em; color:var(--muted); }
-  .calc-res b{ font-size:1.35rem; letter-spacing:-.02em; }
-  .calc-fino{ font-size:.78rem; color:var(--muted); }
+  .calc-et{ font-size:11.5px; text-transform:uppercase; letter-spacing:.09em; color:var(--muted); }
+  .calc-res b{ font-size:20px; letter-spacing:-.02em; }
+  .calc-fino{ font-size:13px; color:var(--muted); }
   /* EL REMATE. Es la única pieza grande de la página, y a propósito: es la respuesta a la
      pregunta que trajo aquí al visitante. */
   .calc-total{ background:linear-gradient(135deg, var(--acc2), var(--deep));
     color:#fff; border-radius:14px; padding:18px 20px; display:flex; flex-wrap:wrap;
     align-items:baseline; gap:4px 12px; }
-  .calc-total-et{ font-size:.8rem; opacity:.82; width:100%; }
-  .calc-total b{ font-size:clamp(2.4rem,7vw,3.1rem); font-weight:800; line-height:1;
+  .calc-total-et{ font-size:13px; opacity:.82; width:100%; }
+  .calc-total b{ font-size:clamp(38px,7vw,50px); font-weight:800; line-height:1;
     letter-spacing:-.03em; font-variant-numeric:tabular-nums; }
-  .calc-total-mes{ font-size:.95rem; opacity:.85; }
-  .calc-anual{ width:100%; margin:8px 0 0; font-size:.86rem; opacity:.9; }
+  .calc-total-mes{ font-size:15px; opacity:.85; }
+  .calc-anual{ width:100%; margin:8px 0 0; font-size:13px; opacity:.9; }
   .calc-anual b{ font-size:inherit; font-weight:700; }
-  .calc-pie{ margin:12px 0 0; font-size:.8rem; color:var(--muted); }
+  .calc-pie{ margin:12px 0 0; font-size:13px; color:var(--muted); }
   @media (max-width:520px){ .calc-res{ grid-template-columns:1fr; } }
   @media (prefers-reduced-motion:reduce){ #calc-v{ transition:none; } }
 
@@ -623,7 +623,7 @@
      aparece el mes que creces. */
   .plan-extra{ margin:-6px 0 16px; padding:9px 11px; border-radius:9px;
     background:rgba(18,138,107,.07); border:1px dashed var(--line);
-    font-size:12.5px; line-height:1.5; color:var(--ink2); }
+    font-size:13px; line-height:1.5; color:var(--ink2); }
   .plan-extra b{ color:var(--amber); }
   .plan.premium .plan-extra{ background:rgba(201,138,45,.10); border-color:rgba(163,106,16,.28); }
   /* ── EL TARIFADOR ───────────────────────────────────────────────────────────────────
@@ -638,16 +638,16 @@
     border-radius:16px; padding:20px 18px; }
   .tf-comp h3{ font-size:17px; font-family:var(--sans); font-weight:800; margin:0 0 3px; color:var(--deep); }
   .tf-comp .tf-sub{ font-size:13px; color:var(--muted); margin:0 0 14px; line-height:1.5; }
-  .tf-g{ font-size:10.5px; font-weight:800; letter-spacing:.07em; text-transform:uppercase;
+  .tf-g{ font-size:11.5px; font-weight:800; letter-spacing:.07em; text-transform:uppercase;
     color:var(--amber); margin:14px 0 5px; }
   .tf-g:first-of-type{ margin-top:0; }
   .tf-o{ display:flex; gap:9px; align-items:flex-start; padding:8px 0; cursor:pointer;
     border-bottom:1px dashed var(--line); }
   .tf-o:hover{ background:rgba(18,138,107,.04); }
   .tf-o input{ width:17px; height:17px; margin-top:2px; accent-color:var(--acc); cursor:pointer; flex:0 0 auto; }
-  .tf-o .tf-n{ flex:1; font-size:13.5px; font-weight:700; color:var(--ink); line-height:1.35; }
-  .tf-o .tf-n small{ display:block; font-weight:400; font-size:12px; color:var(--muted); margin-top:2px; }
-  .tf-o .tf-p{ font-size:13.5px; font-weight:800; color:var(--amber); font-variant-numeric:tabular-nums;
+  .tf-o .tf-n{ flex:1; font-size:13px; font-weight:700; color:var(--ink); line-height:1.35; }
+  .tf-o .tf-n small{ display:block; font-weight:400; font-size:11.5px; color:var(--muted); margin-top:2px; }
+  .tf-o .tf-p{ font-size:13px; font-weight:800; color:var(--amber); font-variant-numeric:tabular-nums;
     white-space:nowrap; }
   /* El detalle desplegable de un complemento. Va FUERA del <label> a propósito: dentro,
      pulsar «qué hace» marcaría la casilla, y el visitante acabaría contratando por leer.
@@ -655,7 +655,7 @@
   .tf-o.con-mas{ border-bottom:none; padding-bottom:2px; }
   /* El aviso del mes gratis. Va pegado al subtítulo del panel y NO grita: si pareciera una
      pegatina de oferta, el visitante lo lee como un truco y desconfía del precio de al lado. */
-  .tf-gratis{ font-size:12px; line-height:1.45; color:var(--deep); background:rgba(18,138,107,.07);
+  .tf-gratis{ font-size:11.5px; line-height:1.45; color:var(--deep); background:rgba(18,138,107,.07);
     border:1px solid rgba(18,138,107,.22); border-radius:8px; padding:8px 10px; margin:0 0 14px; }
   .tf-gratis b{ color:var(--acc); }
   .tf-mas{ margin:0 0 2px 26px; padding-bottom:8px; border-bottom:1px dashed var(--line); }
@@ -678,16 +678,16 @@
   .tf-mas li:last-child{ margin-bottom:0; }
   .tf-mas b{ color:var(--ink2); }
   .tf-res{ margin-top:16px; padding-top:14px; border-top:1.5px solid var(--line); }
-  .tf-res-l{ display:flex; justify-content:space-between; gap:10px; font-size:12.5px;
+  .tf-res-l{ display:flex; justify-content:space-between; gap:10px; font-size:13px;
     color:var(--ink2); padding:2px 0; }
   .tf-res-l b{ font-variant-numeric:tabular-nums; }
   .tf-tot{ display:flex; justify-content:space-between; align-items:baseline; gap:10px;
     margin-top:10px; padding-top:10px; border-top:1px solid var(--line); }
-  .tf-tot span{ font-size:13.5px; font-weight:700; color:var(--deep); }
-  .tf-tot b{ font-family:var(--serif); font-size:30px; font-weight:600; color:var(--acc2);
+  .tf-tot span{ font-size:13px; font-weight:700; color:var(--deep); }
+  .tf-tot b{ font-family:var(--serif); font-size:27px; font-weight:600; color:var(--acc2);
     font-variant-numeric:tabular-nums; }
   .tf-nota{ font-size:11.5px; color:var(--muted); margin:8px 0 0; line-height:1.5; }
-  .tf-vacio{ font-size:12.5px; color:var(--muted); font-style:italic; }
+  .tf-vacio{ font-size:13px; color:var(--muted); font-style:italic; }
   @media (max-width:980px){
     .tarifador{ grid-template-columns:1fr; }
     .tf-comp{ position:static; }
@@ -698,11 +698,11 @@
   .fact-toggle{ display:inline-flex; background:var(--paper); border:1.5px solid var(--line);
     border-radius:99px; padding:6px; gap:6px; }
   .fact-toggle button{ border:0; background:transparent; font:inherit; font-weight:700;
-    font-size:14.5px; color:var(--ink2); padding:9px 20px; border-radius:99px; cursor:pointer;
+    font-size:15px; color:var(--ink2); padding:9px 20px; border-radius:99px; cursor:pointer;
     display:inline-flex; align-items:center; gap:8px;
     transition:background .18s ease, color .18s ease; }
   .fact-toggle button[aria-checked="true"]{ background:var(--acc); color:#fff; }
-  .fact-toggle .dto{ font-size:11px; font-weight:800; background:var(--gold-soft); color:var(--amber);
+  .fact-toggle .dto{ font-size:11.5px; font-weight:800; background:var(--gold-soft); color:var(--amber);
     border-radius:99px; padding:2px 8px; letter-spacing:.02em; }
   .fact-toggle button[aria-checked="true"] .dto{ background:rgba(255,255,255,.22); color:#fff; }
   .fact-toggle button:focus-visible{ outline:2.5px solid var(--acc); outline-offset:3px; }
@@ -712,10 +712,10 @@
      ha migrado una vez de plataforma sabe que ese coste no está en el precio. */
   .integra{ margin:22px auto 0; max-width:960px; border:1px solid var(--line);
     border-radius:14px; background:var(--paper); padding:18px 20px; }
-  .integra > b{ display:block; font-size:15.5px; margin-bottom:10px; }
+  .integra > b{ display:block; font-size:15px; margin-bottom:10px; }
   .integra ul{ list-style:none; margin:0; padding:0; display:grid;
     grid-template-columns:repeat(3,1fr); gap:14px 22px; }
-  .integra li{ font-size:14px; color:var(--ink2); line-height:1.5; padding-left:22px;
+  .integra li{ font-size:13px; color:var(--ink2); line-height:1.5; padding-left:22px;
     position:relative; }
   .integra li::before{ content:'→'; position:absolute; left:0; color:var(--acc);
     font-weight:800; }
@@ -726,10 +726,10 @@
   #planes.premium-on .integra{ background:rgba(255,253,247,.06); border-color:rgba(253,246,230,.22); }
   #planes.premium-on .integra > b, #planes.premium-on .integra li b{ color:#fdf6e6; }
   #planes.premium-on .integra li, #planes.premium-on .integra .fino{ color:#e8dfd0; }
-  .pausa{ max-width:62ch; margin:12px auto 0; font-size:13.5px; color:var(--muted); }
+  .pausa{ max-width:62ch; margin:12px auto 0; font-size:13px; color:var(--muted); }
   .precio .imp{ display:inline-block; transition:opacity .18s ease, transform .18s ease; }
   .precio .imp.cambia{ opacity:0; transform:translateY(6px); }
-  .fact-nota{ font-size:12.5px; color:var(--acc); font-weight:700; margin:2px 0 0; }
+  .fact-nota{ font-size:13px; color:var(--acc); font-weight:700; margin:2px 0 0; }
   .fact-nota[hidden]{ display:none; }
   .plan.premium .fact-nota{ color:var(--amber); }
 
@@ -751,8 +751,8 @@
   .web-chip{ display:inline-block; font-size:11.5px; font-weight:800; letter-spacing:.08em;
     text-transform:uppercase; color:#231400; background:linear-gradient(90deg,var(--gold),#e2ab48);
     padding:4px 13px; border-radius:99px; margin-bottom:14px; }
-  .webcard h2{ color:var(--deep); font-size:clamp(24px,3.2vw,32px); }
-  .webcard .lead{ color:var(--ink2); font-size:16.5px; margin:14px 0 18px; }
+  .webcard h2{ color:var(--deep); font-size:clamp(26px,3.4vw,34px); }
+  .webcard .lead{ color:var(--ink2); font-size:17px; margin:14px 0 18px; }
   .webcard .lead b{ color:var(--ink); }
   .webcard ul{ margin:0 0 20px; padding:0; list-style:none; font-size:15px; color:var(--ink2); }
   .webcard li{ padding:7px 0 7px 28px; position:relative; border-top:1px dashed rgba(163,106,16,.22); }
@@ -760,11 +760,11 @@
   .webcard li::before{ content:"✦"; position:absolute; left:2px; color:var(--gold); }
   .webcard li b{ color:var(--ink); }
   .web-precio{ display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin:4px 0 12px; }
-  .web-precio .wp{ font-family:var(--serif); font-size:32px; font-weight:600; color:var(--ink); }
-  .web-precio .wp small{ font-family:var(--sans); font-size:14px; color:var(--muted); font-weight:600; }
-  .web-precio .wn{ font-size:13.5px; color:var(--ink2); }
+  .web-precio .wp{ font-family:var(--serif); font-size:34px; font-weight:600; color:var(--ink); }
+  .web-precio .wp small{ font-family:var(--sans); font-size:13px; color:var(--muted); font-weight:600; }
+  .web-precio .wn{ font-size:13px; color:var(--ink2); }
   .web-precio .wn b{ color:var(--amber); }
-  .web-comp{ font-size:13.5px; color:var(--muted); border-top:1px solid rgba(163,106,16,.22);
+  .web-comp{ font-size:13px; color:var(--muted); border-top:1px solid rgba(163,106,16,.22);
     padding-top:12px; margin:0; }
   .web-comp b{ color:var(--ink); }
   /* mockup del navegador (CSS puro). La sección que lo usaba está retirada hasta
@@ -774,28 +774,28 @@
   .wbar{ display:flex; align-items:center; gap:5px; background:var(--bg);
     border-bottom:1px solid var(--line); padding:9px 12px; }
   .wdot{ width:9px; height:9px; border-radius:50%; background:#cfd8d3; }
-  .wurl{ margin-left:8px; font-family:var(--mono); font-size:11px; color:var(--acc);
+  .wurl{ margin-left:8px; font-family:var(--mono); font-size:11.5px; color:var(--acc);
     background:var(--paper); border:1px solid var(--line); border-radius:99px; padding:3px 12px; }
   .whero{ padding:18px 20px 14px; border-bottom:1px dashed var(--line); }
-  .whero b{ font-family:var(--serif); font-size:19px; display:block; }
-  .whero span{ display:block; color:var(--ink2); font-size:12.5px; margin:3px 0 10px; }
+  .whero b{ font-family:var(--serif); font-size:20px; display:block; }
+  .whero span{ display:block; color:var(--ink2); font-size:13px; margin:3px 0 10px; }
   .whero .wbtn{ display:inline-block; background:var(--coral); color:#fff; font-weight:800;
-    font-size:12px; border-radius:8px; padding:7px 16px; }
+    font-size:11.5px; border-radius:8px; padding:7px 16px; }
   .wrow{ display:flex; justify-content:space-between; align-items:center; gap:10px;
     padding:9px 20px; border-top:1px solid var(--line); color:var(--ink2); }
   .wrow:first-of-type{ border-top:0; }
-  .wrow b{ color:var(--amber); font-size:12px; white-space:nowrap; }
+  .wrow b{ color:var(--amber); font-size:11.5px; white-space:nowrap; }
   .wrow.ok{ background:#ecf7ef; color:#14532d; }
-  .wwa{ background:var(--acc-soft); color:var(--acc); font-weight:800; font-size:11px;
+  .wwa{ background:var(--acc-soft); color:var(--acc); font-weight:800; font-size:11.5px;
     border-radius:99px; padding:3px 10px; white-space:nowrap; }
 
   /* ---- roadmap ---- */
   .ruta{ display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:14px; }
   .paso{ background:var(--paper); border:1px dashed var(--line); border-radius:14px; padding:18px 20px; }
   section.alt .paso{ background:var(--bg); }
-  .paso h3{ font-family:var(--sans); font-weight:700; font-size:16px; margin:0 0 4px; }
-  .paso p{ font-size:13.8px; color:var(--ink2); margin:0; }
-  .fase{ display:inline-block; font-family:var(--mono); font-size:10.5px; font-weight:700;
+  .paso h3{ font-family:var(--sans); font-weight:700; font-size:15px; margin:0 0 4px; }
+  .paso p{ font-size:13px; color:var(--ink2); margin:0; }
+  .fase{ display:inline-block; font-family:var(--mono); font-size:11.5px; font-weight:700;
     letter-spacing:.06em; padding:2px 9px; border-radius:99px; margin-bottom:9px;
     background:var(--teal-soft); color:var(--teal-ink); }
   .fase.f3{ background:var(--gold-soft); color:var(--amber); }
@@ -803,7 +803,7 @@
   /* ================= comparativa ================= */
   .vs{ background:var(--paper); border:1px solid var(--line); border-radius:16px; overflow:hidden; }
   .vs-row{ display:grid; grid-template-columns:1fr 1fr; }
-  .vs-row > div{ padding:16px 22px; font-size:14.8px; border-top:1px solid var(--line); }
+  .vs-row > div{ padding:16px 22px; font-size:15px; border-top:1px solid var(--line); }
   .vs-row:first-child > div{ border-top:0; background:var(--bg); font-weight:800; font-size:13px;
       letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
   .vs-row .malo{ color:var(--ink2); }
@@ -814,7 +814,7 @@
 
   /* ================= CTA / footer ================= */
   .final{ text-align:center; padding:84px 0; position:relative; }
-  .final h2{ font-size:clamp(28px,4vw,40px); max-width:24ch; margin:0 auto; }
+  .final h2{ font-size:clamp(26px,3.4vw,34px); max-width:24ch; margin:0 auto; }
   .final p{ color:var(--ink2); max-width:52ch; margin:16px auto 28px; }
   footer{ border-top:1px solid var(--line); padding:28px 0 46px; color:var(--muted); font-size:13px; }
   footer .wrap{ display:flex; gap:18px; flex-wrap:wrap; justify-content:space-between; }
@@ -944,8 +944,9 @@
     <div>
       <div class="kicker reveal" style="--d:80ms" data-i18n="hero.kicker">Operations software for walking and free tour companies with a team of guides</div>
       <h1 data-split data-i18n="hero.h1">Your booking system forgets everything that happens after the booking.</h1>
-      <p class="lede reveal" style="--d:120ms">Audutor is <b>your tour company’s operations layer</b>:
-      it gets your WhatsApp reminders ready to send in one tap, gets stragglers back to the group, answers groups with your own policy, and settles every tour to the penny. Every channel’s bookings land in one list. <b>Modular</b>: start with two modules and grow when you want to.</p>
+      <p class="lede reveal" style="--d:120ms">Audutor is <b>your tour company’s operations layer</b>: every channel’s bookings in
+      one list, your reminders ready to send in one tap, and every tour settled to the
+      penny. <b>Start with two modules and grow when you want to.</b></p>
       <div class="hero-ctas reveal" style="--d:220ms">
         <a class="btn" href="../demo-en/" data-demo>🖱️ Try the interactive demo</a>
       <a class="btn sec" href="#contacto">Book a guided demo</a>
@@ -1154,8 +1155,8 @@
       <span class="calc-total-mes">a month</span>
       <p class="calc-anual" id="calc-anual">Paid yearly: <b>€450</b> — ten months for twelve.</p>
     </div>
-    <p class="calc-pie">Without add-ons. Your first month is free on any plan, and you can
-    change plan or switch off what you don't use whenever you like.</p>
+    <p class="calc-pie">Without add-ons. You can change plan or switch off what you don't
+    use whenever you like.</p>
   </div>
 
   <div class="tarifador">
@@ -1237,9 +1238,9 @@
       <details class="tf-mas"><summary>What it does, exactly</summary>
         <ul>
           <li>It answers in your website chat, <b>in whatever language people write in</b>.</li>
-          <li>Only from what you put in its <b>57 fields</b> — it asks for <b>24 to get going</b>, the rest whenever you like —: meeting point, times, duration, where it
-            ends, how to spot the guide, how long they wait, what happens if it rains, children, dogs,
-            accessibility, toilets, what to bring, cancellations, how people pay at the end…</li>
+          <li>Only from what you put in its <b>57 fields</b> — it asks for <b>24 to get
+            going</b>: meeting point, times, duration, where it ends, how to spot the guide,
+            rain, children, dogs, accessibility, what to bring, cancellations…</li>
           <li>What it does not know <b>it hands to you</b> — and logs it in a list sorted by how many
             times you have been asked, so you know what to answer first.</li>
           <li>You answer it once and from then on it answers. <b>That question stops reaching
@@ -1256,14 +1257,12 @@
       <details class="tf-mas"><summary>What it does, exactly</summary>
         <ul>
           <li><b>Already have a website?</b> Then you do not need this one: Audutor
-            <b>synchronises with whatever site you have</b> and your bookings land here on
-            their own. Your site asks what departures exist, files the booking, and hears
-            what happens next: if you cancel a departure or the seats run out, it stops
-            selling them. Set up on day one, and you keep your page.</li>
-          <li><b>Your public page</b>, with a front page and one page per tour. You do not
-            write it: it comes from the facts you already put in the Brain so GuIA would not
-            invent anything. A field you left empty <b>does not appear</b> — no label, no
-            dash, no "ask us".</li>
+            <b>synchronises with whatever site you have</b>. Bookings land here on their own,
+            and if you cancel a departure or the seats run out, your site stops selling
+            them. Set up on day one.</li>
+          <li><b>Your public page</b>, a front page and one per tour. You do not write it: it
+            comes from the Brain. A field you left empty <b>does not appear</b> — no label,
+            no dash, no "ask us".</li>
           <li><b>The free tour is booked right there</b>, against the real capacity. This is
             the part people get wrong most: for the <b>free tour</b> you need nothing else;
             "Your paid tour" is only for tours <b>with a price</b>.</li>
@@ -1279,9 +1278,7 @@
           <li>It goes live when you say so: you choose the address and flip the switch.
             <b>Two gestures</b>, never a side effect of saving a fact.</li>
         </ul>
-        <p class="mini muted">To sell <b>paid</b> tours you need "Your paid tour" below —
-          but <b>separately</b>: each one is bought on its own, and neither needs the
-          other.</p>
+        
       </details>
 
       <label class="tf-o con-mas"><input type="checkbox" data-c="reservas" data-eur="19" onchange="tarifa()">
@@ -1289,21 +1286,19 @@
         <span class="tf-p">+€19</span></label>
       <details class="tf-mas"><summary>What it does, exactly</summary>
         <ul>
-          <li><b>The only thing it opens:</b> selling a tour <b>with a price</b>. On both
-            pages — the one Audutor builds you and <b>your own, the one you already have</b>:
-            without this add-on a priced departure is neither offered nor booked on either.
-            The free tour does not need it: that one always goes through.</li>
+          <li><b>The only thing it opens:</b> selling a tour <b>with a price</b> — on the page
+            Audutor builds you and on <b>your own site, the one you already have</b>. The
+            free tour does not need it.</li>
           <li><b>Capacity wins.</b> If three seats are left, the fourth booking is refused
             on the spot — not afterwards.</li>
-          <li><b>How the payment actually works:</b> the traveller books, the seat is
-            <b>held straight away</b>, and to pay they are sent <b>your</b> payment link —
-            your gateway, the one you already use. It is <b>not</b> paid inside the page
-            yet; that comes later, and it is why this is €19 and not more.</li>
+          <li><b>How it is paid:</b> the traveller books, the seat is <b>held straight
+            away</b>, and to pay they are sent <b>your</b> payment link — your gateway. It
+            is not paid inside the page yet.</li>
           <li><b>You place the payment ✓</b>, or whoever you say. Until then the booking is
             marked "payment to confirm", and nothing counts as paid that a person has not
             seen.</li>
           <li><b>The money goes to your gateway</b>, not ours. No commission per booking.
-            And until you see the payment, that booking is flagged “payment to confirm”.</li>
+           </li>
         </ul>
         <p class="tf-mas-p">A €25 ticket through a platform leaves you 17 to 20; through your
         own page, 25 less whatever your gateway charges. <b>Paying inside the page comes
@@ -1334,12 +1329,9 @@
       <div class="tf-res">
         <div id="tf-lineas"><p class="tf-vacio">No add-ons: you pay for the traveller bundle only.</p></div>
         <div class="tf-tot"><span>With <b id="tf-plan">Pro</b></span><b id="tf-total">€45</b></div>
-        <p class="tf-nota">With the first month free, this starts at the bundle price alone.<br><br>
-        Add-ons work with any plan, including the free one. The plan decides how many
-        travellers you have included.<br><br>
-        <b>Without GuIA the system still works</b> —the daily brief, the manifest, the inbox,
-        the reminders, the settlements— but the reminders go out and you read your customers'
-        replies yourself. GuIA is the one that answers.</p>
+        <p class="tf-nota">Add-ons work with any plan, including the free one. <b>Without GuIA
+        the system still works</b>; what changes is who answers your customers — you or
+        it.</p>
       </div>
     </aside>
   </div>
@@ -1350,8 +1342,7 @@
     against a platform commission: the platform brings you the customer and we do not.</p>
   <p class="reveal nota-pie" style="color:var(--muted); font-size:13px; margin:14px 0 0; max-width:74ch; margin-inline:auto;">Prices <b>exclude VAT</b>. With a Spanish NIF we invoice at 21 %; elsewhere in the EU with a VAT
     number, under the reverse charge.</p>
-  <p class="reveal nota-pie" style="color:var(--muted); font-size:14px; margin:10px 0 0; max-width:70ch; margin-inline:auto;"><b>Reminders cost nothing per message</b>: they go from your own WhatsApp in one tap. And we
-    only prepare them where there is a real risk of a no-show — so you send fewer and better.</p>
+  
   <!-- The reasoning for not taking the tip lives in the docs, NOT on the page: here we only
        say what the product does. A page that defends itself against questions nobody asked
        puts those questions in the reader's head. -->
@@ -1405,7 +1396,7 @@
       it would rather hand the question to you than mix two languages in one sentence.</p>
       <span class="mini">each fact is translated once and cached, so it costs nothing to repeat</span></div>
   </div>
-  <p class="reveal" style="text-align:center; color:var(--muted); font-size:14px; margin:20px 0 0;">
+  <p class="reveal" style="text-align:center; color:var(--muted); font-size:13px; margin:20px 0 0;">
     In the demo you can watch it hand something over: ask GuIA for a discount and see where the question
     lands. <a href="../demo-en/" style="color:var(--acc); font-weight:700;">Try it →</a></p>
 </div></section>
@@ -1414,9 +1405,9 @@
 <section class="alt" id="agente"><div class="wrap">
   <div class="sec-head">
     <h2 data-split>The platforms don't tell you everything.<br>Someone has to go in and look.</h2>
-    <p class="reveal">Each platform keeps its own books and only emails you when it feels like it.
-    The rest of the time your list and theirs are two different numbers, and the first person to
-    find out about the gap is the guide, at the meeting point, with the group in front of them.</p>
+    <p class="reveal">Each platform keeps its own books and only emails you when it feels
+    like it. The rest of the time your list and theirs are two different numbers — and the
+    first to find out is the guide, at the meeting point.</p>
   </div>
   <div class="grid3">
     <div class="celda star reveal"><span class="ico">🔢</span><h3>It counts what each one has on its books</h3>
@@ -1425,9 +1416,9 @@
       you know today, not when they turn up.</p>
       <span class="mini">it is the only thing that can find out about an email that never arrived</span></div>
     <div class="celda star reveal" style="--d:70ms"><span class="ico">🔐</span><h3>It closes departures that are full</h3>
-      <p>When a tour fills up you have to close it on every panel, one by one, and if you're slow
-      people book seats that aren't there. The agent does it as soon as it fills. <b>But here it
-      still shows as not closed until you check</b>: saying it closed is not the same as closed.</p>
+      <p>When a tour fills up you have to close it on every panel, and if you're slow people
+      book seats that aren't there. The agent does it for you — but <b>here it still shows as
+      not closed until you check</b>.</p>
       <span class="mini">the ✓ is always placed by a person</span></div>
     <div class="celda star reveal" style="--d:140ms"><span class="ico">🤐</span><h3>And it makes GuIA go quiet when it should</h3>
       <p>If the numbers don't add up, GuIA <b>stops saying how many places are left</b> until
@@ -1435,7 +1426,7 @@
       confidence, about a list it knows is incomplete.</p>
       <span class="mini">it can only make GuIA say less, never more</span></div>
   </div>
-  <p class="reveal nota-pie" style="color:var(--muted); font-size:14px; margin:20px 0 0; max-width:74ch; margin-inline:auto;">
+  <p class="reveal nota-pie" style="color:var(--muted); font-size:13px; margin:20px 0 0; max-width:74ch; margin-inline:auto;">
     <b>It runs on your computer, with your session.</b> Audutor stores no platform passwords: the
     agent uses the one you already have open, as if you sat down yourself.
     <a href="../demo-en/" style="color:var(--acc); font-weight:700;">See it in the demo →</a></p>
