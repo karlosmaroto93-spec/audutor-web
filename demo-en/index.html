@@ -2947,6 +2947,18 @@ function mencionEntera(may, l){
   return false;
 }
 function codDe(t){ return codEscrito(t) || S.codConocido || null; }
+/* ── PEDIR ALGO IRREVERSIBLE SIN IDENTIFICARSE ───────────────────────────────────────
+   El chat público de la web no trae remitente, así que un localizador —cuatro cifras, con
+   el prefijo en cada correo— es una PISTA, no una llave. Desde ahí no se ejecuta nada.
+   Pero tampoco se calla: si era el viajero de verdad, el encargado tiene que poder verlo
+   y hacerlo a mano; y si no lo era, es justo lo que hay que ver. Se apunta el INTENTO —no
+   la acción— para que la observación diga lo que de verdad pasó. */
+function intentoSinIdentificar(cod){
+  if (!cod) return;
+  anotaGuia('⚠️ Alguien pidió tocar la reserva «'+cod+'» desde el chat público, SIN '+
+    'IDENTIFICARSE. No se ha cambiado nada: desde ahí no se ejecuta. Si era el viajero, '+
+    'que use el enlace de gestión de su correo — o míralo tú a mano.');
+}
 /* UN CÓDIGO ESCRITO QUE NO ES DE NINGUNA RESERVA VIVA. Se distingue de «no ha escrito
    código» porque son dos situaciones distintas y piden dos respuestas distintas: al que no
    ha puesto código se le pide; al que ha puesto uno que no consta hay que DECÍRSELO, o se
@@ -4579,7 +4591,15 @@ function respuestaGuiaES(t){
     var preguntaC = (/\b(puedo|podemos|podria|podriamos|se puede|es posible)\b(\s+\S+){0,2}\s+(cancelar|anular)\b/.test(m) ||
                      /\b(hasta cuando|que pasa si|politica de cancelacion)\b/.test(m)) &&
       !/\b(puedes|podrias|me la|nos la|me lo|cancelamela)\b/.test(m);
-    var cod = preguntaC ? null : (codEscrito(t) || (ordenC ? S.codConocido : null));
+    /* SIN CANAL IDENTIFICADO NO SE EJECUTA, y por tanto tampoco se anuncia. El chat
+       público de la web no trae remitente: ahí un localizador es una PISTA, no una llave
+       —son cuatro cifras y el prefijo va en cada correo—. El servidor ya se negaba a
+       aplicar la acción; el motor seguía diciendo «¡Hecho!», así que el viajero se iba
+       creyendo cancelada una reserva que seguía viva. Ahora cae al camino de abajo, que
+       le da la política y su enlace de gestión — el token de 32 caracteres que sí es suyo. */
+    var puedeActuar = S.canalIdentificado !== false;
+    if (!puedeActuar && !preguntaC) intentoSinIdentificar(codEscrito(t));
+    var cod = (preguntaC || !puedeActuar) ? null : (codEscrito(t) || (ordenC ? S.codConocido : null));
     if (cod){
       anotaGuia('Reserva «'+cod+'» cancelada por el chat — plaza liberada');
       return '¡Hecho! Cancelo tu reserva ✅ Tu plaza queda libre al instante.\n\n<i>— La reserva se cancela de verdad y la plaza vuelve a contar libre en el aforo. Queda apuntado en las observaciones del tour de hoy.</i>';
@@ -4587,6 +4607,23 @@ function respuestaGuiaES(t){
     if (/guruwalk|civitatis|getyourguide|plataforma/i.test(m))
       return 'Esa reserva la hiciste en la plataforma, así que cancélala desde su email de confirmación — así te aplican <b>su</b> política de devolución 🙂 En cuanto lo hagas, tu plaza se libera sola en nuestra lista: no hace falta que nos avises — así no te cuenta como no presentado.';
     var pc=kb('cancelar'); if(!pc) return derivaPorHueco('cancelar', t);
+    /* «Dime tu código y te la cancelo yo aquí» solo se puede ofrecer donde de verdad se
+       puede hacer. En el chat público de la web no se ejecuta nada —el remitente no está
+       verificado—, así que prometerlo ahí es mandar al viajero a dar un código para nada.
+       Ahí se le manda a su enlace de gestión, que es lo suyo y no se adivina. */
+    if (!puedeActuar) {
+      /* El enlace de gestión SOLO existe si el operador tiene su web de reservas: sin
+         ella no hay token que ofrecer, y mandar a alguien a un enlace que no existe es
+         otra forma de prometer lo que no hay. Con web, se ofrece; sin web, se dice lo
+         único cierto — que lo mire una persona. */
+      return pc+'\n\n'+(hayWeb()
+        ? 'Si reservaste en <b>nuestra web</b> ('+webEnlace()+'), abre tu <b>enlace de '+
+          'gestión</b> —el del email de confirmación— y la sueltas en un clic. '
+        : 'Para cancelarla, contéstale a tu email de confirmación o escríbenos y lo hacemos. ')+
+        'Desde este chat no puedo tocar reservas: aquí no sé quién eres, y no quiero '+
+        'cancelarle el tour a otra persona 🙏 Si reservaste por una <b>plataforma</b>, '+
+        'cancélala allí y yo actualizo la lista sola.';
+    }
     return pc+'\n\nDos formas, la que te venga mejor: (1)'+(hayWeb() ? ' si reservaste en <b>nuestra web</b> (' + webEnlace() + '), abre tu <b>enlace de gestión</b> (el del email de confirmación) y la cancelas en un clic, o' : '')+' dime tu código'+ejCod()+' y te la cancelo yo aquí; (2) si fue por una <b>plataforma</b>, cancélala allí y yo actualizo la lista sola.';
   }
   /* «cambiar el pañal» y «cambiar dinero» llevan «cambiar» y no son un cambio de reserva. */
@@ -4617,7 +4654,13 @@ function respuestaGuiaES(t){
         'la reserva de otra persona 🙏 Repásalo en tu email de confirmación y dímelo otra vez.'+
         '\n\n<i>— Tu reserva sigue como estaba: no se ha cambiado nada.</i>';
     }
-    var codB = codEscrito(t) || (preguntaB ? null : S.codConocido);
+    /* Misma guarda que en cancelar: sin canal identificado no se ejecuta, así que
+       tampoco se anuncia. Aquí cuelgan el cambio de PERSONAS y la mudanza de FECHA —las
+       dos irreversibles para la plaza de otro— y las dos decían «¡Hecho!» desde el chat
+       público mientras el servidor las rechazaba. */
+    if (S.canalIdentificado === false) intentoSinIdentificar(codEscrito(t));
+    var codB = (S.canalIdentificado === false) ? null
+      : (codEscrito(t) || (preguntaB ? null : S.codConocido));
     if (codB){
       var cp=paxCambioDe(m, t);
       if (cp){
@@ -5552,7 +5595,9 @@ function respuestaEN(t){
     var preguntaE = (/\b(can i|could i|can we|could we|am i able|is it possible)\b(\s+\S+){0,2}\s+cancel\b/.test(crudoE) ||
                      /\b(until when|what if i cancel|cancellation policy|do i have to)\b/.test(crudoE)) &&
       !/\b(can you|could you|please cancel|cancel it)\b/.test(crudoE);
-    var codC = preguntaE ? null : (codEscrito(t) || (ordenCE ? S.codConocido : null));
+    /* Misma guarda que en español: sin canal identificado no se ejecuta ni se anuncia. */
+    var codC = (preguntaE || S.canalIdentificado === false)
+      ? null : (codEscrito(t) || (ordenCE ? S.codConocido : null));
     if (codC){
       anotaGuia('Booking “'+codC+'” cancelled over chat — place released');
       return 'Done! Your booking is cancelled ✅ Thanks for letting us know in good time: your place is free again straight away.\n\n<i>— The booking is cancelled for real and the place counts free again. It is written into today\'s tour notes.</i>';
