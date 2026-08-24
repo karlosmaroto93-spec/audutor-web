@@ -9911,6 +9911,11 @@ function modoLiq(m){
   document.getElementById('ctl-pct').style.display = m==='pct'?'':'none';
   document.getElementById('ctl-fijo').style.display = m==='fijo'?'':'none';
   pintaLiq();
+  /* Y EL MANIFIESTO, que es la otra pantalla que depende del modo: su caja pregunta
+     dinero o personas según esto. Sin repintarlo, el operador cambiaba el reparto aquí,
+     navegaba al manifiesto y seguía viendo la caja del modelo anterior — una pantalla
+     enseñando algo que ya no es verdad. `ir()` no lo repinta: solo cambia de vista. */
+  if (typeof pintaManifiesto === 'function') pintaManifiesto();
 }
 function rangoRapido(q){
   /* Desde el HOY del ciclo semanal, no desde el 18-jul cableado: si no, en agosto los
