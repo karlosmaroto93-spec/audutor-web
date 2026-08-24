@@ -1816,12 +1816,12 @@
     </div>
     <div class="fila" style="margin-top:12px; gap:8px;">
       <b class="mini">Split mode:</b>
-      <button class="btn mini" id="tab-pct" onclick="modoLiq('pct')">% of the tip to the guide</button>
-      <button class="btn mini sec" id="tab-fijo" onclick="modoLiq('fijo')">Flat <span data-moneda>£</span> per person to the company</button>
-      <label class="mini" id="ctl-pct">the guide keeps
+      <button class="btn mini sec" id="tab-pct" onclick="modoLiq('pct')">% of the tip to the guide</button>
+      <button class="btn mini" id="tab-fijo" onclick="modoLiq('fijo')">Flat <span data-moneda>£</span> per person to the company</button>
+      <label class="mini" id="ctl-pct" style="display:none;">the guide keeps
         <input type="range" min="50" max="80" step="1" value="67" id="rep-pct" oninput="pintaLiq()">
         <b><span id="rep-v">67</span> %</b> of the net</label>
-      <label class="mini" id="ctl-fijo" style="display:none;">the company keeps
+      <label class="mini" id="ctl-fijo">the company keeps
         <input type="range" min="1" max="10" step="0.5" value="2.5" id="rep-fijo" oninput="pintaLiq()">
         <b><span data-moneda>£</span><span id="fijo-v">2.50</span></b> per attendee; the guide keeps the rest</label>
     </div>
@@ -1891,12 +1891,12 @@
     </div>
     <div class="fila" style="margin-top:14px; gap:8px;">
       <b class="mini">Split mode:</b>
-      <button class="btn mini" id="py-tab-pct" onclick="proyModo('pct')">% of the tip to the guide</button>
-      <button class="btn mini sec" id="py-tab-fijo" onclick="proyModo('fijo')">Flat <span data-moneda>£</span> per person to the company</button>
-      <label class="mini" id="py-ctl-pct">the guide keeps
+      <button class="btn mini sec" id="py-tab-pct" onclick="proyModo('pct')">% of the tip to the guide</button>
+      <button class="btn mini" id="py-tab-fijo" onclick="proyModo('fijo')">Flat <span data-moneda>£</span> per person to the company</button>
+      <label class="mini" id="py-ctl-pct" style="display:none;">the guide keeps
         <input type="range" id="py-rep" min="50" max="80" step="1" value="67" oninput="calcProy()">
         <b><span id="py-rep-v">67</span> %</b></label>
-      <label class="mini" id="py-ctl-fijo" style="display:none;">the company keeps
+      <label class="mini" id="py-ctl-fijo">the company keeps
         <input type="range" id="py-fijo" min="1" max="10" step="0.5" value="2.5" oninput="calcProy()">
         <b><span data-moneda>£</span><span id="py-fijo-v">2.50</span></b> per person</label>
     </div>
@@ -6645,7 +6645,7 @@ function pintaGuiaDispo(nombre){
   var box = document.getElementById('guia-dispo'); if(!g||!box){ if(box) box.innerHTML=''; return; }
   var gi = S.equipo.guias.indexOf(g);
   var fr = franjasEmpresa();
-  var h = '<div class="g-dispo"><h2>🗓 My availability</h2>'+
+  var h = pintaAvisosGuia(gi) + '<div class="g-dispo"><h2>🗓 My availability</h2>'+
     '<p class="mini muted" style="margin:0;">Tap once to offer (✓), again to say you can’t do that departure (✗), again to leave it unsaid. Your manager sees it when assigning. '+
     '<span style="color:'+g.color+'; font-weight:700;">🔒 = already assigned to you</span>.</p>'+
     '<table><tr><th></th>'+DIAS_SEM.map(function(x){return '<th>'+x+'</th>';}).join('')+'</tr>';
@@ -6955,7 +6955,16 @@ function pintaManifiestoReal(){
         '<button class="btn mini rec-save">Save</button>'+
         '<span class="mini muted rec-media">'+(t.rec?media:'')+'</span>'+
       '</div>'+
-      '<p class="mini muted" style="margin:6px 0 0;">Log the total tips at the end — that’s what the payout is worked out from'+
+      /* LO QUE DICE EL PIE DEPENDE DEL MODELO, igual que en la app real. En el fijo por
+         cabeza la liquidación es `fijo × llegados` y NO necesita el bote: decirle al guía
+         que de ahí sale su pago es falso ahí, y es de donde salen casi todas las
+         reticencias — el guía suele ser autónomo y eso es un dato de SU renta. */
+      (liqModo==='fijo'
+        ? '<p class="mini muted" style="margin:6px 0 0;">The house keeps <b>'+euros(fijoCabeza())+
+          ' per person</b>: with '+pres+(pres===1?' who turned up that is ':' who turned up that is ')+
+          '<b>'+euros(fijoCabeza()*pres)+'</b>. The rest is yours. Logging the tips is '+
+          '<b>optional</b> — it does not change what you pay'
+        : '<p class="mini muted" style="margin:6px 0 0;">Log the total tips at the end — that’s what the payout is worked out from')+
         (t.sinGuia?'. ⚠️ Nobody is down to guide this one yet (see Team &amp; availability).':'.')+'</p>';
     caja.querySelector('.rec-save').onclick=function(){
       var v=parseFloat(caja.querySelector('.rec-in').value.replace(',','.'))||0;
@@ -8586,10 +8595,19 @@ var TICKETED_LIQ = [
     venta:48.0, pagoGuia:30.0, plat:2 },
 ];
 var COMISION_CANAL = 2.5;
-var liqModo = 'pct';
+/* EL DEFECTO ES EL FIJO POR CABEZA, como en el servidor (`cuentas.js`): así funciona un
+   free tour —la casa cobra dos o tres euros por persona que aparece y el guía se queda la
+   propina— y el porcentaje sobre el bote es la excepción. El defecto importa más de lo que
+   parece: el porcentaje es el único modo que OBLIGA a preguntarle al guía cuánto recaudó,
+   que es un dato de su renta y la fuente de casi todas las reticencias. */
+var liqModo = 'fijo';
 var liqCoste = 'empresa';   // POR DEFECTO: el canal lo paga quien lo contrata, no el guía
 
 function eur(x){ return dinero(x, 2); }
+/* Lo que la casa se queda por cabeza, del mismo deslizador que la liquidación: dos sitios
+   leyendo el mismo control es lo que hace que la demo no se contradiga consigo misma. */
+function fijoCabeza(){ return +document.getElementById('rep-fijo').value || 0; }
+
 /* La tabla «By guide» del Cuadro, del mismo rango y la misma fuente que la Liquidación —
    que es lo que la nota de esa tarjeta lleva prometiendo. Gemelo de `pintaCuadroGuias` en
    la demo española; los importes salen de `eur`, así que siguen a la moneda del mercado en
@@ -9048,7 +9066,7 @@ function pintaCalPicker(){
     ? cob.map(function(gi,ix){ var g=S.equipo.guias[gi];
         return '<span class="fila" style="gap:5px; align-items:center;">'+
           '<span class="ini grande" style="background:'+g.color+'">'+iniGuia(g)+'</span>'+
-          '<b>'+ordEN(ix+1)+'</b> '+g.n+(ix===0?' <span class="chip" style="background:var(--acc-soft); color:var(--acc);">lead</span>':
+          '<b>'+ordEN(ix+1)+'</b> '+g.n+marcaVisto(gi, slot)+(ix===0?' <span class="chip" style="background:var(--acc-soft); color:var(--acc);">lead</span>':
             ' <button class="btn mini sec" style="padding:3px 8px;" onclick="calSubir(\''+slot+'\','+gi+')" title="move up the running order">▲</button>')+
           ' <button class="btn mini sec" style="padding:3px 8px;" onclick="calToggleGuia(\''+slot+'\','+gi+')" title="quitar">✕</button></span>'; }).join('')
     : '<i class="mini muted">Nobody assigned — tap a guide to put them at the front of this departure.</i>';
@@ -9343,8 +9361,15 @@ function pintaEquipo(){
       cand.forEach(function(p){
         var b=document.createElement('button'); b.className='btn mini';
         b.innerHTML='<span class="ini" style="background:'+p.x.color+'; width:18px; height:18px; font-size:11.5px; margin:0; border:0; display:inline-flex; vertical-align:middle;">'+iniGuia(p.x)+'</span> '+p.x.n+
-          (p.x.dispo[u.slot]===true?' <b title="Offered for this departure">✋</b>':'');
-        b.onclick=function(){ S.equipo.cobertura[u.slot]=[p.gi]; pintaEquipo();
+          (p.x.dispo[u.slot]===true?' <b title="Offered for this departure">✋</b>':'')+
+          (p.x.idiomas?' <span class="mini muted">'+p.x.idiomas+'</span>':'');
+        b.onclick=function(){ S.equipo.cobertura[u.slot]=[p.gi];
+          /* AVISA Y NO BLOQUEA, como el resto: el encargado manda. Antes de repintar,
+             porque `huecoCorto` mira la cobertura y esta salida ya cuenta. */
+          var h = huecoCorto(p.gi, u.slot);
+          avisaAlGuia(p.gi, u.slot);
+          pintaEquipo();
+          if (h !== null) toast('Careful: that leaves {h} hours between the night before and this one. Assigned anyway — you decide.'.replace('{h}', h));
           toast('✅ '+p.x.n+' assigned to the '+gpHora12(u.f.hora)+' '+u.f.tour+' ('+DIA_L[u.d]+') — manifest created'); };
         d.appendChild(b);
       });
@@ -9356,6 +9381,67 @@ function pintaEquipo(){
     });
   }
 }
+
+/* ══════════ EL AVISO AL GUÍA Y SU «VISTO» ══════════
+   Como en el sistema real: el encargado repartía y al guía no se le decía nada — se
+   enteraba si abría la app y miraba el día correcto—. El toast de esta misma demo llegó a
+   decir «equipo avisado» cuando no se avisaba a nadie.
+   El botón dice «visto» y no «aceptar»: aceptar abre la pregunta de qué pasa si dice que
+   no, y eso lo decide el operador con su equipo, no esta pantalla. */
+function avisaAlGuia(gi, slot){
+  S.equipo.vistos = S.equipo.vistos || {};
+  S.equipo.vistos[gi+'@'+slot] = false;          // puesto y sin ver
+}
+function daPorVisto(gi, slot){
+  S.equipo.vistos[gi+'@'+slot] = true;
+  pintaGuiaDispo(S.guiaVista); pintaEquipo();
+  toast('✓ Noted. Your manager can see you know');
+}
+function estaVisto(gi, slot){
+  var v = (S.equipo.vistos||{})[gi+'@'+slot];
+  return v === undefined ? null : v;            // null = de antes; no se inventa un «sin ver»
+}
+function marcaVisto(gi, slot){
+  var v = estaVisto(gi, slot);
+  if (v === null) return '';
+  return v ? ' <span style="color:var(--acc); font-weight:700;">✓ seen</span>'
+           : ' <span class="muted">not seen</span>';
+}
+function pintaAvisosGuia(gi){
+  var pend = Object.keys(S.equipo.vistos||{})
+    .filter(function(k){ return k.indexOf(gi+'@')===0 && S.equipo.vistos[k]===false; })
+    .map(function(k){ return k.slice(String(gi).length+1); });
+  if(!pend.length) return '';
+  return '<div class="g-dispo" style="border-color:var(--acc);">'+
+    '<h2>🔔 '+(pend.length===1?'You have been put on a departure':'You have been put on '+pend.length+' departures')+'</h2>'+
+    pend.map(function(slot){
+      var p=slot.split('|');
+      return '<div class="fila" style="gap:8px; align-items:center; margin-top:6px;">'+
+        '<span class="mini" style="flex:1 1 10rem; font-weight:600;">'+p[1]+' · '+p[0]+' · '+
+          (DIAS_SEM[+p[2]]||'')+'</span>'+
+        '<button class="btn mini" onclick="daPorVisto('+gi+',\''+slot+'\')">Got it</button>'+
+      '</div>';
+    }).join('')+'</div>';
+}
+
+/* ══════════ EL HUECO ENTRE JORNADAS ══════════
+   Se dice EL NÚMERO, nunca la regla: la ley de descanso entre jornadas es para empleados y
+   los autónomos sin trabajadores quedan fuera — y en un free tour buena parte de los guías
+   son autónomos. Afirmar la norma sería afirmar lo que no se sabe. Doce horas de umbral. */
+function huecoCorto(gi, slot){
+  var p = slot.split('|'), hora = +String(p[1]).slice(0,2), dia = +p[2];
+  var antes = (dia + 6) % 7;
+  var peor = null;
+  Object.keys(S.equipo.cobertura || {}).forEach(function(k){
+    if ((S.equipo.cobertura[k] || []).indexOf(gi) < 0) return;
+    var q = k.split('|');
+    if (+q[2] !== antes) return;
+    var h = (24 - (+String(q[1]).slice(0,2))) + hora;
+    if (h < 12 && (peor === null || h < peor)) peor = h;
+  });
+  return peor;
+}
+
 function toggleCheckin(gi){
   var x=S.equipo.guias[gi]; x.checkin=!x.checkin; pintaEquipo();
   toast(x.checkin ? '✅ '+x.n+' can now check people in from their own manifest'
@@ -9375,14 +9461,19 @@ function toggleDispoFranja(gi, key, d){
 }
 function asignarGuia(si, gi){
   var s=S.equipo.sinGuia[si], x=S.equipo.guias[gi];
-  x.dispo[s.tourNombre+'|'+s.hora+'|'+s.dia]='asig';
+  var slot=s.tourNombre+'|'+s.hora+'|'+s.dia;
+  x.dispo[slot]='asig';
   s.asignada=x.n;
+  /* LAS DOS PUERTAS AVISAN. Solo una lo hacía y la otra no: la misma acción desde otra
+     pantalla y sin la guarda es el fallo que este fichero ya tiene documentado con el
+     aviso de solape. */
+  avisaAlGuia(gi, slot);
   pintaEquipo();
   toast('✅ '+x.n+' asignada al '+s.tourNombre+' ('+s.cuando+') — manifiesto creado y equipo avisado');
 }
 
 /* ============ proyección de ingresos (plan de negocio en vivo) ============ */
-var proyModoV='pct', proyCosteV='empresa';
+var proyModoV='fijo', proyCosteV='empresa';
 function proyModo(m){ proyModoV=m;
   document.getElementById('py-tab-pct').className='btn mini'+(m==='pct'?'':' sec');
   document.getElementById('py-tab-fijo').className='btn mini'+(m==='fijo'?'':' sec');
@@ -9428,7 +9519,11 @@ function calcProy(){
   document.getElementById('py-nota').innerHTML=
     (proyModoV==='pct'
       ? 'The guide keeps <b>'+Math.round(rep*100)+' %</b> of what gets split; the company keeps the rest. '
-      : 'The company keeps <b>'+fijo.toLocaleString('en-GB',d2)+' £ per person</b> ('+eur0(fijo*paxMes)+'/month); the guide keeps the rest. ')+
+      /* Con `dinero()` y no a mano: aquí había `toLocaleString('es-ES')` y un € clavado
+         —y en la inglesa, 'en-GB' y una £—. Estaba en la rama del FIJO, que hasta hoy no
+         se veía nunca porque el modo por defecto era el porcentaje: la guarda de moneda
+         no podía cazarlo porque el control estaba oculto. Cambiar el defecto lo destapó. */
+      : 'The company keeps <b>'+dinero(fijo,2)+' per person</b> ('+eur0(fijo*paxMes)+'/month); the guide keeps the rest. ')+
     (proyCosteV==='empresa'
       ? 'Platform fees ('+eur0(comMes)+'/month) <b>are absorbed by the company</b> out of its share — the split is on the gross tip. '
       : 'The fees ('+eur0(comMes)+'/month) come off the total <b>before</b> the split — guide and company share them. ')+

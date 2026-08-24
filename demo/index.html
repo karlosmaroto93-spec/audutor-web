@@ -1944,12 +1944,12 @@
     </div>
     <div class="fila" style="margin-top:12px; gap:8px;">
       <b class="mini">Modo de reparto:</b>
-      <button class="btn mini" id="tab-pct" onclick="modoLiq('pct')">% de la propina para el guía</button>
-      <button class="btn mini sec" id="tab-fijo" onclick="modoLiq('fijo')"><span data-moneda>€</span> fijos por persona para la empresa</button>
-      <label class="mini" id="ctl-pct">el guía se queda
+      <button class="btn mini sec" id="tab-pct" onclick="modoLiq('pct')">% de la propina para el guía</button>
+      <button class="btn mini" id="tab-fijo" onclick="modoLiq('fijo')"><span data-moneda>€</span> fijos por persona para la empresa</button>
+      <label class="mini" id="ctl-pct" style="display:none;">el guía se queda
         <input type="range" min="50" max="80" step="1" value="67" id="rep-pct" oninput="pintaLiq()">
         <b><span id="rep-v">67</span> %</b> del neto</label>
-      <label class="mini" id="ctl-fijo" style="display:none;">la empresa se queda
+      <label class="mini" id="ctl-fijo">la empresa se queda
         <input type="range" min="1" max="10" step="0.5" value="2.5" id="rep-fijo" oninput="pintaLiq()">
         <b><span id="fijo-v">2,50</span> <span data-moneda>€</span></b> × asistente; el guía, el resto</label>
     </div>
@@ -2009,12 +2009,12 @@
     </div>
     <div class="fila" style="margin-top:14px; gap:8px;">
       <b class="mini">Modo de reparto:</b>
-      <button class="btn mini" id="py-tab-pct" onclick="proyModo('pct')">% de la propina para el guía</button>
-      <button class="btn mini sec" id="py-tab-fijo" onclick="proyModo('fijo')"><span data-moneda>€</span> fijos por persona para la empresa</button>
-      <label class="mini" id="py-ctl-pct">el guía se queda
+      <button class="btn mini sec" id="py-tab-pct" onclick="proyModo('pct')">% de la propina para el guía</button>
+      <button class="btn mini" id="py-tab-fijo" onclick="proyModo('fijo')"><span data-moneda>€</span> fijos por persona para la empresa</button>
+      <label class="mini" id="py-ctl-pct" style="display:none;">el guía se queda
         <input type="range" id="py-rep" min="50" max="80" step="1" value="67" oninput="calcProy()">
         <b><span id="py-rep-v">67</span> %</b></label>
-      <label class="mini" id="py-ctl-fijo" style="display:none;">la empresa se queda
+      <label class="mini" id="py-ctl-fijo">la empresa se queda
         <input type="range" id="py-fijo" min="1" max="10" step="0.5" value="2.5" oninput="calcProy()">
         <b><span id="py-fijo-v">2,50</span> <span data-moneda>€</span></b> × persona</label>
     </div>
@@ -7390,7 +7390,7 @@ function pintaGuiaDispo(nombre){
   var box = document.getElementById('guia-dispo'); if(!g||!box){ if(box) box.innerHTML=''; return; }
   var gi = S.equipo.guias.indexOf(g);
   var fr = franjasEmpresa();
-  var h = '<div class="g-dispo"><h2>🗓 Mi disponibilidad</h2>'+
+  var h = pintaAvisosGuia(gi) + '<div class="g-dispo"><h2>🗓 Mi disponibilidad</h2>'+
     '<p class="mini muted" style="margin:0;">Toca una vez para ofrecerte (✓), otra para decir que no puedes esa salida (✗) y otra para dejarlo sin decir. El encargado lo ve al repartir. '+
     '<span style="color:'+g.color+'; font-weight:700;">🔒 = ya te lo han asignado</span>.</p>'+
     '<table><tr><th></th>'+DIAS_SEM.map(function(x){return '<th>'+x+'</th>';}).join('')+'</tr>';
@@ -8394,7 +8394,17 @@ function pintaManifiestoReal(){
         '<button class="btn mini rec-save">Guardar</button>'+
         '<span class="mini muted rec-media">'+(t.rec?media:'')+'</span>'+
       '</div>'+
-      '<p class="mini muted" style="margin:6px 0 0;">Apunta la propina total al terminar — con esto se calcula la liquidación'+
+      /* LO QUE DICE EL PIE DEPENDE DEL MODELO, igual que en la app real. En el fijo por
+         cabeza la liquidación es `fijo × llegados` y NO necesita el bote: decirle al guía
+         que «con esto se calcula la liquidación» es falso ahí, y es de donde salen casi
+         todas las reticencias — el guía suele ser autónomo y eso es un dato de SU renta.
+         Se queda opcional, y se dice para qué sirve: para que él vea lo que le queda. */
+      (liqModo==='fijo'
+        ? '<p class="mini muted" style="margin:6px 0 0;">La casa se queda <b>'+euros(fijoCabeza())+
+          ' por persona</b>: con '+pres+(pres===1?' llegado son ':' llegados son ')+
+          '<b>'+euros(fijoCabeza()*pres)+'</b>. Lo demás es tuyo. Apuntar la propina es '+
+          '<b>opcional</b> — no cambia lo que pagas'
+        : '<p class="mini muted" style="margin:6px 0 0;">Apunta la propina total al terminar — con esto se calcula la liquidación')+
         (t.sinGuia?'. ⚠️ Este tour no tiene guía asignado (mira Equipo y disponibilidad).':'.')+'</p>';
     caja.querySelector('.rec-save').onclick=function(){
       var v=parseFloat(caja.querySelector('.rec-in').value.replace(',','.'))||0;
@@ -9850,12 +9860,21 @@ var TOURS_LIQ = historiaLiq().concat([
   return x.f <= isoDe(HOY_DEMO);
 }));
 var COMISION_CANAL = 2.5;
-var liqModo = 'pct';
+/* EL DEFECTO ES EL FIJO POR CABEZA, como en el servidor (`cuentas.js`): así funciona un
+   free tour —la casa cobra dos o tres euros por persona que aparece y el guía se queda la
+   propina— y el porcentaje sobre el bote es la excepción. El defecto importa más de lo que
+   parece: el porcentaje es el único modo que OBLIGA a preguntarle al guía cuánto recaudó,
+   que es un dato de su renta y la fuente de casi todas las reticencias. */
+var liqModo = 'fijo';
 var liqCoste = 'empresa';   // POR DEFECTO: el canal lo paga quien lo contrata, no el guía
 
 /* La liquidación entera pasa por aquí: era el sitio con más importes clavados en euros
    de las dos demos (94 en una sola pantalla al pasar al mercado británico). */
 function eur(x){ return dinero(x, 2); }
+/* Lo que la casa se queda por cabeza, del mismo deslizador que la liquidación: dos sitios
+   leyendo el mismo control es lo que hace que la demo no se contradiga consigo misma. */
+function fijoCabeza(){ return +document.getElementById('rep-fijo').value || 0; }
+
 function celdaEur(x, esGuia){
   var cls = x<0 ? ' class="num neg"' : (esGuia && x>0 ? ' class="num pos-guia"' : ' class="num"');
   return '<td'+cls+'>'+eur(x)+'</td>';
@@ -10248,7 +10267,7 @@ function pintaCalPicker(){
     ? cob.map(function(gi,ix){ var g=S.equipo.guias[gi];
         return '<span class="fila" style="gap:5px; align-items:center;">'+
           '<span class="ini grande" style="background:'+g.color+'">'+iniGuia(g)+'</span>'+
-          '<b>'+(ix+1)+'º</b> '+g.n+(ix===0?' <span class="chip" style="background:var(--acc-soft); color:var(--acc);">principal</span>':
+          '<b>'+(ix+1)+'º</b> '+g.n+marcaVisto(gi, slot)+(ix===0?' <span class="chip" style="background:var(--acc-soft); color:var(--acc);">principal</span>':
             ' <button class="btn mini sec" style="padding:3px 8px;" onclick="calSubir(\''+slot+'\','+gi+')" title="subir en la jerarquía">▲</button>')+
           ' <button class="btn mini sec" style="padding:3px 8px;" onclick="calToggleGuia(\''+slot+'\','+gi+')" title="quitar">✕</button></span>'; }).join('')
     : '<i class="mini muted">Nadie asignado — toca un guía para ponerlo al frente de la salida.</i>';
@@ -10431,8 +10450,15 @@ function pintaEquipo(){
       cand.forEach(function(p){
         var b=document.createElement('button'); b.className='btn mini';
         b.innerHTML='<span class="ini" style="background:'+p.x.color+'; width:18px; height:18px; font-size:11.5px; margin:0; border:0; display:inline-flex; vertical-align:middle;">'+iniGuia(p.x)+'</span> '+p.x.n+
-          (p.x.dispo[u.slot]===true?' <b title="Se ofreció para esta salida">✋</b>':'');
-        b.onclick=function(){ S.equipo.cobertura[u.slot]=[p.gi]; pintaEquipo();
+          (p.x.dispo[u.slot]===true?' <b title="Se ofreció para esta salida">✋</b>':'')+
+          (p.x.idiomas?' <span class="mini muted">'+p.x.idiomas+'</span>':'');
+        b.onclick=function(){ S.equipo.cobertura[u.slot]=[p.gi];
+          /* AVISA Y NO BLOQUEA, como el resto: el encargado manda. Antes de repintar,
+             porque `huecoCorto` mira la cobertura y esta salida ya cuenta. */
+          var h = huecoCorto(p.gi, u.slot);
+          avisaAlGuia(p.gi, u.slot);
+          pintaEquipo();
+          if (h !== null) toast('Ojo: le quedan {h} horas entre la salida de la víspera y esta. Queda asignado igual — mandas tú.'.replace('{h}', h));
           toast('✅ '+p.x.n+' asignada al '+u.f.tour+' de las '+u.f.hora+' ('+DIA_L[u.d]+') — manifiesto creado'); };
         d.appendChild(b);
       });
@@ -10444,6 +10470,67 @@ function pintaEquipo(){
     });
   }
 }
+
+/* ══════════ EL AVISO AL GUÍA Y SU «VISTO» ══════════
+   Como en el sistema real: el encargado repartía y al guía no se le decía nada — se
+   enteraba si abría la app y miraba el día correcto—. El toast de esta misma demo llegó a
+   decir «equipo avisado» cuando no se avisaba a nadie.
+   El botón dice «visto» y no «aceptar»: aceptar abre la pregunta de qué pasa si dice que
+   no, y eso lo decide el operador con su equipo, no esta pantalla. */
+function avisaAlGuia(gi, slot){
+  S.equipo.vistos = S.equipo.vistos || {};
+  S.equipo.vistos[gi+'@'+slot] = false;          // puesto y sin ver
+}
+function daPorVisto(gi, slot){
+  S.equipo.vistos[gi+'@'+slot] = true;
+  pintaGuiaDispo(S.guiaVista); pintaEquipo();
+  toast('✓ Anotado. Tu encargado ve que ya lo sabes');
+}
+function estaVisto(gi, slot){
+  var v = (S.equipo.vistos||{})[gi+'@'+slot];
+  return v === undefined ? null : v;            // null = de antes; no se inventa un «sin ver»
+}
+function marcaVisto(gi, slot){
+  var v = estaVisto(gi, slot);
+  if (v === null) return '';
+  return v ? ' <span style="color:var(--acc); font-weight:700;">✓ visto</span>'
+           : ' <span class="muted">sin ver</span>';
+}
+function pintaAvisosGuia(gi){
+  var pend = Object.keys(S.equipo.vistos||{})
+    .filter(function(k){ return k.indexOf(gi+'@')===0 && S.equipo.vistos[k]===false; })
+    .map(function(k){ return k.slice(String(gi).length+1); });
+  if(!pend.length) return '';
+  return '<div class="g-dispo" style="border-color:var(--acc);">'+
+    '<h2>🔔 '+(pend.length===1?'Te han puesto una salida':'Te han puesto '+pend.length+' salidas')+'</h2>'+
+    pend.map(function(slot){
+      var p=slot.split('|');
+      return '<div class="fila" style="gap:8px; align-items:center; margin-top:6px;">'+
+        '<span class="mini" style="flex:1 1 10rem; font-weight:600;">'+p[1]+' · '+p[0]+' · '+
+          (DIAS_SEM[+p[2]]||'')+'</span>'+
+        '<button class="btn mini" onclick="daPorVisto('+gi+',\''+slot+'\')">Visto</button>'+
+      '</div>';
+    }).join('')+'</div>';
+}
+
+/* ══════════ EL HUECO ENTRE JORNADAS ══════════
+   Se dice EL NÚMERO, nunca la regla: la ley de descanso entre jornadas es para empleados y
+   los autónomos sin trabajadores quedan fuera — y en un free tour buena parte de los guías
+   son autónomos. Afirmar la norma sería afirmar lo que no se sabe. Doce horas de umbral. */
+function huecoCorto(gi, slot){
+  var p = slot.split('|'), hora = +String(p[1]).slice(0,2), dia = +p[2];
+  var antes = (dia + 6) % 7;
+  var peor = null;
+  Object.keys(S.equipo.cobertura || {}).forEach(function(k){
+    if ((S.equipo.cobertura[k] || []).indexOf(gi) < 0) return;
+    var q = k.split('|');
+    if (+q[2] !== antes) return;
+    var h = (24 - (+String(q[1]).slice(0,2))) + hora;
+    if (h < 12 && (peor === null || h < peor)) peor = h;
+  });
+  return peor;
+}
+
 function toggleCheckin(gi){
   var x=S.equipo.guias[gi]; x.checkin=!x.checkin; pintaEquipo();
   toast(x.checkin ? '✅ '+x.n+' ya puede marcar llegadas desde su manifiesto'
@@ -10463,14 +10550,19 @@ function toggleDispoFranja(gi, key, d){
 }
 function asignarGuia(si, gi){
   var s=S.equipo.sinGuia[si], x=S.equipo.guias[gi];
-  x.dispo[s.tourNombre+'|'+s.hora+'|'+s.dia]='asig';
+  var slot=s.tourNombre+'|'+s.hora+'|'+s.dia;
+  x.dispo[slot]='asig';
   s.asignada=x.n;
+  /* LAS DOS PUERTAS AVISAN. Solo una lo hacía y la otra no: la misma acción desde otra
+     pantalla y sin la guarda es el fallo que este fichero ya tiene documentado con el
+     aviso de solape. */
+  avisaAlGuia(gi, slot);
   pintaEquipo();
   toast('✅ '+x.n+' asignada al '+s.tourNombre+' ('+s.cuando+') — manifiesto creado y equipo avisado');
 }
 
 /* ============ proyección de ingresos (plan de negocio en vivo) ============ */
-var proyModoV='pct', proyCosteV='empresa';
+var proyModoV='fijo', proyCosteV='empresa';
 function proyModo(m){ proyModoV=m;
   document.getElementById('py-tab-pct').className='btn mini'+(m==='pct'?'':' sec');
   document.getElementById('py-tab-fijo').className='btn mini'+(m==='fijo'?'':' sec');
@@ -10497,7 +10589,7 @@ function calcProy(){
   document.getElementById('py-ovh-v').textContent=ovh.toLocaleString('es-ES');
   document.getElementById('py-dias-v').textContent=dias;
   document.getElementById('py-rep-v').textContent=Math.round(rep*100);
-  document.getElementById('py-fijo-v').textContent=fijo.toLocaleString('es-ES',d2);
+  document.getElementById('py-fijo-v').textContent=fijo.toLocaleString(MK.moneda.loc,d2);
   var paxDia=grupo*tours, paxMes=paxDia*dias, brutoMes=paxDia*prop*dias;
   var comMes=com*paxMes*(1-dir);
   var base = brutoMes - (proyCosteV==='ingreso' ? comMes : 0);
@@ -10516,7 +10608,11 @@ function calcProy(){
   document.getElementById('py-nota').innerHTML=
     (proyModoV==='pct'
       ? 'El guía se queda el <b>'+Math.round(rep*100)+' %</b> de lo que se reparte; la empresa, el resto. '
-      : 'La empresa se queda <b>'+fijo.toLocaleString('es-ES',d2)+' € por persona</b> ('+eur0(fijo*paxMes)+'/mes); el guía, el resto. ')+
+      /* Con `dinero()` y no a mano: aquí había `toLocaleString('es-ES')` y un € clavado
+         —y en la inglesa, 'en-GB' y una £—. Estaba en la rama del FIJO, que hasta hoy no
+         se veía nunca porque el modo por defecto era el porcentaje: la guarda de moneda
+         no podía cazarlo porque el control estaba oculto. Cambiar el defecto lo destapó. */
+      : 'La empresa se queda <b>'+dinero(fijo,2)+' por persona</b> ('+eur0(fijo*paxMes)+'/mes); el guía, el resto. ')+
     (proyCosteV==='empresa'
       ? 'Las comisiones de plataforma ('+eur0(comMes)+'/mes) <b>las asume la empresa</b> de su parte — el reparto es sobre la propina bruta. '
       : 'Las comisiones ('+eur0(comMes)+'/mes) se descuentan del total <b>antes</b> del reparto — las comparten guía y empresa. ')+
