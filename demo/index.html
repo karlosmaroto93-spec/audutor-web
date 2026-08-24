@@ -9740,8 +9740,11 @@ function abreFichaGuia(nombre){
       (prox.length ? prox.map(function(x){ return '<p class="mini">'+x+'</p>'; }).join('')
                    : '<p class="mini muted">Ninguna en el cuadrante.</p>')+'</div>'+
     '<div class="fg-op-c"><div class="fg-op-t">Salidas que ha dicho que no puede</div>'+
-      (noPuede.length ? '<p class="mini">'+noPuede.join(' · ')+'</p>'
-                      : '<p class="mini muted">No ha marcado ninguno.</p>')+
+      /* UNA LÍNEA POR SALIDA, como el bloque de al lado. Juntas con ` · ` se leían como
+         una sola frase: dentro de cada entrada ya hay puntos medios separando hora, tour y
+         día, así que el mismo separador fuera borraba dónde acaba una y empieza otra. */
+      (noPuede.length ? noPuede.map(function(x){ return '<p class="mini">'+x+'</p>'; }).join('')
+                      : '<p class="mini muted">No ha marcado ninguna.</p>')+
       '<p class="mini muted">Lo que no ha marcado no es un sí: es que no ha dicho nada.</p>'+
     '</div></div>'+
     '<p class="mini muted" style="margin:14px 0 0;">Sale de la misma liquidación que ves en '+
