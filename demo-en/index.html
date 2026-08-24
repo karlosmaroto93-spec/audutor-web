@@ -6139,15 +6139,12 @@ function totalCesta(){
   }
   return { total:t, piezas:piezas };
 }
-/* LA DEPENDENCIA, EN LOS DOS SENTIDOS, como en el servidor (`clientes.contrata`): no se
-   enciende lo que no puede funcionar solo, y no se apaga aquello de lo que otro cuelga. Sin
-   esto, la demo dejaría contratar «Tu tour de pago» sin «Tu web» —y el operador se
-   encontraría el 409 el día que lo hiciera de verdad en su panel—. */
 function compTog(k, el){
-  /* Aquí vivía la comprobación de dependencias: «Tu tour de pago» necesitaba «Tu web», y
-     esto marcaba una al tocar la otra y bloqueaba quitarla. Desde el 23-ago-2026 ningún
-     complemento necesita a otro —hay dos superficies donde reservar, la nuestra y la del
-     propio operador— así que marcar una casilla ya no arrastra a ninguna. */
+  /* Aquí vivía la comprobación de dependencias, y encima de esta función el párrafo que la
+     explicaba: «Tu tour de pago» necesitaba «Tu web», y tocar una marcaba o bloqueaba la
+     otra. Ese complemento se fue entero el 24-ago-2026 —era un peaje: sus cinco funciones
+     ya estaban abiertas sin contratarlo—, y con él la única dependencia que había. Marcar
+     una casilla ya no arrastra a ninguna. */
   S.comp[k] = el.checked; pintaComplementos(); pintaCandados(); ir((location.hash.slice(1))||'operaciones');
 }
 function pintaComplementos(){
