@@ -9686,9 +9686,15 @@ function abreFichaGuia(nombre){
       var p=k.split('|'); prox.push(p[0]+' · '+p[1]+' · '+(DIAS[+p[2]]||''));
     }
   });
-  /* Los días que ha dicho que NO puede. Solo los noes: lo que no ha marcado no es un sí,
-     y juntarlos haría que el encargado le diera un sábado sin confirmar. */
-  var noPuede = Object.keys(g.dispo||{}).filter(function(k){ return g.dispo[k]===false; });
+  /* Lo que ha dicho que NO puede. Solo los noes: lo que no ha marcado no es un sí, y
+     juntarlos haría que el encargado le diera un sábado sin confirmar.
+     Se lee la clave ENTERA —`tour|hora|día`— porque desde el 24-ago la marca es por
+     SALIDA y no por día: esta lista existía y estaba siempre vacía, porque hasta entonces
+     nada escribía nunca un `false`. Sin partir la clave, el encargado leería
+     «Free tour centro histórico|10:00|5», que no es una frase. */
+  var noPuede = Object.keys(g.dispo||{}).filter(function(k){ return g.dispo[k]===false; })
+    .map(function(k){ var q=k.split('|');
+      return (q[1]||'')+' · '+(q[0]||'')+' · '+(DIAS[+q[2]]||''); });
 
   document.getElementById('ficha-caja').innerHTML =
     '<div class="fg-cab"><span class="fg-ini" style="background:'+(g.color||'#0c6b56')+'" aria-hidden="true">'+
@@ -9733,7 +9739,7 @@ function abreFichaGuia(nombre){
   '<div class="fg-op"><div class="fg-op-c"><div class="fg-op-t">Turnos que cubre en el cuadrante</div>'+
       (prox.length ? prox.map(function(x){ return '<p class="mini">'+x+'</p>'; }).join('')
                    : '<p class="mini muted">Ninguna en el cuadrante.</p>')+'</div>'+
-    '<div class="fg-op-c"><div class="fg-op-t">Días que ha dicho que no puede</div>'+
+    '<div class="fg-op-c"><div class="fg-op-t">Salidas que ha dicho que no puede</div>'+
       (noPuede.length ? '<p class="mini">'+noPuede.join(' · ')+'</p>'
                       : '<p class="mini muted">No ha marcado ninguno.</p>')+
       '<p class="mini muted">Lo que no ha marcado no es un sí: es que no ha dicho nada.</p>'+
