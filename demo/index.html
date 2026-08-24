@@ -1347,9 +1347,9 @@
       <h2 style="margin:0;">📮 Mensaje post-tour</h2>
       <span class="chip gris">toda la empresa</span>
     </div>
-    <div class="mini muted" style="margin:8px 0 4px;">El mensaje que se envía al acabar cada tour —
-      <b>solo a reservas de tu web</b> (las de plataforma ya reciben la petición de reseña de su
-      propia plataforma). <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Responde estas preguntas rápidas y abajo se despliega el mensaje final
+    <div class="mini muted" style="margin:8px 0 4px;">El mensaje que se envía al acabar cada
+      tour. El agradecimiento va <b>a todos</b>; el <b>enlace de reseñas</b> solo a quien dijo que sí,
+      y nunca a las de plataforma (ya reciben la suya). <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Responde estas preguntas rápidas y abajo se despliega el mensaje final
       que queda, adaptado solo a cada tour de tu empresa.</span></details></div>
     <div id="post-preguntas"></div>
     <p class="mini muted" id="post-hint" style="margin:10px 0 0;"></p>
@@ -1394,8 +1394,9 @@
       contrato, no publicidad — así que al de GuruWalk, del que solo tienes el teléfono,
       <b>sí</b> se le puede recordar. <details class="mas"><summary>ⓘ más</summary><span class="mas-p"><b>Contrato</b>
       (tiene reserva): los cuatro mensajes, escritos como servicio. <b>Consentimiento</b>
-      (marcó la casilla al reservar): además el enlace de reseñas al acabar, que es la parte
-      que promociona. <b>Baja</b>: nada, nunca — ni los recordatorios.<br><br>Y la baja la
+      (marcó la casilla al reservar, <b>o te lo dijo y lo apuntas tú</b> con un toque en la
+      pantalla de envío — queda con tu nombre): además el enlace de reseñas al acabar, que
+      es la parte que promociona. <b>Baja</b>: nada, nunca — ni los recordatorios.<br><br>Y la baja la
       marcas <b>tú</b>, con un toque, en la misma pantalla desde la que mandas. Es donde
       lees la respuesta: los mensajes salen de tu propio WhatsApp, así que el «no me
       escribáis más» te llega a ti y Audutor no lo ve. Se guarda por persona, no por
@@ -7371,9 +7372,17 @@ function toggleDispoGuia(fkey, d){
   var g = S.equipo.guias.filter(function(x){ return x.n===S.guiaVista; })[0]; if(!g) return;
   var slot = fkey+'|'+d;
   if (estaAsignado(S.equipo.guias.indexOf(g), slot)) { toast('Ese tour ya te lo han asignado 🙂'); return; }
-  g.dispo[slot] = !g.dispo[slot];
+  /* TRES estados, como el servidor: nada dicho → «me ofrezco» → «esta no» → nada dicho.
+     Con dos no cabía la frase que más falta hace —la clase que acaba a las siete: el de
+     las 10:00 no, el nocturno sí—, y para decirla había que bloquear el día entero y
+     perder el nocturno también. El silencio (nada dicho) es el estado normal y no
+     significa nada: no aparta a nadie de la sugerencia del encargado. */
+  var v = g.dispo[slot];
+  g.dispo[slot] = v===true ? false : (v===false ? undefined : true);
+  if (g.dispo[slot]===undefined) delete g.dispo[slot];
   pintaGuiaDispo(S.guiaVista);
-  toast(g.dispo[slot] ? 'Te ofreces para ese día ✓' : 'Quitado de tu disponibilidad');
+  toast(g.dispo[slot]===true ? 'Te ofreces para ese día ✓'
+      : g.dispo[slot]===false ? 'Marcado: esa salida no puedes ✗' : 'Quitado de tu disponibilidad');
 }
 function pintaGuiaDispo(nombre){
   var g = S.equipo.guias.filter(function(x){ return x.n===nombre; })[0];
@@ -7382,19 +7391,21 @@ function pintaGuiaDispo(nombre){
   var gi = S.equipo.guias.indexOf(g);
   var fr = franjasEmpresa();
   var h = '<div class="g-dispo"><h2>🗓 Mi disponibilidad</h2>'+
-    '<p class="mini muted" style="margin:0;">Marca los días que puedes hacer cada tour. El encargado lo ve en su calendario. '+
+    '<p class="mini muted" style="margin:0;">Toca una vez para ofrecerte (✓), otra para decir que no puedes esa salida (✗) y otra para dejarlo sin decir. El encargado lo ve al repartir. '+
     '<span style="color:'+g.color+'; font-weight:700;">🔒 = ya te lo han asignado</span>.</p>'+
     '<table><tr><th></th>'+DIAS_SEM.map(function(x){return '<th>'+x+'</th>';}).join('')+'</tr>';
   fr.forEach(function(f){
     h += '<tr><td><b class="num">'+f.hora+'</b> · '+f.tour+'</td>'+
       DIAS_SEM.map(function(dn,d){
         if (f.dias.indexOf(d)<0) return '<td style="text-align:center; color:var(--line);">·</td>';
-        var slot=f.key+'|'+d, asig=estaAsignado(gi,slot), sel=!!g.dispo[slot];
+        var slot=f.key+'|'+d, asig=estaAsignado(gi,slot), mar=g.dispo[slot];
         var est = asig ? 'background:'+g.color+'; color:#fff;'
-                : sel ? 'background:var(--acc-soft); color:var(--acc); border:1.5px solid var(--acc);'
+                : mar===true ? 'background:var(--acc-soft); color:var(--acc); border:1.5px solid var(--acc);'
+                : mar===false ? 'background:#f3eeee; color:var(--muted); border:1.5px dashed var(--muted);'
                       : 'background:#eef3f0; color:var(--muted);';
         return '<td style="text-align:center;"><button class="g-tb" style="'+est+'" '+
-          'onclick="toggleDispoGuia(\''+f.key+'\','+d+')">'+(asig?'🔒':(sel?'✓':'+'))+'</button></td>';
+          'onclick="toggleDispoGuia(\''+f.key+'\','+d+')">'+
+          (asig?'🔒':(mar===true?'✓':(mar===false?'✗':'+')))+'</button></td>';
       }).join('')+'</tr>';
   });
   h += '</table></div>'+
@@ -10347,10 +10358,16 @@ function pintaEquipo(){
       if(!corre) return '<td style="text-align:center; color:var(--line);">·</td>';
       var slot=f.key+'|'+d;
       var asig = estaAsignado(S.equipo.guiaSel, slot);   // asignado en el calendario
-      var sel = !!gs.dispo[slot];
+      /* Tres marcas y no dos: el ✗ es «dijo que NO a esa salida», que no es lo mismo que
+         no haber dicho nada. Si las dos se pintaran igual, el encargado no distinguiría a
+         quien se protegió de quien no ha mirado el móvil. */
+      var mar = gs.dispo[slot], sel = mar===true;
       if(sel || asig){ seSel++; totSel++; }
-      var estilo = asig ? 'background:'+gs.color+'; color:#fff;' : (sel?'background:var(--acc-soft); color:var(--acc); border:1.5px solid var(--acc);':'background:#eef3f0; color:var(--muted);');
-      var etq = asig ? '🔒' : (sel?'✓':'+');
+      var estilo = asig ? 'background:'+gs.color+'; color:#fff;'
+        : sel ? 'background:var(--acc-soft); color:var(--acc); border:1.5px solid var(--acc);'
+        : mar===false ? 'background:#f3eeee; color:var(--muted); border:1.5px dashed var(--muted);'
+        : 'background:#eef3f0; color:var(--muted);';
+      var etq = asig ? '🔒' : (sel?'✓':(mar===false?'✗':'+'));
       return '<td style="text-align:center;"><button '+(gs.activo?'':'disabled ')+
         'onclick="toggleDispoFranja('+S.equipo.guiaSel+',\''+f.key+'\','+d+')" '+
         'style="border:0; width:28px; height:26px; border-radius:7px; font-weight:800; '+(gs.activo?'cursor:pointer;':'')+estilo+'">'+etq+'</button></td>';
@@ -10365,7 +10382,7 @@ function pintaEquipo(){
   else {
     var porTour={}, totDisp=0;
     fr.forEach(function(f){ f.dias.forEach(function(d){
-      if(gs.dispo[f.key+'|'+d]) { porTour[f.hora+' · '+f.tour]=(porTour[f.hora+' · '+f.tour]||0)+1; totDisp++; } }); });
+      if(gs.dispo[f.key+'|'+d]===true) { porTour[f.hora+' · '+f.tour]=(porTour[f.hora+' · '+f.tour]||0)+1; totDisp++; } }); });
     var lista=Object.keys(porTour).map(function(k){ return k+' ('+porTour[k]+' d)'; });
     res.innerHTML= lista.length
       ? '<b>'+gs.n+'</b> se ofrece a <b>'+totDisp+'</b> salidas: '+lista.join(' · ')+
@@ -10387,14 +10404,23 @@ function pintaEquipo(){
     descubiertas.forEach(function(u){
       var d=document.createElement('div'); d.className='fila';
       d.style.cssText='gap:8px; align-items:center; flex-wrap:wrap; padding:5px 0;';
-      var cand=g.map(function(x,gi){ return {x:x, gi:gi} })
-        .filter(function(p){ return p.x.activo && p.x.dispo[u.slot]; });
+      /* ORDENA, NO FILTRA — como el servidor. Antes solo salían los que se habían
+         ofrecido, así que una semana en la que nadie tocó nada enseñaba «nadie marcó
+         disponibilidad» y CERO botones: la pantalla que más falta hace, en blanco. Los que
+         se ofrecieron van primero y marcados; los demás, detrás. Un sí ADELANTA; el
+         silencio no aparta a nadie. */
+      var todos=g.map(function(x,gi){ return {x:x, gi:gi} })
+        .filter(function(p){ return p.x.activo && p.x.dispo[u.slot]!=='asig'; });
+      var cand=todos.filter(function(p){ return p.x.dispo[u.slot]===true; })
+        .concat(todos.filter(function(p){ return p.x.dispo[u.slot]!==true; }));
+      var hayOfertas=todos.some(function(p){ return p.x.dispo[u.slot]===true; });
       var txt='<span>⚠ <b>'+u.f.hora+' · '+u.f.tour+'</b> · '+DIA_L[u.d]+' — '+
-        (cand.length?'disponibles:':'nadie marcó disponibilidad')+'</span>';
+        (hayOfertas?'se ofrecieron:':'nadie se ofreció — estos pueden:')+'</span>';
       d.innerHTML=txt;
       cand.forEach(function(p){
         var b=document.createElement('button'); b.className='btn mini';
-        b.innerHTML='<span class="ini" style="background:'+p.x.color+'; width:18px; height:18px; font-size:11.5px; margin:0; border:0; display:inline-flex; vertical-align:middle;">'+iniGuia(p.x)+'</span> '+p.x.n;
+        b.innerHTML='<span class="ini" style="background:'+p.x.color+'; width:18px; height:18px; font-size:11.5px; margin:0; border:0; display:inline-flex; vertical-align:middle;">'+iniGuia(p.x)+'</span> '+p.x.n+
+          (p.x.dispo[u.slot]===true?' <b title="Se ofreció para esta salida">✋</b>':'');
         b.onclick=function(){ S.equipo.cobertura[u.slot]=[p.gi]; pintaEquipo();
           toast('✅ '+p.x.n+' asignada al '+u.f.tour+' de las '+u.f.hora+' ('+DIA_L[u.d]+') — manifiesto creado'); };
         d.appendChild(b);
@@ -10416,6 +10442,11 @@ function toggleDispoFranja(gi, key, d){
   var x=S.equipo.guias[gi]; if(!x.activo){ toast(x.n+' está de baja: su disponibilidad no se toca'); return; }
   var k=key+'|'+d;
   if(x.dispo[k]==='asig'){ toast('Esa salida ya está asignada a '+x.n+' — libérala desde la salida'); return; }
+  /* El ✗ lo puso EL GUÍA sobre sí mismo, y el encargado no lo borra desde aquí: en el
+     sistema real la marca solo se escribe con la sesión del guía —esta pantalla la LEE—.
+     Un encargado que puede convertir un «no puedo» en un «me ofrezco» con un clic hace
+     que la marca no valga para lo único que sirve: protegerse. */
+  if(x.dispo[k]===false){ toast(''+x.n+' marcó que NO puede esa salida — solo lo quita quien lo puso'); return; }
   if(x.dispo[k]) delete x.dispo[k]; else x.dispo[k]=true;
   pintaEquipo();
 }

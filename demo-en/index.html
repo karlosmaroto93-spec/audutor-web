@@ -1197,8 +1197,9 @@
       <h2 style="margin:0;">📮 Post-tour message</h2>
       <span class="chip gris">whole company</span>
     </div>
-    <div class="mini muted" style="margin:8px 0 4px;">The message that goes out when each tour ends —
-      <b>only to bookings from your own site</b> (platform bookings already get a review request from
+    <div class="mini muted" style="margin:8px 0 4px;">The message that goes out when each tour
+      ends. The thank-you goes <b>to everyone</b>; the <b>review link</b> only to those who said yes,
+      and never to platform bookings (they already get a review request from
       the platform itself). <details class="mas"><summary>ⓘ more</summary><span class="mas-p">Answer these quick questions and the finished message opens up
       below, adapted by itself to each of your tours.</span></details></div>
     <div id="post-preguntas"></div>
@@ -1246,8 +1247,9 @@
       performance of a contract, not advertising — so the GuruWalk traveller, of whom you
       only have a phone number, <b>can</b> be reminded. <details class="mas"><summary>ⓘ more</summary><span class="mas-p"><b>Contract</b>
       (they have a booking): all four messages, written as service. <b>Consent</b> (they
-      ticked the box when booking): plus the review link at the end, which is the part that
-      promotes. <b>Opted out</b>: nothing, ever — not even reminders.<br><br>And you mark the
+      ticked the box when booking, <b>or told you and you record it</b> with one tap on the
+      send screen — it is stored with your name): plus the review link at the end, which is
+      the part that promotes. <b>Opted out</b>: nothing, ever — not even reminders.<br><br>And you mark the
       opt-out <b>yourself</b>, one tap, on the same screen you send from. That is where you
       read the reply: messages go out from your own WhatsApp, so "stop writing to me" reaches
       you and Audutor never sees it. It is stored per person, not per booking: if they book
@@ -6578,9 +6580,17 @@ function toggleDispoGuia(fkey, d){
   var g = S.equipo.guias.filter(function(x){ return x.n===S.guiaVista; })[0]; if(!g) return;
   var slot = fkey+'|'+d;
   if (estaAsignado(S.equipo.guias.indexOf(g), slot)) { toast('You’re already down for that one 🙂'); return; }
-  g.dispo[slot] = !g.dispo[slot];
+  /* TRES estados, como el servidor: nada dicho → «me ofrezco» → «esta no» → nada dicho.
+     Con dos no cabía la frase que más falta hace —la clase que acaba a las siete: el de
+     las 10:00 no, el nocturno sí—, y para decirla había que bloquear el día entero y
+     perder el nocturno también. El silencio es el estado normal y no significa nada. */
+  var v = g.dispo[slot];
+  g.dispo[slot] = v===true ? false : (v===false ? undefined : true);
+  if (g.dispo[slot]===undefined) delete g.dispo[slot];
   pintaGuiaDispo(S.guiaVista);
-  toast(g.dispo[slot] ? 'You’ve put yourself down for that day ✓' : 'Taken off your availability');
+  toast(g.dispo[slot]===true ? 'You’ve put yourself down for that one ✓'
+      : g.dispo[slot]===false ? 'Marked: you can’t do that departure ✗'
+      : 'Taken off your availability');
 }
 function pintaGuiaDispo(nombre){
   var g = S.equipo.guias.filter(function(x){ return x.n===nombre; })[0];
@@ -6589,19 +6599,21 @@ function pintaGuiaDispo(nombre){
   var gi = S.equipo.guias.indexOf(g);
   var fr = franjasEmpresa();
   var h = '<div class="g-dispo"><h2>🗓 My availability</h2>'+
-    '<p class="mini muted" style="margin:0;">Mark the days you can do each tour. The manager sees it on their calendar. '+
+    '<p class="mini muted" style="margin:0;">Tap once to offer (✓), again to say you can’t do that departure (✗), again to leave it unsaid. Your manager sees it when assigning. '+
     '<span style="color:'+g.color+'; font-weight:700;">🔒 = already assigned to you</span>.</p>'+
     '<table><tr><th></th>'+DIAS_SEM.map(function(x){return '<th>'+x+'</th>';}).join('')+'</tr>';
   fr.forEach(function(f){
     h += '<tr><td><b class="num">'+f.hora+'</b> · '+f.tour+'</td>'+
       DIAS_SEM.map(function(dn,d){
         if (f.dias.indexOf(d)<0) return '<td style="text-align:center; color:var(--line);">·</td>';
-        var slot=f.key+'|'+d, asig=estaAsignado(gi,slot), sel=!!g.dispo[slot];
+        var slot=f.key+'|'+d, asig=estaAsignado(gi,slot), mar=g.dispo[slot];
         var est = asig ? 'background:'+g.color+'; color:#fff;'
-                : sel ? 'background:var(--acc-soft); color:var(--acc); border:1.5px solid var(--acc);'
+                : mar===true ? 'background:var(--acc-soft); color:var(--acc); border:1.5px solid var(--acc);'
+                : mar===false ? 'background:#f3eeee; color:var(--muted); border:1.5px dashed var(--muted);'
                       : 'background:#eef3f0; color:var(--muted);';
         return '<td style="text-align:center;"><button class="g-tb" style="'+est+'" '+
-          'onclick="toggleDispoGuia(\''+f.key+'\','+d+')">'+(asig?'🔒':(sel?'✓':'+'))+'</button></td>';
+          'onclick="toggleDispoGuia(\''+f.key+'\','+d+')">'+
+          (asig?'🔒':(mar===true?'✓':(mar===false?'✗':'+')))+'</button></td>';
       }).join('')+'</tr>';
   });
   h += '</table></div>'+
@@ -9076,10 +9088,16 @@ function pintaEquipo(){
       if(!corre) return '<td style="text-align:center; color:var(--line);">·</td>';
       var slot=f.key+'|'+d;
       var asig = estaAsignado(S.equipo.guiaSel, slot);   // asignado en el calendario
-      var sel = !!gs.dispo[slot];
+      /* Tres marcas y no dos: el ✗ es «dijo que NO a esa salida», que no es lo mismo que
+         no haber dicho nada. Si las dos se pintaran igual, el encargado no distinguiría a
+         quien se protegió de quien no ha mirado el móvil. */
+      var mar = gs.dispo[slot], sel = mar===true;
       if(sel || asig){ seSel++; totSel++; }
-      var estilo = asig ? 'background:'+gs.color+'; color:#fff;' : (sel?'background:var(--acc-soft); color:var(--acc); border:1.5px solid var(--acc);':'background:#eef3f0; color:var(--muted);');
-      var etq = asig ? '🔒' : (sel?'✓':'+');
+      var estilo = asig ? 'background:'+gs.color+'; color:#fff;'
+        : sel ? 'background:var(--acc-soft); color:var(--acc); border:1.5px solid var(--acc);'
+        : mar===false ? 'background:#f3eeee; color:var(--muted); border:1.5px dashed var(--muted);'
+        : 'background:#eef3f0; color:var(--muted);';
+      var etq = asig ? '🔒' : (sel?'✓':(mar===false?'✗':'+'));
       return '<td style="text-align:center;"><button '+(gs.activo?'':'disabled ')+
         'onclick="toggleDispoFranja('+S.equipo.guiaSel+',\''+f.key+'\','+d+')" '+
         'style="border:0; width:28px; height:26px; border-radius:7px; font-weight:800; '+(gs.activo?'cursor:pointer;':'')+estilo+'">'+etq+'</button></td>';
@@ -9094,7 +9112,7 @@ function pintaEquipo(){
   else {
     var porTour={}, totDisp=0;
     fr.forEach(function(f){ f.dias.forEach(function(d){
-      if(gs.dispo[f.key+'|'+d]) { porTour[f.hora+' · '+f.tour]=(porTour[f.hora+' · '+f.tour]||0)+1; totDisp++; } }); });
+      if(gs.dispo[f.key+'|'+d]===true) { porTour[f.hora+' · '+f.tour]=(porTour[f.hora+' · '+f.tour]||0)+1; totDisp++; } }); });
     var lista=Object.keys(porTour).map(function(k){ return k+' ('+porTour[k]+' d)'; });
     res.innerHTML= lista.length
       ? '<b>'+gs.n+'</b> se ofrece a <b>'+totDisp+'</b> salidas: '+lista.join(' · ')+
@@ -9116,14 +9134,23 @@ function pintaEquipo(){
     descubiertas.forEach(function(u){
       var d=document.createElement('div'); d.className='fila';
       d.style.cssText='gap:8px; align-items:center; flex-wrap:wrap; padding:5px 0;';
-      var cand=g.map(function(x,gi){ return {x:x, gi:gi} })
-        .filter(function(p){ return p.x.activo && p.x.dispo[u.slot]; });
+      /* ORDENA, NO FILTRA — como el servidor. Antes solo salían los que se habían
+         ofrecido, así que una semana en la que nadie tocó nada enseñaba «nadie marcó
+         disponibilidad» y CERO botones: la pantalla que más falta hace, en blanco. Los que
+         se ofrecieron van primero y marcados; los demás, detrás. Un sí ADELANTA; el
+         silencio no aparta a nadie. */
+      var todos=g.map(function(x,gi){ return {x:x, gi:gi} })
+        .filter(function(p){ return p.x.activo && p.x.dispo[u.slot]!=='asig'; });
+      var cand=todos.filter(function(p){ return p.x.dispo[u.slot]===true; })
+        .concat(todos.filter(function(p){ return p.x.dispo[u.slot]!==true; }));
+      var hayOfertas=todos.some(function(p){ return p.x.dispo[u.slot]===true; });
       var txt='<span>⚠ <b>'+u.f.hora+' · '+u.f.tour+'</b> · '+DIA_L[u.d]+' — '+
-        (cand.length?'available:':'nobody marked themselves available')+'</span>';
+        (hayOfertas?'offered:':'nobody offered — these can:')+'</span>';
       d.innerHTML=txt;
       cand.forEach(function(p){
         var b=document.createElement('button'); b.className='btn mini';
-        b.innerHTML='<span class="ini" style="background:'+p.x.color+'; width:18px; height:18px; font-size:11.5px; margin:0; border:0; display:inline-flex; vertical-align:middle;">'+iniGuia(p.x)+'</span> '+p.x.n;
+        b.innerHTML='<span class="ini" style="background:'+p.x.color+'; width:18px; height:18px; font-size:11.5px; margin:0; border:0; display:inline-flex; vertical-align:middle;">'+iniGuia(p.x)+'</span> '+p.x.n+
+          (p.x.dispo[u.slot]===true?' <b title="Offered for this departure">✋</b>':'');
         b.onclick=function(){ S.equipo.cobertura[u.slot]=[p.gi]; pintaEquipo();
           toast('✅ '+p.x.n+' assigned to the '+gpHora12(u.f.hora)+' '+u.f.tour+' ('+DIA_L[u.d]+') — manifest created'); };
         d.appendChild(b);
@@ -9145,6 +9172,11 @@ function toggleDispoFranja(gi, key, d){
   var x=S.equipo.guias[gi]; if(!x.activo){ toast(x.n+' is on leave: their availability is left alone'); return; }
   var k=key+'|'+d;
   if(x.dispo[k]==='asig'){ toast('That departure is already assigned to '+x.n+' — free it up from the departure itself'); return; }
+  /* El ✗ lo puso EL GUÍA sobre sí mismo, y el encargado no lo borra desde aquí: en el
+     sistema real la marca solo se escribe con la sesión del guía —esta pantalla la LEE—.
+     Un encargado que puede convertir un «no puedo» en un «me ofrezco» con un clic hace
+     que la marca no valga para lo único que sirve: protegerse. */
+  if(x.dispo[k]===false){ toast(''+x.n+' marked they cannot do that departure — only they can undo it'); return; }
   if(x.dispo[k]) delete x.dispo[k]; else x.dispo[k]=true;
   pintaEquipo();
 }
