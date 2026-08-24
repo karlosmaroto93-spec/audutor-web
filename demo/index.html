@@ -9683,7 +9683,9 @@ function abreFichaGuia(nombre){
   var DIAS=['lunes','martes','miércoles','jueves','viernes','sábado','domingo'];
   Object.keys(S.equipo.cobertura||{}).forEach(function(k){
     if ((S.equipo.cobertura[k]||[]).indexOf(gi)>=0){
-      var p=k.split('|'); prox.push(p[0]+' · '+p[1]+' · '+(DIAS[+p[2]]||''));
+      /* HORA primero, igual que la columna de al lado: son dos listas que se leen en
+         paralelo, y con el orden cambiado no se pueden comparar de un vistazo. */
+      var p=k.split('|'); prox.push(p[1]+' · '+p[0]+' · '+(DIAS[+p[2]]||''));
     }
   });
   /* Lo que ha dicho que NO puede. Solo los noes: lo que no ha marcado no es un sí, y
