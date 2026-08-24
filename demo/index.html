@@ -1950,8 +1950,8 @@
         <input type="range" min="50" max="80" step="1" value="67" id="rep-pct" oninput="pintaLiq()">
         <b><span id="rep-v">67</span> %</b> del neto</label>
       <label class="mini" id="ctl-fijo">la empresa se queda
-        <input type="range" min="1" max="10" step="0.5" value="2.5" id="rep-fijo" oninput="pintaLiq()">
-        <b><span id="fijo-v">2,50</span> <span data-moneda>€</span></b> × asistente; el guía, el resto</label>
+        <input type="range" min="1" max="10" step="0.5" value="4" id="rep-fijo" oninput="pintaLiq()">
+        <b><span id="fijo-v">4,00</span> <span data-moneda>€</span></b> × asistente; el guía, el resto</label>
     </div>
   </div>
 
@@ -2015,8 +2015,8 @@
         <input type="range" id="py-rep" min="50" max="80" step="1" value="67" oninput="calcProy()">
         <b><span id="py-rep-v">67</span> %</b></label>
       <label class="mini" id="py-ctl-fijo">la empresa se queda
-        <input type="range" id="py-fijo" min="1" max="10" step="0.5" value="2.5" oninput="calcProy()">
-        <b><span id="py-fijo-v">2,50</span> <span data-moneda>€</span></b> × persona</label>
+        <input type="range" id="py-fijo" min="1" max="10" step="0.5" value="4" oninput="calcProy()">
+        <b><span id="py-fijo-v">4,00</span> <span data-moneda>€</span></b> × persona</label>
     </div>
     <div class="fila" style="margin-top:10px; gap:8px;">
       <b class="mini">Comisión de plataforma:</b>
@@ -8388,25 +8388,50 @@ function pintaManifiestoReal(){
     // caja de recaudación
     var caja=document.createElement('div'); caja.className='caja-ingresos';
     var media = t.rec && pres ? ' · media '+euros(t.rec/pres)+'/persona' : '';
+    /* ══ DOS CAJAS, PORQUE SON DOS PREGUNTAS ══
+       Con reparto por PORCENTAJE lo que decide la liquidación es el bote: se pregunta
+       dinero. Con FIJO POR CABEZA lo decide cuánta gente vino, y el bote es del guía y no
+       es asunto de nadie más — preguntarlo es pedirle el dato del otro modelo, y de ahí
+       salen las reticencias.
+       La casilla de personas VIENE PUESTA con las llegadas y los walk-ins que ya están
+       marcados arriba: hacerle teclear otra vez algo que ya está en pantalla es pedirle
+       que copie, y copiando es donde se equivoca. Lo que él aporta es lo que la máquina
+       no puede saber: si vinieron dos más que nadie apuntó. */
+    if (liqModo==='fijo'){
+      var conf = t.cabezas!=null ? t.cabezas : pres;
+      caja.innerHTML='<strong>👥 Personas que vinieron</strong>'+
+        '<div class="fila" style="gap:8px; margin-top:8px; align-items:center;">'+
+          '<input class="cab-in" type="number" min="0" max="999" value="'+conf+'" style="width:90px;"> '+
+          '<span class="mini muted">personas</span>'+
+          '<button class="btn mini cab-save">Guardar</button>'+
+        '</div>'+
+        '<p class="mini muted cab-pie" style="margin:6px 0 0;">La casa se queda <b>'+euros(fijoCabeza())+
+          ' por persona</b>: son <b>'+euros(fijoCabeza()*conf)+'</b>. La propina es tuya entera y no hace falta apuntarla.'+
+          (t.sinGuia?' ⚠️ Este tour no tiene guía asignado (mira Equipo y disponibilidad).':'')+'</p>'+
+        '<p class="mini muted" style="margin:4px 0 0;">'+
+          (t.cabezas!=null?'Lo confirmaste tú. Cámbialo si te acuerdas de alguien más.':'Sale de las llegadas que has marcado ('+pres+'). Corrígelo si vino alguien sin apuntar.')+'</p>';
+      var ci=caja.querySelector('.cab-in');
+      ci.oninput=function(){
+        var n=Math.max(0, parseInt(ci.value,10)||0);
+        caja.querySelector('.cab-pie').innerHTML='La casa se queda <b>'+euros(fijoCabeza())+
+          ' por persona</b>: son <b>'+euros(fijoCabeza()*n)+'</b>. La propina es tuya entera y no hace falta apuntarla.';
+      };
+      caja.querySelector('.cab-save').onclick=function(){
+        t.cabezas=Math.max(0, parseInt(ci.value,10)||0);
+        pintaManifiesto();
+        toast('👥 {n} personas — la casa se queda {e}'.replace('{n}', t.cabezas).replace('{e}', euros(fijoCabeza()*t.cabezas)));
+      };
+    } else {
     caja.innerHTML='<strong>💶 Ingresos del tour</strong>'+
       '<div class="fila" style="gap:8px; margin-top:8px; align-items:center;">'+
-        '<input class="rec-in" inputmode="decimal" placeholder="0,00" value="'+(t.rec?String(t.rec).replace('.',','):'')+'" style="width:110px;"> '+MK.moneda.sim+
+        '<input class="rec-in" inputmode="decimal" placeholder="0,00" value="'+(t.rec?String(t.rec).replace('.',','):'')+'" style="width:110px;"> '+MK.moneda.sim+''+
         '<button class="btn mini rec-save">Guardar</button>'+
         '<span class="mini muted rec-media">'+(t.rec?media:'')+'</span>'+
       '</div>'+
-      /* LO QUE DICE EL PIE DEPENDE DEL MODELO, igual que en la app real. En el fijo por
-         cabeza la liquidación es `fijo × llegados` y NO necesita el bote: decirle al guía
-         que «con esto se calcula la liquidación» es falso ahí, y es de donde salen casi
-         todas las reticencias — el guía suele ser autónomo y eso es un dato de SU renta.
-         Se queda opcional, y se dice para qué sirve: para que él vea lo que le queda. */
-      (liqModo==='fijo'
-        ? '<p class="mini muted" style="margin:6px 0 0;">La casa se queda <b>'+euros(fijoCabeza())+
-          ' por persona</b>: con '+pres+(pres===1?' llegado son ':' llegados son ')+
-          '<b>'+euros(fijoCabeza()*pres)+'</b>. Lo demás es tuyo. Apuntar la propina es '+
-          '<b>opcional</b> — no cambia lo que pagas'
-        : '<p class="mini muted" style="margin:6px 0 0;">Apunta la propina total al terminar — con esto se calcula la liquidación')+
+      '<p class="mini muted" style="margin:6px 0 0;">Apunta la propina total al terminar — con esto se calcula la liquidación'+
         (t.sinGuia?'. ⚠️ Este tour no tiene guía asignado (mira Equipo y disponibilidad).':'.')+'</p>';
-    caja.querySelector('.rec-save').onclick=function(){
+    }
+    if (liqModo!=='fijo') caja.querySelector('.rec-save').onclick=function(){
       var v=parseFloat(caja.querySelector('.rec-in').value.replace(',','.'))||0;
       t.rec=v; pintaManifiesto();
       toast('💶 Recaudación guardada: '+euros(v)+' — ya suma en la semana, el mes y la liquidación');

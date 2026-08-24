@@ -1822,8 +1822,8 @@
         <input type="range" min="50" max="80" step="1" value="67" id="rep-pct" oninput="pintaLiq()">
         <b><span id="rep-v">67</span> %</b> of the net</label>
       <label class="mini" id="ctl-fijo">the company keeps
-        <input type="range" min="1" max="10" step="0.5" value="2.5" id="rep-fijo" oninput="pintaLiq()">
-        <b><span data-moneda>£</span><span id="fijo-v">2.50</span></b> per attendee; the guide keeps the rest</label>
+        <input type="range" min="1" max="10" step="0.5" value="4" id="rep-fijo" oninput="pintaLiq()">
+        <b><span data-moneda>£</span><span id="fijo-v">4.00</span></b> per attendee; the guide keeps the rest</label>
     </div>
   </div>
 
@@ -1897,8 +1897,8 @@
         <input type="range" id="py-rep" min="50" max="80" step="1" value="67" oninput="calcProy()">
         <b><span id="py-rep-v">67</span> %</b></label>
       <label class="mini" id="py-ctl-fijo">the company keeps
-        <input type="range" id="py-fijo" min="1" max="10" step="0.5" value="2.5" oninput="calcProy()">
-        <b><span data-moneda>£</span><span id="py-fijo-v">2.50</span></b> per person</label>
+        <input type="range" id="py-fijo" min="1" max="10" step="0.5" value="4" oninput="calcProy()">
+        <b><span data-moneda>£</span><span id="py-fijo-v">4.00</span></b> per person</label>
     </div>
     <div class="fila" style="margin-top:10px; gap:8px;">
       <b class="mini">Platform fee:</b>
@@ -6949,24 +6949,50 @@ function pintaManifiestoReal(){
     // caja de recaudación
     var caja=document.createElement('div'); caja.className='caja-ingresos';
     var media = t.rec && pres ? ' · average '+euros(t.rec/pres)+'/person' : '';
+    /* ══ DOS CAJAS, PORQUE SON DOS PREGUNTAS ══
+       Con reparto por PORCENTAJE lo que decide la liquidación es el bote: se pregunta
+       dinero. Con FIJO POR CABEZA lo decide cuánta gente vino, y el bote es del guía y no
+       es asunto de nadie más — preguntarlo es pedirle el dato del otro modelo, y de ahí
+       salen las reticencias.
+       La casilla de personas VIENE PUESTA con las llegadas y los walk-ins que ya están
+       marcados arriba: hacerle teclear otra vez algo que ya está en pantalla es pedirle
+       que copie, y copiando es donde se equivoca. Lo que él aporta es lo que la máquina
+       no puede saber: si vinieron dos más que nadie apuntó. */
+    if (liqModo==='fijo'){
+      var conf = t.cabezas!=null ? t.cabezas : pres;
+      caja.innerHTML='<strong>👥 People who turned up</strong>'+
+        '<div class="fila" style="gap:8px; margin-top:8px; align-items:center;">'+
+          '<input class="cab-in" type="number" min="0" max="999" value="'+conf+'" style="width:90px;"> '+
+          '<span class="mini muted">people</span>'+
+          '<button class="btn mini cab-save">Save</button>'+
+        '</div>'+
+        '<p class="mini muted cab-pie" style="margin:6px 0 0;">The house keeps <b>'+euros(fijoCabeza())+
+          ' per person</b>: that is <b>'+euros(fijoCabeza()*conf)+'</b>. The tips are yours and there is no need to log them.'+
+          (t.sinGuia?' ⚠️ Nobody is down to guide this one yet (see Team &amp; availability).':'')+'</p>'+
+        '<p class="mini muted" style="margin:4px 0 0;">'+
+          (t.cabezas!=null?'You confirmed it. Change it if you remember anyone else.':'It comes from the arrivals you marked ('+pres+'). Correct it if someone came without being logged.')+'</p>';
+      var ci=caja.querySelector('.cab-in');
+      ci.oninput=function(){
+        var n=Math.max(0, parseInt(ci.value,10)||0);
+        caja.querySelector('.cab-pie').innerHTML='The house keeps <b>'+euros(fijoCabeza())+
+          ' per person</b>: that is <b>'+euros(fijoCabeza()*n)+'</b>. The tips are yours and there is no need to log them.';
+      };
+      caja.querySelector('.cab-save').onclick=function(){
+        t.cabezas=Math.max(0, parseInt(ci.value,10)||0);
+        pintaManifiesto();
+        toast('👥 {n} people — the house keeps {e}'.replace('{n}', t.cabezas).replace('{e}', euros(fijoCabeza()*t.cabezas)));
+      };
+    } else {
     caja.innerHTML='<strong>💶 Tour takings</strong>'+
       '<div class="fila" style="gap:8px; margin-top:8px; align-items:center;">'+
-        MK.moneda.sim+' <input class="rec-in" inputmode="decimal" placeholder="0.00" value="'+(t.rec?String(t.rec):'')+'" style="width:110px;">'+
+        ''+MK.moneda.sim+' <input class="rec-in" inputmode="decimal" placeholder="0.00" value="'+(t.rec?String(t.rec):'')+'" style="width:110px;">'+
         '<button class="btn mini rec-save">Save</button>'+
         '<span class="mini muted rec-media">'+(t.rec?media:'')+'</span>'+
       '</div>'+
-      /* LO QUE DICE EL PIE DEPENDE DEL MODELO, igual que en la app real. En el fijo por
-         cabeza la liquidación es `fijo × llegados` y NO necesita el bote: decirle al guía
-         que de ahí sale su pago es falso ahí, y es de donde salen casi todas las
-         reticencias — el guía suele ser autónomo y eso es un dato de SU renta. */
-      (liqModo==='fijo'
-        ? '<p class="mini muted" style="margin:6px 0 0;">The house keeps <b>'+euros(fijoCabeza())+
-          ' per person</b>: with '+pres+(pres===1?' who turned up that is ':' who turned up that is ')+
-          '<b>'+euros(fijoCabeza()*pres)+'</b>. The rest is yours. Logging the tips is '+
-          '<b>optional</b> — it does not change what you pay'
-        : '<p class="mini muted" style="margin:6px 0 0;">Log the total tips at the end — that’s what the payout is worked out from')+
+      '<p class="mini muted" style="margin:6px 0 0;">Log the total tips at the end — that’s what the payout is worked out from'+
         (t.sinGuia?'. ⚠️ Nobody is down to guide this one yet (see Team &amp; availability).':'.')+'</p>';
-    caja.querySelector('.rec-save').onclick=function(){
+    }
+    if (liqModo!=='fijo') caja.querySelector('.rec-save').onclick=function(){
       var v=parseFloat(caja.querySelector('.rec-in').value.replace(',','.'))||0;
       t.rec=v; pintaManifiesto();
       toast('💶 Takings saved: '+euros(v)+' — it already counts in the week, the month and the payout');
