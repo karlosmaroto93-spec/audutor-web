@@ -116,7 +116,7 @@
   html{ scroll-behavior:smooth; }
   body{ margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans);
         font-size:17px; line-height:1.6; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
-  .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
+  .wrap{ max-width:1200px; margin:0 auto; padding:0 24px; }
   /* Un solo interlineado para tres tamaños muy distintos: 1,16 es correcto a 50 px y
      asfixiante a 18,5. Cada nivel el suyo. */
   h1,h2,h3{ font-family:var(--serif); text-wrap:balance; margin:0; }
@@ -161,7 +161,7 @@
   .guia{ width:142px; height:auto; flex:none; animation:flota 8s ease-in-out infinite; }
   .bocadillo{ position:relative; background:var(--paper); border:1.5px solid var(--line);
     border-radius:16px; padding:13px 18px; font-size:15px; line-height:1.5;
-    color:var(--ink2); box-shadow:0 10px 26px rgba(28,38,34,.10); max-width:300px; margin:0; }
+    color:var(--ink2); max-width:300px; margin:0; }
   .bocadillo b{ color:var(--ink); }
   .bocadillo::before{ content:""; position:absolute; left:-8px; top:50%; margin-top:-8px;
     width:13px; height:13px; background:var(--paper); border-left:1.5px solid var(--line);
@@ -253,9 +253,9 @@
      que no oculta es peor que no tenerlo, porque se confía en él. */
   [hidden]{ display:none !important; }
   .btn{ display:inline-block; background:var(--coral); color:#fff !important; text-decoration:none;
-        padding:12px 24px; border-radius:10px; font-weight:700; font-size:15px; border:0;
+        padding:12px 24px; border-radius:4px; font-weight:700; font-size:15px; border:0;
         cursor:pointer; transition:transform .15s ease, box-shadow .15s ease; }
-  .btn:hover{ background:var(--coral2); transform:translateY(-1px); box-shadow:0 8px 22px rgba(244,101,58,.30); }
+  .btn:hover{ background:var(--coral2); transform:translateY(-1px); }
   .btn.sec{ background:transparent; color:var(--acc) !important; border:1.5px solid var(--acc); }
   .btn.sec:hover{ background:var(--acc-soft); box-shadow:none; }
   @media (max-width:720px){ nav .links a:not(.btn){ display:none; } }
@@ -293,7 +293,7 @@
   nav .links a.btn.entrar{
     background:#fdf9ee; color:#0e4a3a !important; border:0; font-weight:700;
   }
-  nav .links a.btn.entrar:hover{ background:#fff; box-shadow:0 6px 18px rgba(0,0,0,.16); }
+  nav .links a.btn.entrar:hover{ background:#fff; }
   nav .links a.btn.sec{ color:#fdf9ee !important; border-color:rgba(253,249,238,.62);
     background:transparent; }
   nav .links a.btn.sec:hover{ background:rgba(253,249,238,.16); border-color:#fdf9ee; }
@@ -309,10 +309,7 @@
   /* ================= hero ================= */
   header{ padding:76px 0 64px; position:relative; overflow:hidden; }
   header::before{ content:""; position:absolute; inset:0; pointer-events:none;
-    background:
-      radial-gradient(560px 340px at 85% 10%, rgba(43,179,163,.14), transparent 65%),
-      radial-gradient(460px 320px at 8% 90%, rgba(244,101,58,.10), transparent 60%),
-      radial-gradient(420px 280px at 55% 42%, rgba(201,138,45,.09), transparent 65%); }
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56'%3E%3Cpath d='M56 0H0V56' fill='none' stroke='%231f2a25' stroke-opacity='.055'/%3E%3C/svg%3E"); }
   .hero-grid{ display:grid; grid-template-columns:1.05fr .95fr; gap:44px; align-items:center; position:relative; }
   @media (max-width:900px){ .hero-grid{ grid-template-columns:1fr; } }
   .kicker{ font-size:13px; letter-spacing:.14em; text-transform:uppercase; font-weight:800;
@@ -324,23 +321,22 @@
      los móviles el h1 medía 33 y el h2 medía 28 — cinco píxeles de jerarquía entre el
      título de la página y el de una sección. Anclado en rem+vw, en un móvil de 375 sube
      a ~37 y la distancia se nota. */
-  h1{ font-size:clamp(34px,5vw,50px); font-weight:400;
-      line-height:1.06; letter-spacing:-.012em; max-width:20ch; }
+  h1{ font-size:clamp(38px,5.2vw,58px); font-weight:400;
+      line-height:1.04; letter-spacing:-.016em; max-width:20ch; }
   .lede{ font-size:20px; color:var(--ink2); max-width:54ch; margin:20px 0 28px; }
   .lede b{ color:var(--ink); }
   .hero-ctas{ display:flex; gap:14px; flex-wrap:wrap; align-items:center; }
   .hero-nota{ font-size:13px; color:var(--muted); margin-top:14px; }
 
   /* ---- mockup del producto (CSS puro) ---- */
-  .mock{ position:relative; min-height:430px; }
-  .mock-card{ background:var(--paper); border:1px solid var(--line); border-radius:16px;
-    box-shadow:0 18px 50px rgba(31,42,37,.12); padding:18px 20px; font-size:13px;
-    animation:flota 7s ease-in-out infinite; }
+  .mock{ position:relative; min-height:500px; }
+  .mock-card{ background:var(--paper); border:1px solid var(--ink); border-radius:0;
+    padding:18px 20px; font-size:13px; }
   .mock-card.principal{ max-width:380px; margin-left:auto; }
   .mock-head{ display:flex; justify-content:space-between; align-items:center; gap:8px;
     font-weight:800; font-size:15px; margin-bottom:6px; }
   .chipv{ font-size:11.5px; font-weight:800; letter-spacing:.05em; text-transform:uppercase;
-    background:var(--teal-soft); color:var(--teal-ink); padding:3px 9px; border-radius:99px; white-space:nowrap; }
+    background:var(--teal-soft); color:var(--teal-ink); padding:3px 9px; border-radius:3px; white-space:nowrap; }
   .mock-sem{ font-size:11.5px; color:var(--ink2); border-bottom:1px solid var(--line); padding-bottom:9px;
     margin-bottom:4px; }
   .mock-sem b{ color:var(--amber); }
@@ -352,17 +348,29 @@
   .mock-card button{ width:100%; margin-top:10px; border:1.5px solid var(--acc); background:var(--acc-soft);
     color:var(--acc); font-weight:800; font-size:13px; border-radius:9px; padding:9px; cursor:default; }
   .mock-pop{ position:absolute; z-index:2; background:var(--paper); border:1px solid var(--line);
-    border-left:4px solid var(--gold); border-radius:12px; padding:11px 14px; font-size:13px;
-    color:var(--ink2); box-shadow:0 14px 34px rgba(31,42,37,.14); max-width:270px; }
+    border-left:4px solid var(--gold); border-radius:0; padding:11px 14px; font-size:13px;
+    color:var(--ink2); transform:rotate(-1.2deg); max-width:270px; }
   .mock-pop b{ color:var(--ink); }
-  .pop1{ left:0; top:12px; animation:flota 8s ease-in-out infinite reverse; }
-  .pop2{ left:14px; bottom:6px; border-left-color:var(--coral); animation:flota 9s ease-in-out 1s infinite; }
+  .pop1{ left:0; top:-96px; }
+  .pop2{ left:0; bottom:44px; border-left-color:var(--coral); transform:rotate(1deg); }
   @keyframes flota{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-9px); } }
+
+  /* La hoja del mapa: el plano de operación (ruta, punto de encuentro, dónde está el grupo)
+     como imagen del hero, no otro pantallazo. Es la referencia principal del estudio
+     (SevenRooms enseña el plano de mesas a tamaño gigante; aquí, el plano de la calle). */
+  .mock-card.principal{ position:relative; z-index:1; }
+  .mock-mapa{ position:absolute; right:-24px; bottom:-46px; width:300px; z-index:0; background:var(--paper);
+    border:1px solid var(--line); padding:8px 8px 7px; transform:rotate(1.4deg); }
+  .mock-mapa svg{ display:block; width:100%; height:auto; }
+  .mapa-eti{ display:block; margin-top:7px; font-family:var(--mono); font-size:11.5px; color:var(--muted); letter-spacing:.02em; }
+  .hora-m{ font-family:var(--mono); font-weight:600; letter-spacing:.02em; }
+  @media (max-width:900px){ .mock-mapa{ position:static; width:auto; transform:none; } }
   @media (max-width:900px){ .mock{ min-height:0; display:grid; gap:12px; }
     .mock-pop{ position:static; max-width:none; } .mock-card.principal{ margin:0; max-width:none; } }
 
   .cifras{ display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:14px; margin:58px 0 0; }
-  .cifra{ background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:18px 20px; }
+  .cifra{ background:var(--paper); border:1px solid var(--line); border-radius:4px; padding:18px 20px; }
+  .cifra .f{ display:block; margin-top:8px; font-family:var(--mono); font-size:11.5px; color:var(--muted); letter-spacing:.02em; }
   .cifra .v{ font-family:var(--serif); font-size:27px; font-weight:600; color:var(--acc); display:block; }
   .cifra:nth-child(1) .v{ color:var(--coral2); }
   .cifra:nth-child(3) .v{ color:var(--teal-ink); }
@@ -379,13 +387,39 @@
   .grid3{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px; }
   .celda{ background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:22px 24px;
     transition:transform .2s ease, box-shadow .2s ease; }
-  .celda:hover{ transform:translateY(-3px); box-shadow:0 12px 30px rgba(31,42,37,.08); }
+  .celda:hover{ transform:translateY(-3px); border-color:var(--acc); }
   section.alt .celda{ background:var(--bg); }
-  .celda.star{ border-color:var(--acc); box-shadow:0 6px 22px rgba(18,138,107,.12); }
+  .celda.star{ border-color:var(--acc); }
   .celda .ico{ font-size:27px; }
   .celda h3{ font-size:17px; margin:10px 0 6px; font-family:var(--sans); font-weight:700; }
   .celda p{ font-size:15px; color:var(--ink2); margin:0; }
   .celda .mini{ font-size:13px; color:var(--muted); display:block; margin-top:10px; font-family:var(--mono); }
+  .celda .eti-num{ display:block; font-family:var(--mono); font-size:11.5px; font-weight:700; letter-spacing:.075em;
+    color:var(--acc); text-transform:uppercase; margin-bottom:14px; }
+
+  /* El producto no es un catálogo de ocho módulos. Es una jornada de trabajo: cada
+     ficha es un verbo y la composición no repite el mismo rectángulo ocho veces. La
+     rejilla desigual toma de los mejores referentes de operación la idea útil (ritmo),
+     no su decoración: papel, borde fino y códigos de campo en vez de sombras, emojis o
+     iconos intercambiables. */
+  .producto-grid{ grid-template-columns:repeat(12,minmax(0,1fr)); gap:14px; align-items:stretch; }
+  .producto-grid .celda{ min-height:218px; padding:25px 27px; border-radius:4px;
+    border-color:var(--line); border-top:3px solid var(--line); box-shadow:none; }
+  section.alt .producto-grid .celda{ background:#fbf8f0; }
+  .producto-grid .celda:hover{ transform:none; box-shadow:none; border-color:var(--acc); }
+  .producto-grid .celda.star{ border-color:var(--line); border-top-color:var(--acc); box-shadow:none; }
+  .producto-grid .operacion-num{ display:block; font-family:var(--mono); font-size:11px;
+    font-weight:700; letter-spacing:.075em; color:var(--acc); text-transform:uppercase; }
+  .producto-grid .celda h3{ margin:32px 0 8px; font-size:19px; }
+  .producto-grid .celda p{ max-width:47ch; }
+  @media (min-width:901px){
+    .producto-grid .celda:nth-child(1), .producto-grid .celda:nth-child(4){ grid-column:span 5; }
+    .producto-grid .celda:nth-child(2), .producto-grid .celda:nth-child(3){ grid-column:span 7; }
+    .producto-grid .celda:nth-child(5), .producto-grid .celda:nth-child(6),
+    .producto-grid .celda:nth-child(7){ grid-column:span 4; }
+    .producto-grid .celda:nth-child(8){ grid-column:1 / -1; min-height:0; }
+  }
+  @media (max-width:900px){ .producto-grid{ grid-template-columns:1fr; } }
 
   /* ---- contacto ---- */
   .contacto-caja{ background:var(--paper); border:1.5px solid var(--acc); border-radius:16px;
@@ -428,7 +462,7 @@
 
   /* ================= pricing ================= */
   .planes{ display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:18px; align-items:stretch; }
-  .plan{ background:var(--paper); border:1.5px solid var(--line); border-radius:16px; padding:26px;
+  .plan{ background:var(--paper); border:1px solid var(--line); border-radius:6px; padding:26px;
     display:flex; flex-direction:column; }
   /* El caso de la reserva de 0 €: es la PRUEBA de «sin comisión por reserva», así que se
      lee como una cita y no como un reclamo — fondo de papel, letra normal y el enlace a la
@@ -449,19 +483,19 @@
   .cero-l li{ margin:7px 0; line-height:1.55; }
   .cero-l i{ color:var(--ink2); }
   .cero-fin{ margin:12px 0 0; line-height:1.55; }
-  .plan.elegido{ box-shadow:0 0 0 2px var(--acc), 0 10px 34px rgba(18,138,107,.13); }
-  .plan.destacado{ border-color:var(--acc); box-shadow:0 10px 34px rgba(18,138,107,.13); position:relative; }
+  .plan.elegido{ box-shadow:0 0 0 2px var(--acc); }
+  .plan.destacado{ border-color:var(--acc); box-shadow:0 0 0 1px var(--acc); position:relative; }
   .plan.destacado::before{ content:"El de la mayoría"; position:absolute; top:-12px; left:22px;
       background:var(--acc); color:#fff; font-size:11.5px; font-weight:800; letter-spacing:.06em;
       padding:3px 12px; border-radius:99px; text-transform:uppercase; }
   /* Premium: la tarjeta estrella — crema cálida, elegante, con acento dorado */
   .plan.premium{ position:relative; z-index:2; color:var(--ink); border:1.5px solid var(--gold);
     background:linear-gradient(165deg,#fff9ea 0%,#fbeecb 100%);
-    box-shadow:0 24px 52px rgba(163,106,16,.18); transform:translateY(-12px); }
+    transform:translateY(-12px); }
   .plan.premium::before{ content:"★ El más completo"; position:absolute; top:-13px; left:50%;
     transform:translateX(-50%); background:linear-gradient(90deg,var(--gold),#e2ab48); color:#231400;
     font-size:11.5px; font-weight:800; letter-spacing:.05em; padding:4px 16px; border-radius:99px;
-    text-transform:uppercase; white-space:nowrap; box-shadow:0 6px 16px rgba(201,138,45,.45); }
+    text-transform:uppercase; white-space:nowrap; }
   .plan.premium::after{ content:""; position:absolute; inset:0; border-radius:16px; pointer-events:none;
     background:radial-gradient(420px 200px at 80% -10%, rgba(201,138,45,.14), transparent 70%); }
   .plan.premium > *{ position:relative; z-index:1; }
@@ -473,8 +507,8 @@
   .plan.premium li{ border-top-color:rgba(163,106,16,.18); }
   .plan.premium li::before{ content:"✦"; color:var(--gold); }
   .plan.premium .btn{ background:linear-gradient(90deg,var(--gold),#dda640); color:#231400 !important;
-    border:0; box-shadow:0 8px 22px rgba(201,138,45,.4); }
-  .plan.premium .btn:hover{ background:#e6ad46; box-shadow:0 12px 28px rgba(201,138,45,.5); transform:translateY(-1px); }
+    border:0; }
+  .plan.premium .btn:hover{ background:#e6ad46; transform:translateY(-1px); }
   @media (max-width:900px){ .plan.premium{ transform:none; } }
 
   /* ── PREMIUM ELEGIDO: LA SECCIÓN ENTERA CAMBIA ─────────────────────────────────────
@@ -508,7 +542,7 @@
   #planes.premium-on .adorno{ color:rgba(201,138,45,.22); }
   /* La estrella se separa del resto: sube un poco más y el halo se le nota. */
   #planes.premium-on .plan.premium{ transform:translateY(-18px);
-    box-shadow:0 34px 70px rgba(0,0,0,.42), 0 0 0 1px rgba(201,138,45,.5); }
+    box-shadow:0 0 0 1px rgba(201,138,45,.5); }
   @media (max-width:900px){ #planes.premium-on .plan.premium{ transform:none; } }
   @media (prefers-reduced-motion:reduce){ #planes{ transition:none; } }
 
@@ -612,7 +646,7 @@
   .addon{ display:grid; grid-template-columns:1.35fr 1fr; gap:28px; align-items:start;
     background:var(--paper); border:1.5px solid var(--gold); border-radius:16px;
     padding:26px; margin-top:34px;
-    box-shadow:0 10px 34px rgba(201,138,45,.10); }
+    }
   .addon .t h3{ font-size:20px; font-family:var(--sans); font-weight:800; color:var(--deep);
     margin:0 0 12px; line-height:1.3; }
   .addon .t p{ font-size:15px; color:var(--ink2); margin:0 0 12px; line-height:1.62; }
@@ -830,6 +864,42 @@
     border-radius:6px; }
   .cifra .v, .plan .precio, .addon .tramo .p{ font-variant-numeric:tabular-nums; }
   .celda:focus-within{ border-color:var(--acc); }
+
+  /* ── Del estudio de 66 webs (4-sep-2026): lo que se copia es el mecanismo, no el estilo.
+     Sellos bajo el CTA (Crisp, Smoobu), plataformas como texto y no como logos (Bókun,
+     Donicus), «para quién» (Mews), fuente en cada cifra (Amenitiz), banner fino con una
+     novedad cierta (18 % de las webs de 2026) y una franja de cumplimiento local (Hostaway).
+     Todo lo que afirman está en el repo; nada que no se pueda demostrar. ── */
+  .aviso-alto{ background:var(--deep); color:#e9f3ee; font-size:13px; text-align:center; padding:8px 24px;
+    line-height:1.4; }
+  .aviso-alto b{ color:#fff; font-weight:700; }
+  .aviso-alto .tag{ font-family:var(--mono); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase;
+    color:#8fbfae; margin-right:8px; }
+  .sellos{ list-style:none; margin:16px 0 0; padding:0; display:flex; flex-wrap:wrap; gap:6px 18px;
+    font-family:var(--mono); font-size:13px; color:var(--ink2); }
+  .sellos li{ display:inline-flex; align-items:center; gap:7px; }
+  .sellos li::before{ content:""; width:7px; height:7px; border-radius:50%; background:var(--acc); flex:none; }
+  .mock-abrir{ margin:14px 0 0; font-size:13px; color:var(--muted); text-align:right; }
+  .mock-abrir a{ font-weight:700; color:var(--acc2); }
+  @media (max-width:900px){ .mock-abrir{ text-align:left; } }
+  .lee-de, .para-quien{ margin:26px 0 0; font-size:15px; color:var(--ink2); line-height:1.7; }
+  .lee-de b{ display:inline-block; font-family:var(--mono); font-weight:600; font-size:13px; color:var(--ink);
+    background:var(--paper); border:1px solid var(--line); border-radius:3px; padding:2px 9px; margin:0 3px; }
+  .para-quien{ margin-top:10px; font-size:13px; color:var(--muted); }
+  .para-quien span{ font-family:var(--mono); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--acc); margin-right:8px; }
+  .cambio-sistema{ font-size:15px; color:var(--ink2); margin-top:10px; }
+  .cumple{ padding:40px 0; border-top:1px solid var(--line); }
+  .cumple .wrap{ display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,2fr); gap:28px 48px; align-items:start; }
+  .cumple h3{ font-family:var(--serif); font-size:27px; font-weight:400; line-height:1.14; margin:0; }
+  .cumple .eti{ display:block; font-family:var(--mono); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--acc); margin-bottom:10px; }
+  .cumple ul{ list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px 24px; }
+  .cumple li{ font-size:15px; color:var(--ink2); padding-left:16px; position:relative; }
+  .cumple li::before{ content:""; position:absolute; left:0; top:.62em; width:7px; height:7px; background:var(--acc); }
+  .cumple li b{ color:var(--ink); }
+  .cumple a{ color:var(--acc2); }
+  @media (max-width:800px){ .cumple .wrap{ grid-template-columns:1fr; } .cumple ul{ grid-template-columns:1fr; } }
 </style>
 </head>
 <body>
@@ -915,6 +985,7 @@
 </svg>
 
 
+<div class="aviso-alto"><span class="tag">Nuevo</span><b>El guía corrige los adultos desde el móvil</b> y la liquidación del tour se recalcula sola.</div>
 <nav><div class="wrap">
   <a class="logo" href="#" aria-label="Audutor, inicio"><span class="wm">Audutor<svg class="ruta" viewBox="0 0 100 14" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M1 10.5 Q 24 5 46 9 T 86 8"/><path class="rpin" d="M93 1.2c-2.6 0-4.7 2.1-4.7 4.7 0 3.4 4.7 7.5 4.7 7.5s4.7-4.1 4.7-7.5c0-2.6-2.1-4.7-4.7-4.7z"/><circle class="rhueco" cx="93" cy="6" r="1.8"/></svg></span></a>
   <div class="links">
@@ -955,12 +1026,11 @@
       todos tus canales, te deja los avisos listos para mandar en un toque y liquida cada
       tour al céntimo. <b>Empiezas con dos módulos y creces cuando quieras.</b></p>
       <div class="hero-ctas reveal" style="--d:220ms">
-        <a class="btn" href="demo/" data-demo>🖱️ Probar la demo interactiva</a>
+        <a class="btn" href="demo/" data-demo>Probar la demo interactiva</a>
         <a class="btn sec" href="#contacto">Pedir una demo guiada</a>
       </div>
-      <p class="hero-nota reveal" style="--d:300ms">Está construido operando, no en una sala de
-      reuniones. Y arrancar es cosa de una tarde: reenvías tus emails de reserva y el buzón monta
-      el resto, sin migraciones ni permanencia.</p>
+      <ul class="sellos"><li>Sin permanencia</li><li>0 % de comisión</li><li>Datos en la UE (París)</li><li>Sin cookies ni rastreadores</li></ul>
+      <p class="hero-nota reveal" style="--d:300ms">Está construido operando, no en una sala de reuniones. Arrancar es cosa de una tarde: reenvías tus emails de reserva y el buzón monta el resto.</p>
       <div class="guia-saludo reveal" style="--d:380ms">
         <svg class="guia" aria-hidden="true" focusable="false"><use href="#guia"/></svg>
         <p class="bocadillo"><b>¡Hola! Soy GuIA.</b> Atiendo a tus clientes mientras tú guías.
@@ -969,27 +1039,41 @@
     </div>
 
     <div class="mock reveal" style="--d:260ms" aria-hidden="true">
-      <div class="mock-pop pop1">👥 <b>Un grupo de 11 en el chat</b> — GuIA ha mirado las salidas de hoy,
+      <div class="mock-pop pop1"><b>Un grupo de 11 en el chat</b> — GuIA ha mirado las salidas de hoy,
         les ha contado tu política de adelanto y te los pasa con su tamaño.</div>
       <div class="mock-card principal">
-        <div class="mock-head">🕒 10:00 · Free tour centro <span class="chipv">en marcha</span></div>
-        <div class="mock-sem">📨 12/14 avisadas · ✓ 9 confirmadas · <b>⏰ 1 llega tarde (3p)</b> · 2 sin responder</div>
+        <div class="mock-head"><span><span class="hora-m">10:00</span> · Free tour centro</span> <span class="chipv">en marcha</span></div>
+        <div class="mock-sem">12/14 avisadas · ✓ 9 confirmadas · <b>1 llega tarde (3p)</b> · 2 sin responder</div>
         <div class="mock-row ok"><span>Ana García · 4p</span><span>✓ en el punto</span></div>
         <div class="mock-row"><span>Marco Bianchi · 2p</span><span>pendiente</span></div>
         <div class="mock-row ok"><span>Familia Dupont · 5p</span><span>✓ en el punto</span></div>
-        <button>📍 Compartir dónde está el grupo</button>
+        <button>Compartir dónde está el grupo</button>
       </div>
-      <div class="mock-pop pop2">⛑️ <b>«Me he perdido»</b> → GuIA le pasó el mapa del grupo
+      <div class="mock-pop pop2"><b>«Me he perdido»</b> → GuIA le pasó el mapa del grupo
         (ubicación del guía, hace 2 min). Sin dar su teléfono.</div>
+      <div class="mock-mapa">
+        <svg viewBox="0 0 300 190" aria-hidden="true" focusable="false">
+          <defs><pattern id="ret-mapa" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" fill="none" stroke="#1f2a25" stroke-opacity=".09"/></pattern></defs>
+          <rect width="300" height="190" fill="url(#ret-mapa)"/>
+          <path d="M-10 142 C 60 112, 110 164, 170 124 S 260 74, 320 96" fill="none" stroke="#123f33" stroke-width="2" stroke-dasharray="2 8" stroke-linecap="round"/>
+          <circle cx="104" cy="140" r="4" fill="#128a6b"/><circle cx="118" cy="152" r="4" fill="#128a6b"/><circle cx="131" cy="143" r="4" fill="#128a6b"/><circle cx="113" cy="130" r="4" fill="#128a6b"/>
+          <circle cx="170" cy="124" r="13" fill="none" stroke="#f4653a" stroke-opacity=".35"/><circle cx="170" cy="124" r="6" fill="#f4653a"/>
+        </svg>
+        <span class="mapa-eti">Punto de encuentro · 40.4155 N 3.7074 W · el grupo, a 2 min</span>
+      </div>
     </div>
   </div>
 
+  <p class="mock-abrir">Esta hoja es la demo, con datos de ejemplo. <a href="demo/" data-demo>Ábrela y toca lo que quieras</a></p>
+
   <div class="cifras">
-    <div class="cifra reveal"><span class="v">2,50 €</span><span class="l">te cuesta cada persona reservada en plataforma — venga o no venga. El no-show se paga igual.</span></div>
+    <div class="cifra reveal"><span class="v">2,50 €</span><span class="l">te cuesta cada persona reservada en plataforma — venga o no venga. El no-show se paga igual.</span><span class="f">Tarifa por asistente de GuruWalk en 2025</span></div>
     <div class="cifra reveal" style="--d:90ms"><span class="v">5 sitios</span><span class="l">donde vive hoy tu operación: extranets, Excel, WhatsApp, correo y la cabeza del encargado. Aquí, uno.</span></div>
     <div class="cifra reveal" style="--d:180ms"><span class="v">Tour a tour</span><span class="l">sabes lo que entra, lo que se lleva la plataforma y lo que queda. Sin hoja de cálculo.</span></div>
-    <div class="cifra reveal" style="--d:270ms"><span class="v">0 %</span><span class="l">de comisión por tus reservas. No somos una OTA ni pertenecemos a ninguna.</span></div>
+    <div class="cifra reveal" style="--d:270ms"><span class="v">0 %</span><span class="l">de comisión por tus reservas. No somos una OTA ni pertenecemos a ninguna.</span><span class="f">Cuota plana: ninguna comisión por reserva</span></div>
   </div>
+<p class="lee-de">Lee las reservas que te llegan por correo de <b>GuruWalk</b><b>Civitatis</b><b>FreeTour</b> y las de tu propia web. Sin API y sin copiar nada a mano.</p>
+  <p class="para-quien"><span>Hecho para</span>free tours · visitas guiadas · rutas gastronómicas · tours privados · cualquier actividad con punto de encuentro</p>
 </div></header>
 
 <section class="alt" id="producto"><div class="wrap">
@@ -1003,31 +1087,31 @@
        etiqueta «módulo: X» debajo. «Módulo» es vocabulario del sistema; el que lee esto
        tiene una empresa de tours, no una arquitectura. Y una decía «módulo: asistente
        IA», que además de no ayudar era falso: GuIA son reglas, sin ningún modelo. -->
-  <div class="grid3">
-    <div class="celda reveal"><span class="ico">📲</span><h3>Recordatorios que evitan no-shows</h3>
+  <div class="grid3 producto-grid">
+    <div class="celda reveal"><span class="operacion-num">01 · Avisar</span><h3>Recordatorios que evitan no-shows</h3>
       <p>Confirmas por WhatsApp y el «sí voy» aparece en el manifiesto del guía al instante,
       como un semáforo.</p></div>
-    <div class="celda star reveal" style="--d:70ms"><span class="ico">🧭</span><h3>Rescate de rezagados</h3>
+    <div class="celda star reveal" style="--d:70ms"><span class="operacion-num">02 · Encontrar</span><h3>Rescate de rezagados</h3>
       <p>El guía comparte su ubicación con un botón y quien se ha perdido recibe el mapa
       —sin que nadie le dé su teléfono—.</p><span class="mini">solo en Audutor</span></div>
-    <div class="celda star reveal" style="--d:140ms"><span class="ico">👥</span><h3>Grupos, con tu política</h3>
+    <div class="celda star reveal" style="--d:140ms"><span class="operacion-num">03 · Juntar</span><h3>Grupos, con tu política</h3>
       <p>Las plataformas parten los grupos en varias reservas: el sistema junta las del
       mismo apellido que entraron con minutos de diferencia y se lo avisa al guía con tu
       adelanto delante. Y si preguntan por el chat, GuIA mira si caben ese día antes de
       decirles nada.</p></div>
-    <div class="celda reveal"><span class="ico">💶</span><h3>Liquidaciones al céntimo</h3>
+    <div class="celda reveal"><span class="operacion-num">04 · Cuadrar</span><h3>Liquidaciones al céntimo</h3>
       <p>Propinas, comisiones de cada canal y reparto guía-empresa, tour a tour y listo para
       la gestoría.</p></div>
-    <div class="celda celda-guia reveal" style="--d:70ms"><svg class="ico-svg" aria-hidden="true" focusable="false"><use href="#guia"/></svg><h3>Un asistente que no inventa</h3>
+    <div class="celda celda-guia reveal" style="--d:70ms"><svg class="ico-svg" aria-hidden="true" focusable="false"><use href="#guia"/></svg><span class="operacion-num">05 · Contestar</span><h3>Un asistente que no inventa</h3>
       <p>Contesta con tus datos y con ninguno más. <b>Cada pregunta que le enseñas deja de
       llegarte</b>: la contestas una vez, no cuarenta.</p></div>
-    <div class="celda reveal" style="--d:140ms"><span class="ico">🧑‍🤝‍🧑</span><h3>Tus guías, sin cuentas ni líos</h3>
+    <div class="celda reveal" style="--d:140ms"><span class="operacion-num">06 · Salir</span><h3>Tus guías, sin cuentas ni líos</h3>
       <p>Cada guía entra por su enlace: su tour de hoy, check-in de un toque y walk-ins. Sin
       usuarios que gestionar.</p></div>
-    <div class="celda reveal"><span class="ico">📊</span><h3>Operaciones por excepciones</h3>
+    <div class="celda reveal"><span class="operacion-num">07 · Decidir</span><h3>Operaciones por excepciones</h3>
       <p>Un parte diario con lo que necesita tu atención y nada más. Si no hay nada, te lo
       dice y a otra cosa.</p></div>
-    <div class="celda reveal" style="--d:70ms"><span class="ico">📥</span><h3>Reservas multicanal, solas</h3>
+    <div class="celda reveal" style="--d:70ms"><span class="operacion-num">08 · Recoger</span><h3>Reservas multicanal, solas</h3>
       <p>Las reservas de tus plataformas y de tu web entran y se actualizan solas. Sin API y
       sin copiar a mano.</p>
       <p class="mini">Y una reserva que no hayamos probado no entra nunca sin que tú la mires.</p></div>
@@ -1100,6 +1184,7 @@
     <h2 data-split>Pagas por lo que operas, no por tu equipo</h2>
     <p class="reveal">Sin comisión por reserva, sin permanencia y con soporte incluido.<br>
     <b>Pro opera tu día. Premium además te ayuda a vender.</b></p>
+    <p class="reveal cambio-sistema">¿Vienes de una hoja de cálculo o de otro programa? En el alta cargamos tus tours y las reservas futuras, y el primer mes es gratis en cualquier tarifa.</p>
   </div>
   <div class="integra reveal">
     <b>Se monta con lo que ya tienes publicado — no hay que migrar nada</b>
@@ -1380,7 +1465,7 @@
        preguntas que nadie ha hecho las mete en la cabeza de quien la lee. -->
   <div class="addon reveal">
     <div class="t">
-      <h3>💶 La propina, cuadrada al céntimo</h3>
+      <h3>La propina, cuadrada al céntimo</h3>
       <p>Cóbrala como quieras —en mano o con tu datáfono— y aquí queda <b>registrada,
       repartida entre tus guías y cuadrada</b>, tour a tour.</p>
     </div>
@@ -1415,15 +1500,15 @@
     tu disponibilidad. Lo demás se lo inventa — y lo demás es casi todo lo que pregunta un cliente.</p>
   </div>
   <div class="grid3">
-    <div class="celda star reveal"><span class="ico">🔒</span><h3>Solo afirma lo que has confirmado tú</h3>
+    <div class="celda star reveal"><span class="eti-num">01 · Confirmado por ti</span><h3>Solo afirma lo que has confirmado tú</h3>
       <p>Escribes los datos de tus tours una vez. Lo que no le has dicho te llega a ti, con la pregunta
       anotada para que la contestes una vez y no vuelva.</p>
       <span class="mini">esto baja nuestro «% resuelto por la IA» — y preferimos que baje</span></div>
-    <div class="celda star reveal" style="--d:70ms"><span class="ico">🧭</span><h3>Sabe lo que pasa en la calle, no solo en el catálogo</h3>
+    <div class="celda star reveal" style="--d:70ms"><span class="eti-num">02 · La calle</span><h3>Sabe lo que pasa en la calle, no solo en el catálogo</h3>
       <p>Ve quién ha llegado y dónde está el guía ahora mismo — y por eso puede rescatar al
       que se pierde sin que nadie llame a nadie.</p>
       <span class="mini">un motor de reservas no puede contestar esto: no tiene el dato</span></div>
-    <div class="celda star reveal" style="--d:140ms"><span class="ico">🌍</span><h3>Lo escribes una vez, contesta en el idioma del cliente</h3>
+    <div class="celda star reveal" style="--d:140ms"><span class="eti-num">03 · Su idioma</span><h3>Lo escribes una vez, contesta en el idioma del cliente</h3>
       <p>Un alemán pregunta en alemán y recibe tu punto de encuentro en alemán. Si un dato aún no está
       traducido, prefiere pasártelo antes que mezclar dos idiomas en la misma frase.</p>
       </div>
@@ -1450,17 +1535,17 @@
     se entera de la diferencia es el guía, en el punto de encuentro, con la gente delante.</p>
   </div>
   <div class="grid3">
-    <div class="celda star reveal"><span class="ico">🔢</span><h3>Cuenta lo que le consta a cada una</h3>
+    <div class="celda star reveal"><span class="eti-num">01 · Cuenta</span><h3>Cuenta lo que le consta a cada una</h3>
       <p>Entra en los paneles y mira cuánta gente tiene apuntada cada plataforma. Si a una le
       constan tres personas más que a ti, <b>son tres reservas que no llegaron a tu correo</b> —
       y lo sabes hoy, no cuando aparezcan.</p>
       <span class="mini">es lo único que puede enterarse de un correo que nunca llegó</span></div>
-    <div class="celda star reveal" style="--d:70ms"><span class="ico">🔐</span><h3>Cierra las salidas llenas</h3>
+    <div class="celda star reveal" style="--d:70ms"><span class="eti-num">02 · Cierra</span><h3>Cierra las salidas llenas</h3>
       <p>Cuando un tour se llena hay que cerrarlo en cada panel, y si tardas entra gente que
       ya no cabe. El agente lo hace solo — pero <b>aquí sigue como no cerrada hasta que lo
       compruebes tú</b>.</p>
       <span class="mini">el ✓ lo pone una persona, siempre</span></div>
-    <div class="celda star reveal" style="--d:140ms"><span class="ico">🤐</span><h3>Y hace callar a GuIA cuando toca</h3>
+    <div class="celda star reveal" style="--d:140ms"><span class="eti-num">03 · Calla</span><h3>Y hace callar a GuIA cuando toca</h3>
       <p>Si los números no cuadran, GuIA <b>deja de decir cuántas plazas quedan</b> hasta que
       alguien lo mire. Sin el agente, seguiría contestando «quedan 3 🙂» con toda la seguridad
       del mundo sobre una lista que sabe incompleta.</p>
@@ -1495,6 +1580,19 @@
     <div class="vs-row"><div class="malo">Soporte en inglés, en horario de otra costa</div>
       <div class="bueno">En español, por gente que ha estado en el punto de encuentro un sábado a las 12</div></div>
   </div>
+</div></section>
+
+<section class="cumple"><div class="wrap">
+  <div><span class="eti">Hecho en Madrid, para operar en la UE</span>
+    <h3>Lo que un cliente europeo pregunta antes de firmar, contestado aquí</h3></div>
+  <ul>
+    <li><b>Datos en la UE.</b> El sistema corre en un centro de datos de París.</li>
+    <li><b>Copia diaria fuera del proveedor</b>, también en jurisdicción europea.</li>
+    <li><b>RGPD a la vista:</b> <a href="aviso-legal/">aviso legal y política de privacidad</a> publicados, no escondidos.</li>
+    <li><b>Factura con IVA español</b> o VAT intracomunitario con inversión del sujeto pasivo.</li>
+    <li><b>Esta web no tiene cookies ni rastreadores.</b> Ni banner que aceptar.</li>
+    <li><b>Soporte en español</b>, por gente que ha estado en el punto de encuentro.</li>
+  </ul>
 </div></section>
 
 <div class="final wrap">
