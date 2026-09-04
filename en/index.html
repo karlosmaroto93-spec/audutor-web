@@ -331,7 +331,7 @@
   /* ---- mockup del producto (CSS puro) ---- */
   .mock{ position:relative; min-height:500px; }
   .mock-card{ background:var(--paper); border:1px solid var(--ink); border-radius:0;
-    padding:18px 20px; font-size:13px; }
+    padding:18px 20px; font-size:13px; animation:flota 7s ease-in-out infinite; }
   .mock-card.principal{ max-width:380px; margin-left:auto; }
   .mock-head{ display:flex; justify-content:space-between; align-items:center; gap:8px;
     font-weight:800; font-size:15px; margin-bottom:6px; }
@@ -351,9 +351,16 @@
     border-left:4px solid var(--gold); border-radius:0; padding:11px 14px; font-size:13px;
     color:var(--ink2); transform:rotate(-1.2deg); max-width:270px; }
   .mock-pop b{ color:var(--ink); }
-  .pop1{ left:0; top:-96px; }
-  .pop2{ left:0; bottom:44px; border-left-color:var(--coral); transform:rotate(1deg); }
+  .pop1{ left:0; top:-96px; animation:flota 8s ease-in-out infinite reverse; }
+  .pop2{ left:0; bottom:44px; border-left-color:var(--coral); animation:flota2 9s ease-in-out 1s infinite; }
   @keyframes flota{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-9px); } }
+  @keyframes flota2{ 0%,100%{ transform:translateY(0) rotate(1deg); } 50%{ transform:translateY(-8px) rotate(1deg); } }
+  @keyframes flota3{ 0%,100%{ transform:translateY(0) rotate(1.4deg); } 50%{ transform:translateY(-7px) rotate(1.4deg); } }
+  /* Quien pide menos movimiento no ve ninguno: las hojas se quedan quietas y giradas. */
+  @media (prefers-reduced-motion:reduce){
+    .mock-card, .mock-pop, .mock-mapa{ animation:none !important; }
+    .pop2{ transform:rotate(1deg); } .mock-mapa{ transform:rotate(1.4deg); }
+  }
 
   /* La hoja del mapa: el plano de operación (ruta, punto de encuentro, dónde está el grupo)
      como imagen del hero, no otro pantallazo. Es la referencia principal del estudio
@@ -361,6 +368,7 @@
   .mock-card.principal{ position:relative; z-index:1; }
   .mock-mapa{ position:absolute; right:-24px; bottom:-46px; width:300px; z-index:0; background:var(--paper);
     border:1px solid var(--line); padding:8px 8px 7px; transform:rotate(1.4deg); }
+  .mock-mapa{ animation:flota3 8.5s ease-in-out .4s infinite; }
   .mock-mapa svg{ display:block; width:100%; height:auto; }
   .mapa-eti{ display:block; margin-top:7px; font-family:var(--mono); font-size:11.5px; color:var(--muted); letter-spacing:.02em; }
   .hora-m{ font-family:var(--mono); font-weight:600; letter-spacing:.02em; }
@@ -406,9 +414,9 @@
   section.alt .producto-grid .celda{ background:#fbf8f0; }
   .producto-grid .celda:hover{ transform:none; box-shadow:none; border-color:var(--acc); }
   .producto-grid .celda.star{ border-color:var(--line); border-top-color:var(--acc); box-shadow:none; }
-  .producto-grid .operacion-num{ display:block; font-family:var(--mono); font-size:11px;
+  .producto-grid .operacion-num{ display:block; font-family:var(--mono); font-size:11.5px;
     font-weight:700; letter-spacing:.075em; color:var(--acc); text-transform:uppercase; }
-  .producto-grid .celda h3{ margin:32px 0 8px; font-size:19px; }
+  .producto-grid .celda h3{ margin:32px 0 8px; font-size:20px; }
   .producto-grid .celda p{ max-width:47ch; }
   @media (min-width:901px){
     .producto-grid .celda:nth-child(1), .producto-grid .celda:nth-child(4){ grid-column:span 5; }
@@ -863,11 +871,6 @@
      Donicus), «para quién» (Mews), fuente en cada cifra (Amenitiz), banner fino con una
      novedad cierta (18 % de las webs de 2026) y una franja de cumplimiento local (Hostaway).
      Todo lo que afirman está en el repo; nada que no se pueda demostrar. ── */
-  .aviso-alto{ background:var(--deep); color:#e9f3ee; font-size:13px; text-align:center; padding:8px 24px;
-    line-height:1.4; }
-  .aviso-alto b{ color:#fff; font-weight:700; }
-  .aviso-alto .tag{ font-family:var(--mono); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase;
-    color:#8fbfae; margin-right:8px; }
   .sellos{ list-style:none; margin:16px 0 0; padding:0; display:flex; flex-wrap:wrap; gap:6px 18px;
     font-family:var(--mono); font-size:13px; color:var(--ink2); }
   .sellos li{ display:inline-flex; align-items:center; gap:7px; }
@@ -881,18 +884,6 @@
   .para-quien{ margin-top:10px; font-size:13px; color:var(--muted); }
   .para-quien span{ font-family:var(--mono); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase;
     color:var(--acc); margin-right:8px; }
-  .cambio-sistema{ font-size:15px; color:var(--ink2); margin-top:10px; }
-  .cumple{ padding:40px 0; border-top:1px solid var(--line); }
-  .cumple .wrap{ display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,2fr); gap:28px 48px; align-items:start; }
-  .cumple h3{ font-family:var(--serif); font-size:27px; font-weight:400; line-height:1.14; margin:0; }
-  .cumple .eti{ display:block; font-family:var(--mono); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase;
-    color:var(--acc); margin-bottom:10px; }
-  .cumple ul{ list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px 24px; }
-  .cumple li{ font-size:15px; color:var(--ink2); padding-left:16px; position:relative; }
-  .cumple li::before{ content:""; position:absolute; left:0; top:.62em; width:7px; height:7px; background:var(--acc); }
-  .cumple li b{ color:var(--ink); }
-  .cumple a{ color:var(--acc2); }
-  @media (max-width:800px){ .cumple .wrap{ grid-template-columns:1fr; } .cumple ul{ grid-template-columns:1fr; } }
 </style>
 </head>
 <body>
@@ -978,7 +969,6 @@
 </svg>
 
 
-<div class="aviso-alto"><span class="tag">New</span><b>Guides fix the adult count from their phone</b> and the tour settlement recalculates itself.</div>
 <nav><div class="wrap">
   <a class="logo" href="#" aria-label="Audutor, home"><span class="wm">Audutor<svg class="ruta" viewBox="0 0 100 14" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M1 10.5 Q 24 5 46 9 T 86 8"/><path class="rpin" d="M93 1.2c-2.6 0-4.7 2.1-4.7 4.7 0 3.4 4.7 7.5 4.7 7.5s4.7-4.1 4.7-7.5c0-2.6-2.1-4.7-4.7-4.7z"/><circle class="rhueco" cx="93" cy="6" r="1.8"/></svg></span></a>
   <div class="links">
@@ -1020,11 +1010,11 @@
         <a class="btn" href="../demo-en/" data-demo>Try the interactive demo</a>
       <a class="btn sec" href="#contacto">Book a guided demo</a>
       </div>
-      <ul class="sellos"><li>No lock-in</li><li>0% commission</li><li>Data in the EU (Paris)</li><li>No cookies, no trackers</li></ul>
+      <ul class="sellos"><li>No lock-in</li><li>0% commission</li><li>Data and backups in the EU</li><li>No cookies, no trackers</li></ul>
       <p class="hero-nota reveal" style="--d:300ms">It was built while running tours, not in a boardroom. Setting it up takes an afternoon: forward your booking emails and the inbox fills itself in.</p>
       <div class="guia-saludo reveal" style="--d:380ms">
         <svg class="guia" aria-hidden="true" focusable="false"><use href="#guia"/></svg>
-        <p class="bocadillo"><b>Hi! I’m GuIA.</b> I look after your customers while you’re out guiding. I answer with your facts and nothing else — anything I haven’t been told, I bring to you.</p>
+        <p class="bocadillo"><b>Hi! I’m GuIA.</b> I look after your customers while you’re out guiding.</p>
       </div>
     </div>
 
@@ -1067,7 +1057,6 @@
 <section class="alt" id="producto"><div class="wrap">
   <div class="sec-head">
     <h2 data-split>Everything between the booking and the tip</h2>
-    <p class="reveal">Start with whatever hurts today and grow without changing systems.</p>
   </div>
   <!-- One sentence per card, and the sentence says WHAT HAPPENS, not how it is built.
        Each card used to carry a paragraph explaining its own workings — the last one ran
@@ -1097,8 +1086,7 @@
     <div class="celda reveal"><span class="operacion-num">07 · Decide</span><h3>Run the day by exception</h3>
       <p>A daily brief with what needs you and nothing else. If there's nothing, it says so.</p></div>
     <div class="celda reveal" style="--d:70ms"><span class="operacion-num">08 · Collect</span><h3>Every channel, in one inbox</h3>
-      <p>Bookings from your platforms and your own site arrive and keep themselves up to date.
-      No API to set up, nothing to retype.</p>
+      <p>Bookings from your platforms and your own site arrive and keep themselves up to date.</p>
       <p class="mini">And a booking we haven't tested never goes in without you looking at it.</p></div>
   </div>
 </div></section>
@@ -1147,7 +1135,6 @@
     <h2 data-split>You pay for what you run, not for your team</h2>
     <p class="reveal">No booking commission, no lock-in, support included.<br>
     <b>Pro runs your day. Premium also helps you sell.</b></p>
-    <p class="reveal cambio-sistema">Coming from a spreadsheet or another system? During onboarding we load your tours and upcoming bookings, and the first month is free on every plan.</p>
   </div>
   <div class="integra reveal">
     <b>It sets itself up from what you have already published — nothing to migrate</b>
@@ -1518,19 +1505,6 @@
   </div>
 </div></section>
 
-<section class="cumple"><div class="wrap">
-  <div><span class="eti">Made in Madrid, built to operate in the EU</span>
-    <h3>What a European operator asks before signing, answered here</h3></div>
-  <ul>
-    <li><b>Data in the EU.</b> The system runs in a data centre in Paris.</li>
-    <li><b>Daily copy outside the hosting provider</b>, also under EU jurisdiction.</li>
-    <li><b>GDPR in plain sight:</b> <a href="legal-notice/">legal notice and privacy policy</a> published, not hidden.</li>
-    <li><b>Invoices with Spanish VAT</b> or intra-EU reverse charge.</li>
-    <li><b>This website has no cookies and no trackers.</b> No banner to accept.</li>
-    <li><b>Support in English and Spanish</b>, from people who have stood at the meeting point.</li>
-  </ul>
-</div></section>
-
 <div class="final wrap">
   <svg class="adorno ruta-linea final-ruta" viewBox="0 0 1000 60" preserveAspectRatio="none" aria-hidden="true" focusable="false">
     <path d="M-10 14 C 200 52, 420 8, 620 42 S 870 16, 1010 38"/>
@@ -1560,7 +1534,6 @@
 <footer><div class="wrap">
   <span class="logo pie" aria-label="Audutor"><span class="wm">Audutor<svg class="ruta" viewBox="0 0 100 14" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M1 10.5 Q 24 5 46 9 T 86 8"/><path class="rpin" d="M93 1.2c-2.6 0-4.7 2.1-4.7 4.7 0 3.4 4.7 7.5 4.7 7.5s4.7-4.1 4.7-7.5c0-2.6-2.1-4.7-4.7-4.7z"/><circle class="rhueco" cx="93" cy="6" r="1.8"/></svg></span></span>
   <span>© 2026 Audutor · <a href="legal-notice/">Legal notice and privacy</a> · Made in Madrid</span>
-  <span>Bookings · Channels · Guides · Groups · Rescue · Tips · GuIA</span>
 </div></footer>
 
 <script>
