@@ -65,6 +65,11 @@ input{
   width:100%; min-height:48px; padding:11px 13px; font:inherit; font-size:16px;
   color:var(--ink); background:#faf7ef; border:1.5px solid var(--line); border-radius:11px;
 }
+select{
+  width:100%; min-height:48px; padding:11px 13px; font:inherit; font-size:16px;
+  color:var(--ink); background:#faf7ef; border:1.5px solid var(--line); border-radius:11px;
+}
+select:focus{ outline:none; border-color:var(--acc); box-shadow:0 0 0 3.5px rgba(20,99,76,.15); }
 input:focus{ outline:none; border-color:var(--acc);
   box-shadow:0 0 0 3.5px rgba(20,99,76,.15); }
 button{
@@ -155,6 +160,18 @@ button:disabled{ background:var(--line); color:var(--muted); cursor:default; }
     <label class="campo-mas" for="an">Your company name</label>
     <input id="an" type="text" autocomplete="organization" required maxlength="80"
            placeholder="Free Walking Tour Edinburgh">
+    <label class="campo-mas" for="ap">Where you operate</label>
+    <select id="ap" autocomplete="country">
+      <option value="GB" selected>United Kingdom</option>
+      <option value="IE">Ireland</option>
+      <option value="DE">Germany</option>
+      <option value="ES">Spain</option>
+      <option value="PT">Portugal</option>
+      <option value="IT">Italy</option>
+      <option value="FR">France</option>
+      <option value="NL">Netherlands</option>
+      <option value="XX">Other</option>
+    </select>
     <button type="submit" id="ab">Create the account</button>
     <p class="aviso" id="amsg" role="status" aria-live="polite"></p>
   </form>
@@ -240,7 +257,11 @@ var APP_URL = 'https://audutor.fly.dev';
     amsg.className = 'aviso'; amsg.textContent = '';
     fetch(APP_URL.replace(/\/+$/, '') + '/api/alta/empresa', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: correo, nombreEmpresa: empresa }),
+      /* El país es dato de la empresa (moneda, y mañana zona horaria y avisos):
+         hasta ahora nadie lo preguntaba y toda alta quedaba como España. Optativo:
+         el servidor sigue aceptando el cuerpo sin él. */
+      body: JSON.stringify({ email: correo, nombreEmpresa: empresa,
+                             pais: (document.getElementById('ap') || {}).value || undefined }),
     }).then(function(r){
       return r.json().catch(function(){ return {}; }).then(function(j){
         if (!r.ok) throw new Error(j.error || ('HTTP ' + r.status));

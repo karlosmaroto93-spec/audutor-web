@@ -4424,6 +4424,35 @@ var PESO_MARCADOR = (function(){
   return n;
 })();
 
+/* ── EL AVISO A QUIEN ESCRIBE EN UN IDIOMA QUE GuIA DETECTA PERO NO HABLA ───────────
+   Alemán, francés, italiano, portugués, neerlandés y polaco se DETECTAN (arriba) y no se
+   sirven. El aviso salía en inglés y español; a un alemán en Berlín eso le llega si sabe
+   inglés, y a uno que no, no le llega nada — en el peor momento, con el grupo saliendo.
+   Una frase FIJA por idioma, delante de las dos de siempre. Fija a propósito: no es una
+   respuesta, es «esto va a una persona», y una frase que no lleva ningún hecho no puede
+   inventar nada. Es el «rematar» del §3.4 de guia-mas-idiomas.md, sin tocar el motor de
+   reglas (§3.5: ni un motor por idioma, ni traducir con el modelo cada mensaje).
+   Las dos frases de siempre se QUEDAN detrás: hay bancos que las exigen y siguen siendo
+   la red para el idioma que no tenga frase propia. Vive aquí, en el motor, porque los
+   tres routers —servidor, demo ES y demo EN— cargan este fichero; una copia por router
+   es justo cómo se separan los espejos. */
+var AVISO_IDIOMA = {
+  de: 'Ich kann noch nicht auf Deutsch antworten — eine Person aus dem Team meldet sich hier gleich bei Ihnen 🙂',
+  fr: 'Je ne réponds pas encore en français — une personne de l\'équipe vous répond ici très vite 🙂',
+  it: 'Non rispondo ancora in italiano — una persona del team ti risponde qui a breve 🙂',
+  pt: 'Ainda não respondo em português — uma pessoa da equipa responde-te aqui em breve 🙂',
+  nl: 'Ik antwoord nog niet in het Nederlands — iemand van het team antwoordt hier zo 🙂',
+  pl: 'Nie odpowiadam jeszcze po polsku — ktoś z zespołu odpowie tutaj wkrótce 🙂'
+};
+function avisoNoHablo(idi){
+  var propio = AVISO_IDIOMA[idi];
+  return (propio ? propio + '\n\n' : '') +
+    'Sorry — I can\'t answer in your language yet, but a colleague can. ' +
+    'I\'ve passed your message on and they\'ll reply here shortly 🙂\n\n' +
+    'Lo siento, todavía no contesto en tu idioma. Se lo he pasado a una persona y te ' +
+    'responde enseguida 🙂';
+}
+
 function idiomaDe(t){
   /* El idioma en que el operador escribió sus hechos. Es dato del perfil: un operador de
      Roma los escribe en español y uno de Edimburgo en inglés. */
@@ -6720,15 +6749,10 @@ var COMPLEMENTOS = {
      cuelgan del mismo complemento (`app/guia/encargado.js`, «van detrás del mismo
      complemento»). El cuadro y la proyección se pedían aquí por PLAN Premium, así que un
      Pro que paga «las cuentas» las tenía en su panel y con candado en esta demo. */
-  /* «TU TOUR DE PAGO», QUE FALTABA. El servidor lo cobra como complemento
-     (`clientes.COMPLEMENTOS.reservas`, 19 €) y aquí el carrito se abría por PLAN: es
-     exactamente el mismo descuadre que ya se corrigió para `conciliacion` —la demo
-     ofrecía «cambiar a Premium» por algo que en el servidor vive detrás de un
-     complemento, así que quien pagara el plan se encontraría un 402 en la pantalla
-     que compró—. Y peor: al no estar en el selector, el operador no lo descubría, y
-     un complemento que no se ve en la demo no se vende.
-     `necesita:'web'` no es preferencia comercial: sin página no hay dónde reservar.
-     Lo vigila `app/tests/las-tres-superficies.test.mjs`. */
+  /* AQUÍ VIVÍA «TU TOUR DE PAGO» EN EL CARRITO, y ya no: lo quitó el commit 49a5c79
+     —«era un peaje, no una función»—. El motor de reservas es BASE, no complemento, así
+     que no hay nada que marcar aquí. El comentario largo que había describía el
+     complemento como si existiera, y eso engaña más que aclarar. */
 };
 S.comp = { guia:false, agente:false, web:false, cuentas:false };
 
@@ -8635,9 +8659,7 @@ function respuestaGuia(t){
      arregla nada, y el encargado tiene que saber que le toca contestar él.
      (En producción esto lo cubre la capa de traducción; aquí la demo es honesta.) */
   registraDerivada(t, 'idioma');
-  return 'Sorry — I can\'t answer in your language yet, but a colleague can. I\'ve passed your '+
-    'message on and they\'ll reply here shortly 🙂\n\nLo siento, todavía no contesto en tu idioma. '+
-    'Se lo he pasado a una persona y te responde enseguida 🙂';
+  return avisoNoHablo(lang);
 }
 function pintaSelectorChat(){
   var sel=document.getElementById('chat-tour'); sel.innerHTML='';
