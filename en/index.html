@@ -78,7 +78,7 @@
      complemento en «Móntate tu tarifa», la nota monoespaciada al pie de cada tarjeta del
      asistente, y las dos columnas del comparador. Todos son texto corrido. */
   .tf-n small, .celda .mini, .bueno, .malo{
-    text-align:justify; hyphens:auto; -webkit-hyphens:auto;
+    text-align:left; hyphens:manual; -webkit-hyphens:manual;
   }
   nav p, nav li, .btn, .chip, .tramo, footer li{ text-align:inherit; hyphens:manual; }
   /* El correo de contacto, CENTRADO en su tarjeta. Es la única acción de la caja y estaba
@@ -91,7 +91,7 @@
     .contacto-dir, .contacto-dir + p, .contacto-fino{ text-align:center; }
   }
   .nota-pie{
-    text-align:justify; text-align-last:center; hyphens:auto; -webkit-hyphens:auto;
+    text-align:left; text-align-last:left; hyphens:manual; -webkit-hyphens:manual;
     text-wrap:pretty;
   }
   /* Por debajo de 560 px la línea es tan corta que justificar sí abre ríos: ahí manda la
@@ -129,14 +129,8 @@
   .anim .reveal.in{ opacity:1; transform:none;
     transition:opacity .65s ease, transform .8s cubic-bezier(.16,.7,.22,1.05);
     transition-delay:var(--d,0ms); }
-  .anim [data-split] .ch{ display:inline-block; opacity:0;
-    transform:translateY(.7em) rotate(3deg); }
-  .anim [data-split].in .ch{ opacity:1; transform:none;
-    transition:transform .6s cubic-bezier(.18,.7,.28,1.12), opacity .45s ease;
-    transition-delay:calc(var(--i) * 16ms); }
-  [data-split] .w{ display:inline-block; white-space:pre; }
   @media (prefers-reduced-motion: reduce){
-    .anim .reveal, .anim [data-split] .ch{ opacity:1 !important; transform:none !important; transition:none !important; }
+    .anim .reveal{ opacity:1 !important; transform:none !important; transition:none !important; }
     .mock-pop, .mock, .guia{ animation:none !important; }
     .precio .imp, .fact-toggle button, .barra-fill{ transition:none !important; }
   }
@@ -252,10 +246,10 @@
      salía igual estando oculto — y con `href="#"`, o sea visible y muerto. Un `hidden`
      que no oculta es peor que no tenerlo, porque se confía en él. */
   [hidden]{ display:none !important; }
-  .btn{ display:inline-block; background:var(--coral); color:#fff !important; text-decoration:none;
+  .btn{ display:inline-block; background:var(--deep); color:#fff !important; text-decoration:none;
         padding:12px 24px; border-radius:4px; font-weight:700; font-size:15px; border:0;
         cursor:pointer; transition:transform .15s ease, box-shadow .15s ease; }
-  .btn:hover{ background:var(--coral2); transform:translateY(-1px); }
+  .btn:hover{ background:var(--acc2); transform:translateY(-1px); }
   .btn.sec{ background:transparent; color:var(--acc) !important; border:1.5px solid var(--acc); }
   .btn.sec:hover{ background:var(--acc-soft); box-shadow:none; }
   @media (max-width:1050px){ nav .links a:not(.btn){ display:none; } }
@@ -358,6 +352,7 @@
   @keyframes flota3{ 0%,100%{ transform:translateY(0) rotate(1.4deg); } 50%{ transform:translateY(-7px) rotate(1.4deg); } }
   /* Quien pide menos movimiento no ve ninguno: las hojas se quedan quietas y giradas. */
   @media (prefers-reduced-motion:reduce){
+    *, *::before, *::after{ animation:none !important; transition:none !important; }
     .mock-card, .mock-pop, .mock-mapa{ animation:none !important; }
     .pop2{ transform:rotate(1deg); } .mock-mapa{ transform:rotate(1.4deg); }
   }
@@ -414,9 +409,9 @@
   .sec-head p{ color:var(--ink2); font-size:17px; margin:12px 0 0; }
 
   .grid3{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px; }
-  .celda{ background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:22px 24px;
+  .celda{ background:var(--paper); border:1px solid var(--line); border-radius:4px; padding:22px 24px;
     transition:transform .2s ease, box-shadow .2s ease; }
-  .celda:hover{ transform:translateY(-3px); border-color:var(--acc); }
+  .celda:hover{ border-color:var(--acc); }
   section.alt .celda{ background:var(--bg); }
   .celda.star{ border-color:var(--acc); }
   .celda .ico{ font-size:27px; }
@@ -429,23 +424,22 @@
   /* Product is a working day, not a catalogue of eight modules. Field codes and an
      uneven editorial grid make the order of operations scannable without adding generic
      cards, shadows or interchangeable icons. */
-  .producto-grid{ grid-template-columns:repeat(12,minmax(0,1fr)); gap:14px; align-items:stretch; }
-  .producto-grid .celda{ min-height:218px; padding:25px 27px; border-radius:4px;
-    border-color:var(--line); border-top:3px solid var(--line); box-shadow:none; }
-  section.alt .producto-grid .celda{ background:#fbf8f0; }
-  .producto-grid .celda:hover{ transform:none; box-shadow:none; border-color:var(--acc); }
-  .producto-grid .celda.star{ border-color:var(--line); border-top-color:var(--acc); box-shadow:none; }
+  .producto-grid{ grid-template-columns:1.15fr 1fr; gap:0 44px; }
+  .producto-grid .celda{ min-width:0; padding:24px 0; border:0; border-top:1px solid var(--line);
+    border-radius:0; background:transparent; box-shadow:none; }
+  .producto-grid .celda:hover{ transform:none; border-color:var(--line); }
+  .producto-grid .celda.star{ border-color:var(--line); }
   .producto-grid .operacion-num{ display:block; font-family:var(--mono); font-size:11.5px;
-    font-weight:700; letter-spacing:.075em; color:var(--acc); text-transform:uppercase; }
-  .producto-grid .celda h3{ margin:32px 0 8px; font-size:20px; }
+    font-weight:700; letter-spacing:.075em; color:var(--acc2); text-transform:uppercase; }
+  .producto-grid .celda h3{ margin:10px 0 8px; font-size:20px; }
+  /* Tres celdas teñidas para dar ritmo a ocho fichas iguales (el estudio: la rejilla uniforme
+     es lo que huele a plantilla). Cada tinta ya existía y significa algo: teal = la calle y
+     el mapa, oro = las cuentas, verde = GuIA. Ningún color nuevo. */
+  .producto-grid .celda:nth-child(2){ background:var(--teal-soft); padding:26px; }
+  .producto-grid .celda:nth-child(4){ background:var(--gold-soft); padding:26px; }
+  .producto-grid .celda:nth-child(5){ background:var(--acc-soft); padding:26px; }
   .producto-grid .celda p{ max-width:47ch; }
-  @media (min-width:901px){
-    .producto-grid .celda:nth-child(1), .producto-grid .celda:nth-child(4){ grid-column:span 5; }
-    .producto-grid .celda:nth-child(2), .producto-grid .celda:nth-child(3){ grid-column:span 7; }
-    .producto-grid .celda:nth-child(5), .producto-grid .celda:nth-child(6),
-    .producto-grid .celda:nth-child(7){ grid-column:span 4; }
-    .producto-grid .celda:nth-child(8){ grid-column:1 / -1; min-height:0; }
-  }
+  @media (max-width:900px){ .producto-grid{ grid-template-columns:1fr; } }
   @media (max-width:900px){ .producto-grid{ grid-template-columns:1fr; } }
 
   /* ---- contacto ---- */
@@ -486,6 +480,19 @@
   .hito .que b{ color:var(--ink); }
   section.alt .hito .que{ background:var(--bg); }
   @media (max-width:640px){ .dia{ --c1:48px; } }
+  /* La jornada, sobre verde bosque: una superficie grande a mitad de página cambia el ritmo
+     (Clay, Beyonk y TrekkSoft en el estudio; la revisión del 5-sep lo propuso en azul pizarra,
+     aquí va en el verde de la casa). Las horas en oro, el hito del perdido sigue en coral. */
+  #dia{ background:var(--deep); color:var(--paper); border:0; }
+  #dia h2{ color:var(--paper); } #dia .sec-head p{ color:var(--acc-soft); }
+  #dia .dia::before{ border-left-color:rgba(255,255,255,.28); }
+  #dia .hito .hora{ color:var(--gold); }
+  #dia .hito .punto{ background:var(--deep); border-color:var(--gold); }
+  #dia .hito.clave .punto{ border-color:var(--coral); box-shadow:0 0 0 4px rgba(244,101,58,.25); }
+  #dia .hito .que{ background:transparent; border:0; border-bottom:1px solid rgba(255,255,255,.18);
+    border-radius:0; padding:6px 0 20px; color:var(--acc-soft); }
+  #dia .hito .que b{ color:var(--paper); }
+  #dia .brujula{ display:none; }
 
   /* ================= pricing ================= */
   .planes{ display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:18px; align-items:stretch; }
@@ -502,8 +509,7 @@
   .tf-o.tf-pronto{ opacity:.72; }
   .tf-o.tf-pronto .tf-p b{ color:var(--gold); font-weight:700; }
   .tf-p.tf-dentro{ color:var(--acc); font-weight:700; }
-  .cero{ background:var(--paper); border:1px solid var(--line); border-left:3px solid var(--acc);
-    border-radius:14px; padding:18px 20px; margin:0 0 22px; }
+  .cero{ background:var(--acc-soft); border:0; border-radius:0; padding:22px 26px; margin:0 0 22px; }
   .cero > b{ display:block; font-size:17px; margin-bottom:6px; }
   .cero-fecha{ color:var(--ink2); }
   .cero-l{ margin:10px 0 0; padding-left:18px; }
@@ -517,14 +523,14 @@
       padding:3px 12px; border-radius:99px; text-transform:uppercase; }
   /* Premium: la tarjeta estrella — crema cálida, elegante, con acento dorado */
   .plan.premium{ position:relative; z-index:2; color:var(--ink); border:1.5px solid var(--gold);
-    background:linear-gradient(165deg,#fff9ea 0%,#fbeecb 100%);
+    background:var(--gold-soft);
     transform:translateY(-12px); }
   .plan.premium::before{ content:"★ No steps, no surprises"; position:absolute; top:-13px; left:50%;
-    transform:translateX(-50%); background:linear-gradient(90deg,var(--gold),#e2ab48); color:#231400;
+    transform:translateX(-50%); background:var(--gold); color:#231400;
     font-size:11.5px; font-weight:800; letter-spacing:.05em; padding:4px 16px; border-radius:99px;
     text-transform:uppercase; white-space:nowrap; }
   .plan.premium::after{ content:""; position:absolute; inset:0; border-radius:16px; pointer-events:none;
-    background:radial-gradient(420px 200px at 80% -10%, rgba(201,138,45,.14), transparent 70%); }
+    background:none; }
   .plan.premium > *{ position:relative; z-index:1; }
   .plan.premium h3{ color:var(--deep); }
   .plan.premium .precio{ color:var(--ink); }
@@ -533,7 +539,7 @@
   .plan.premium ul{ color:#544e3d; }
   .plan.premium li{ border-top-color:rgba(163,106,16,.18); }
   .plan.premium li::before{ content:"✦"; color:var(--gold); }
-  .plan.premium .btn{ background:linear-gradient(90deg,var(--gold),#dda640); color:#231400 !important;
+  .plan.premium .btn{ background:var(--gold); color:#231400 !important;
     border:0; }
   .plan.premium .btn:hover{ background:#e6ad46; transform:translateY(-1px); }
   @media (max-width:900px){ .plan.premium{ transform:none; } }
@@ -549,9 +555,7 @@
      es un cambio de fondo que acaba con una frase gris sobre negro. */
   #planes{ transition:background .5s ease, border-color .5s ease; }
   #planes.premium-on{
-    background:
-      radial-gradient(760px 420px at 50% 8%, rgba(201,138,45,.20), transparent 68%),
-      linear-gradient(168deg,#123f33 0%,#0d2b24 55%,#0a201b 100%);
+    background:var(--deep);
     border-top-color:rgba(201,138,45,.4); border-bottom-color:rgba(201,138,45,.4); }
   #planes.premium-on .sec-head h2{ color:#fdf6e6; }
   #planes.premium-on .sec-head p,
@@ -663,7 +667,7 @@
   .calc-fino{ font-size:13px; color:var(--muted); }
   /* EL REMATE. Es la única pieza grande de la página, y a propósito: es la respuesta a la
      pregunta que trajo aquí al visitante. */
-  .calc-total{ background:linear-gradient(135deg, var(--acc2), var(--deep));
+  .calc-total{ background:var(--deep);
     color:#fff; border-radius:14px; padding:18px 20px; display:flex; flex-wrap:wrap;
     align-items:baseline; gap:4px 12px; }
   .calc-total-et{ font-size:13px; opacity:.82; width:100%; }
@@ -801,16 +805,16 @@
      borde, y apiladas en una misma página eso se lee como descuido aunque cada una por
      separado esté bien. Dos pasos y un radio: 26 para las que van de tres en fila y 38
      para las grandes, radio 16 en todas. */
-  .webcard{ background:linear-gradient(160deg,#fffdf4 0%,#fbf1da 100%); color:var(--ink);
+  .webcard{ background:var(--paper); color:var(--ink);
     border:1.5px solid var(--gold); border-radius:16px; padding:38px;
     display:grid; grid-template-columns:1.05fr .95fr; gap:40px; align-items:center;
     box-shadow:0 20px 46px rgba(163,106,16,.16); position:relative; overflow:hidden; }
   .webcard::before{ content:""; position:absolute; inset:0; pointer-events:none;
-    background:radial-gradient(480px 240px at 88% -12%, rgba(201,138,45,.16), transparent 70%); }
+    background:none; }
   .webcard > *{ position:relative; }
   @media (max-width:900px){ .webcard{ grid-template-columns:1fr; padding:28px 24px; } }
   .web-chip{ display:inline-block; font-size:11.5px; font-weight:800; letter-spacing:.08em;
-    text-transform:uppercase; color:#231400; background:linear-gradient(90deg,var(--gold),#e2ab48);
+    text-transform:uppercase; color:#231400; background:var(--gold);
     padding:4px 13px; border-radius:99px; margin-bottom:14px; }
   .webcard h2{ color:var(--deep); font-size:clamp(26px,3.4vw,34px); }
   .webcard .lead{ color:var(--ink2); font-size:17px; margin:14px 0 18px; }
@@ -854,6 +858,13 @@
   .ruta{ display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:14px; }
   .paso{ background:var(--paper); border:1px dashed var(--line); border-radius:14px; padding:18px 20px; }
   section.alt .paso{ background:var(--bg); }
+  /* Las dos secciones de la segunda mitad llevan su tinta, para que la página no sea crema
+     y papel alternándose ocho veces: teal para GuIA (el color de su chapa), oro para las
+     plataformas y la caja. Tintas de la casa; las tarjetas vuelven a papel encima. */
+  #asistente{ background:var(--teal-soft); }
+  #asistente .celda{ background:var(--paper); border-color:rgba(43,179,163,.4); }
+  #agente{ background:var(--gold-soft); border-color:rgba(201,138,45,.35); }
+  #agente .celda{ background:var(--paper); border-color:rgba(201,138,45,.4); }
   .paso h3{ font-family:var(--sans); font-weight:700; font-size:15px; margin:0 0 4px; }
   .paso p{ font-size:13px; color:var(--ink2); margin:0; }
   .fase{ display:inline-block; font-family:var(--mono); font-size:11.5px; font-weight:700;
@@ -1023,7 +1034,7 @@
   <div class="hero-grid">
     <div>
       <div class="kicker reveal" style="--d:80ms" data-i18n="hero.kicker">Operations for free tour and walking tour companies</div>
-      <h1 data-split data-i18n="hero.h1">Your booking system forgets everything that happens after the booking.</h1>
+      <h1 data-i18n="hero.h1">Your booking system forgets everything that happens after the booking.</h1>
       <p class="lede reveal" style="--d:120ms">Audutor is <b>your tour company’s operations layer</b>: every channel’s bookings in
       one list, your reminders ready to send in one tap, and every tour settled to the
       penny. <b>Start with two modules and grow when you want to.</b></p>
@@ -1119,7 +1130,7 @@
 
 <section class="alt" id="producto"><div class="wrap">
   <div class="sec-head">
-    <h2 data-split>Everything between the booking and the tip</h2>
+    <h2>Everything between the booking and the tip</h2>
   </div>
   <!-- One sentence per card, and the sentence says WHAT HAPPENS, not how it is built.
        Each card used to carry a paragraph explaining its own workings — the last one ran
@@ -1165,7 +1176,7 @@
   </svg>
   <div class="wrap">
   <div class="sec-head">
-    <h2 data-split>A normal day with Audutor</h2>
+    <h2>A normal day with Audutor</h2>
     <p class="reveal">No spreadsheet, no copying bookings across, no “does anyone know where the guide is?”.</p>
   </div>
   <div class="dia">
@@ -1195,7 +1206,7 @@
   </svg>
   <div class="wrap">
   <div class="sec-head">
-    <h2 data-split>You pay for what you run, not for your team</h2>
+    <h2>You pay for what you run, not for your team</h2>
     <p class="reveal">No booking commission, no lock-in, support included.<br>
     <b>Pro runs your day. Premium also helps you sell.</b></p>
   </div>
@@ -1487,7 +1498,7 @@
          know— instead of an anonymous claim from the seller. -->
     <div class="guia-dice reveal">
       <svg class="guia" aria-hidden="true" focusable="false"><use href="#guia-habla"/></svg>
-      <h2 data-split class="bocadillo">Every booking system has an assistant now.<br>Ask them what it does when it doesn’t know.</h2>
+      <h2 class="bocadillo">Every booking system has an assistant now.<br>Ask them what it does when it doesn’t know.</h2>
     </div>
     <p class="reveal">An assistant plugged into a booking engine knows your products, your prices and your
     availability. Everything else it makes up — and everything else is most of what a customer asks.</p>
@@ -1513,7 +1524,7 @@
      didn't sell: a whole product explained in fourteen words. -->
 <section class="alt" id="agente"><div class="wrap">
   <div class="sec-head">
-    <h2 data-split>The platforms don't tell you everything.<br>Someone has to go in and look.</h2>
+    <h2>The platforms don't tell you everything.<br>Someone has to go in and look.</h2>
     <p class="reveal">Each platform keeps its own books and only emails you when it feels
     like it. The rest of the time your list and theirs are two different numbers — and the
     first to find out is the guide, at the meeting point.</p>
@@ -1544,7 +1555,7 @@
 
 <section class="alt" id="porque"><div class="wrap">
   <div class="sec-head">
-    <h2 data-split>Why Audutor and not the usual software</h2>
+    <h2>Why Audutor and not the usual software</h2>
     <p class="reveal">Classic booking software was built to sell tickets. <b>We started from the other end: from the
     guide at the meeting point at 10:15, counting heads.</b></p>
   </div>
@@ -1574,7 +1585,7 @@
     <svg class="guia" aria-hidden="true" focusable="false"><use href="#guia"/></svg>
     <p class="bocadillo"><b>Shall we get started?</b> I’ll be in there, looking after your customers.</p>
   </div>
-  <h2 data-split>We’re taking on our first companies</h2>
+  <h2>We’re taking on our first companies</h2>
   <p class="reveal">We’re looking for a small group of founding companies, on founding-member pricing.</p>
   <a class="btn reveal" style="--d:120ms" href="#contacto">Apply as a founding company</a>
 </div>
@@ -1601,34 +1612,6 @@
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   document.documentElement.classList.add('anim');
 
-  // Los titulares se "construyen": cada letra aparece y se coloca con un pelín
-  // de rebote. Palabras envueltas para que nunca se parta una a mitad de línea.
-  /* EL <br> SOBREVIVE AL PARTIDO. Esto hacía `h.textContent`, y textContent DESCARTA los
-     elementos: en un titular de dos frases separadas por <br> —«…tienen asistente.<br>
-     Pregúntales qué hace…»— el salto desaparecía y las dos frases salían pegadas sin ni
-     un espacio: «asistente.Pregúntales». Se ve en la página y parece una falta de
-     ortografía nuestra.
-     Ahora se recorren los HIJOS: el texto se parte en letras como antes y cada <br> se
-     vuelve a poner. Cualquier otro elemento que alguien meta dentro se conserva tal cual
-     en vez de evaporarse. */
-  document.querySelectorAll('[data-split]').forEach(function (h) {
-    var hijos = Array.prototype.slice.call(h.childNodes), i = 0;
-    h.textContent = '';
-    hijos.forEach(function (nodo) {
-      if (nodo.nodeType !== 3) { h.appendChild(nodo.cloneNode(true)); return; }
-      nodo.nodeValue.split(/(\s+)/).forEach(function (tok) {
-        if (!tok) return;
-        if (/^\s+$/.test(tok)) { h.appendChild(document.createTextNode(' ')); return; }
-        var w = document.createElement('span'); w.className = 'w';
-        tok.split('').forEach(function (ch) {
-          var s = document.createElement('span'); s.className = 'ch';
-          s.style.setProperty('--i', i++); s.textContent = ch; w.appendChild(s);
-        });
-        h.appendChild(w);
-      });
-    });
-  });
-
   // Al bajar, cada pieza se revela cuando entra en el viewport (una sola vez).
   if ('IntersectionObserver' in window && !reduce) {
     var io = new IntersectionObserver(function (entradas) {
@@ -1636,9 +1619,9 @@
         if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
       });
     }, { threshold: 0.15, rootMargin: '0px 0px -50px' });
-    document.querySelectorAll('.reveal, [data-split]').forEach(function (el) { io.observe(el); });
+    document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
   } else {
-    document.querySelectorAll('.reveal, [data-split]').forEach(function (el) { el.classList.add('in'); });
+    document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('in'); });
   }
 
   // Toggle de facturación mensual / anual. Los precios mensuales (0/39/149) son
@@ -1724,7 +1707,6 @@ function cambiaIdioma(){
     var k=el.getAttribute('data-i18n');
     if (TXT0[k]===undefined) TXT0[k]=el.textContent;
     el.textContent = LANG==='en' ? (d[k]||TXT0[k]) : TXT0[k];
-    if (el.hasAttribute('data-split')) el.removeAttribute('data-split');
   });
   // la demo del idioma correspondiente
   document.querySelectorAll('a[data-demo]').forEach(function(a){
