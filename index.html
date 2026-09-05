@@ -329,7 +329,7 @@
   .hero-nota{ font-size:13px; color:var(--muted); margin-top:14px; }
 
   /* ---- mockup del producto (CSS puro) ---- */
-  .mock{ position:relative; min-height:500px; }
+  .mock{ position:relative; min-height:600px; }
   .mock-card{ background:var(--paper); border:1px solid var(--ink); border-radius:0;
     padding:18px 20px; font-size:13px; animation:flota 7s ease-in-out infinite; }
   .mock-card.principal{ max-width:380px; margin-left:auto; }
@@ -345,7 +345,7 @@
   .mock-row span{ font-size:11.5px; color:var(--muted); white-space:nowrap; }
   .mock-row.ok{ background:#ecf7ef; color:#14532d; }
   .mock-row.ok span{ color:#16a34a; font-weight:700; }
-  .mock-card button{ width:100%; margin-top:10px; border:1.5px solid var(--acc); background:var(--acc-soft);
+  .mock-panel > button{ width:100%; margin-top:10px; border:1.5px solid var(--acc); background:var(--acc-soft);
     color:var(--acc); font-weight:800; font-size:13px; border-radius:9px; padding:9px; cursor:default; }
   .mock-pop{ position:absolute; z-index:2; background:var(--paper); border:1px solid var(--line);
     border-left:4px solid var(--gold); border-radius:0; padding:11px 14px; font-size:13px;
@@ -372,6 +372,27 @@
   .mock-mapa svg{ display:block; width:100%; height:auto; }
   .mapa-eti{ display:block; margin-top:7px; font-family:var(--mono); font-size:11.5px; color:var(--muted); letter-spacing:.02em; }
   .hora-m{ font-family:var(--mono); font-weight:600; letter-spacing:.02em; }
+  /* La hoja del hero con sus tres momentos: antes de salir, en el punto y al terminar.
+     Una sola hoja que cambia con pestañas (Boulevard, WeTravel e Intercom en el estudio de
+     66 webs; la revisión del 5-sep lo propuso para aquí). Lo que gana la portada es el
+     CIERRE: la liquidación, que es lo que nadie más hace, no se veía en ningún sitio. */
+  .mock-card.principal{ margin:0 0 0 auto; padding:0; }
+  .mock-cab{ display:flex; justify-content:space-between; gap:10px; padding:9px 14px; border-bottom:1px solid var(--line);
+    font-family:var(--mono); font-size:11.5px; letter-spacing:.04em; color:var(--muted); }
+  .mock-tabs{ display:flex; border-bottom:1px solid var(--line); }
+  .mock-tabs button{ flex:1; background:transparent; border:0; border-bottom:3px solid transparent; margin-bottom:-1px;
+    padding:9px 4px; font-family:var(--mono); font-size:11.5px; letter-spacing:.04em; color:var(--muted); cursor:pointer; }
+  .mock-tabs button[aria-selected="true"]{ color:var(--deep); border-bottom-color:var(--acc); font-weight:700; }
+  .mock-panel{ padding:14px 16px 16px; }
+  .mock-panel[hidden]{ display:none; }
+  .mock-row .n{ font-family:var(--mono); font-weight:700; color:var(--ink); }
+  .mock-total{ display:flex; justify-content:space-between; align-items:baseline; padding:10px 8px 0;
+    border-top:1px solid var(--line); margin-top:6px; color:var(--ink2); }
+  .mock-total b{ font-family:var(--serif); font-size:27px; color:var(--deep); }
+  .mock-nota{ margin-top:10px; font-size:11.5px; color:var(--muted); }
+  .mock-abrir{ display:block; margin:0; padding:11px 16px; background:var(--deep); color:#fff !important; font-weight:700;
+    font-size:13px; text-decoration:none; }
+  .mock-abrir:hover{ background:var(--acc2); }
   @media (max-width:900px){ .mock-mapa{ position:static; width:auto; transform:none; } }
   @media (max-width:900px){ .mock{ min-height:0; display:grid; gap:12px; }
     .mock-pop{ position:static; max-width:none; } .mock-card.principal{ margin:0; max-width:none; } }
@@ -882,9 +903,6 @@
     font-family:var(--mono); font-size:13px; color:var(--ink2); }
   .sellos li{ display:inline-flex; align-items:center; gap:7px; }
   .sellos li::before{ content:""; width:7px; height:7px; border-radius:50%; background:var(--acc); flex:none; }
-  .mock-abrir{ margin:14px 0 0; font-size:13px; color:var(--muted); text-align:right; }
-  .mock-abrir a{ font-weight:700; color:var(--acc2); }
-  @media (max-width:900px){ .mock-abrir{ text-align:left; } }
   .lee-de, .para-quien{ margin:26px 0 0; font-size:15px; color:var(--ink2); line-height:1.7; }
   .lee-de b{ display:inline-block; font-family:var(--mono); font-weight:600; font-size:13px; color:var(--ink);
     background:var(--paper); border:1px solid var(--line); border-radius:3px; padding:2px 9px; margin:0 3px; }
@@ -1013,7 +1031,7 @@
   <div class="wrap">
   <div class="hero-grid">
     <div>
-      <div class="kicker reveal" style="--d:80ms" data-i18n="hero.kicker">Software de operaciones para empresas de free tours y tours a pie con equipo de guías</div>
+      <div class="kicker reveal" style="--d:80ms" data-i18n="hero.kicker">Operaciones para empresas de free tours y tours a pie</div>
       <h1 data-split data-i18n="hero.h1">Tu software de reservas se olvida de lo que pasa después de la reserva.</h1>
       <p class="lede reveal" style="--d:120ms">Audutor es <b>la capa operativa de tu empresa de tours</b>: junta las reservas de
       todos tus canales, te deja los avisos listos para mandar en un toque y liquida cada
@@ -1030,17 +1048,43 @@
       </div>
     </div>
 
-    <div class="mock reveal" style="--d:260ms" aria-hidden="true">
+    <div class="mock reveal" style="--d:260ms">
       <div class="mock-pop pop1"><b>Un grupo de 11 en el chat</b> — GuIA ha mirado las salidas de hoy,
         les ha contado tu política de adelanto y te los pasa con su tamaño.</div>
-      <div class="mock-card principal">
+      <figure class="mock-card principal">
+        <figcaption class="mock-cab"><span>Una salida · Free tour centro</span><span>Datos de ejemplo</span></figcaption>
+        <div class="mock-tabs" role="tablist" aria-label="Los tres momentos de una salida">
+          <button type="button" role="tab" id="tab-reservas" aria-controls="hoja-reservas" aria-selected="false" tabindex="-1">01 · Reservas</button>
+          <button type="button" role="tab" id="tab-encuentro" aria-controls="hoja-encuentro" aria-selected="true">02 · Encuentro</button>
+          <button type="button" role="tab" id="tab-cierre" aria-controls="hoja-cierre" aria-selected="false" tabindex="-1">03 · Cierre</button>
+        </div>
+        <div class="mock-panel" id="hoja-reservas" role="tabpanel" aria-labelledby="tab-reservas" hidden>
+          <div class="mock-head"><span><span class="hora-m">08:41</span> · antes de salir</span> <span class="chipv">4 reservas</span></div>
+          <div class="mock-sem">Cada canal, en su sitio. Nadie ha copiado nada de ninguna extranet.</div>
+          <div class="mock-row"><span>GuruWalk · 2 reservas</span><span class="n">9p</span></div>
+          <div class="mock-row"><span>Civitatis · 1 reserva</span><span class="n">3p</span></div>
+          <div class="mock-row"><span>Tu web · 1 reserva</span><span class="n">2p</span></div>
+          <div class="mock-total"><span>Personas esperadas</span><b>14</b></div>
+        </div>
+        <div class="mock-panel" id="hoja-encuentro" role="tabpanel" aria-labelledby="tab-encuentro">
         <div class="mock-head"><span><span class="hora-m">10:00</span> · Free tour centro</span> <span class="chipv">en marcha</span></div>
         <div class="mock-sem">12/14 avisadas · ✓ 9 confirmadas · <b>1 llega tarde (3p)</b> · 2 sin responder</div>
         <div class="mock-row ok"><span>Ana García · 4p</span><span>✓ en el punto</span></div>
         <div class="mock-row"><span>Marco Bianchi · 2p</span><span>pendiente</span></div>
         <div class="mock-row ok"><span>Familia Dupont · 5p</span><span>✓ en el punto</span></div>
         <button>Compartir dónde está el grupo</button>
-      </div>
+        </div>
+        <div class="mock-panel" id="hoja-cierre" role="tabpanel" aria-labelledby="tab-cierre" hidden>
+          <div class="mock-head"><span><span class="hora-m">12:15</span> · al terminar</span> <span class="chipv">cierre</span></div>
+          <div class="mock-sem">11 en el punto · el guía apunta la propina · <b>Audutor no toca ese dinero</b></div>
+          <div class="mock-row"><span>Propinas apuntadas</span><span class="n">132 €</span></div>
+          <div class="mock-row"><span>Coste de canal · 12 reservados en plataforma</span><span class="n">−30 €</span></div>
+          <div class="mock-row ok"><span>Para el guía</span><span class="n">51 €</span></div>
+          <div class="mock-row ok"><span>Para la empresa</span><span class="n">51 €</span></div>
+          <div class="mock-nota">Reparto al 50 % de ejemplo: tú fijas el tuyo. Por la noche se liquida sola.</div>
+        </div>
+        <a class="mock-abrir" href="demo/" data-demo>Abrir esta salida en la demo</a>
+      </figure>
       <div class="mock-pop pop2"><b>«Me he perdido»</b> → GuIA le pasó el mapa del grupo
         (ubicación del guía, hace 2 min). Sin dar su teléfono.</div>
       <div class="mock-mapa">
@@ -1056,8 +1100,6 @@
     </div>
   </div>
 
-  <p class="mock-abrir">Esta hoja es la demo, con datos de ejemplo. <a href="demo/" data-demo>Ábrela y toca lo que quieras</a></p>
-
   <div class="cifras">
     <div class="cifra reveal"><span class="v">2,50 €</span><span class="l">te cuesta cada persona reservada en plataforma — venga o no venga. El no-show se paga igual.</span><span class="f">Tarifa por asistente de GuruWalk en 2025</span></div>
     <div class="cifra reveal" style="--d:90ms"><span class="v">5 sitios</span><span class="l">donde vive hoy tu operación: extranets, Excel, WhatsApp, correo y la cabeza del encargado. Aquí, uno.</span></div>
@@ -1067,6 +1109,24 @@
 <p class="lee-de">Lee las reservas que te llegan por correo de <b>GuruWalk</b><b>Civitatis</b><b>FreeTour</b> y las de tu propia web. Los formatos no reconocidos quedan para revisión.</p>
   <p class="para-quien"><span>Hecho para</span>free tours · visitas guiadas · rutas gastronómicas · tours privados · cualquier actividad con punto de encuentro</p>
 </div></header>
+<script>
+/* La hoja del hero cambia de momento al pedirlo. Con ?hoja=reservas|encuentro|cierre se abre
+   por el que se quiera (sirve para enseñarla en una captura). Son datos de ejemplo, no un panel vivo. */
+(function(){
+  var tabs=Array.prototype.slice.call(document.querySelectorAll('.mock-tabs [role="tab"]'));
+  if(!tabs.length) return;
+  function activa(tab){ tabs.forEach(function(t){
+    var si=t===tab; t.setAttribute('aria-selected',String(si)); t.tabIndex=si?0:-1;
+    document.getElementById(t.getAttribute('aria-controls')).hidden=!si; }); }
+  tabs.forEach(function(tab,i){
+    tab.addEventListener('click',function(){ activa(tab); });
+    tab.addEventListener('keydown',function(e){
+      var n=e.key==='ArrowRight'?(i+1)%tabs.length:e.key==='ArrowLeft'?(i+tabs.length-1)%tabs.length:e.key==='Home'?0:e.key==='End'?tabs.length-1:null;
+      if(n!==null){ e.preventDefault(); activa(tabs[n]); tabs[n].focus(); } });
+  });
+  var q=/[?&]hoja=([a-z]+)/.exec(location.search); var t=q&&document.getElementById('tab-'+q[1]); if(t) activa(t);
+})();
+</script>
 
 <section class="alt" id="producto"><div class="wrap">
   <div class="sec-head">
