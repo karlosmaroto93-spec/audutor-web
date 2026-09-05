@@ -275,7 +275,7 @@
   nav .logo .ruta .rhueco{ fill:#14634c; }
   nav .links a:not(.btn){ color:#f4efe2; font-weight:700; padding:7px 11px;
     border-radius:9px; transition:background .15s, color .15s; }
-  nav .links a:not(.btn):hover{ color:#fff; }   /* el fondo lo pone la burbuja */
+  nav .links a:not(.btn):hover{ color:#fff; }   /* el fondo lo pone la gota */
   nav .lang-sw{ background:rgba(253,249,238,.14); border-color:rgba(253,249,238,.42);
     color:#fdf9ee; }
   nav .lang-sw:hover{ background:rgba(253,249,238,.24); border-color:#fdf9ee; color:#fff; }
@@ -292,51 +292,61 @@
     background:transparent; }
   nav .links a.btn.sec:hover{ background:rgba(253,249,238,.16); border-color:#fdf9ee; }
 
-  /* ===== La burbuja deslizante del menú =====
-     El hover era una pastilla estática por enlace. Ahora hay UNA burbuja de cristal que
-     va por detrás de los enlaces (z-index 0 frente al 1 de ellos) y se desliza de uno a
-     otro ajustando posición y tamaño; al salir del menú se desvanece y al volver aparece
-     fundiéndose sobre el enlace apuntado (`.salta` apaga un instante la transición de
-     movimiento). No recibe el ratón (pointer-events:none). Por debajo de 1050 px los
-     enlaces de texto ya no se ven, y la burbuja tampoco. El script va al final de la página. */
+  /* ===== La lupa líquida del menú =====
+     Una gota de cristal por DETRÁS de los enlaces (z-index 0 frente al 1 de ellos) que se
+     desliza de uno a otro con una curva elástica, respira (los ocho radios del
+     border-radius cambian sin parar), aclara y satura el verde que tiene debajo, lleva un
+     filo cian/magenta (aberración cromática) y AUMENTA el enlace que tiene encima: una
+     lupa, no un fondo. No recibe el ratón; por debajo de 1050 px no existe (los enlaces de
+     texto tampoco). El script va al final de la página. */
   nav .links{ position:relative; }
-  nav .links > a{ position:relative; z-index:1; transition:color .2s ease; }
-  .burbuja{
+  nav .links > a{
+    position:relative; z-index:1; transform-origin:center;
+    transition:transform .4s cubic-bezier(.34,1.56,.64,1), color .2s ease, letter-spacing .2s ease;
+  }
+  nav .links a.lupa{ color:#fff; transform:scale(1.15); font-weight:800; letter-spacing:.01em; }
+  .gota{
     position:absolute; top:0; left:0; z-index:0;
     width:0; height:0;
-    border-radius:50px;
-    background:rgba(255,255,255,.15);
-    -webkit-backdrop-filter:blur(6px) saturate(1.25);
-    backdrop-filter:blur(6px) saturate(1.25);
+    background:rgba(255,255,255,.10);
+    -webkit-backdrop-filter:brightness(1.2) saturate(1.3) blur(2px);
+    backdrop-filter:brightness(1.2) saturate(1.3) blur(2px);
     box-shadow:
-      inset 0 0 0 1px rgba(255,255,255,.22),
-      inset 0 1px 0 rgba(255,255,255,.38),
-      inset 0 -1px 0 rgba(0,0,0,.10),
-      0 6px 16px -8px rgba(0,0,0,.45);
+      inset  1px  1px 0    rgba(0,255,255,.34),     /* cian, arriba-izquierda */
+      inset -1px -1px 0    rgba(255,0,255,.30),     /* magenta, abajo-derecha */
+      inset  0    0   0 1px rgba(255,255,255,.26),  /* aro blanco fino */
+      inset  0    6px 12px rgba(255,255,255,.10),   /* brillo interior */
+       1px  0   6px         rgba(0,255,255,.16),    /* halo cian por fuera */
+      -1px  0   6px         rgba(255,0,255,.16),    /* halo magenta por fuera */
+       0    8px 18px -8px   rgba(0,0,0,.45);        /* caída corta */
     opacity:0;
     pointer-events:none;
     transform:translate(0,0);
     transition:
-      transform .3s cubic-bezier(.25,1,.5,1),
-      width     .3s cubic-bezier(.25,1,.5,1),
-      height    .3s cubic-bezier(.25,1,.5,1),
-      opacity   .22s ease;
-    will-change:transform,width,height;
+      transform .45s cubic-bezier(.34,1.56,.64,1),
+      width     .45s cubic-bezier(.34,1.56,.64,1),
+      height    .45s cubic-bezier(.34,1.56,.64,1),
+      opacity   .25s ease;
+    animation:respira 7s ease-in-out infinite;
+    will-change:transform,width,height,border-radius;
   }
-  /* Filo iridiscente: un anillo de 1 px con degradado cónico, recortado con mask. */
-  .burbuja::before{
-    content:''; position:absolute; inset:0; border-radius:inherit; padding:1px;
-    background:conic-gradient(from 210deg,
-      rgba(255,255,255,.55), rgba(201,138,45,.45), rgba(255,255,255,.15),
-      rgba(120,220,190,.45), rgba(255,255,255,.55));
-    -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite:xor; mask-composite:exclude;
-    opacity:.7;
+  /* La gota respira: los ocho radios no se quedan quietos nunca. */
+  @keyframes respira{
+    0%   { border-radius:60% 40% 30% 70% / 60% 30% 70% 40%; }
+    25%  { border-radius:35% 65% 60% 40% / 50% 45% 55% 50%; }
+    50%  { border-radius:50% 50% 40% 60% / 40% 60% 60% 40%; }
+    75%  { border-radius:42% 58% 65% 35% / 65% 35% 45% 55%; }
+    100% { border-radius:60% 40% 30% 70% / 60% 30% 70% 40%; }
   }
-  .burbuja.visible{ opacity:1; }
-  .burbuja.salta{ transition:opacity .22s ease; }
-  @media (prefers-reduced-motion:reduce){ .burbuja{ transition:opacity .2s ease; } }
-  @media (max-width:1050px){ .burbuja{ display:none; } }
+  .gota.visible{ opacity:1; }
+  /* Al reaparecer tras salir del menú se coloca SIN deslizarse desde donde estaba. */
+  .gota.salta{ transition:opacity .25s ease; }
+  @media (prefers-reduced-motion:reduce){
+    .gota{ animation:none; border-radius:50px; transition:opacity .2s ease; }
+    nav .links > a{ transition:color .2s ease; }
+    nav .links a.lupa{ transform:none; }
+  }
+  @media (max-width:1050px){ .gota{ display:none; } }
   /* En móvil el botón se salía por la derecha y el selector de idioma se cortaba: con
      los enlaces ya ocultos, lo que sobra es el padding del botón y el hueco del flex. */
   @media (max-width:560px){
@@ -1050,7 +1060,7 @@
 <nav><div class="wrap">
   <a class="logo" href="#" aria-label="Audutor, home"><span class="wm">Audutor<svg class="ruta" viewBox="0 0 100 14" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M1 10.5 Q 24 5 46 9 T 86 8"/><path class="rpin" d="M93 1.2c-2.6 0-4.7 2.1-4.7 4.7 0 3.4 4.7 7.5 4.7 7.5s4.7-4.1 4.7-7.5c0-2.6-2.1-4.7-4.7-4.7z"/><circle class="rhueco" cx="93" cy="6" r="1.8"/></svg></span></a>
   <div class="links">
-    <span class="burbuja" aria-hidden="true"></span>
+    <div class="gota" aria-hidden="true"></div>
     <a href="#producto" data-i18n="nav.producto">Product</a>
     <a href="#asistente" data-i18n="nav.asistente">The assistant</a>
     <a href="#agente">The agent</a>
@@ -1962,50 +1972,57 @@ document.addEventListener('DOMContentLoaded', function(){
 
 </script>
 <script>
-/* La burbuja del menú: un solo oyente en `.links` (pointerover burbujea desde cualquier
-   enlace). Las medidas son relativas al marco, así el menú pegajoso no la descoloca.
-   Entre dos enlaces el objetivo es el propio contenedor y no se hace nada: la burbuja se
-   queda quieta hasta el siguiente. Sobre los botones y el idioma, se apaga. Con Tab sigue
-   al foco. */
+/* La lupa líquida del menú: mouseenter por enlace, medidas con getBoundingClientRect
+   relativas al marco `.links` (el menú pegajoso no la descoloca). El enlace se mide SIN
+   escalar y la gota se hace del tamaño del enlace ya crecido más un margen: es una lente
+   que rebasa el texto. Sobre los botones y el idioma se apaga; con Tab sigue al foco. */
 (() => {
   const links = document.querySelector('nav .links');
-  const burbuja = links && links.querySelector('.burbuja');
-  if (!links || !burbuja) return;
-  const OBJETIVO = 'a:not(.btn)';
+  const gota = links && links.querySelector('.gota');
+  if (!links || !gota) return;
+  const enlaces = [...links.querySelectorAll('a:not(.btn)')];
+  const ESCALA = 1.15;                 // la misma de `.lupa` en el CSS
   let visible = false, actual = null;
   function mueve(a) {
+    if (actual && actual !== a) actual.classList.remove('lupa');
+    a.classList.remove('lupa');        // se mide sin escalar
     const marco = links.getBoundingClientRect();
     const r = a.getBoundingClientRect();
-    burbuja.style.width  = r.width + 'px';
-    burbuja.style.height = r.height + 'px';
-    burbuja.style.transform = 'translate(' + (r.left - marco.left) + 'px, ' + (r.top - marco.top) + 'px)';
+    const holguraX = r.width  * (ESCALA - 1) / 2 + 6;
+    const holguraY = r.height * (ESCALA - 1) / 2 + 3;
+    gota.style.width  = (r.width  + holguraX * 2) + 'px';
+    gota.style.height = (r.height + holguraY * 2) + 'px';
+    gota.style.transform = 'translate(' + (r.left - marco.left - holguraX) + 'px, ' +
+                                          (r.top  - marco.top  - holguraY) + 'px)';
+    a.classList.add('lupa');
     actual = a;
   }
   function muestra(a) {
     if (visible) { mueve(a); return; }
-    burbuja.classList.add('salta');   // reaparece sobre el enlace, sin deslizarse desde el último sitio
+    gota.classList.add('salta');       // reaparece sobre el enlace, sin deslizarse
     mueve(a);
-    void burbuja.offsetWidth;         // reflow antes de reactivar la transición
-    burbuja.classList.remove('salta');
+    void gota.offsetWidth;             // reflow antes de reactivar la transición
+    gota.classList.remove('salta');
     visible = true;
-    burbuja.classList.add('visible');
+    gota.classList.add('visible');
   }
-  function esconde() { visible = false; actual = null; burbuja.classList.remove('visible'); }
-  links.addEventListener('pointerover', (e) => {
-    const a = e.target.closest(OBJETIVO);
-    if (a && links.contains(a)) { muestra(a); return; }
-    if (e.target.closest('.btn, .lang-sw')) esconde();
+  function esconde() {
+    visible = false;
+    if (actual) actual.classList.remove('lupa');
+    actual = null;
+    gota.classList.remove('visible');
+  }
+  enlaces.forEach(a => {
+    a.addEventListener('mouseenter', () => muestra(a));
+    a.addEventListener('focus', () => muestra(a));
   });
-  links.addEventListener('pointerleave', esconde);
-  links.addEventListener('focusin', (e) => {
-    const a = e.target.closest(OBJETIVO);
-    if (a) muestra(a); else esconde();
-  });
+  links.addEventListener('mouseleave', esconde);
+  links.querySelectorAll('.btn, .lang-sw').forEach(b => b.addEventListener('mouseenter', esconde));
   links.addEventListener('focusout', (e) => { if (!links.contains(e.relatedTarget)) esconde(); });
   const recoloca = () => {
     if (!visible || !actual) return;
-    burbuja.classList.add('salta'); mueve(actual);
-    void burbuja.offsetWidth; burbuja.classList.remove('salta');
+    gota.classList.add('salta'); mueve(actual);
+    void gota.offsetWidth; gota.classList.remove('salta');
   };
   window.addEventListener('resize', recoloca);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(recoloca);

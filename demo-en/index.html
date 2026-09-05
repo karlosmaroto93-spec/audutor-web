@@ -97,6 +97,58 @@
     padding:9px 10px; border-radius:9px; font-size:13px; font-weight:600; margin-bottom:2px;
     transition:background .14s, color .14s; }
   aside nav a:hover{ background:rgba(255,255,255,.09); color:#fff; }
+  /* ===== La lupa líquida del menú lateral =====
+     La misma gota de cristal que en la web y en el panel del producto: se desliza entre las
+     entradas con una curva elástica, respira, aclara el verde de debajo, lleva filo
+     cian/magenta y AUMENTA un poco la entrada que tiene encima (un 4 %, desde la
+     izquierda: en una columna de 225 px el 15 % de la web se saldría). La activa no lleva
+     gota: ya es de otro material. El script va al final de la página. */
+  #nav-princ{ position:relative; }
+  #nav-princ > *:not(.gota){ position:relative; z-index:1; }
+  #nav-princ a, #nav-princ .nav-g-cab{ transform-origin:left center;
+    transition:transform .4s cubic-bezier(.34,1.56,.64,1), background .14s, color .14s; }
+  #nav-princ a:not(.act):hover, #nav-princ .nav-g-cab:hover{ background:transparent; }
+  #nav-princ .lupa{ color:#fff; transform:scale(1.04); }
+  .gota{
+    position:absolute; top:0; left:0; z-index:0;
+    width:0; height:0;
+    background:rgba(255,255,255,.10);
+    -webkit-backdrop-filter:brightness(1.2) saturate(1.3) blur(2px);
+    backdrop-filter:brightness(1.2) saturate(1.3) blur(2px);
+    box-shadow:
+      inset  1px  1px 0    rgba(0,255,255,.34),     /* cian, arriba-izquierda */
+      inset -1px -1px 0    rgba(255,0,255,.30),     /* magenta, abajo-derecha */
+      inset  0    0   0 1px rgba(255,255,255,.26),  /* aro blanco fino */
+      inset  0    6px 12px rgba(255,255,255,.10),   /* brillo interior */
+       1px  0   6px         rgba(0,255,255,.16),    /* halo cian por fuera */
+      -1px  0   6px         rgba(255,0,255,.16),    /* halo magenta por fuera */
+       0    8px 18px -8px   rgba(0,0,0,.45);        /* caída corta */
+    opacity:0;
+    pointer-events:none;
+    transform:translate(0,0);
+    transition:
+      transform .45s cubic-bezier(.34,1.56,.64,1),
+      width     .45s cubic-bezier(.34,1.56,.64,1),
+      height    .45s cubic-bezier(.34,1.56,.64,1),
+      opacity   .25s ease;
+    animation:respira 7s ease-in-out infinite;
+    will-change:transform,width,height,border-radius;
+  }
+  /* La gota respira: los ocho radios no se quedan quietos nunca. */
+  @keyframes respira{
+    0%   { border-radius:60% 40% 30% 70% / 60% 30% 70% 40%; }
+    25%  { border-radius:35% 65% 60% 40% / 50% 45% 55% 50%; }
+    50%  { border-radius:50% 50% 40% 60% / 40% 60% 60% 40%; }
+    75%  { border-radius:42% 58% 65% 35% / 65% 35% 45% 55%; }
+    100% { border-radius:60% 40% 30% 70% / 60% 30% 70% 40%; }
+  }
+  .gota.visible{ opacity:1; }
+  /* Al reaparecer tras salir del menú se coloca SIN deslizarse desde donde estaba. */
+  .gota.salta{ transition:opacity .25s ease; }
+  @media (prefers-reduced-motion:reduce){
+    .gota{ animation:none; border-radius:9px; transition:opacity .2s ease; }
+    #nav-princ .lupa{ transform:none; }
+  }
   /* El activo, en CREMA y no en más verde: sobre fondo verde, un verde más claro es un
      matiz y el ojo no lo pilla de reojo. El crema es el mismo tono del área de contenido,
      así que el activo dice algo además de destacar: es la página en la que estás, del
@@ -871,6 +923,7 @@
   <div class="tenant"><span class="ini-emp" aria-hidden="true">OT</span><span class="txt"><b>Old Town Walks</b><small>Edinburgh · fictional company</small></span></div>
   <button class="nav-hamb" onclick="menuMovil()" aria-expanded="false" aria-controls="nav-princ"><span aria-hidden="true">☰</span><span class="hamb-txt">Menu</span></button>
 <nav id="nav-princ">
+    <div class="gota" aria-hidden="true"></div>
     <a href="#operaciones" data-v="operaciones" class="act destacada">🗞️ Dashboard <span class="n" id="n-exc">6</span></a>
     <div class="nav-g" id="ng-dia">
       <button class="nav-g-cab" onclick="this.parentElement.classList.toggle('abierto')">📅 Day to day <span class="flecha">▾</span></button>
@@ -9695,6 +9748,66 @@ function sembrarProy(){
 pintaManifiesto(); pintaNoshowCfg(); pintaNoshow(); pintaLiq(); pintaCerebro(); pintaCombosDestinatarios(); pintaPost(); sembrarProy(); pintaEquipo(); pintaCanales(); pintaOperaciones();
 pintaGatesInline(); pintaWaTope(); pintaCanalChat(); pintaPropCfg(); pintaCoste();
 msg('bot','Hi! 👋 I’m GuIA, the automated assistant answering this chat. Right now I answer about “'+tourChat().nombre+'” — try the examples, or create another tour under 🧠 Brain and you’ll see each one has its own brain, with nothing mixed in.');
+</script>
+<script>
+/* La lupa líquida del menú lateral: una gota por menú, un solo oyente en el marco. */
+function lupaLiquida(marco, selector, opciones) {
+  const { escala = 1.04, holgura = [4, 2], saltar = '.act' } = opciones || {};
+  if (!marco) return;
+  /* La gota puede venir escrita en el HTML (la demo) o crearse aquí (el mando). Si ya
+     tiene sus oyentes puestos, no se repite: una gota por menú. */
+  let gota = marco.querySelector(':scope > .gota');
+  if (gota && gota.__lupa) return;
+  if (!gota) {
+    gota = document.createElement('div');
+    gota.className = 'gota';
+    gota.setAttribute('aria-hidden', 'true');
+    marco.prepend(gota);
+  }
+  gota.__lupa = true;
+  let visible = false, actual = null;
+  function mueve(a) {
+    if (actual && actual !== a) actual.classList.remove('lupa');
+    a.classList.remove('lupa');        // se mide sin escalar
+    const m = marco.getBoundingClientRect();
+    const r = a.getBoundingClientRect();
+    /* La entrada crece desde su borde IZQUIERDO (transform-origin:left center): el margen
+       de la izquierda es fijo y el ancho de la gota cubre la entrada ya crecida. En
+       vertical crece desde el centro, y el margen se reparte. */
+    const hy = r.height * (escala - 1) / 2 + holgura[1];
+    gota.style.width  = (r.width * escala + holgura[0] * 2) + 'px';
+    gota.style.height = (r.height + hy * 2) + 'px';
+    gota.style.transform = 'translate(' + (r.left - m.left - holgura[0]) + 'px, ' + (r.top - m.top - hy) + 'px)';
+    a.classList.add('lupa');
+    actual = a;
+  }
+  function muestra(a) {
+    if (visible) { mueve(a); return; }
+    gota.classList.add('salta');       // reaparece sobre la entrada, sin deslizarse
+    mueve(a);
+    void gota.offsetWidth;
+    gota.classList.remove('salta');
+    visible = true;
+    gota.classList.add('visible');
+  }
+  function esconde() {
+    visible = false;
+    if (actual) actual.classList.remove('lupa');
+    actual = null;
+    gota.classList.remove('visible');
+  }
+  const entra = (e) => {
+    const a = e.target.closest(selector);
+    if (!a || !marco.contains(a)) return;
+    if (saltar && a.matches(saltar)) { esconde(); return; }   // la activa ya es de otro material
+    muestra(a);
+  };
+  marco.addEventListener('pointerover', entra);
+  marco.addEventListener('focusin', entra);
+  marco.addEventListener('pointerleave', esconde);
+  marco.addEventListener('focusout', (e) => { if (!marco.contains(e.relatedTarget)) esconde(); });
+}
+lupaLiquida(document.getElementById('nav-princ'), 'a[data-v], .nav-g-cab');
 </script>
 </body>
 </html>
