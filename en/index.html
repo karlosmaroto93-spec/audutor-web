@@ -113,7 +113,7 @@
     --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
   }
   *{ box-sizing:border-box; }
-  html{ scroll-behavior:smooth; }
+  html{ scroll-behavior:smooth; scroll-padding-top:100px; }
   body{ margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans);
         font-size:17px; line-height:1.6; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
   .wrap{ max-width:1200px; margin:0 auto; padding:0 24px; }
@@ -258,7 +258,7 @@
   .btn:hover{ background:var(--coral2); transform:translateY(-1px); }
   .btn.sec{ background:transparent; color:var(--acc) !important; border:1.5px solid var(--acc); }
   .btn.sec:hover{ background:var(--acc-soft); box-shadow:none; }
-  @media (max-width:720px){ nav .links a:not(.btn){ display:none; } }
+  @media (max-width:1050px){ nav .links a:not(.btn){ display:none; } }
 
   /* ===== Barra verde bosque =====
      Va DESPUÉS de las reglas base del nav a propósito: `nav .links a` tiene la misma
@@ -884,6 +884,9 @@
   .para-quien{ margin-top:10px; font-size:13px; color:var(--muted); }
   .para-quien span{ font-family:var(--mono); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase;
     color:var(--acc); margin-right:8px; }
+  /* Foco visible con teclado: antes dependía del anillo por defecto, que el reset se comía. */
+  :focus-visible{ outline:3px solid var(--deep); outline-offset:4px; }
+  nav :focus-visible{ outline-color:var(--coral); }
 </style>
 </head>
 <body>
@@ -1050,7 +1053,7 @@
     <div class="cifra reveal" style="--d:180ms"><span class="v">Tour by tour</span><span class="l">you see what came in, what the platform took and what’s left. No spreadsheet.</span></div>
     <div class="cifra reveal" style="--d:270ms"><span class="v">0%</span><span class="l">commission on your bookings. We’re not an OTA and we don’t belong to one.</span><span class="f">Flat subscription: no per-booking commission</span></div>
   </div>
-<p class="lee-de">Reads the booking emails you get from <b>GuruWalk</b><b>Civitatis</b><b>FreeTour</b> and the bookings from your own website. No API, nothing copied by hand.</p>
+<p class="lee-de">Reads the booking emails you get from <b>GuruWalk</b><b>Civitatis</b><b>FreeTour</b> and the bookings from your own website. Unrecognised formats are held for review.</p>
   <p class="para-quien"><span>Built for</span>free tours · guided walks · food tours · private tours · any activity with a meeting point</p>
 </div></header>
 
@@ -1068,7 +1071,7 @@
       manifest instantly.</p></div>
     <div class="celda star reveal" style="--d:70ms"><span class="operacion-num">02 · Find</span><h3>Finding the stragglers</h3>
       <p>The guide shares their location with one tap and whoever got lost gets the map —
-      without anyone handing out the guide's number.</p><span class="mini">only in Audutor</span></div>
+      without anyone handing out the guide's number.</p></div>
     <div class="celda star reveal" style="--d:140ms"><span class="operacion-num">03 · Group</span><h3>Groups, with your policy</h3>
       <p>Platforms split groups across several bookings: the system puts back together the
       ones sharing a surname that came in minutes apart, and flags them to the guide with
@@ -1309,10 +1312,8 @@
         <span class="tf-p">+€39</span></label>
       <details class="tf-mas"><summary>What it does, exactly</summary>
         <ul>
-          <li>It answers in your website chat, <b>in whatever language people write in</b>.</li>
-          <li>Only from what you put in its <b>57 fields</b> — it asks for <b>24 to get
-            going</b>: meeting point, times, duration, where it ends, how to spot the guide,
-            rain, children, dogs, accessibility, what to bring, cancellations…</li>
+          <li>It answers in your website chat, <b>in Spanish and English</b>.</li>
+          <li>It answers using facts you have confirmed. Start with the meeting point, departure time and how to recognise the guide. Complete the rest gradually and test the answers before publishing.</li>
           <li>What it does not know <b>it hands to you</b> — and logs it in a list sorted by how many
             times you have been asked, so you know what to answer first.</li>
           <li>You answer it once and from then on it answers. <b>That question stops reaching
@@ -1440,9 +1441,8 @@
       <p>It can see who has checked in and where the guide is right now. So when someone writes
       <b>«I'm lost»</b>, it sends them the live map — never the guide's number.</p>
       <span class="mini">a booking engine cannot answer this: it hasn’t got the data</span></div>
-    <div class="celda star reveal" style="--d:140ms"><span class="eti-num">03 · Their language</span><h3>Write it once, answer in their language</h3>
-      <p>A German asks in German and gets your meeting point in German. If a fact isn't translated yet,
-      it would rather hand the question to you than mix two languages in one sentence.</p>
+    <div class="celda star reveal" style="--d:140ms"><span class="eti-num">03 · Their language</span><h3>Spanish and English, with a clear handoff for other languages</h3>
+      <p>It answers in Spanish and English. When it detects another language, it notifies the traveller in that language and passes the labelled question to a person. Missing confirmed facts are handed over too.</p>
       <span class="mini">each fact is translated once and cached, so it costs nothing to repeat</span></div>
   </div>
   <p class="reveal" style="text-align:center; color:var(--muted); font-size:13px; margin:20px 0 0;">
@@ -1461,9 +1461,9 @@
   <div class="grid3">
     <div class="celda star reveal"><span class="eti-num">01 · Counts</span><h3>It counts what each one has on its books</h3>
       <p>It signs into the panels and checks how many people each platform has down. If one has
-      three more than you do, <b>those are three bookings that never reached your inbox</b> — and
+      three more than you do, <b>there is a difference to check with the platform</b> — and
       you know today, not when they turn up.</p>
-      <span class="mini">it is the only thing that can find out about an email that never arrived</span></div>
+      <span class="mini">checks the manifest against the platform's information</span></div>
     <div class="celda star reveal" style="--d:70ms"><span class="eti-num">02 · Closes</span><h3>It closes departures that are full</h3>
       <p>When a tour fills up you have to close it on every panel, and if you're slow people
       book seats that aren't there. The agent does it for you — but <b>here it still shows as

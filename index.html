@@ -113,7 +113,7 @@
     --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
   }
   *{ box-sizing:border-box; }
-  html{ scroll-behavior:smooth; }
+  html{ scroll-behavior:smooth; scroll-padding-top:100px; }
   body{ margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans);
         font-size:17px; line-height:1.6; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
   .wrap{ max-width:1200px; margin:0 auto; padding:0 24px; }
@@ -258,7 +258,7 @@
   .btn:hover{ background:var(--coral2); transform:translateY(-1px); }
   .btn.sec{ background:transparent; color:var(--acc) !important; border:1.5px solid var(--acc); }
   .btn.sec:hover{ background:var(--acc-soft); box-shadow:none; }
-  @media (max-width:720px){ nav .links a:not(.btn){ display:none; } }
+  @media (max-width:1050px){ nav .links a:not(.btn){ display:none; } }
 
   /* ===== Barra verde bosque =====
      Va DESPUÉS de las reglas base del nav a propósito: `nav .links a` tiene la misma
@@ -891,6 +891,9 @@
   .para-quien{ margin-top:10px; font-size:13px; color:var(--muted); }
   .para-quien span{ font-family:var(--mono); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase;
     color:var(--acc); margin-right:8px; }
+  /* Foco visible con teclado: antes dependía del anillo por defecto, que el reset se comía. */
+  :focus-visible{ outline:3px solid var(--deep); outline-offset:4px; }
+  nav :focus-visible{ outline-color:var(--coral); }
 </style>
 </head>
 <body>
@@ -1061,7 +1064,7 @@
     <div class="cifra reveal" style="--d:180ms"><span class="v">Tour a tour</span><span class="l">sabes lo que entra, lo que se lleva la plataforma y lo que queda. Sin hoja de cálculo.</span></div>
     <div class="cifra reveal" style="--d:270ms"><span class="v">0 %</span><span class="l">de comisión por tus reservas. No somos una OTA ni pertenecemos a ninguna.</span></div>
   </div>
-<p class="lee-de">Lee las reservas que te llegan por correo de <b>GuruWalk</b><b>Civitatis</b><b>FreeTour</b> y las de tu propia web. Sin API y sin copiar nada a mano.</p>
+<p class="lee-de">Lee las reservas que te llegan por correo de <b>GuruWalk</b><b>Civitatis</b><b>FreeTour</b> y las de tu propia web. Los formatos no reconocidos quedan para revisión.</p>
   <p class="para-quien"><span>Hecho para</span>free tours · visitas guiadas · rutas gastronómicas · tours privados · cualquier actividad con punto de encuentro</p>
 </div></header>
 
@@ -1081,7 +1084,7 @@
       como un semáforo.</p></div>
     <div class="celda star reveal" style="--d:70ms"><span class="operacion-num">02 · Encontrar</span><h3>Rescate de rezagados</h3>
       <p>El guía comparte su ubicación con un botón y quien se ha perdido recibe el mapa
-      —sin que nadie le dé su teléfono—.</p><span class="mini">solo en Audutor</span></div>
+      —sin que nadie le dé su teléfono—.</p></div>
     <div class="celda star reveal" style="--d:140ms"><span class="operacion-num">03 · Juntar</span><h3>Grupos, con tu política</h3>
       <p>Las plataformas parten los grupos en varias reservas: el sistema junta las del
       mismo apellido que entraron con minutos de diferencia y se lo avisa al guía con tu
@@ -1362,10 +1365,8 @@
         <span class="tf-p">+39 €</span></label>
       <details class="tf-mas"><summary>Qué hace, exactamente</summary>
         <ul>
-          <li>Contesta en el chat de tu web, <b>en el idioma en que le escriban</b>.</li>
-          <li>Solo con lo que tú has puesto en sus <b>57 casillas</b> —te pide <b>24 para empezar</b> y el resto van cuando quieras—: punto de encuentro, horarios,
-            duración, dónde acaba, cómo reconocer al guía, cuánto espera, si llueve, niños, mascotas,
-            accesibilidad, baños, qué llevar, cancelaciones, cómo se paga al final…</li>
+          <li>Contesta en el chat de tu web, <b>en español e inglés</b>.</li>
+          <li>Responde con los datos que has confirmado. Empieza por el punto de encuentro, el horario y cómo reconocer al guía; puedes completar los demás datos poco a poco y probar las respuestas antes de publicar.</li>
           <li>Lo que no sabe <b>te lo pasa a ti</b> — y te lo apunta en una lista ordenada por cuántas
             veces se lo han preguntado, para que sepas qué contestar primero.</li>
           <li>Se lo contestas una vez y a partir de ahí lo contesta él. <b>Esa pregunta deja de
@@ -1494,9 +1495,8 @@
       <p>Ve quién ha llegado y dónde está el guía ahora mismo — y por eso puede rescatar al
       que se pierde sin que nadie llame a nadie.</p>
       <span class="mini">un motor de reservas no puede contestar esto: no tiene el dato</span></div>
-    <div class="celda star reveal" style="--d:140ms"><span class="eti-num">03 · Su idioma</span><h3>Lo escribes una vez, contesta en el idioma del cliente</h3>
-      <p>Un alemán pregunta en alemán y recibe tu punto de encuentro en alemán. Si un dato aún no está
-      traducido, prefiere pasártelo antes que mezclar dos idiomas en la misma frase.</p>
+    <div class="celda star reveal" style="--d:140ms"><span class="eti-num">03 · Su idioma</span><h3>Español e inglés, con una salida clara para otros idiomas</h3>
+      <p>Contesta en español e inglés. Si detecta otro idioma, avisa al viajero en ese idioma y pasa la pregunta etiquetada a una persona. Si falta un dato confirmado, también lo deriva.</p>
       </div>
   </div>
   <p class="reveal" style="text-align:center; color:var(--muted); font-size:13px; margin:20px 0 0;">
@@ -1523,9 +1523,9 @@
   <div class="grid3">
     <div class="celda star reveal"><span class="eti-num">01 · Cuenta</span><h3>Cuenta lo que le consta a cada una</h3>
       <p>Entra en los paneles y mira cuánta gente tiene apuntada cada plataforma. Si a una le
-      constan tres personas más que a ti, <b>son tres reservas que no llegaron a tu correo</b> —
+      constan tres personas más que a ti, <b>hay una diferencia que revisar con la plataforma</b> —
       y lo sabes hoy, no cuando aparezcan.</p>
-      <span class="mini">es lo único que puede enterarse de un correo que nunca llegó</span></div>
+      <span class="mini">contrasta el manifiesto con la información de la plataforma</span></div>
     <div class="celda star reveal" style="--d:70ms"><span class="eti-num">02 · Cierra</span><h3>Cierra las salidas llenas</h3>
       <p>Cuando un tour se llena hay que cerrarlo en cada panel, y si tardas entra gente que
       ya no cabe. El agente lo hace solo — pero <b>aquí sigue como no cerrada hasta que lo
