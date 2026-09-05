@@ -437,6 +437,21 @@
   .mock-panel{ padding:14px 16px 16px; }
   .mock-panel[hidden]{ display:none; }
   .mock-row .n{ font-family:var(--mono); font-weight:700; color:var(--ink); }
+  /* ===== La hoja del hero responde =====
+     Los números de la hoja suben desde cero al cargar y al cambiar de momento, y los «✓ en
+     el punto» se dibujan trazo a trazo, uno detrás de otro. Es el mismo cuidado que hay en
+     el panel, enseñado en la web. */
+  .mock-row .tick{ width:13px; height:13px; vertical-align:-2px; margin-right:3px; fill:none;
+    stroke:#16a34a; stroke-width:3; stroke-linecap:round; stroke-linejoin:round; overflow:visible; }
+  .mock-row .tick path{ stroke-dasharray:24; stroke-dashoffset:24;
+    animation:traza .5s ease-out forwards; animation-delay:calc(var(--i,0) * 260ms + 350ms); }
+  @keyframes traza{ to{ stroke-dashoffset:0; } }
+  .cuenta-cambia{ display:inline-block; animation:cuenta-brilla .9s cubic-bezier(.22,1,.36,1); }
+  @keyframes cuenta-brilla{ 0%,35%{ color:var(--acc); transform:translateY(-2px); } 100%{ transform:none; } }
+  @media (prefers-reduced-motion:reduce){
+    .mock-row .tick path{ animation:none; stroke-dashoffset:0; }
+    .cuenta-cambia{ animation:none; }
+  }
   .mock-total{ display:flex; justify-content:space-between; align-items:baseline; padding:10px 8px 0;
     border-top:1px solid var(--line); margin-top:6px; color:var(--ink2); }
   .mock-total b{ font-family:var(--serif); font-size:27px; color:var(--deep); }
@@ -1129,26 +1144,26 @@
         <div class="mock-panel" id="hoja-reservas" role="tabpanel" aria-labelledby="tab-reservas" hidden>
           <div class="mock-head"><span><span class="hora-m">08:41</span> · antes de salir</span> <span class="chipv">4 reservas</span></div>
           <div class="mock-sem">Cada canal, en su sitio. Nadie ha copiado nada de ninguna extranet.</div>
-          <div class="mock-row"><span>GuruWalk · 2 reservas</span><span class="n">9p</span></div>
-          <div class="mock-row"><span>Civitatis · 1 reserva</span><span class="n">3p</span></div>
-          <div class="mock-row"><span>Tu web · 1 reserva</span><span class="n">2p</span></div>
-          <div class="mock-total"><span>Personas esperadas</span><b>14</b></div>
+          <div class="mock-row"><span>GuruWalk · 2 reservas</span><span class="n" data-cuenta="res-0">9p</span></div>
+          <div class="mock-row"><span>Civitatis · 1 reserva</span><span class="n" data-cuenta="res-1">3p</span></div>
+          <div class="mock-row"><span>Tu web · 1 reserva</span><span class="n" data-cuenta="res-2">2p</span></div>
+          <div class="mock-total"><span>Personas esperadas</span><b data-cuenta="esperadas">14</b></div>
         </div>
         <div class="mock-panel" id="hoja-encuentro" role="tabpanel" aria-labelledby="tab-encuentro">
         <div class="mock-head"><span><span class="hora-m">10:00</span> · Free tour centro</span> <span class="chipv">en marcha</span></div>
         <div class="mock-sem">12/14 avisadas · ✓ 9 confirmadas · <b>1 llega tarde (3p)</b> · 2 sin responder</div>
-        <div class="mock-row ok"><span>Ana García · 4p</span><span>✓ en el punto</span></div>
+        <div class="mock-row ok" style="--i:0"><span>Ana García · 4p</span><span><svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>en el punto</span></div>
         <div class="mock-row"><span>Marco Bianchi · 2p</span><span>pendiente</span></div>
-        <div class="mock-row ok"><span>Familia Dupont · 5p</span><span>✓ en el punto</span></div>
+        <div class="mock-row ok" style="--i:1"><span>Familia Dupont · 5p</span><span><svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>en el punto</span></div>
         <button>Compartir dónde está el grupo</button>
         </div>
         <div class="mock-panel" id="hoja-cierre" role="tabpanel" aria-labelledby="tab-cierre" hidden>
           <div class="mock-head"><span><span class="hora-m">12:15</span> · al terminar</span> <span class="chipv">cierre</span></div>
           <div class="mock-sem">11 en el punto · el guía apunta la propina · <b>Audutor no toca ese dinero</b></div>
-          <div class="mock-row"><span>Propinas apuntadas</span><span class="n">132 €</span></div>
-          <div class="mock-row"><span>Coste de canal · 12 reservados en plataforma</span><span class="n">−30 €</span></div>
-          <div class="mock-row ok"><span>Para el guía</span><span class="n">51 €</span></div>
-          <div class="mock-row ok"><span>Para la empresa</span><span class="n">51 €</span></div>
+          <div class="mock-row"><span>Propinas apuntadas</span><span class="n" data-cuenta="cierre-0">132 €</span></div>
+          <div class="mock-row"><span>Coste de canal · 12 reservados en plataforma</span><span class="n" data-cuenta="cierre-1">−30 €</span></div>
+          <div class="mock-row ok"><span>Para el guía</span><span class="n" data-cuenta="cierre-2">51 €</span></div>
+          <div class="mock-row ok"><span>Para la empresa</span><span class="n" data-cuenta="cierre-3">51 €</span></div>
           <div class="mock-nota">Reparto al 50 % de ejemplo: tú fijas el tuyo. Por la noche se liquida sola.</div>
         </div>
         <a class="mock-abrir" href="demo/" data-demo>Abrir esta salida en la demo</a>
@@ -1185,7 +1200,8 @@
   if(!tabs.length) return;
   function activa(tab){ tabs.forEach(function(t){
     var si=t===tab; t.setAttribute('aria-selected',String(si)); t.tabIndex=si?0:-1;
-    document.getElementById(t.getAttribute('aria-controls')).hidden=!si; }); }
+    document.getElementById(t.getAttribute('aria-controls')).hidden=!si; });
+    if (window.cuentasHoja) window.cuentasHoja(document.getElementById(tab.getAttribute('aria-controls'))); }
   tabs.forEach(function(tab,i){
     tab.addEventListener('click',function(){ activa(tab); });
     tab.addEventListener('keydown',function(e){
@@ -2038,6 +2054,37 @@ document.addEventListener('DOMContentLoaded', function(){
   tarifa();
 });
 
+</script>
+<script>
+/* Los números de la hoja del hero suben desde cero (al cargar y al cambiar de momento):
+   es el mismo gesto que tienen los contadores del panel. Con prefers-reduced-motion se
+   ponen y ya. */
+(function(){
+  var quieto = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var ULTIMO = {};
+  function cuentas(raiz){
+    if (!raiz) return;
+    Array.prototype.forEach.call(raiz.querySelectorAll('[data-cuenta]'), function(el){
+      var clave = el.getAttribute('data-cuenta'), texto = el.textContent, m = /\d+/.exec(texto);
+      if (!m || /\d[.,]\d/.test(texto)) return;
+      var fin = parseInt(m[0], 10), pre = texto.slice(0, m.index), suf = texto.slice(m.index + m[0].length);
+      var habia = clave in ULTIMO, desde = habia ? ULTIMO[clave] : 0;
+      ULTIMO[clave] = fin;
+      if (desde === fin || quieto) return;
+      var t0 = performance.now(), dur = habia ? 480 : 700;
+      var pinta = function(v){ el.textContent = pre + Math.round(v) + suf; };
+      var paso = function(){
+        var x = Math.min(1, (performance.now() - t0) / dur), e = 1 - Math.pow(1 - x, 3);
+        pinta(desde + (fin - desde) * e);
+        if (x < 1) { requestAnimationFrame(paso); return; }
+        pinta(fin);
+      };
+      requestAnimationFrame(paso);
+    });
+  }
+  window.cuentasHoja = cuentas;
+  Array.prototype.forEach.call(document.querySelectorAll('.mock-panel:not([hidden])'), cuentas);
+})();
 </script>
 <script>
 /* La lupa líquida del menú: mouseenter por enlace, medidas con getBoundingClientRect

@@ -98,17 +98,17 @@
     transition:background .14s, color .14s; }
   aside nav a:hover{ background:rgba(255,255,255,.09); color:#fff; }
   /* ===== La lupa líquida del menú lateral =====
-     La misma gota de cristal que en la web y en el panel del producto: se desliza entre las
-     entradas con una curva elástica, respira, aclara el verde de debajo, lleva filo
-     cian/magenta y AUMENTA un poco la entrada que tiene encima (un 4 %, desde la
-     izquierda: en una columna de 225 px el 15 % de la web se saldría). La activa no lleva
-     gota: ya es de otro material. El script va al final de la página. */
+     La misma gota de cristal que en la web, pero QUIETA: en un menú que se usa para
+     trabajar, respirar y rebotar entorpecía. Aquí se desliza con una curva suave, no cambia
+     de forma ni agranda la entrada; conserva el cristal (aclara el verde de debajo) y el
+     filo cian/magenta. La activa no lleva gota —ya es de otro material— y al pulsar una
+     entrada la gota se retira. El script va al final de la página. */
   #nav-princ{ position:relative; }
   #nav-princ > *:not(.gota){ position:relative; z-index:1; }
   #nav-princ a, #nav-princ .nav-g-cab{ transform-origin:left center;
     transition:transform .4s cubic-bezier(.34,1.56,.64,1), background .14s, color .14s; }
   #nav-princ a:not(.act):hover, #nav-princ .nav-g-cab:hover{ background:transparent; }
-  #nav-princ .lupa{ color:#fff; transform:scale(1.04); }
+  #nav-princ .lupa{ color:#fff; }
   .gota{
     position:absolute; top:0; left:0; z-index:0;
     width:0; height:0;
@@ -127,27 +127,34 @@
     pointer-events:none;
     transform:translate(0,0);
     transition:
-      transform .45s cubic-bezier(.34,1.56,.64,1),
-      width     .45s cubic-bezier(.34,1.56,.64,1),
-      height    .45s cubic-bezier(.34,1.56,.64,1),
-      opacity   .25s ease;
-    animation:respira 7s ease-in-out infinite;
-    will-change:transform,width,height,border-radius;
+      transform .28s cubic-bezier(.22,1,.36,1),
+      width     .28s cubic-bezier(.22,1,.36,1),
+      height    .28s cubic-bezier(.22,1,.36,1),
+      opacity   .22s ease;
+    animation:none;
+    border-radius:9px;
+    will-change:transform,width,height;
   }
-  /* La gota respira: los ocho radios no se quedan quietos nunca. */
-  @keyframes respira{
-    0%   { border-radius:60% 40% 30% 70% / 60% 30% 70% 40%; }
-    25%  { border-radius:35% 65% 60% 40% / 50% 45% 55% 50%; }
-    50%  { border-radius:50% 50% 40% 60% / 40% 60% 60% 40%; }
-    75%  { border-radius:42% 58% 65% 35% / 65% 35% 45% 55%; }
-    100% { border-radius:60% 40% 30% 70% / 60% 30% 70% 40%; }
-  }
-  .gota.visible{ opacity:1; }
+    .gota.visible{ opacity:1; }
   /* Al reaparecer tras salir del menú se coloca SIN deslizarse desde donde estaba. */
   .gota.salta{ transition:opacity .25s ease; }
   @media (prefers-reduced-motion:reduce){
-    .gota{ animation:none; border-radius:9px; transition:opacity .2s ease; }
-    #nav-princ .lupa{ transform:none; }
+    .gota{ transition:opacity .2s ease; }
+  }
+  /* ===== Los detalles que hacen que la demo responda (como el panel) =====
+     Números que ruedan y brillan al cambiar, tarjetas que entran escalonadas al cambiar de
+     vista, y la fila que se acaba de marcar asienta. Todo se apaga con
+     prefers-reduced-motion. */
+  .cuenta-cambia{ display:inline-block; animation:cuenta-brilla .9s cubic-bezier(.22,1,.36,1); }
+  @keyframes cuenta-brilla{ 0%,35%{ color:var(--acc); transform:translateY(-2px); } 100%{ transform:none; } }
+  .vista.act .card{ animation:sube .45s cubic-bezier(.22,1,.36,1) both; animation-delay:calc(var(--i,0) * 40ms); }
+  @keyframes sube{ from{ opacity:0; transform:translateY(8px); } }
+  .att.recien{ animation:asienta .5s cubic-bezier(.34,1.56,.64,1); }
+  .att.recien .chk{ animation:brinca .45s cubic-bezier(.34,1.56,.64,1); }
+  @keyframes asienta{ 0%{ transform:none; } 30%{ transform:translateY(-4px); } 100%{ transform:none; } }
+  @keyframes brinca{ 0%{ transform:scale(.86); } 60%{ transform:scale(1.12); } 100%{ transform:none; } }
+  @media (prefers-reduced-motion:reduce){
+    .cuenta-cambia, .vista.act .card, .att.recien, .att.recien .chk{ animation:none; }
   }
   /* El activo, en CREMA y no en más verde: sobre fondo verde, un verde más claro es un
      matiz y el ojo no lo pilla de reojo. El crema es el mismo tono del área de contenido,
@@ -6679,6 +6686,7 @@ function cierraMenuMovil(){
 function ir(v){
   document.querySelectorAll('.vista').forEach(function(s){ s.classList.remove('act'); s.classList.remove('borroso'); });
   var sec=document.getElementById('v-'+v); sec.classList.add('act');
+  sec.querySelectorAll('.card').forEach(function(c, i){ c.style.setProperty('--i', String(Math.min(i, 10))); });
   document.querySelectorAll('aside nav a').forEach(function(a){
     a.classList.toggle('act', a.dataset.v===v); });
   history.replaceState(null,'','#'+v);
@@ -6834,9 +6842,10 @@ function pintaCuadroDia(){
     [tours.length, tours.length===1?'departure':'departures'],
     [pax, pax===1?'person':'people'],
     [enMarcha, enMarcha===1?'tour running':'tours running']
-  ].map(function(c){
-    return '<div><div class="n">'+c[0]+'</div><div class="e">'+c[1]+'</div></div>';
+  ].map(function(c, i){
+    return '<div><div class="n" data-cuenta="cd-'+i+'">'+c[0]+'</div><div class="e">'+c[1]+'</div></div>';
   }).join('');
+  if (cifras) cuentas(cifras);
 
   /* What needs a person, in plain words. If there is nothing, say so: "nothing pending" is
      information, and staying quiet only leaves the doubt of whether anyone looked. */
@@ -6897,10 +6906,11 @@ function pintaSeguimiento(){
     if(e==='llego') llego+=a.p; else if(e==='confirmado') conf++; else if(e==='tarde') tarde++; else pend++; });
   var CH={ llego:'👣 Here', confirmado:'✅ Confirmed', tarde:'🕐 Running late', pendiente:'⏳ No reply yet' };
   document.getElementById('seg-kpis').innerHTML=
-    '<div class="seg-kpi llego"><span class="n">'+llego+'</span><span class="l">checked in (people)</span></div>'+
-    '<div class="seg-kpi ok"><span class="n">'+conf+'</span><span class="l">confirmed</span></div>'+
-    '<div class="seg-kpi pend"><span class="n">'+pend+'</span><span class="l">no reply</span></div>'+
-    '<div class="seg-kpi tarde"><span class="n">'+tarde+'</span><span class="l">running late</span></div>';
+    '<div class="seg-kpi llego"><span class="n" data-cuenta="seg-llego">'+llego+'</span><span class="l">checked in (people)</span></div>'+
+    '<div class="seg-kpi ok"><span class="n" data-cuenta="seg-conf">'+conf+'</span><span class="l">confirmed</span></div>'+
+    '<div class="seg-kpi pend"><span class="n" data-cuenta="seg-pend">'+pend+'</span><span class="l">no reply</span></div>'+
+    '<div class="seg-kpi tarde"><span class="n" data-cuenta="seg-tarde">'+tarde+'</span><span class="l">running late</span></div>';
+  cuentas(document.getElementById('seg-kpis'));
   lista.innerHTML='';
   S.att.forEach(function(a){ var e=estadoSeg(a);
     var f=document.createElement('div'); f.className='seg-fila '+e;
@@ -7016,7 +7026,7 @@ function pintaManifiestoReal(){
     t.res.forEach(function(a){
       var dif=a.p-a.res0;
       var d=document.createElement('div');
-      d.className='att'+(a.ok?' ok':'')+(a.grupo?' grupo-marca':'')+(a.walkin?' walkin':'')+(dif&&!a.walkin?' aju':'');
+      d.className='att'+(a.ok?' ok':'')+(a===RECIEN_ATT?' recien':'')+(a.grupo?' grupo-marca':'')+(a.walkin?' walkin':'')+(dif&&!a.walkin?' aju':'');
       var difTxt = (dif&&!a.walkin) ? ' · <b style="color:'+(dif<0?'var(--rojo)':'var(--acc)')+';">booked '+a.res0+' → '+a.p+' ('+(dif>0?'+':'−')+Math.abs(dif)+')</b>' : '';
       d.innerHTML='<div class="info">'+(a.walkin?'➕ ':'')+a.n+' · '+a.p+'p'+
         '<small>'+a.canal+(a.tarde&&!a.ok?' · ⏰ said they’re running late':'')+
@@ -7028,7 +7038,7 @@ function pintaManifiestoReal(){
           '<button class="pax-b" data-d="1" title="one person more">+</button>'+
           '<button class="chk" title="Check in">'+'🧍'.repeat(Math.min(a.p,4)||1)+'</button>'+
         '</div>';
-      d.querySelector('.chk').onclick=function(){ a.ok=!a.ok; pintaManifiesto();
+      d.querySelector('.chk').onclick=function(){ a.ok=!a.ok; RECIEN_ATT=a; if (navigator.vibrate) { try { navigator.vibrate(8); } catch(e){} } pintaManifiesto(); RECIEN_ATT=null;
         if(a.ok) toast(a.n+' checked in ✓ — it shows on the dashboard straight away'); };
       d.querySelectorAll('.pax-b').forEach(function(b){ b.onclick=function(){ ajustarPax(t, a, +b.dataset.d); }; });
       mov.appendChild(d);
@@ -9750,9 +9760,38 @@ pintaGatesInline(); pintaWaTope(); pintaCanalChat(); pintaPropCfg(); pintaCoste(
 msg('bot','Hi! 👋 I’m GuIA, the automated assistant answering this chat. Right now I answer about “'+tourChat().nombre+'” — try the examples, or create another tour under 🧠 Brain and you’ll see each one has its own brain, with nothing mixed in.');
 </script>
 <script>
+/* Los detalles que hacen que la demo responda, iguales que en el panel (detalles.js): los
+   números marcados con data-cuenta suben desde cero y ruedan cuando cambian; la fila que se
+   acaba de marcar asienta. */
+var ULTIMO_CUENTA = {};
+function cuentas(raiz){
+  if (!raiz) return;
+  var quieto = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  raiz.querySelectorAll('[data-cuenta]').forEach(function(el){
+    var clave = el.dataset.cuenta, texto = el.textContent, m = /\d+/.exec(texto);
+    if (!m || /\d[.,]\d/.test(texto)) return;
+    var fin = parseInt(m[0], 10), pre = texto.slice(0, m.index), suf = texto.slice(m.index + m[0].length);
+    var habia = clave in ULTIMO_CUENTA, desde = habia ? ULTIMO_CUENTA[clave] : 0;
+    ULTIMO_CUENTA[clave] = fin;
+    if (desde === fin || quieto) return;
+    var t0 = performance.now(), dur = habia ? 480 : 650;
+    var pinta = function(v){ el.textContent = pre + Math.round(v) + suf; };
+    var paso = function(){
+      var x = Math.min(1, (performance.now() - t0) / dur), e = 1 - Math.pow(1 - x, 3);
+      pinta(desde + (fin - desde) * e);
+      if (x < 1) { requestAnimationFrame(paso); return; }
+      pinta(fin);
+      if (habia) { el.classList.add('cuenta-cambia'); setTimeout(function(){ el.classList.remove('cuenta-cambia'); }, 900); }
+    };
+    requestAnimationFrame(paso);
+  });
+}
+var RECIEN_ATT = null;
+</script>
+<script>
 /* La lupa líquida del menú lateral: una gota por menú, un solo oyente en el marco. */
 function lupaLiquida(marco, selector, opciones) {
-  const { escala = 1.04, holgura = [4, 2], saltar = '.act' } = opciones || {};
+  const { escala = 1, holgura = [4, 2], saltar = '.act' } = opciones || {};
   if (!marco) return;
   /* La gota puede venir escrita en el HTML (la demo) o crearse aquí (el mando). Si ya
      tiene sus oyentes puestos, no se repite: una gota por menú. */
@@ -9805,6 +9844,9 @@ function lupaLiquida(marco, selector, opciones) {
   marco.addEventListener('pointerover', entra);
   marco.addEventListener('focusin', entra);
   marco.addEventListener('pointerleave', esconde);
+  /* Al ELEGIR una entrada, pasa a ser la activa —otro material— y la gota se retira: si
+     no, la pastilla crema y el cristal se quedaban superpuestos. Vuelve al moverse a otra. */
+  marco.addEventListener('click', (e) => { if (e.target.closest(selector)) esconde(); });
   marco.addEventListener('focusout', (e) => { if (!marco.contains(e.relatedTarget)) esconde(); });
 }
 lupaLiquida(document.getElementById('nav-princ'), 'a[data-v], .nav-g-cab');
