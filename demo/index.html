@@ -2410,6 +2410,37 @@
 </div>
 
 <script>
+/* Los detalles que hacen que la demo responda, iguales que en el panel (detalles.js): los
+   números marcados con data-cuenta suben desde cero y ruedan cuando cambian; la fila que se
+   acaba de marcar asienta. Va ANTES del resto del código: el manifiesto y Operaciones los
+   usan al arrancar, y una función declarada en un script posterior no existe todavía
+   —así salió «No se ha podido pintar el manifiesto» en la demo en vivo. */
+var ULTIMO_CUENTA = {};
+function cuentas(raiz){
+  if (!raiz) return;
+  var quieto = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  raiz.querySelectorAll('[data-cuenta]').forEach(function(el){
+    var clave = el.dataset.cuenta, texto = el.textContent, m = /\d+/.exec(texto);
+    if (!m || /\d[.,]\d/.test(texto)) return;
+    var fin = parseInt(m[0], 10), pre = texto.slice(0, m.index), suf = texto.slice(m.index + m[0].length);
+    var habia = clave in ULTIMO_CUENTA, desde = habia ? ULTIMO_CUENTA[clave] : 0;
+    ULTIMO_CUENTA[clave] = fin;
+    if (desde === fin || quieto) return;
+    var t0 = performance.now(), dur = habia ? 480 : 650;
+    var pinta = function(v){ el.textContent = pre + Math.round(v) + suf; };
+    var paso = function(){
+      var x = Math.min(1, (performance.now() - t0) / dur), e = 1 - Math.pow(1 - x, 3);
+      pinta(desde + (fin - desde) * e);
+      if (x < 1) { requestAnimationFrame(paso); return; }
+      pinta(fin);
+      if (habia) { el.classList.add('cuenta-cambia'); setTimeout(function(){ el.classList.remove('cuenta-cambia'); }, 900); }
+    };
+    requestAnimationFrame(paso);
+  });
+}
+var RECIEN_ATT = null;
+</script>
+<script>
 /* ================= MOTOR MODULABLE DE MERCADO =================
    Audutor no es «software para free tours españoles»: es la capa operativa, y el
    mercado es configuración. Un preset define país, idioma, moneda, MODELO DE
@@ -10805,35 +10836,6 @@ msg('bot','¡Hola! 👋 Soy GuIA, el asistente automático que atiende este chat
    todo lo anterior. Va al FINAL a propósito — necesita que las funciones de pintado ya
    existan, y así la demo de ejemplo queda montada por debajo para poder volver a ella. */
 tdArranca();
-</script>
-<script>
-/* Los detalles que hacen que la demo responda, iguales que en el panel (detalles.js): los
-   números marcados con data-cuenta suben desde cero y ruedan cuando cambian; la fila que se
-   acaba de marcar asienta. */
-var ULTIMO_CUENTA = {};
-function cuentas(raiz){
-  if (!raiz) return;
-  var quieto = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  raiz.querySelectorAll('[data-cuenta]').forEach(function(el){
-    var clave = el.dataset.cuenta, texto = el.textContent, m = /\d+/.exec(texto);
-    if (!m || /\d[.,]\d/.test(texto)) return;
-    var fin = parseInt(m[0], 10), pre = texto.slice(0, m.index), suf = texto.slice(m.index + m[0].length);
-    var habia = clave in ULTIMO_CUENTA, desde = habia ? ULTIMO_CUENTA[clave] : 0;
-    ULTIMO_CUENTA[clave] = fin;
-    if (desde === fin || quieto) return;
-    var t0 = performance.now(), dur = habia ? 480 : 650;
-    var pinta = function(v){ el.textContent = pre + Math.round(v) + suf; };
-    var paso = function(){
-      var x = Math.min(1, (performance.now() - t0) / dur), e = 1 - Math.pow(1 - x, 3);
-      pinta(desde + (fin - desde) * e);
-      if (x < 1) { requestAnimationFrame(paso); return; }
-      pinta(fin);
-      if (habia) { el.classList.add('cuenta-cambia'); setTimeout(function(){ el.classList.remove('cuenta-cambia'); }, 900); }
-    };
-    requestAnimationFrame(paso);
-  });
-}
-var RECIEN_ATT = null;
 </script>
 <script>
 /* La lupa líquida del menú lateral: una gota por menú, un solo oyente en el marco. */
