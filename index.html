@@ -291,6 +291,25 @@
   nav .links a.btn.sec{ color:#fdf9ee !important; border-color:rgba(253,249,238,.62);
     background:transparent; }
   nav .links a.btn.sec:hover{ background:rgba(253,249,238,.16); border-color:#fdf9ee; }
+  /* «Probar la demo» tiene que MANDAR en la barra: en verde hondo sobre verde pasaba
+     desapercibido detrás de «Entrar» en crema. Va en el dorado de la casa con la tinta
+     oscura —el mismo par que el plan premium—, un punto más grande, y con su sombra. */
+  nav .links a.btn[data-demo]{
+    background:var(--gold); color:#231400 !important; font-weight:800; padding:11px 20px;
+    box-shadow:0 6px 16px -8px rgba(201,138,45,.9), 0 0 0 1px rgba(255,255,255,.12) inset;
+  }
+  nav .links a.btn[data-demo]:hover{ background:#d8983a; transform:translateY(-1px); }
+  nav .links a.btn.entrar{ background:transparent; color:#fdf9ee !important;
+    border:1.5px solid rgba(253,249,238,.55); font-weight:700; }
+  nav .links a.btn.entrar:hover{ background:rgba(253,249,238,.14); border-color:#fdf9ee; }
+  /* Y el principal del hero, en el mismo dorado, más grande: es el botón de la página. */
+  .hero-ctas .btn[data-demo]{
+    background:var(--gold); color:#231400 !important; font-size:17px; font-weight:800;
+    padding:15px 30px; border-radius:6px;
+    box-shadow:0 10px 24px -10px rgba(201,138,45,.85);
+  }
+  .hero-ctas .btn[data-demo]:hover{ background:#d8983a; transform:translateY(-2px);
+    box-shadow:0 14px 28px -10px rgba(201,138,45,.9); }
 
   /* ===== La lupa líquida del menú =====
      Una gota de cristal por DETRÁS de los enlaces (z-index 0 frente al 1 de ellos) que se

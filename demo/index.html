@@ -2439,6 +2439,21 @@ function cuentas(raiz){
   });
 }
 var RECIEN_ATT = null;
+/* El ancla: el mando pulsado se queda bajo el dedo aunque lo de encima cambie de alto al
+   repintar (el semáforo pasa a dos líneas cuando cambian los números). Igual que en el panel. */
+function ancla(el){ return el && el.isConnected && el.dataset && el.dataset.ancla ? { clave: el.dataset.ancla, top: el.getBoundingClientRect().top } : null; }
+function anclaRestaura(a){
+  if (!a) return;
+  var el = document.querySelector('[data-ancla="' + a.clave.replace(/"/g, '') + '"]');
+  if (!el) return;
+  var corrige = function(){
+    var el2 = document.querySelector('[data-ancla="' + a.clave.replace(/"/g, '') + '"]');
+    if (!el2) return;
+    var dy = el2.getBoundingClientRect().top - a.top;
+    if (Math.abs(dy) > 1) window.scrollBy(0, dy);
+  };
+  corrige(); requestAnimationFrame(corrige);
+}
 </script>
 <script>
 /* ================= MOTOR MODULABLE DE MERCADO =================
@@ -8497,7 +8512,7 @@ function pintaManifiestoReal(){
         (a.nsAuto?' · <b style="color:var(--rojo);">🚫 no-show (se marcó solo)</b>':'')+
         (a.pw?' · 💳 pago por confirmar':'')+
         (a.grupo?' · 👥 grupo':'')+(a.walkin?' · walk-in':'')+difTxt+'</small></div>'+
-        '<div class="fila" style="gap:4px; align-items:center;">'+
+        '<div class="fila" style="gap:4px; align-items:center;" data-ancla="att:'+String(a.n).replace(/"/g,'')+'">'+
           '<button class="pax-b" data-d="-1" title="una persona menos">−</button>'+
           '<button class="pax-b" data-d="1" title="una persona más">+</button>'+
           /* Los cuatro huecos siempre, los que sobran invisibles — igual que la app: el botón
@@ -8508,9 +8523,9 @@ function pintaManifiestoReal(){
               (i >= (Math.min(a.p,4)||1) ? ' style="visibility:hidden"' : '')+'>🧍</span>'; }).join('')+
           '</button>'+
         '</div>';
-      d.querySelector('.chk').onclick=function(){ a.ok=!a.ok; RECIEN_ATT=a; if (navigator.vibrate) { try { navigator.vibrate(8); } catch(e){} } pintaManifiesto(); RECIEN_ATT=null;
+      d.querySelector('.chk').onclick=function(){ var an=ancla(this.parentNode); a.ok=!a.ok; RECIEN_ATT=a; if (navigator.vibrate) { try { navigator.vibrate(8); } catch(e){} } pintaManifiesto(); RECIEN_ATT=null; anclaRestaura(an);
         if(a.ok) toast(a.n+' marcado en el punto ✓ — Operaciones lo ve al instante'); };
-      d.querySelectorAll('.pax-b').forEach(function(b){ b.onclick=function(){ ajustarPax(t, a, +b.dataset.d); }; });
+      d.querySelectorAll('.pax-b').forEach(function(b){ b.onclick=function(){ var an=ancla(b.parentNode); ajustarPax(t, a, +b.dataset.d); anclaRestaura(an); }; });
       mov.appendChild(d);
     });
     /* No-shows automáticos: al cerrar el tour, las reservas sin marcar pasan SOLAS
