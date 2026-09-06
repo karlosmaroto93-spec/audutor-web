@@ -1198,7 +1198,7 @@
         <a class="btn" href="demo/" data-demo>Probar la demo interactiva</a>
         <a class="btn sec" href="#contacto">Pedir una demo guiada</a>
       </div>
-      <ul class="sellos"><li>Sin permanencia</li><li>0 % de comisión</li><li>Datos y copias en la UE</li><li>Sin cookies ni rastreadores</li></ul>
+      <ul class="sellos"><li>Sin permanencia</li><li>0 % de comisión</li><li>Datos alojados en la UE</li><li>Sin cookies ni rastreadores</li></ul>
       <p class="hero-nota reveal" style="--d:300ms">Está construido operando, no en una sala de reuniones. Y arrancar es cosa de una tarde.</p>
       <div class="guia-saludo reveal" style="--d:380ms">
         <svg class="guia" aria-hidden="true" focusable="false"><use href="#guia"/></svg>
@@ -1546,7 +1546,7 @@
         <li>Sin marca «Audutor» — tu marca en la propina y la página del guía</li>
         <li><b>Cadencia anti-no-show inteligente completa</b>: se adapta al riesgo de cada
           reserva — y deja registrado quién avisó, cuándo y quién confirmó</li>
-        <li>Recordatorios por WhatsApp y SMS <b>sin coste por mensaje</b>: salen desde tu propio móvil en un toque</li>
+        <li>Recordatorios preparados para WhatsApp y SMS desde tu móvil. <b>Audutor no cobra por mensaje</b>; los SMS dependen de tu tarifa móvil</li>
         <li><b>Conciliación con plataformas</b>: te deja lista la reclamación de las comisiones de los no-shows</li>
       </ul>
       <p class="plan-extra">Si pasas de 1.000 viajeros: <b>+<span class="imp-tramo" data-mensual="6" data-anual="5">6</span> €/mes por cada 100</b>, hasta 4.000.<br><b>Y desde unos 2.800 te sale más barato Premium: te lo decimos nosotros.</b></p>
@@ -1641,14 +1641,14 @@
       
 
       <div class="tf-g">Las plataformas y la caja</div>
-      <label class="tf-o con-mas tf-pronto"><input type="checkbox" data-c="agente" data-eur="29" onchange="tarifa()">
+      <label class="tf-o con-mas tf-pronto"><input type="checkbox" data-c="agente" data-eur="29" disabled onchange="tarifa()">
         <span class="tf-n">El agente de plataformas<small>Tú llevas 14 en la lista; una plataforma tiene 17. Lo sabes antes de salir, no con los tres delante</small></span>
         <span class="tf-p">+29 € <b>· en preparación</b></span></label>
       <details class="tf-mas"><summary>Qué hace, exactamente</summary>
         <ul>
           <li><b>En preparación.</b> Hoy están construidos la cola de órdenes, su comprobación y el panel;
-            el programa que entra en los paneles se está probando con las empresas fundadoras, y este
-            complemento no se cobra hasta que funcione en tu cuenta.</li>
+            el programa que entra en los paneles todavía no está disponible. Este
+            complemento no se puede contratar ni se incluye en la cuota mientras esté en preparación.</li>
           <li>Entrará en los paneles de tus plataformas <b>con tu sesión y en tu ordenador</b>. Audutor
             no guarda ninguna contraseña de plataforma, y no va a guardarlas.</li>
           <li><b>Cuenta</b>: cuánta gente le consta a cada plataforma y cuántas plazas quedan. Si a
@@ -1755,29 +1755,28 @@
     le apetece. El resto del tiempo tu lista y la suya son dos números distintos, y el primero que
     se entera de la diferencia es el guía, en el punto de encuentro, con la gente delante.</p>
     <p class="reveal mini" style="margin-top:8px"><b>En preparación:</b> la cola de órdenes, su comprobación y el panel están
-    construidos; el programa que entra en los paneles se está probando con las empresas fundadoras.</p>
+    construidos; el programa que entra en los paneles todavía no está disponible.</p>
   </div>
   <div class="grid3">
-    <div class="celda star reveal"><span class="eti-num">01 · Cuenta</span><h3>Cuenta lo que le consta a cada una</h3>
-      <p>Entra en los paneles y mira cuánta gente tiene apuntada cada plataforma. Si a una le
-      constan tres personas más que a ti, <b>hay una diferencia que revisar con la plataforma</b> —
-      y lo sabes hoy, no cuando aparezcan.</p>
-      <span class="mini">contrasta el manifiesto con la información de la plataforma</span></div>
-    <div class="celda star reveal" style="--d:70ms"><span class="eti-num">02 · Cierra</span><h3>Cierra las salidas llenas</h3>
+    <div class="celda star reveal"><span class="eti-num">01 · Cuenta</span><h3>Podrá contrastar los recuentos</h3>
+      <p>La función prevista es consultar cuánta gente tiene apuntada cada plataforma y
+      <b>señalar las diferencias con tu manifiesto</b> para que puedas revisarlas.</p>
+      <span class="mini">previsto: contrastar el manifiesto con la plataforma</span></div>
+    <div class="celda star reveal" style="--d:70ms"><span class="eti-num">02 · Cierra</span><h3>Podrá cerrar las salidas llenas</h3>
       <p>Cuando un tour se llena hay que cerrarlo en cada panel, y si tardas entra gente que
       ya no cabe. El agente lo hará solo — pero <b>aquí seguirá como no cerrada hasta que lo
       compruebes tú</b>.</p>
       <span class="mini">el ✓ lo pone una persona, siempre</span></div>
-    <div class="celda star reveal" style="--d:140ms"><span class="eti-num">03 · Calla</span><h3>Y hace callar a GuIA cuando toca</h3>
-      <p>Si los números no cuadran, GuIA <b>deja de decir cuántas plazas quedan</b> hasta que
-      alguien lo mire. Sin el agente, seguiría contestando «quedan 3 🙂» con toda la seguridad
-      del mundo sobre una lista que sabe incompleta.</p>
+    <div class="celda star reveal" style="--d:140ms"><span class="eti-num">03 · Calla</span><h3>Las discrepancias limitan lo que dice GuIA</h3>
+      <p>Cuando el sistema registra una discrepancia, GuIA <b>deja de decir cuántas plazas quedan</b>
+      hasta que alguien la revise. Esta protección ya existe; la detección mediante el agente
+      depende del programa que estamos preparando.</p>
       <span class="mini">solo puede hacer que GuIA diga menos, nunca más</span></div>
   </div>
   <p class="reveal nota-pie" style="color:var(--muted); font-size:13px; margin:20px 0 0; max-width:74ch; margin-inline:auto;">
-    <b>Corre en tu ordenador y con tu sesión.</b> Audutor no guarda ninguna contraseña de
-    plataforma: el agente usa la que ya tienes abierta. Y <b>no te pide mudarte</b>: sigues
-    vendiendo donde vendes.
+    <b>Está previsto que funcione en tu ordenador y con tu sesión.</b> El diseño utiliza
+    la sesión que ya tienes abierta en cada plataforma. No está disponible para contratar
+    y no se incluye en tu cuota mientras siga en preparación.
     <a href="demo/#agente" style="color:var(--acc); font-weight:700;">Verlo en la demo →</a></p>
 </div></section>
 
@@ -1976,7 +1975,7 @@ var TF_PLAN = 'pro';            // el plan sobre el que se enseña el total
 
 function tfExtras(plan){
   var t = 0, piezas = [];
-  document.querySelectorAll('.tf-o input:checked').forEach(function(i){
+  document.querySelectorAll('.tf-o input:checked:not(:disabled)').forEach(function(i){
     t += +i.dataset.eur;
     piezas.push({ n: i.closest('.tf-o').querySelector('.tf-n').childNodes[0].textContent.trim(),
                   e: +i.dataset.eur });

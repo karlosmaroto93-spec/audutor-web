@@ -969,7 +969,7 @@
   <div class="pie-demo">
     <div class="leyenda-planes">
       <b>Your plan (demo):</b> switch it and see what unlocks. Essential comes with
-      <b>1 tour, 2 guides and 2 channels</b>; from Pro, unlimited.
+      <b>1 tour and 2 guides</b>; from Pro, unlimited.
       <div class="mk-sel">
         <b>Market (demo):</b> same product, same language — adapted to each country’s currency, business model and habits.
         <div class="fila" id="mk-btns" style="gap:4px; margin-top:6px; flex-wrap:wrap;"></div>
@@ -984,7 +984,7 @@
         <div class="comp-gratis">🎁 The first month of every add-on is free.</div>
         <div class="comp-tit">Add-ons</div>
         <label><input type="checkbox" id="c-guia" onchange="compTog('guia',this)"><span>GuIA, the assistant</span><b>+€39</b></label>
-        <label><input type="checkbox" id="c-agente" onchange="compTog('agente',this)"><span>The platform agent</span><b>+€29</b></label>
+        <label><input type="checkbox" id="c-agente" onchange="compTog('agente',this)"><span>Agent preview</span><b>In preparation</b></label>
         <label><input type="checkbox" id="c-web" onchange="compTog('web',this)"><span>Your website, always current</span><b>+€9</b></label>
         <div class="comp-total">Your plan: <b id="comp-tot">€39</b><span id="comp-desglose"></span></div>
       </div>
@@ -1698,7 +1698,7 @@
 
 </section>
 
-<section class="vista" id="v-agente">
+<section class="vista" id="v-agente"><p class="mini">Preview with simulated data. The platform agent is in preparation, unavailable for purchase and excluded from the price.</p>
   <div class="cab"><span class="rotulo-vista">🤖 The platform agent · add-on</span><h1>The agent that signs into your dashboards</h1><span class="sub">reads your listings, counts the people each platform has on record and closes what is full — and nothing it says counts as done until you look at it</span></div>
   <!-- THE EXTERNAL AGENT. It sits here, with the channels, because that is what it is
        about: signing into each platform's dashboard. Off by default, with its state in
@@ -6356,7 +6356,7 @@ function abiertoPorComplemento(v){
 
 function totalCesta(){
   var t = PLANES[S.plan].base, piezas = [];
-  for (var k in COMPLEMENTOS) if (S.comp[k]) {
+  for (var k in COMPLEMENTOS) if (S.comp[k] && k !== 'agente') {
     t += COMPLEMENTOS[k].precio; piezas.push(COMPLEMENTOS[k].n);
   }
   return { total:t, piezas:piezas };
@@ -6514,7 +6514,7 @@ function pintaGate(v){
     '<h2 style="margin:6px 0 2px;">'+i.n+'</h2>'+
     '<p class="chip" style="background:rgba(201,138,45,.25); color:var(--amber); margin:6px 0; display:inline-block;">Included in '+P.n+' · '+P.precio+'/month</p>'+
     '<p style="color:var(--ink2); max-width:40ch; margin:6px auto 0;">'+i.d+'</p>'+
-    '<p class="mini muted" style="max-width:42ch; margin:12px auto;">The <b>core</b> is in every plan — on Essential with <b>1 tour, 2 guides and 2 channels</b>; unlimited guides and channels from Pro. Add-ons switch on according to your plan.</p>'+
+    '<p class="mini muted" style="max-width:42ch; margin:12px auto;">The <b>core</b> is in every plan — on Essential with <b>1 tour and 2 guides</b>; unlimited guides from Pro. Add-ons switch on according to your plan.</p>'+
     '<div class="fila" style="gap:8px; justify-content:center; flex-wrap:wrap;">'+
       '<button class="btn" onclick="cambiarPlan(\''+reqPlan+'\')">Switch to '+P.n+' ('+P.precio+')</button>'+
       '<button class="btn sec" onclick="desbloquear(\''+v+'\')">🔓 Just try it (demo)</button>'+

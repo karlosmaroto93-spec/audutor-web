@@ -1112,7 +1112,7 @@
   <div class="pie-demo">
     <div class="leyenda-planes">
       <b>Tu plan (demo):</b> cámbialo y mira qué se desbloquea. Esencial trae
-      <b>1 tour, 2 guías y 2 canales</b>; desde Pro, ilimitados. El plan es un <b>bono de viajeros</b>: GuIA, el agente y la web se suman aparte.
+      <b>1 tour y 2 guías</b>; desde Pro, ilimitados. El plan es un <b>bono de viajeros</b>: GuIA, el agente y la web se suman aparte.
       <div class="mk-sel">
         <b>Mercado (demo):</b> el mismo producto, en el mismo idioma, adaptado a la moneda, el modelo de negocio y las costumbres de cada país.
         <div class="fila" id="mk-btns" style="gap:4px; margin-top:6px; flex-wrap:wrap;"></div>
@@ -1131,7 +1131,7 @@
         <div class="comp-gratis">🎁 El primer mes de cada complemento no se cobra.</div>
         <div class="comp-tit">Complementos</div>
         <label><input type="checkbox" id="c-guia" onchange="compTog('guia',this)"><span>GuIA, el asistente</span><b>+39 €</b></label>
-        <label><input type="checkbox" id="c-agente" onchange="compTog('agente',this)"><span>El agente de plataformas</span><b>+29 €</b></label>
+        <label><input type="checkbox" id="c-agente" onchange="compTog('agente',this)"><span>Vista previa del agente</span><b>En preparación</b></label>
         <label><input type="checkbox" id="c-web" onchange="compTog('web',this)"><span>Tu web, siempre al día</span><b>+9 €</b></label>
         <div class="comp-total">Tu tarifa: <b id="comp-tot">39 €</b><span id="comp-desglose"></span></div>
       </div>
@@ -1793,7 +1793,7 @@
      el panel de tus plataformas con tu sesión no puede estar escondido, ni para
      encenderlo ni, sobre todo, para darte cuenta de que está encendido.
      En la app tiene panel propio desde el 3-ago; aquí es el mismo sitio. -->
-<section class="vista" id="v-agente">
+<section class="vista" id="v-agente"><p class="mini">Vista previa con datos simulados. El agente de plataformas está en preparación: no se puede contratar ni se suma al precio.</p>
   <div class="cab"><span class="rotulo-vista">🤖 El agente de plataformas · complemento</span><h1>El agente que entra en tus paneles</h1><span class="sub">mira tus fichas, cuenta la gente que les consta y cierra lo lleno — y nada de lo que dice cuenta como hecho hasta que lo miras tú</span></div>
   <!-- EL AGENTE EXTERNO. Va aquí, con los canales, porque es de lo que habla: entrar en
        el panel de cada plataforma. Apagado por defecto y con su estado en la cabecera —
@@ -6901,7 +6901,7 @@ function disponible(v){ if(!SUPLEMENTOS[v]) return true;
 
 function totalCesta(){
   var t = PLANES[S.plan].base, piezas = [];
-  for (var k in COMPLEMENTOS) if (S.comp[k]) {
+  for (var k in COMPLEMENTOS) if (S.comp[k] && k !== 'agente') {
     t += COMPLEMENTOS[k].precio; piezas.push(COMPLEMENTOS[k].n);
   }
   return { total:t, piezas:piezas };
@@ -7048,7 +7048,7 @@ function pintaGate(v){
     '<h2 style="margin:6px 0 2px;">'+i.n+'</h2>'+
     '<p class="chip" style="background:rgba(201,138,45,.25); color:var(--amber); margin:6px 0; display:inline-block;">Incluido en el plan '+P.n+' · '+P.precio+'/mes</p>'+
     '<p style="color:var(--ink2); max-width:40ch; margin:6px auto 0;">'+i.d+'</p>'+
-    '<p class="mini muted" style="max-width:42ch; margin:12px auto;">La <b>base</b> va en todos los planes — en Esencial con <b>1 tour, 2 guías y 2 canales</b>; guías y canales ilimitados desde Pro. Los suplementos se activan según tu tarifa.</p>'+
+    '<p class="mini muted" style="max-width:42ch; margin:12px auto;">La <b>base</b> va en todos los planes — en Esencial con <b>1 tour y 2 guías</b>; guías y canales ilimitados desde Pro. Los suplementos se activan según tu tarifa.</p>'+
     '<div class="fila" style="gap:8px; justify-content:center; flex-wrap:wrap;">'+
       '<button class="btn" onclick="cambiarPlan(\''+reqPlan+'\')">Cambiar a '+P.n+' ('+P.precio+')</button>'+
       '<button class="btn sec" onclick="desbloquear(\''+v+'\')">🔓 Solo probarlo (demo)</button>'+
