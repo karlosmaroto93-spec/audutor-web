@@ -474,6 +474,40 @@
     .mock-panel:not([hidden]), .mock-row.recien, .anim .hito.in .punto, .dia.traza .hito.clave .punto{ animation:none; }
     .dia::before{ clip-path:none; transition:none; }
   }
+  /* ===== Y tres más: sellos que entran uno a uno, el botón que respira, la línea que se desliza ===== */
+  .sellos.con-ticks li::before{ display:none; }
+  .sellos .tick{ width:12px; height:12px; flex:none; fill:none; stroke:var(--acc); stroke-width:3;
+    stroke-linecap:round; stroke-linejoin:round; overflow:visible; }
+  .sellos .tick path{ stroke-dasharray:24; stroke-dashoffset:24; animation:traza .45s ease-out forwards;
+    animation-delay:calc(var(--i,0) * 140ms + 550ms); }
+  .anim .sellos.con-ticks li{ opacity:0; transform:translateY(6px); animation:sello-entra .5s cubic-bezier(.22,1,.36,1) forwards;
+    animation-delay:calc(var(--i,0) * 140ms + 400ms); }
+  @keyframes sello-entra{ to{ opacity:1; transform:none; } }
+  /* El botón: vuelve con la curva elástica al soltarlo, y se hunde un pelo al pulsar. */
+  .btn{ transition:transform .45s cubic-bezier(.34,1.56,.64,1), box-shadow .15s ease, background .15s ease; }
+  .btn:active{ transform:translateY(1px) scale(.97); transition-duration:.08s; }
+  /* El principal del hero respira UNA vez: un brillo diagonal lo recorre al cargar. */
+  .anim .hero-ctas .btn:not(.sec){ position:relative; overflow:hidden; }
+  .anim .hero-ctas .btn:not(.sec)::after{
+    content:''; position:absolute; top:-40%; bottom:-40%; left:-45%; width:38%;
+    background:linear-gradient(100deg, transparent 0%, rgba(255,255,255,.30) 50%, transparent 100%);
+    transform:skewX(-18deg); pointer-events:none;
+    animation:brillo-boton 1.1s ease-out 1.4s 1 both;
+  }
+  @keyframes brillo-boton{ to{ left:130%; } }
+  /* La línea de las pestañas de la hoja se desliza de una a otra en vez de cambiar de golpe. */
+  .mock-tabs{ position:relative; }
+  .mock-tabs.con-linea button[aria-selected="true"]{ border-bottom-color:transparent; }
+  .mock-linea{ position:absolute; left:0; bottom:-1px; height:3px; width:0; border-radius:2px; background:var(--acc);
+    transition:transform .38s cubic-bezier(.22,1,.36,1), width .38s cubic-bezier(.22,1,.36,1); }
+  .mock-linea.salta{ transition:none; }
+  @media (prefers-reduced-motion:reduce){
+    .sellos .tick path{ animation:none; stroke-dashoffset:0; }
+    .anim .sellos.con-ticks li{ animation:none; opacity:1; transform:none; }
+    .btn{ transition:none; }
+    .anim .hero-ctas .btn:not(.sec)::after{ animation:none; display:none; }
+    .mock-linea{ transition:none; }
+  }
   .mock-total{ display:flex; justify-content:space-between; align-items:baseline; padding:10px 8px 0;
     border-top:1px solid var(--line); margin-top:6px; color:var(--ink2); }
   .mock-total b{ font-family:var(--serif); font-size:27px; color:var(--deep); }
@@ -1209,10 +1243,22 @@
 (function(){
   var tabs=Array.prototype.slice.call(document.querySelectorAll('.mock-tabs [role="tab"]'));
   if(!tabs.length) return;
+  /* La línea que se desliza: un span absoluto que se coloca bajo la pestaña elegida. */
+  var barra=tabs[0].parentNode, linea=document.createElement('span');
+  linea.className='mock-linea'; linea.setAttribute('aria-hidden','true'); barra.appendChild(linea); barra.classList.add('con-linea');
+  function coloca(sinDeslizar){
+    var t=tabs.filter(function(x){ return x.getAttribute('aria-selected')==='true'; })[0]; if(!t) return;
+    if(sinDeslizar) linea.classList.add('salta');
+    linea.style.width=t.offsetWidth+'px'; linea.style.transform='translateX('+t.offsetLeft+'px)';
+    if(sinDeslizar){ void linea.offsetWidth; linea.classList.remove('salta'); }
+  }
+  window.addEventListener('resize', function(){ coloca(true); });
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ coloca(true); });
   function activa(tab){ tabs.forEach(function(t){
     var si=t===tab; t.setAttribute('aria-selected',String(si)); t.tabIndex=si?0:-1;
     document.getElementById(t.getAttribute('aria-controls')).hidden=!si; });
-    if (window.cuentasHoja) window.cuentasHoja(document.getElementById(tab.getAttribute('aria-controls'))); }
+    if (window.cuentasHoja) window.cuentasHoja(document.getElementById(tab.getAttribute('aria-controls')));
+    coloca(); }
   tabs.forEach(function(tab,i){
     tab.addEventListener('click',function(){ activa(tab); });
     tab.addEventListener('keydown',function(e){
@@ -1220,6 +1266,7 @@
       if(n!==null){ e.preventDefault(); activa(tabs[n]); tabs[n].focus(); } });
   });
   var q=/[?&]hoja=([a-z]+)/.exec(location.search); var t=q&&document.getElementById('tab-'+q[1]); if(t) activa(t);
+  coloca(true);
 })();
 </script>
 
@@ -2125,6 +2172,17 @@ document.addEventListener('DOMContentLoaded', function(){
       pendientes.push({ el: el, haz: function(){ window.cuentasHoja.uno(el); }, umbral: 0.92 });
     });
   }
+
+  /* ── 4. Los sellos entran uno a uno, con su tick dibujándose ── */
+  var sellos = document.querySelector('.sellos');
+  if (sellos && !quieto) {
+    sellos.classList.add('con-ticks');
+    Array.prototype.forEach.call(sellos.querySelectorAll('li'), function(li, i){
+      li.style.setProperty('--i', String(i));
+      li.insertAdjacentHTML('afterbegin', '<svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>');
+    });
+  }
+
   var mirando = false;
   function mira(){
     mirando = false;
