@@ -39,7 +39,7 @@
      Se leen en paralelo, como se compara de verdad, y en el móvil se apilan solas.
      Audutor va aparte y a lo ancho: no es una columna más de la comparación, es la
      conclusión. */
-  .cero-rej{ display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));
+  .cero-rej{ display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 240px), 1fr));
     gap:10px; margin:16px 0 12px; }
   .cero-c{ background:var(--paper); border:1px solid var(--line); border-radius:12px;
     padding:13px 14px; }
@@ -1434,23 +1434,19 @@
          misma columna. Las cifras y las fuentes se conservan enteras; lo que se va es el
          texto que las envolvía. -->
     <div class="cero-rej">
-      <div class="cero-c"><span class="n">FareHarbor · Peek Pro · Xola</span>
-        <span class="p no">No la saben cobrar</span>
-        <small>Son de comisión: su modelo no llega a un billete de 0 €.</small></div>
-      <div class="cero-c"><span class="n">TuriTop</span><span class="p">0,10 €</span>
-        <small>Mínimo por reserva, sobre 29 €/mes.
-          <a href="https://www.turitop.com/precios-de-turitop/" target="_blank" rel="noopener">Su página de precios</a></small></div>
-      <div class="cero-c"><span class="n">Rezdy</span><span class="p">1 $</span>
-        <small>Por reserva metida a mano — en un free tour, casi todas.</small></div>
-      <div class="cero-c"><span class="n">TrekkSoft</span><span class="p">1,50 €</span>
-        <small>Por reserva metida a mano.</small></div>
-      <div class="cero-yo"><span class="p">0 €</span><span class="n">Audutor</span>
-        <small>Ni comisión, ni mínimo, ni recargo por meterla a mano.</small></div>
+      <div class="cero-c"><span class="n">Precio de la reserva</span><span class="p">0 %</span>
+        <small>Audutor no cobra un porcentaje del importe de tus reservas.</small></div>
+      <div class="cero-c"><span class="n">Reservas manuales</span><span class="p">Sin recargo</span>
+        <small>Sus viajeros cuentan en el volumen mensual de tu plan.</small></div>
+      <div class="cero-c"><span class="n">Volumen mensual</span><span class="p">Por viajeros</span>
+        <small>Elige el plan según tu operación y consulta los tramos de volumen de abajo.</small></div>
+      <div class="cero-c"><span class="n">Otros proveedores</span><span class="p">Por separado</span>
+        <small>Las comisiones de plataformas o de tu pasarela dependen de tus contratos con ellas.</small></div>
+      <div class="cero-yo"><span class="p">Tu propina</span><span class="n">Entera para ti</span>
+        <small>Audutor no retiene una parte de las propinas.</small></div>
     </div>
-    <p class="cero-fin">Pagas el bono de viajeros y ya está. Y la propina es tuya entera:
-    <b>no tocamos ni un céntimo</b>.
-    <span class="cero-fecha">Comprobado el 10-ago-2026 en sus propias páginas; si ves algo
-    desactualizado, dínoslo.</span></p>
+    <p class="cero-fin">Compara el coste total para tu volumen: cuota, complementos y servicios externos.
+    <b>Las tarifas de Audutor están aquí debajo.</b></p>
   </div>
 
   <div class="fact-toggle-wrap reveal">

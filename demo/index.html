@@ -1657,7 +1657,7 @@
         <button type="button" class="btn mini sec" id="bd-configurar" onclick="buzonDemo.accion('configurar')">Simular configuración</button>
         <details class="mas"><summary>Qué se pide en el alta</summary><p>Reenvío: confirma en Gmail y crea filtros para avisos de reserva, cambios y cancelaciones. IMAP: dirección, servidor, puerto, seguridad y contraseña de aplicación si tu proveedor la exige. Introduce credenciales solo en tu panel.</p></details>
       </div>
-      <div><h3>2 · Comprueba la recepción</h3><p class="mini">Una dirección guardada no basta. La primera recepción y su fecha permiten comprobar la conexión.</p><button type="button" class="btn mini sec" id="bd-recibir" onclick="buzonDemo.accion('recibir')">Simular recepción de ejemplo</button></div>
+      <div><h3>2 · Comprueba la recepción</h3><p class="mini">Una dirección guardada no basta. Un correo de diagnóstico comprueba el acceso; una reserva recibida permite revisar recorrido, fecha y personas en el manifiesto.</p><button type="button" class="btn mini sec" id="bd-recibir" onclick="buzonDemo.accion('recibir')">Simular recepción de ejemplo</button></div>
       <div><h3>3 · Revisa lo ambiguo</h3><p class="mini">Compara el texto conservado, los datos leídos y el destino antes de confirmar.</p><button type="button" class="btn mini sec" id="bd-revisar" onclick="buzonDemo.accion('revisar')">Revisar propuesta</button></div>
     </div>
     <p id="bd-pendientes" role="status" aria-live="polite"></p>
@@ -1670,6 +1670,7 @@
     </div>
   </div>
   <div class="card"><h2>Lo que puedes comprobar en tu panel</h2>
+    <p>El alta indica el siguiente paso pendiente. Para la API de tu web se comprueban por separado las consultas de plazas y de cambios: usar la llave no basta. Las reservas y su referencia se guardan juntas antes de confirmarse; la medición de las consultas se agrupa cada 30 segundos.</p>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;">
       <div><h3>Recepción y revisión</h3><p>Estado de conexión, incidencias y pendientes ordenados por antigüedad. Mediana y p95 del tiempo medido desde la recepción o la primera detección por IMAP.</p><p>Aviso por correo optativo tras 15 minutos de fallo continuado o falta de actualización. Un aviso nuevo cada 24 horas; una caída completa de Audutor requiere un monitor externo.</p></div>
       <div><h3>Confirmaciones por correo</h3><p>Bandeja de salida con reintentos y mensajes que requieren revisión. Aceptación por el servidor de correo no significa entrega o lectura.</p></div>

@@ -39,7 +39,7 @@
      Se leen en paralelo, como se compara de verdad, y en el móvil se apilan solas.
      Audutor va aparte y a lo ancho: no es una columna más de la comparación, es la
      conclusión. */
-  .cero-rej{ display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));
+  .cero-rej{ display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 240px), 1fr));
     gap:10px; margin:16px 0 12px; }
   .cero-c{ background:var(--paper); border:1px solid var(--line); border-radius:12px;
     padding:13px 14px; }
@@ -1397,23 +1397,19 @@
     <!-- Table, not prose — same reasoning as the Spanish twin: this is a COMPARISON, and
          a table answers it at a glance. Every figure and source is kept. -->
     <div class="cero-rej">
-      <div class="cero-c"><span class="n">FareHarbor · Peek Pro · Xola</span>
-        <span class="p no">They can't charge it</span>
-        <small>They run on commission: the model doesn't reach a €0 ticket.</small></div>
-      <div class="cero-c"><span class="n">TuriTop</span><span class="p">€0.10</span>
-        <small>Per-booking minimum, on top of €29/month.
-          <a href="https://www.turitop.com/precios-de-turitop/" target="_blank" rel="noopener">Their pricing page</a></small></div>
-      <div class="cero-c"><span class="n">Rezdy</span><span class="p">$1</span>
-        <small>Per booking entered by hand — on a free tour, nearly all.</small></div>
-      <div class="cero-c"><span class="n">TrekkSoft</span><span class="p">€1.50</span>
-        <small>Per booking entered by hand.</small></div>
-      <div class="cero-yo"><span class="p">€0</span><span class="n">Audutor</span>
-        <small>No commission, no minimum, no surcharge for entering one by hand.</small></div>
+      <div class="cero-c"><span class="n">Booking value</span><span class="p">0%</span>
+        <small>Audutor does not charge a percentage of your booking value.</small></div>
+      <div class="cero-c"><span class="n">Manual bookings</span><span class="p">No surcharge</span>
+        <small>Their travellers count towards your plan’s monthly volume.</small></div>
+      <div class="cero-c"><span class="n">Monthly volume</span><span class="p">By travellers</span>
+        <small>Choose a plan for your operation and check the volume tiers below.</small></div>
+      <div class="cero-c"><span class="n">Other providers</span><span class="p">Separate fees</span>
+        <small>Platform and payment provider fees depend on your contracts with them.</small></div>
+      <div class="cero-yo"><span class="p">Your tips</span><span class="n">Yours in full</span>
+        <small>Audutor does not retain a share of your tips.</small></div>
     </div>
-    <p class="cero-fin">You pay the traveller bundle and that's it. And the tip is yours,
-    whole: <b>we don't touch a cent</b>.
-    <span class="cero-fecha">Checked 10 Aug 2026 on their own pages; if you spot something
-    out of date, tell us.</span></p>
+    <p class="cero-fin">Compare the total cost for your volume: subscription, add-ons and external services.
+    <b>Audutor’s prices are listed below.</b></p>
   </div>
 
   <div class="fact-toggle-wrap reveal">

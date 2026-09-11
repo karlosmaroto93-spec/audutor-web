@@ -1550,7 +1550,7 @@
         <button type="button" class="btn mini sec" id="bd-configurar" onclick="buzonDemo.accion('configurar')">Simulate setup</button>
         <details class="mas"><summary>What setup needs</summary><p>Forwarding: confirm in Gmail and create filters for bookings, changes and cancellations. IMAP: address, server, port, security and an app password if required by your provider. Enter credentials only in your panel.</p></details>
       </div>
-      <div><h3>2 · Verify reception</h3><p class="mini">Saving an address is not enough. The first reception and its timestamp verify the connection.</p><button type="button" class="btn mini sec" id="bd-recibir" onclick="buzonDemo.accion('recibir')">Simulate sample reception</button></div>
+      <div><h3>2 · Verify reception</h3><p class="mini">Saving an address is not enough. A diagnostic email checks access; a received booking lets you verify the tour, date and party size in the manifest.</p><button type="button" class="btn mini sec" id="bd-recibir" onclick="buzonDemo.accion('recibir')">Simulate sample reception</button></div>
       <div><h3>3 · Review uncertain details</h3><p class="mini">Compare the saved text, extracted fields and destination before confirming.</p><button type="button" class="btn mini sec" id="bd-revisar" onclick="buzonDemo.accion('revisar')">Review proposal</button></div>
     </div>
     <p id="bd-pendientes" role="status" aria-live="polite"></p>
@@ -1563,6 +1563,7 @@
     </div>
   </div>
   <div class="card"><h2>What you can check in your panel</h2>
+    <p>Setup shows the next pending step. For your website API, availability and change queries are checked separately: using the key is not enough. Bookings and their reference are saved together before confirmation; query measurements are saved in batches every 30 seconds.</p>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;">
       <div><h3>Reception and review</h3><p>Connection status, issues and oldest pending items. Median and p95 measured from reception or first IMAP detection.</p><p>Optional email alerts after 15 minutes of persistent connection failure or missing updates. One new alert per 24 hours; a complete Audutor outage needs an external monitor.</p></div>
       <div><h3>Email confirmations</h3><p>An outbox with retries and messages needing review. Mail-server acceptance does not mean delivery or reading.</p></div>
