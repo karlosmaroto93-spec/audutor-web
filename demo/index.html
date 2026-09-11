@@ -1646,144 +1646,42 @@
 
 <!-- ================= CANALES Y SINCRONIZACIÓN ================= -->
 <section class="vista" id="v-canales">
-  <div class="cab"><h1>Canales y sincronización</h1><span class="sub">cómo entran las reservas al sistema — sin depender de ninguna plataforma</span></div>
-
-  <div class="card">
-    <h2>Las 3 vías de entrada</h2>
-    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px,1fr)); gap:14px; margin-top:10px;">
-      <div style="border:1.5px solid var(--acc); border-radius:11px; padding:14px;">
-        <b>📬 1 · Buzón de reservas</b> <span class="chip" style="background:var(--acc-soft); color:var(--acc);">la clave</span>
-        <div class="mini muted" style="margin:8px 0 0;">Cada reserva de plataforma llega como <b>email de
-        confirmación</b> (GuruWalk, Civitatis, GetYourGuide…). <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Audutor lee ese buzón — tu correo o un
-        alias <b>reservas@tuempresa</b> que te damos — y crea o actualiza la reserva <b>al momento</b>,
-        también cancelaciones y cambios. Sin API, sin permisos de la plataforma, sin tocar tu operativa:
-        funciona con cualquier canal desde el día 1.</span></details></div>
-        <button class="btn mini" style="margin-top:10px;" onclick="probarBuzon()">📥 Probar el buzón ahora</button>
+  <div class="cab"><h1>Canales y sincronización</h1><span class="sub">De la conexión a la primera reserva comprobada</span></div>
+  <div class="card" id="buzon-demo" style="border-top:4px solid var(--acc);">
+    <span class="chip">Recorrido con datos ficticios</span>
+    <h2>Prueba el buzón, paso a paso</h2>
+    <p class="mini muted">Esta demo no conecta cuentas ni envía correos. Los cambios duran hasta recargar la página. En el panel, una conexión solo se da por comprobada cuando hay evidencia de recepción.</p>
+    <p id="bd-estado" role="status" aria-live="polite"></p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;">
+      <div><h3>1 · Configura la entrada</h3><p class="mini">Usa la dirección de reenvío que aparezca disponible en el panel o conecta tu buzón mediante IMAP.</p>
+        <button type="button" class="btn mini sec" id="bd-configurar" onclick="buzonDemo.accion('configurar')">Simular configuración</button>
+        <details class="mas"><summary>Qué se pide en el alta</summary><p>Reenvío: confirma en Gmail y crea filtros para avisos de reserva, cambios y cancelaciones. IMAP: dirección, servidor, puerto, seguridad y contraseña de aplicación si tu proveedor la exige. Introduce credenciales solo en tu panel.</p></details>
       </div>
-      <div style="border:1px solid var(--line); border-radius:11px; padding:14px;">
-        <b>🌐 2 · Tu propia web</b>
-        <div class="mini muted" style="margin:8px 0 0;">Las páginas que Audutor monta con tu Cerebro
-        —enseñando siempre el horario de verdad— y las páginas de cada guía con su QR. La
-        reserva <b>se hace aquí mismo</b>: el free tour a <span data-dinero="0" data-dec="0">0 €</span> con su código al momento, y el
-        de pago guardando la plaza con el cobro en TU pasarela — Audutor no toca el dinero
-        ni cobra comisión por reserva. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Es el canal que el sistema empuja a crecer —
-        carrito, combos y reseñas apuntan aquí.</span></details></div>
-      </div>
-      <div style="border:1px solid var(--line); border-radius:11px; padding:14px;">
-        <b>📄 3 · Importación manual</b>
-        <p class="mini muted" style="margin:8px 0 0;">CSV o texto pegado (el histórico al arrancar, o un
-        canal esporádico). Con el <b>Importador con IA</b> también montas tours completos desde el
-        listado de la plataforma.</p>
-      </div>
+      <div><h3>2 · Comprueba la recepción</h3><p class="mini">Una dirección guardada no basta. La primera recepción y su fecha permiten comprobar la conexión.</p><button type="button" class="btn mini sec" id="bd-recibir" onclick="buzonDemo.accion('recibir')">Simular recepción de ejemplo</button></div>
+      <div><h3>3 · Revisa lo ambiguo</h3><p class="mini">Compara el texto conservado, los datos leídos y el destino antes de confirmar.</p><button type="button" class="btn mini sec" id="bd-revisar" onclick="buzonDemo.accion('revisar')">Revisar propuesta</button></div>
     </div>
-    <div class="mini muted" style="margin:12px 0 0;">Por email porque <b>GuruWalk no ofrece API</b>, y su
-      email al guía trae todo: reserva, teléfono, cancelaciones y cambios. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Donde
-      sí hay API oficial (Civitatis, con webhooks en tiempo real) Audutor la usa en cuanto la empresa es
-      proveedor aprobado. El buzón da cobertura total sin pedirle permiso a nadie, y se configura en el
-      alta con un reenvío automático al alias: 2 minutos por canal.</span></details></div>
-  </div>
-
-  <div class="card" style="box-shadow:inset 4px 0 0 var(--acc);">
-    <h2>🛡️ Si una plataforma cambia su plantilla</h2>
-    <p class="mini muted" style="margin:0 0 10px;">Las plataformas cambian sus plantillas sin avisar, así
-      que el buzón se vigila a sí mismo: <b>te avisa por WhatsApp en segundos</b>, la reserva
-      <b>queda en revisión con lo que sí ha leído</b> —nunca se pierde— y la plantilla se arregla
-      <b>una vez para todas las empresas</b>. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">No espera a que falte
-      gente en el punto de encuentro para enterarse, y tú no tienes que hacer nada para que se
-      arregle: es la ventaja de que el mismo lector sirva a todos los clientes.</span></details></p>
-    <button class="btn mini sec" onclick="toast('Simulado: llega un email con formato nuevo → aviso WhatsApp + a la bandeja de revisión. La reserva no se pierde.')">▶ Simular un email con formato desconocido</button>
-  </div>
-
-  <div class="card">
-    <h2>⚙️ Conexiones de la empresa — configurable</h2>
-    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:14px; margin-top:10px;">
-      <div style="border:1px solid var(--line); border-radius:11px; padding:14px;">
-        <b>📧 Email de reservas</b> <span class="chip" style="background:var(--acc-soft); color:var(--acc);">conectado</span>
-        <p class="mini muted" style="margin:6px 0 8px;">El buzón que lee el sistema: tu correo de
-          empresa, o el alias que te damos.</p>
-        <input id="cn-email" value="reservas@patioycompas.example"
-          style="width:100%; border:1.5px solid var(--line); border-radius:8px; padding:8px 10px; font-size:13px; font-family:var(--mono);"
-          onchange="S.canales.email=this.value; toast('📧 Buzón actualizado — reenvía aquí las confirmaciones de tus plataformas');">
-      </div>
-      <div style="border:1px solid var(--line); border-radius:11px; padding:14px;">
-        <b>💬 WhatsApp de la empresa</b> <span class="chip" style="background:var(--acc-soft); color:var(--acc);">API oficial de Meta</span> <span class="chip gris" id="wa-filtro-chip">filtro: solo desconocidos</span>
-        <p class="mini muted" style="margin:6px 0 8px;">Recordatorios, GuIA y rescate salen de <b>tu
-          número verificado</b> — siempre por la API oficial de WhatsApp Business (jamás WhatsApp Web):
-          plantillas aprobadas, opt-in del cliente y sin riesgo de bloqueo.</p>
-        <input id="cn-wa" value="+34 6XX XX XX XX"
-          style="width:100%; border:1.5px solid var(--line); border-radius:8px; padding:8px 10px; font-size:13px; font-family:var(--mono);"
-          onchange="S.canales.wa=this.value; toast('💬 Número actualizado — se verifica con Meta en el alta (5 min)');">
-        <div id="wa-tope"></div>
-        <div id="wa-filtros" style="border-top:1px dashed var(--line); padding-top:10px; margin-top:10px;">
-          <b class="mini">🎯 A quién responde GuIA</b>
-          <label class="mini" style="display:flex; gap:7px; align-items:flex-start; margin-top:7px; cursor:pointer;">
-            <input type="checkbox" id="fg-desc" onchange="setFiltroGuia('desconocidos', this.checked)">
-            <span>Solo números que <b>NO</b> están en los contactos del teléfono enlazado
-              <span class="muted">— así GuIA no se mezcla con los contactos personales del dueño</span></span></label>
-          <label class="mini" style="display:flex; gap:7px; align-items:flex-start; margin-top:6px; cursor:pointer;">
-            <input type="checkbox" id="fg-estr" onchange="setFiltroGuia('estricto', this.checked)">
-            <span>Solo números <b>con reserva</b> o que mencionen un tour
-              <span class="muted">(modo estricto)</span></span></label>
-          <label class="mini" style="display:flex; gap:7px; align-items:flex-start; margin-top:6px; cursor:pointer;">
-            <input type="checkbox" id="fg-lista" onchange="setFiltroGuia('listaNegra', this.checked)">
-            <span><b>Nunca</b> responder a esta lista:
-              <span class="num">+34 6•• •• •12</span>, <span class="num">+34 7•• •• •43</span></span></label>
-          <p class="mini muted" style="margin:8px 0 0;"><details class="mas"><summary>ⓘ el número que conviene usar</summary><span class="mas-p">Lo recomendado
-            es un <b>número dedicado</b> para la API oficial, con tu número personal fuera. Estos filtros
-            son el segundo cinturón.</span></details></p>
-        </div>
-      </div>
-    </div>
-    <div style="border:1px solid var(--line); border-radius:11px; padding:14px; margin-top:14px;">
-      <b>🕵️ Detección de plataformas</b>
-      <div class="mini muted" style="margin:6px 0 8px;">El buzón reconoce cada plataforma por su
-        <b>remitente</b> y por palabras clave del asunto. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Añade los de tus plataformas — hasta la más
-        local — y sus reservas entran solas. Y si un día llega una reserva de un remitente que no
-        está en la lista, el sistema no la tira: te la enseña y te propone <b>conectar ese canal en
-        un clic</b>.</span></details></div>
-      <div class="fila" id="cn-remitentes" style="gap:6px; flex-wrap:wrap;"></div>
-      <div class="fila" style="margin-top:10px; gap:8px;">
-        <input id="cn-nuevo" placeholder="remitente o palabra clave — p. ej. reservas@miplataformalocal.com"
-          style="flex:1; min-width:250px; border:1.5px solid var(--line); border-radius:8px; padding:8px 10px; font-size:13px; font-family:inherit;">
-        <button class="btn mini" onclick="anadirRemitente()">+ Añadir</button>
-      </div>
+    <p id="bd-pendientes" role="status" aria-live="polite"></p>
+    <div id="bd-detalle" hidden style="border:1px solid var(--line);border-radius:10px;padding:16px;">
+      <h3>Antes de incorporar</h3>
+      <p><b>Original conservado:</b> Nueva reserva GW-DEMO-101 · Ana Gil · 3 personas · GuruWalk.</p>
+      <p><b>Datos leídos:</b> alta, nombre y tres personas. Falta asociar el recorrido.</p>
+      <p><b>Propuesta de este ejemplo:</b> añadir una reserva al manifiesto que está abierto en la demo. En tu panel eliges una salida con fecha, hora y plazas disponibles.</p>
+      <div class="fila" style="gap:8px;flex-wrap:wrap;"><button type="button" class="btn mini sec" id="bd-aplicar" onclick="buzonDemo.accion('aplicar')">Confirmar e incorporar</button><button type="button" class="btn mini sec" id="bd-volver" onclick="buzonDemo.accion('volver')">Volver sin cambios</button></div>
     </div>
   </div>
-
-  <div class="card" style="overflow-x:auto;">
-    <h2>Canales conectados — método y cobertura reales de cada plataforma</h2>
-    <table>
-      <tr><th>Canal</th><th>Método de sync</th><th>Cobertura</th><th>Estado</th><th>Última reserva</th><th>Este mes</th></tr>
-      <tr><td><b>GuruWalk</b></td>
-        <td class="mini">📬 buzón <span class="muted">(no ofrece API: su email trae los datos y el teléfono, y también avisa de cancelaciones y cambios)</span></td>
-        <td class="mini">reservas ✓ · cancelaciones ✓ · cambios ✓</td>
-        <td><span class="chip" style="background:var(--acc-soft); color:var(--acc);">conectado</span></td>
-        <td class="num" id="cn-guruwalk">hace 22 min</td><td class="num">48 p</td></tr>
-      <tr><td><b>Civitatis</b></td>
-        <td class="mini">📬 buzón hoy · <b>🔌 API oficial</b> <span class="muted">(Activity Operator API: webhooks en tiempo real)</span></td>
-        <td class="mini">reservas ✓ · cancelaciones ✓ · <b>cupos ↔</b> con API</td>
-        <td><span class="chip ambar">API en trámite</span></td>
-        <td class="num">hace 3 h</td><td class="num">28 p</td></tr>
-      <tr><td><b>Freetour.com</b></td>
-        <td class="mini">📬 buzón <span class="muted">(email al operador; sin API pública)</span></td>
-        <td class="mini">reservas ✓ · cancelaciones ✓</td>
-        <td><span class="chip" style="background:var(--acc-soft); color:var(--acc);">conectado</span></td>
-        <td class="num">ayer</td><td class="num">6 p</td></tr>
-      <tr><td><b>Web propia</b></td>
-        <td class="mini">🌐 motor Audutor <span class="muted">(nativo)</span></td>
-        <td class="mini">todo, en tiempo real ✓</td>
-        <td><span class="chip" style="background:var(--acc-soft); color:var(--acc);">activo</span></td>
-        <td class="num">hace 41 min</td><td class="num">38 p</td></tr>
-      <tr><td><b>GetYourGuide</b></td>
-        <td class="mini">alta self-serve en su portal + 📬 buzón <span class="muted">(su API es solo para channel managers)</span></td>
-        <td class="mini">—</td>
-        <td><span class="chip gris">sin conectar</span></td><td class="num">—</td>
-        <td><button class="btn mini sec" onclick="toast('En el alta: reenvío automático del email de confirmación al alias reservas@ — 2 minutos y conectado')">Conectar</button></td></tr>
-    </table>
-    <div class="mini muted" style="margin:10px 0 0;">Venga por donde venga, todo acaba en el mismo
-      sitio: manifiesto, anti no-show, grupos y liquidación.</div>
+  <div class="card"><h2>Lo que puedes comprobar en tu panel</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;">
+      <div><h3>Recepción y revisión</h3><p>Estado de conexión, incidencias y pendientes ordenados por antigüedad. Mediana y p95 del tiempo medido desde la recepción o la primera detección por IMAP.</p></div>
+      <div><h3>Confirmaciones por correo</h3><p>Bandeja de salida con reintentos y mensajes que requieren revisión. Aceptación por el servidor de correo no significa entrega o lectura.</p></div>
+      <div><h3>Ayuda humana en GuIA</h3><p>El viajero pide ayuda en el chat web; el equipo asume y responde desde el panel. La respuesta se recupera en ese chat.</p></div>
+    </div>
   </div>
-
+  <div class="card"><h2>Qué conecta cada vía</h2>
+    <p><b>Correo:</b> crea, modifica o cancela reservas con formatos reconocidos. Los mensajes ambiguos quedan para revisar. No cambia disponibilidad en las plataformas.</p>
+    <p><b>Tu web:</b> la página publicada por Audutor consulta su aforo. La sincronización de una web externa requiere implementar y comprobar su conexión a la API.</p>
+    <p><b>WhatsApp / SMS:</b> preparas recordatorios para enviarlos desde tu móvil. El transporte automático de GuIA y los avisos externos aún requieren integración.</p>
+    <p class="mini muted">Una muestra simulada no acredita la salud de un proveedor real. OAuth y el agente que opera plataformas siguen pendientes; el agente no se puede contratar.</p>
+  </div>
 </section>
 
 <!-- EL AGENTE, EN SU PROPIA VISTA.
@@ -2249,8 +2147,7 @@
       activas, ese guía puede marcar llegadas desde su manifiesto; si no, solo el encargado. Los guías
       <b>nunca ven teléfonos de clientes</b>: GuIA hace de intermediario.</p>
     <p class="mini muted" style="margin:8px 0 0;"><b>¿Ya tienes tu web?</b> No hace falta
-      cambiarla: Audutor <b>se sincroniza con la que tengas</b>, sea cual sea, y se monta el
-      primer día. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Va en las <b>dos direcciones</b>, y las dos
+      cambiarla: Audutor <b>puede sincronizarse mediante su API</b>. La conexión se adapta a tu web y se comprueba antes de darla por operativa. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Va en las <b>dos direcciones</b>, y las dos
       hacen falta. <b>Hacia aquí</b>: tu web pregunta qué salidas hay y cuántas plazas quedan
       de verdad, y mete la reserva — si reintenta por un doble clic no se duplica, porque
       casa por tu propia referencia. <b>Hacia allí</b>: tu web pregunta cada pocos minutos qué
@@ -3632,6 +3529,16 @@ function intentoSinIdentificar(cod){
     'IDENTIFICARSE. No se ha cambiado nada: desde ahí no se ejecuta. Si era el viajero, '+
     'que use el enlace de gestión de su correo — o míralo tú a mano.');
 }
+function gestionSinIdentificar(t, lang){
+  intentoSinIdentificar(codEscrito(t));
+  registraDerivada(t, 'autorizacion');
+  if (lang==='en') return 'I cannot change a booking from this public chat. '+
+    (hayWeb() ? 'If you booked on our website ('+webEnlace()+'), use the management link in your confirmation email. ' : '')+
+    'If you booked through a platform, manage it from their confirmation email. Otherwise, contact the operator. Nothing has been changed.';
+  return 'No puedo modificar una reserva desde este chat público. '+
+    (hayWeb() ? 'Si reservaste en nuestra web ('+webEnlace()+'), usa el enlace de gestión de tu email de confirmación. ' : '')+
+    'Si reservaste en una plataforma, gestiónala desde su email de confirmación. En otro caso, contacta con el operador. No se ha cambiado nada.';
+}
 /* UN CÓDIGO ESCRITO QUE NO ES DE NINGUNA RESERVA VIVA. Se distingue de «no ha escrito
    código» porque son dos situaciones distintas y piden dos respuestas distintas: al que no
    ha puesto código se le pide; al que ha puesto uno que no consta hay que DECÍRSELO, o se
@@ -4129,6 +4036,7 @@ function paxCambioDe(m, t){
   if ((x=/\b(\d{1,2}|one|two|three|four) more (?:people|persons?|of us)\b/.exec(tl))) return {delta:+N(x[1])};
   if ((x=/\b(\d{1,2}|one|two|three|four) (?:fewer|less)\b/.exec(tl))) return {delta:-N(x[1])};
   if ((x=/\b(?:now we(?:'| a)?re|we(?:'ll| will) be) (\d{1,2})\b/.exec(tl))) return {abs:+x[1]};
+  if ((x=/\bto ([1-9]\d?) (?:people|persons?|pax)\b/.exec(tl))) return {abs:+x[1]};
   return null;
 }
 /* ── El calendario, para MOVER reservas de día ──────────────────────────────────
@@ -4783,6 +4691,83 @@ function capaCritica(t, lang){
   return null;
 }
 
+/* Primera familia declarativa: preguntas que antes afirmaban políticas por defecto.
+ * El catálogo declara tema, ámbito y patrones; la ejecución no elige el primer tema.
+ * Dos temas distintos derivan: cambiar el orden del catálogo no cambia la respuesta.
+ * Solo estos cinco temas están migrados; las demás reglas conservan su orden. */
+var TEMAS_HECHOS = [
+  { campo:'fumar', ambito:'empresa', es:/fuma|tabaco|cigarro|vapea|vaper|porro/, en:/\b(smok\w*|vape\w*|cigarette\w*|tobacco)\b/,
+    salvo:/museo|museum|fabrica|factory/,
+    salvoExcepto:/(?:pued|permit|can |may |allowed).*(?:fuma|smok|vape|tabac|cigar)|(?:fuma|smok|vape|tabac|cigar).*allowed/ },
+  /* `salvo`: LO QUE NO ES ESTE TEMA aunque comparta palabra. Hace falta porque el catálogo
+     se consulta ANTES que las reglas de abajo, así que sin él un tema declarativo GANA
+     SIEMPRE a la regla que de verdad contesta esa pregunta. Medido: «¿el seguro da
+     cobertura a los niños?» contestaba «no hace falta internet», y «¿hay conexión de metro
+     hasta el punto?» derivaba al campo `wifi` en vez de a `llegar` — con lo que el
+     encargado rellena el campo equivocado y la pregunta sigue sin respuesta. Es el fallo
+     que el corpus llama «contestar con seguridad algo que no te han preguntado». */
+  { campo:'wifi', ambito:'empresa',
+    es:/wifi|wi-fi|datos moviles|internet|cobertura|\bsim\b|roaming|conexion/,
+    en:/\b(wifi|wi-fi|internet|roaming|mobile data|connection|sim card)\b/,
+    salvo:/seguro|insurance|reserv|\bbook\b|booking|pagar|\bpago\b|\bpaga\b|\bpay\b|comprar|\bcompro\b|\bbuy\b|autobus|\bbus\b|metro|\btren\b|\btrain\b|aeropuerto|airport|\bpuerto\b/ },
+  { campo:'confirmacion', ambito:'empresa', es:/tengo que confirmar|hay que confirmar|debo confirmar|hace falta confirmar|confirmar la reserva/, en:/\b(need|have|must|should|necessary|required)\b.*\b(reconfirm|confirm)\b/ },
+  /* Un tour «con guía» en OTRO IDIOMA es una pregunta de `idiomas`, y «guía privado» lo es
+     de `privados`: las dos tienen su propio campo y su propia regla más abajo. */
+  { campo:'audio', ambito:'tour',
+    es:/es guiad|va guiad|tour guiad|lleva guia|hay guia|va (con )?un guia|con guia local/,
+    en:/\b(is|are)\b.*\b(guided|audio guide|audioguide)\b/,
+    salvo:/ingles|english|frances|french|aleman|german|italiano|italian|portugues|portuguese|espanol|spanish|idioma|language|\bhabla|\bspeak|privad|private|exclusiv|horario|\bhora|\btime\b|\bwhen\b|cuando|\bdura\b|duracion|how long|\blength\b/ },
+  /* Si además pregunta por el precio o por una parada, la respuesta no es la política de
+     alcohol: «¿el vino está incluido?» es `modelo` y «¿paramos a tomar algo?» es `comida`. */
+  { campo:'alcohol', ambito:'empresa',
+    es:/alcohol|cerveza|copa|vino|borrach/, en:/\b(alcohol|beer|wine|drunk)\b/,
+    salvo:/incluid|includ|precio|\bprice\b|cuesta|\bcost\b|pagar|\bpaga\b|\bpay\b|aparte|parada|paramos|\bstop\b/ }
+];
+/* Clasificar no lee hechos ni registra derivaciones. Se evalúan por separado la
+   intención de estas cinco familias y la disponibilidad de su respuesta. */
+function clasificaHechoDeclarado(t, m, lang){
+  /* El `salvo` se mira sobre el texto normalizado Y el original: en inglés el puente solo
+     traduce los tokens que conoce, así que «insurance» o «bus» pueden no llegar a `m`. */
+  var bruto=String(t).toLowerCase(), lupa=m+' '+bruto;
+  // Una póliza necesita revisión humana. «Seguro que sale» sigue siendo horario:
+  // no basta la palabra «seguro», y los datos de niños o accesibilidad no la acreditan.
+  if (/insurance|\binsured\b|poliza|aseguradora|seguro.*(?:cubr|cobertura|accidente|responsabilidad)|(?:cubr|cobertura).*seguro/.test(lupa)) {
+    return { tipo:'persona', motivo:'seguro' };
+  }
+  var temas=TEMAS_HECHOS.filter(function(x){
+    if (x.salvo && x.salvo.test(lupa) && !(x.salvoExcepto && x.salvoExcepto.test(lupa))) return false;
+    return lang==='en' ? x.en.test(bruto) || x.es.test(m) : x.es.test(m);
+  });
+  if (!temas.length) return null;
+  if (temas.length>1) return { tipo:'persona', motivo:'varios-temas' };
+  return { tipo:'hecho', campo:temas[0].campo, ambito:temas[0].ambito };
+}
+function respuestaHechoDeclarado(t, m, lang){
+  var tema=clasificaHechoDeclarado(t,m,lang);
+  if (!tema) return null;
+  if (tema.motivo==='seguro') {
+    registraDerivada(t, 'persona');
+    return lang==='en' ? 'I will pass your insurance question to the manager to check the policy.'
+      : 'Paso tu pregunta sobre el seguro al encargado para que compruebe la póliza.';
+  }
+  if (tema.tipo==='persona'){
+    registraDerivada(t, 'persona');
+    return lang==='en' ? 'You are asking about several policies. I will pass them to the manager so each is checked.'
+      : 'Preguntas por varias condiciones. Se las paso al encargado para que revise cada una.';
+  }
+  var dato=tema.ambito==='empresa' ? kbE(tema.campo) : kb(tema.campo);
+  if (dato && !esPlantilla(dato)){
+    if (lang==='es') return dato;
+    var traducido=!/[a-záéíóúñü]{4,}/i.test(dato) ? dato : trEN(dato);
+    if (traducido) return traducido;
+    registraDerivada(t, 'traduccion', tema.campo);
+    return 'I have that information, but not a verified English version. I will ask the manager to help.';
+  }
+  if (lang==='es') return tema.ambito==='empresa' ? derivaPorHuecoEmp(tema.campo,t) : derivaPorHueco(tema.campo,t);
+  registraDerivada(t, tema.ambito==='empresa' ? 'empresa' : 'hueco', tema.campo);
+  return 'I do not have that information confirmed. I will ask the manager to check it.';
+}
+
 function respuestaGuiaES(t){
   var m=normaliza(t,'es');
   /* La capa crítica ya la ha mirado el router. Se vuelve a llamar aquí porque a este
@@ -4798,6 +4783,8 @@ function respuestaGuiaES(t){
   //    «empresa», ni «grupo», ni «parking» — esos tienen regla propia abajo.)
   if (RE_CORTAFUEGOS.test(m))
     return derivaSiempre(t);
+  var declarado=respuestaHechoDeclarado(t,m,'es');
+  if (declarado!==null) return declarado;
   /* Las URGENCIAS y el CORTAFUEGOS DE AUTORIZACIÓN vivían aquí. Ahora están arriba, en
      capaCritica(), que corre en el router ANTES de elegir idioma — porque la decisión de
      mandar algo a una persona no puede depender de en qué idioma preguntó el viajero. */
@@ -4888,7 +4875,8 @@ function respuestaGuiaES(t){
       var guiaU=(salidasDeHoy()[0]||{}).guia;
       return '¡Los encontramos! El grupo está aquí ahora mismo:\n📍 <b>'+(S.ubiMapa||'el mapa que te paso en cuanto lo comparta')+'</b>\n(ubicación compartida por la guía '+(S.ubiHace<1?'ahora mismo':'hace '+S.ubiHace+' min')+').'+(guiaU?' Pregunta por '+guiaU+' al llegar.':'')+' Si no los ves, dímelo.\n\n<i>— Fíjate: sin dar el teléfono de la guía, y sin que nadie llame a nadie.</i>';
     }
-    return 'Ya le he pedido a tu guía que comparta su ubicación 📍 Pregúntame otra vez en 2-3 minutos y te paso el mapa.\n\n<i>— Prueba a ir al Manifiesto, pulsa «Compartir dónde está el grupo» y vuelve a preguntarme.</i>';
+    registraDerivada(t, 'persona');
+    return 'No tengo la ubicación actual del grupo. Se lo paso al encargado para que te ayude a encontrarlo 📍';
   }
   /* ---- TERCERA PASADA · ideas de Madrid Latido y la competencia ---- */
   // No-show empático (ya pasó): reenganche sin reproche. Va ANTES de la regla
@@ -4929,12 +4917,6 @@ function respuestaGuiaES(t){
     return '¡Perfecto! Queda anotado ✅ Te esperamos'+(partes.length?': '+partes.join(', '):'')+
       (kb('senal')?' — busca '+conArt(kb('senal')):'')+'.\n\n<i>— Apuntado en las observaciones del tour (míralo en el 📋 Manifiesto).</i>';
   }
-  // «¿Es guiado?» — respuesta fija, no es un dato del formulario.
-  if (/es guiad|va guiad|tour guiad|lleva guia|hay guia|va (con )?un guia|con guia local/.test(m))
-    return 'Sí, es un tour 100% guiado: un guía local os acompaña todo el recorrido contando la historia y los secretos de cada rincón.';
-  // Fumar — respuesta fija de sentido común.
-  if (/fuma|tabaco|cigarro|vapea|vaper|porro/.test(m))
-    return kbE('fumar') || 'Es un paseo al aire libre 🙂 Si necesitas un minuto, díselo al guía. Por respeto al grupo, mejor no fumar mientras explica.';
   // Próximo tour: se CALCULA de la agenda de verdad (hoy = S.agenda[S.agDia]).
   /* «Do you have space next monday?» contestaba «el próximo tour es hoy a las 17:00»:
      una salida de hoy afirmada para una pregunta del lunes. Si el mensaje nombra otro
@@ -5300,7 +5282,7 @@ function respuestaGuiaES(t){
        creyendo cancelada una reserva que seguía viva. Ahora cae al camino de abajo, que
        le da la política y su enlace de gestión — el token de 32 caracteres que sí es suyo. */
     var puedeActuar = S.canalIdentificado !== false;
-    if (!puedeActuar && !preguntaC) intentoSinIdentificar(codEscrito(t));
+    if (!puedeActuar && !preguntaC) return gestionSinIdentificar(t,'es');
     var cod = (preguntaC || !puedeActuar) ? null : (codEscrito(t) || (ordenC ? S.codConocido : null));
     if (cod){
       anotaGuia('Reserva «'+cod+'» cancelada por el chat — plaza liberada');
@@ -5360,9 +5342,9 @@ function respuestaGuiaES(t){
        tampoco se anuncia. Aquí cuelgan el cambio de PERSONAS y la mudanza de FECHA —las
        dos irreversibles para la plaza de otro— y las dos decían «¡Hecho!» desde el chat
        público mientras el servidor las rechazaba. */
-    if (S.canalIdentificado === false) intentoSinIdentificar(codEscrito(t));
-    var codB = (S.canalIdentificado === false) ? null
-      : (codEscrito(t) || (preguntaB ? null : S.codConocido));
+    if (S.canalIdentificado === false && !preguntaB) return gestionSinIdentificar(t,'es');
+    var codB = (S.canalIdentificado === false || preguntaB) ? null
+      : (codEscrito(t) || S.codConocido);
     if (codB){
       var cp=paxCambioDe(m, t);
       if (cp){
@@ -5471,7 +5453,7 @@ function respuestaGuiaES(t){
      pregunta, son el complemento de lugar de otra: «¿hay baños EN EL RECORRIDO?», «¿hay
      cuestas EN LA RUTA?». Ahora el itinerario solo dispara si la pregunta va DE la ruta,
      y la lista negra se queda como segunda línea para las formas enmarcadas. */
-  if (/que (se )?visit|que vemos|que veremos|que vamos a ver|que se ve|que sitios|que monumentos?|que recorrido|como es el recorrido|que ruta|cual es la ruta|el recorrido incluye/.test(m)
+  if (/que (se )?visit|que vemos|que veremos|que vamos a ver|que se ve|que sitios|que monumentos?|que recorrido|como es el recorrido|que ruta|cual es la ruta|el recorrido incluye|(?:la visita|el tour|el recorrido|la ruta) pasa por/.test(m)
       && !/bano|aseo|lavabo|urinario|retrete|wc|comer|comida|beber|agua|fumar|foto|nino|bebe|perro|wifi|internet|descanso|parada|embaraz|silla de ruedas|carrito|escaleras|cuestas|desnivel|ritmo|es segur|carterista|robo/.test(m)){
     var vi=kb('visita'); if(!vi) return derivaPorHueco('visita', t);
     return 'Veremos '+vi+' — sin prisas y con las mejores historias 🙂';
@@ -5719,12 +5701,6 @@ function respuestaGuiaES(t){
   if (/sin reserva|no (he |hemos )?reservad|no tengo reserva|puedo ir directamente|hace falta reservar|es necesario reservar|hay que reservar|tengo que reservar|necesito reservar|debo reservar|aparecer y ya|presentarme sin|reserva (entonces|ya|pues)\b|vale,? reserva|me apunt|apuntarme|quiero reservar|como (se )?reserva\b|donde (compro|comprar) (los )?boletos/.test(m))
     return kbE('sinreserva') || derivaPorHuecoEmp('sinreserva', t);
 
-  // Wifi, datos y cobertura. Un viajero extranjero sin datos no puede ni escribirte.
-  if (/wifi|wi-fi|datos moviles|internet|cobertura|sim|roaming|conexion/.test(m))
-    return kbE('wifi') || 'Durante el tour no hace falta internet para nada: no hay que escanear ni '+
-      'descargar nada. Si vas justo de datos, guarda el punto de encuentro antes de salir '+
-      'del hotel y con eso te vale.';
-
   // Embarazo. Se contesta con lo que SÍ sabemos —el terreno— y no con consejo médico.
   // Se contesta con lo que SÍ sabemos —el terreno, que es un hecho del cerebro— y
   // nunca con consejo médico. Si no hay hecho de ritmo, se deriva: no se improvisa.
@@ -5734,10 +5710,6 @@ function respuestaGuiaES(t){
       em+' Si en algún momento quieres parar o sentarte, díselo al guía y se para — se '+
       'hace a menudo y no pasa nada.';
   }
-
-  // Alcohol. Distinto de fumar y sale a menudo en los nocturnos.
-  if (/alcohol|cerveza|beber|copa|vino|borrach/.test(m))
-    return kbE('alcohol') || derivaPorHuecoEmp('alcohol', t);
 
   // Aforo. «¿cuánta gente vamos a ser?» no es lo mismo que «¿quedan plazas?».
   if (/cuant[oa]s (personas |gente )?(vamos a )?ser|cuanta gente|tamano del grupo|cuantos sois|cuantos vais|maximo de personas/.test(m)){
@@ -5755,12 +5727,6 @@ function respuestaGuiaES(t){
   if (/dni|pasaporte|identifica|carnet|documento|id card/.test(m))
     return kbE('documento') || derivaPorHuecoEmp('documento', t);
 
-  // ¿Tengo que confirmar? Justo lo que el módulo anti-no-show le va a pedir.
-  if (/tengo que confirmar|hay que confirmar|debo confirmar|hace falta confirmar|confirmar la reserva/.test(m))
-    return kbE('confirmacion') || 'Sí, y te lo ponemos fácil: el día antes te llega un mensaje y con responder '+
-      '<b>SÍ</b> ya está. Si no puedes venir, responde <b>NO</b> y liberamos tu plaza para '+
-      'otro — nos ayuda muchísimo y no cuesta nada.';
-
   // Qué hacer después. Es donde un guía bueno se gana la propina y la reseña.
   if (/que hacer despues|donde comer|recomiend|recomendacion|algun sitio para|que me recomiendas|donde tomar/.test(m))
     return 'Pregúntaselo al guía al acabar: para eso es de aquí. Te dirá dónde comer bien '+
@@ -5768,7 +5734,7 @@ function respuestaGuiaES(t){
       'lista de internet.';
 
   if (/hola|buenas|hello/.test(m))
-    return '¡Hola! 👋 Soy GuIA, el asistente automático que atiende este chat. Ahora mismo te atiendo sobre «'+tourChat().nombre+'»: horarios, punto de encuentro, duración… y con tu código puedo cancelar, avisar de un retraso o pasarte el mapa del grupo.\n\nSi prefieres hablar con una persona, escribe <b>PERSONA</b> y te paso 🙂';
+    return '¡Hola! 👋 Soy GuIA, el asistente automático que atiende este chat. Ahora mismo te atiendo sobre «'+tourChat().nombre+'»: horarios, punto de encuentro, duración…'+(S.canalIdentificado!==false ? ' y con tu código puedo cancelar, avisar de un retraso o pasarte el mapa del grupo.' : ' Si necesitas gestionar una reserva, te orientaré para hacerlo por un canal verificado.')+'\n\nSi prefieres hablar con una persona, escribe <b>PERSONA</b> y te paso 🙂';
   registraDerivada(t);
   return 'Esto prefiero no responderlo yo para no equivocarme: se lo paso al encargado y te contesta enseguida 🙂\n\n<i>— Regla de oro: GuIA nunca inventa. Esta pregunta queda registrada en el Cerebro: respóndela una vez allí y la sabrá para siempre.</i>';
 }
@@ -6079,6 +6045,8 @@ function respuestaEN(t){
   // cortafuegos: lo delicado va a una persona, también en inglés
   if (RE_CORTAFUEGOS.test(m))
     return falta();
+  var declarado=respuestaHechoDeclarado(t,m,'en');
+  if (declarado!==null) return declarado;
 
   /* ========== BLOQUE DE ENCARGO A MEDIDA ==========
      Va ANTES de las FAQ a propósito. Todo lo de aquí lleva palabras que las reglas
@@ -6298,6 +6266,7 @@ function respuestaEN(t){
                      /\b(until when|what if i cancel|cancellation policy|do i have to)\b/.test(crudoE)) &&
       !/\b(can you|could you|please cancel|cancel it)\b/.test(crudoE);
     /* Misma guarda que en español: sin canal identificado no se ejecuta ni se anuncia. */
+    if (S.canalIdentificado === false && !preguntaE) return gestionSinIdentificar(t,'en');
     var codC = (preguntaE || S.canalIdentificado === false)
       ? null : (codEscrito(t) || (ordenCE ? S.codConocido : null));
     if (codC){
@@ -6316,7 +6285,7 @@ function respuestaEN(t){
        cambio de un viajero inglés. */
     /* La misma mordaza que el gemelo español: pedir permiso no es ordenar. */
     var preguntaB2 = /\bcan (i|we)\b|\bcould (i|we)\b|is it possible|\bmay (i|we)\b/.test(t.toLowerCase()) ||
-      /\bpuedo\b|\bpodria\b|se puede/.test(m);
+      /\bpuedo\b|\bpodria\b|se puede/.test(t.toLowerCase());
     /* Paridad con el gemelo español: un código escrito muerto no redirige el cambio. */
     var muertoB2 = codMuerto(t);
     if (muertoB2){
@@ -6325,7 +6294,8 @@ function respuestaEN(t){
         'anything — I\'d hate to touch someone else\'s reservation 🙏 Double-check it in your '+
         'confirmation email and send it again.\n\n<i>— Your booking is unchanged.</i>';
     }
-    var codB2 = codEscrito(t) || (preguntaB2 ? null : S.codConocido);
+    if (S.canalIdentificado === false && !preguntaB2) return gestionSinIdentificar(t,'en');
+    var codB2 = (S.canalIdentificado === false || preguntaB2) ? null : (codEscrito(t) || S.codConocido);
     if (codB2){
       var cp2=paxCambioDe(m, t);
       if (cp2){
@@ -6406,8 +6376,11 @@ function respuestaEN(t){
   /* ORDEN IMPORTANTE: “I have lost the group” lleva las dos palabras. Si /grupo/ se
      comprobara antes, GuIA contestaría la política de grupos a alguien que se ha perdido
      — que es justo la función de rescate que vende la demo. */
-  if (/perdido/.test(m))
-    return 'No problem — send me your booking code'+ejCod()+' and I\'ll share the guide\'s live location so you can catch up 🙂';
+  if (/perdido/.test(m) && /\b(phone|mobile|wallet|keys|bag|camera|glasses|jacket|passport)\b/i.test(t)){
+    registraDerivada(t, 'persona');
+    return 'I will pass the lost item report to the manager. Tell them what you lost and which tour you joined.';
+  }
+  if (/perdido/.test(m)) return rescateEN();
   /* CON LLAVES, y no es cosmética: este `if` no las tenía y gobernaba una sola línea.
      Al meter la del umbral delante del `return`, el `return` dejó de estar guardado y
      TODA pregunta en inglés caía en la política de grupos. Lo cazó la prueba de «how many
@@ -6549,7 +6522,7 @@ function respuestaEN(t){
   /* «I can't see anybody» no es una pregunta por el itinerario. La regla específica —aquí
      + nadie— vive más abajo, así que aquí basta con apartarse: quien dice que no ve a nadie
      está perdido, no preguntando qué se visita. */
-  if (/visita|\bver\b|veremos/.test(m) && !/nadie|ninguno|no encuentro/.test(m))
+  if (/visita|\bver\b|veremos|\b(?:tour|route)\b.*\b(?:visit|pass by|pass through)\b/.test(m) && !/nadie|ninguno|no encuentro/.test(m))
     return v('visita') ? 'We\'ll see '+v('visita')+' — no rush, and with the best stories 🙂' : falta('visita');
   if (/camina|distancia/.test(m))
     return v('distancia') ? 'We cover '+(/^(about|around|some|roughly|approx)/i.test(v('distancia'))?'':'about ')+v('distancia')+' at an easy pace, with plenty of stops.' : falta('distancia');
@@ -6592,8 +6565,6 @@ function respuestaEN(t){
   }
   if (/minimo|pocas|poca gente|sale igual|sale aunque/.test(m))
     return v('minimo')  || falta('minimo');
-  if (/fumar|alcohol/.test(m))
-    return 'It is an outdoor walk 🙂 If you need a moment, just tell the guide. Out of respect for the group, best not to smoke while they are talking.';
   if (/edad/.test(m))
     return v('ninos') ? v('ninos')+' If you are asking about a specific age, tell me and I will check.' : falta();
   if (/bici/.test(m))      return falta();
@@ -6626,7 +6597,8 @@ function respuestaEN(t){
      el mismo estado: pin caducado, pin fresco, y todavía sin compartir. Y por el mismo
      motivo: el enlace y el nombre salen del ESTADO, no del texto de la regla, para que no
      acaben las coordenadas de un cliente en el chat de otro. */
-  if (/aqui|aparece|encuentro|punto|perdido/.test(m) && /nadie|ninguno|perdido/.test(m)){
+  if (/aqui|aparece|encuentro|punto|perdido/.test(m) && /nadie|ninguno|perdido/.test(m)) return rescateEN();
+  function rescateEN(){
     /* La ubicación CADUCA. Un pin de hace 45 minutos con «están aquí AHORA MISMO» es
        afirmar algo que ya no es verdad: un grupo andando se mueve dos kilómetros. */
     if (S.ubi && S.ubiHace>20){
@@ -6640,10 +6612,11 @@ function respuestaEN(t){
       var guiaEN=(salidasDeHoy()[0]||{}).guia;
       return 'Found them! The group is here right now:\n📍 <b>'+(S.ubiMapa||'the map I will send you as soon as it is shared')+'</b>\n(live location shared by the guide '+(S.ubiHace<1?'just now':S.ubiHace+' min ago')+').'+(guiaEN?' Ask for '+guiaEN+' when you get there.':'')+' If you still cannot see them, tell me.\n\n<i>— Notice: without giving out the guide\'s phone number, and without anyone having to call anyone.</i>';
     }
+    registraDerivada(t, 'persona');
     return (v('senal') ? 'Look for '+conThe(v('senal')) : 'Look for the guide')+
       (v('punto')?' '+conAt(v('punto')):'')+'. '+
       (v('espera') ? 'The guide waits '+v('espera')+', so hold on a moment. ' : '')+
-      'I have already asked your guide to share their live location 📍 Ask me again in 2-3 minutes and I will send you the map.';
+      'I do not have the live location yet. I will pass this to the manager to help you find the group 📍.';
   }
   if (/solo/.test(m))      return v('solo')    || falta('solo');
   if (/seguro/.test(m))    return EMP('seguridad') || falta();
@@ -10310,15 +10283,7 @@ function anadirRemitente(){
   toast('🕵️ Añadido — el buzón reconocerá ese canal automáticamente desde ya');
 }
 function quitarRemitente(i){ S.canales.remitentes.splice(i,1); pintaCanales(); toast('Quitado de la detección'); }
-var buzonProbado=false;
-function probarBuzon(){
-  if (buzonProbado){ toast('📭 Buzón al día: no hay reservas nuevas que leer'); return; }
-  buzonProbado=true;
-  S.att.push({ n:'Ana Gil', p:3, canal:'GuruWalk', ok:false });
-  pintaManifiesto(); pintaCombosDestinatarios();
-  document.getElementById('cn-guruwalk').textContent='ahora mismo';
-  toast('📥 Leída del buzón: Ana Gil · 3p · GuruWalk · mañana 10:00 — ya está en el manifiesto y en la cadencia anti no-show');
-}
+function probarBuzon(){ buzonDemo.accion('recibir'); }
 
 /* ============ equipo y disponibilidad ============ */
 /* días de la semana en que sale una franja (0=lun..6=dom): override manual del
@@ -10914,6 +10879,42 @@ function lupaLiquida(marco, selector, opciones) {
   marco.addEventListener('focusout', (e) => { if (!marco.contains(e.relatedTarget)) esconde(); });
 }
 lupaLiquida(document.getElementById('nav-princ'), 'a[data-v], .nav-g-cab');
+/* BUZON_DEMO_INICIO: mismo recorrido en ambos idiomas, datos sólo en memoria. */
+var buzonDemo = (function(){
+  var en=document.documentElement.lang.indexOf('en')===0;
+  var fase=0, revisando=false;
+  function t(es, ingles){ return en?ingles:es; }
+  function pinta(){
+    document.getElementById('bd-estado').textContent = fase===0
+      ? t('Sin configurar · ejemplo local','Not configured · local example')
+      : fase===1 ? t('Configurada · recepción pendiente','Configured · reception pending')
+      : t('Recepción comprobada · ejemplo local','Reception verified · local example');
+    document.getElementById('bd-configurar').disabled=fase>0;
+    document.getElementById('bd-recibir').disabled=fase===0;
+    document.getElementById('bd-revisar').disabled=fase!==2;
+    document.getElementById('bd-aplicar').disabled=fase!==2 || !revisando;
+    document.getElementById('bd-detalle').hidden=!revisando;
+    document.getElementById('bd-pendientes').textContent=fase<2
+      ? t('Sin mensajes recibidos. Configurar no demuestra recepción.','No messages received. Configuration is not proof of reception.')
+      : fase===2 ? t('1 pendiente · recorrido sin asociar. Revisa antes de incorporarla.','1 pending · unmatched tour. Review before adding it.')
+      : t('Incorporada una vez al manifiesto. Un reintento no añade otra reserva.','Added once to the manifest. Retrying does not add another booking.');
+  }
+  function accion(a){
+    if(a==='configurar' && fase===0) fase=1;
+    if(a==='recibir' && fase===1) fase=2;
+    if(a==='revisar' && fase===2) revisando=true;
+    if(a==='volver') revisando=false;
+    if(a==='aplicar' && fase===2 && revisando){
+      S.att.push({n:en?'Ana Rossi':'Ana Gil', p:3, canal:'GuruWalk', ok:false});
+      fase=3; revisando=false;
+      pintaManifiesto(); pintaCombosDestinatarios();
+    }
+    pinta();
+  }
+  pinta();
+  return { accion:accion };
+})();
+/* BUZON_DEMO_FIN */
 </script>
 </body>
 </html>

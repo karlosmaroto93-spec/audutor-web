@@ -136,7 +136,7 @@ button:disabled{ background:var(--line); color:var(--muted); cursor:default; }
     <span class="pie">the guide's day, sorted</span></span>
 
   <h1>Log in to Audutor</h1>
-  <p class="lead">No password. Type your email and we send you a link.</p>
+  <p class="lead">Use your email or the access saved on your device.</p>
 
   <div class="modos" role="tablist" aria-label="Log in or create an account">
     <button type="button" class="modo" id="tab-entrar" role="tab" aria-selected="true"
@@ -145,6 +145,8 @@ button:disabled{ background:var(--line); color:var(--muted); cursor:default; }
             aria-controls="fa">Create account</button>
   </div>
   <form id="f" hidden>
+    <a id="acceso-app" href="https://audutor.fly.dev/" style="display:block;padding:14px;border-radius:10px;background:#165344;color:#fffdf7;text-align:center;text-decoration:none;font-weight:700;">Log in with a code or your device</a>
+    <p style="font-size:13px;line-height:1.6;">Open Audutor to use the code from your email, or your saved fingerprint, face or PIN access. You can also request a link below.</p>
     <label for="e">Your email</label>
     <input id="e" type="email" inputmode="email" autocomplete="email" required
            placeholder="you@company.com">
@@ -194,6 +196,7 @@ var APP_URL = 'https://audutor.fly.dev';
   var f = document.getElementById('f');
   var cerrado = document.getElementById('cerrado');
   if (!APP_URL){ cerrado.hidden = false; return; }
+  document.getElementById('acceso-app').href = APP_URL.replace(/\/+$/, '') + '/';
   f.hidden = false;
 
   var msg = document.getElementById('msg');
@@ -242,7 +245,7 @@ var APP_URL = 'https://audutor.fly.dev';
     h1.textContent = alta ? 'Create your account' : 'Log in to Audutor';
     lead.textContent = alta
       ? 'No card and no lock-in. We send your login link to your email.'
-      : 'No password. Type your email and we send you a link.';
+      : 'Use your email or the access saved on your device.';
     (alta ? document.getElementById('ae') : document.getElementById('e')).focus();
   }
   tabAlta.addEventListener('click', function(){ modo(true); });
