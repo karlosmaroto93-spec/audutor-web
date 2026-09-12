@@ -3901,7 +3901,7 @@ function salidasDeHoy(){
    «quedan 20 plazas 🙂» a un viajero al que iba a dejar en la calle. Una reserva ocupa
    sitio la haya confirmado el viajero o no: confirmar es decir «voy a ir», no «quiero
    plaza». La lista ya llega sin canceladas desde el parte, así que aquí se suman todas. */
-function paxDeSalida(s){ var p=0; (s.res||[]).forEach(function(r){ p+=r.p; }); return p; }
+function paxDeSalida(s){ if(typeof s.ocupacionCapacidad==='number'&&isFinite(s.ocupacionCapacidad))return Math.max(0,s.ocupacionCapacidad); var p=0; (s.res||[]).forEach(function(r){ p+=r.p; }); return p; }
 /* EL AFORO DE ESA SALIDA, y solo si no lo tiene el de la ficha.
    El mismo fallo que `paxDeSalida`, por el otro lado: el motor usaba `kb('aforo')` —el
    aforo general del tour— para decidir si quedaban plazas, ignorando el `aforo` que el
