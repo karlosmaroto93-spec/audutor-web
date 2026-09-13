@@ -7109,29 +7109,26 @@ function pintaManifiestoReal(){
        que copie, y copiando es donde se equivoca. Lo que él aporta es lo que la máquina
        no puede saber: si vinieron dos más que nadie apuntó. */
     if (liqModo==='fijo'){
-      var conf = t.cabezas!=null ? t.cabezas : pres;
-      caja.innerHTML='<strong>👥 People who turned up</strong>'+
-        '<div class="fila" style="gap:8px; margin-top:8px; align-items:center;">'+
-          '<input class="cab-in" type="number" min="0" max="999" value="'+conf+'" style="width:90px;"> '+
-          '<span class="mini muted">people</span>'+
-          '<button class="btn mini cab-save">Save</button>'+
-        '</div>'+
-        '<p class="mini muted cab-pie" style="margin:6px 0 0;">The house keeps <b>'+euros(fijoCabeza())+
-          ' per person</b>: that is <b>'+euros(fijoCabeza()*conf)+'</b>. The tips are yours and there is no need to log them.'+
-          (t.sinGuia?' ⚠️ Nobody is down to guide this one yet (see Team &amp; availability).':'')+'</p>'+
-        '<p class="mini muted" style="margin:4px 0 0;">'+
-          (t.cabezas!=null?'You confirmed it. Change it if you remember anyone else.':'It comes from the arrivals you marked ('+pres+'). Correct it if someone came without being logged.')+'</p>';
+      var adultos=t.res.filter(function(r){return r.ok||r.walkin}).reduce(function(n,r){return n+Math.max(0,Math.min(r.p,r.tramos&&r.tramos.adultos!=null?r.tramos.adultos:r.p))},0);
+      var conf=t.cabezas!=null?t.cabezas:adultos;
+      caja.innerHTML='<strong>👥 Adults for the split</strong>'+
+        '<div class="fila" style="gap:8px;margin-top:8px;align-items:center">'+
+        '<input class="cab-in" aria-label="Adults for the split" type="number" min="0" max="10000" value="'+conf+'" style="width:90px">'+
+        '<span class="mini muted">adults</span><button class="btn mini cab-save">Save</button></div>'+
+        '<p class="mini muted cab-pie"></p><p class="mini muted">Only changes the split basis in this demo. Attendance and no-shows stay the same. Without ages, everyone counts as an adult. '+(t.cabezas!=null?'Manual basis; kept even when the list changes.':'Basis calculated from arrivals.')+'</p>'+
+        (t.cabezas!=null?'<button class="btn mini cab-auto">Use adults from the list</button>':'');
       var ci=caja.querySelector('.cab-in');
-      ci.oninput=function(){
-        var n=Math.max(0, parseInt(ci.value,10)||0);
-        caja.querySelector('.cab-pie').innerHTML='The house keeps <b>'+euros(fijoCabeza())+
-          ' per person</b>: that is <b>'+euros(fijoCabeza()*n)+'</b>. The tips are yours and there is no need to log them.';
-      };
-      caja.querySelector('.cab-save').onclick=function(){
-        t.cabezas=Math.max(0, parseInt(ci.value,10)||0);
-        pintaManifiesto();
-        toast('👥 {n} people — the house keeps {e}'.replace('{n}', t.cabezas).replace('{e}', euros(fijoCabeza()*t.cabezas)));
-      };
+      ci.oninput=function(){var n=Number(ci.value);caja.querySelector('.cab-pie').textContent='The house keeps '+euros(fijoCabeza())+' per adult: '+euros(fijoCabeza()*(Number.isFinite(n)&&n>=0?n:0));};ci.oninput();
+      function guardaBase(auto){
+        var n=auto?null:Number(ci.value);
+        if(!auto&&(!ci.value.trim()||!Number.isInteger(n)||n<0||n>10000)){toast('Enter a whole number of adults between 0 and 10000.');return;}
+        if(dia.pasado&&!confirm('This departure is closed. Correct the demo split basis?'))return;
+        var antes=t.cabezas!=null?t.cabezas:adultos;t.cabezas=n;
+        (t.obs||(t.obs=[])).push({a:'sistema',rec:true,t:'Demo split basis corrected: '+antes+' → '+(auto?adultos:n)});
+        pintaManifiesto();toast('Split basis saved in the demo.');
+      }
+      caja.querySelector('.cab-save').onclick=function(){guardaBase(false)};
+      if(caja.querySelector('.cab-auto'))caja.querySelector('.cab-auto').onclick=function(){guardaBase(true)};
     } else {
     caja.innerHTML='<strong>💶 Tour takings</strong>'+
       '<div class="fila" style="gap:8px; margin-top:8px; align-items:center;">'+

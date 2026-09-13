@@ -8569,29 +8569,26 @@ function pintaManifiestoReal(){
        que copie, y copiando es donde se equivoca. Lo que él aporta es lo que la máquina
        no puede saber: si vinieron dos más que nadie apuntó. */
     if (liqModo==='fijo'){
-      var conf = t.cabezas!=null ? t.cabezas : pres;
-      caja.innerHTML='<strong>👥 Personas que vinieron</strong>'+
-        '<div class="fila" style="gap:8px; margin-top:8px; align-items:center;">'+
-          '<input class="cab-in" type="number" min="0" max="999" value="'+conf+'" style="width:90px;"> '+
-          '<span class="mini muted">personas</span>'+
-          '<button class="btn mini cab-save">Guardar</button>'+
-        '</div>'+
-        '<p class="mini muted cab-pie" style="margin:6px 0 0;">La casa se queda <b>'+euros(fijoCabeza())+
-          ' por persona</b>: son <b>'+euros(fijoCabeza()*conf)+'</b>. La propina es tuya entera y no hace falta apuntarla.'+
-          (t.sinGuia?' ⚠️ Este tour no tiene guía asignado (mira Equipo y disponibilidad).':'')+'</p>'+
-        '<p class="mini muted" style="margin:4px 0 0;">'+
-          (t.cabezas!=null?'Lo confirmaste tú. Cámbialo si te acuerdas de alguien más.':'Sale de las llegadas que has marcado ('+pres+'). Corrígelo si vino alguien sin apuntar.')+'</p>';
+      var adultos=t.res.filter(function(r){return r.ok||r.walkin}).reduce(function(n,r){return n+Math.max(0,Math.min(r.p,r.tramos&&r.tramos.adultos!=null?r.tramos.adultos:r.p))},0);
+      var conf=t.cabezas!=null?t.cabezas:adultos;
+      caja.innerHTML='<strong>👥 Adultos para el reparto</strong>'+
+        '<div class="fila" style="gap:8px;margin-top:8px;align-items:center">'+
+        '<input class="cab-in" aria-label="Adultos para el reparto" type="number" min="0" max="10000" value="'+conf+'" style="width:90px">'+
+        '<span class="mini muted">adultos</span><button class="btn mini cab-save">Guardar</button></div>'+
+        '<p class="mini muted cab-pie"></p><p class="mini muted">Solo cambia la base del reparto de esta demo. No modifica asistentes ni no-shows. Sin edades, se cuentan todas las personas como adultos. '+(t.cabezas!=null?'Base manual; se mantiene aunque cambie la lista.':'Base calculada de las llegadas.')+'</p>'+
+        (t.cabezas!=null?'<button class="btn mini cab-auto">Usar adultos de la lista</button>':'');
       var ci=caja.querySelector('.cab-in');
-      ci.oninput=function(){
-        var n=Math.max(0, parseInt(ci.value,10)||0);
-        caja.querySelector('.cab-pie').innerHTML='La casa se queda <b>'+euros(fijoCabeza())+
-          ' por persona</b>: son <b>'+euros(fijoCabeza()*n)+'</b>. La propina es tuya entera y no hace falta apuntarla.';
-      };
-      caja.querySelector('.cab-save').onclick=function(){
-        t.cabezas=Math.max(0, parseInt(ci.value,10)||0);
-        pintaManifiesto();
-        toast('👥 {n} personas — la casa se queda {e}'.replace('{n}', t.cabezas).replace('{e}', euros(fijoCabeza()*t.cabezas)));
-      };
+      ci.oninput=function(){var n=Number(ci.value);caja.querySelector('.cab-pie').textContent='La casa se queda '+euros(fijoCabeza())+' por adulto: '+euros(fijoCabeza()*(Number.isFinite(n)&&n>=0?n:0));};ci.oninput();
+      function guardaBase(auto){
+        var n=auto?null:Number(ci.value);
+        if(!auto&&(!ci.value.trim()||!Number.isInteger(n)||n<0||n>10000)){toast('Indica un número entero de adultos entre 0 y 10000.');return;}
+        if(dia.pasado&&!confirm('Esta salida está cerrada. ¿Rectificar la base del reparto de la demo?'))return;
+        var antes=t.cabezas!=null?t.cabezas:adultos;t.cabezas=n;
+        (t.obs||(t.obs=[])).push({a:'sistema',rec:true,t:'Base del reparto rectificada en la demo: '+antes+' → '+(auto?adultos:n)});
+        pintaManifiesto();toast('Base del reparto guardada en la demo.');
+      }
+      caja.querySelector('.cab-save').onclick=function(){guardaBase(false)};
+      if(caja.querySelector('.cab-auto'))caja.querySelector('.cab-auto').onclick=function(){guardaBase(true)};
     } else {
     caja.innerHTML='<strong>💶 Ingresos del tour</strong>'+
       '<div class="fila" style="gap:8px; margin-top:8px; align-items:center;">'+
