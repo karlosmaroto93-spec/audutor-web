@@ -879,6 +879,21 @@
     .vista.act, .nav-g.abierto .nav-g-hijos, .seg-vivo{ animation:none !important; }
     .btn, .card, .bloq-inline, #toast, .nav-g-cab .flecha{ transition:none !important; }
   }
+/* DEMO_PLAN_CSS_INICIO */
+.dp-panel, #dp-equipo { margin:16px 0; padding:16px; border:1px solid var(--line); border-radius:12px; background:var(--acc-soft); }
+.dp-panel label, #dp-equipo label, .dp-dialogo label { display:flex; flex-direction:column; gap:5px; min-width:0; margin:8px 0; }
+.dp-panel input, .dp-panel select, #dp-equipo input, .dp-dialogo textarea { box-sizing:border-box; width:100%; min-width:0; padding:9px; border:1px solid var(--line); border-radius:7px; font:inherit; background:white; color:#172f28; }
+.dp-panel [hidden] { display:none!important; }
+.dp-franja { display:flex; align-items:end; gap:8px; flex-wrap:wrap; }
+.dp-franja label { flex:1 1 85px; }
+.dp-franja button { margin-bottom:8px; }
+.dp-acciones { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+.dp-dialogo { box-sizing:border-box; width:calc(100% - 24px); max-width:560px; max-height:calc(100dvh - 24px); overflow:auto; overflow-wrap:anywhere; border:1px solid var(--line); border-radius:16px; padding:20px; color:#172f28; background:#fffdf7; }
+.dp-dialogo::backdrop { background:rgba(0,0,0,.45); }
+.dp-dialogo textarea { min-height:85px; }
+.dp-dialogo [role=alert] { color:#993b21; }
+.dp-dialogo .btn { white-space:normal; }
+/* DEMO_PLAN_CSS_FIN */
 </style>
 </head>
 <body>
@@ -2054,6 +2069,7 @@
       running order</b> (first = lead guide). Hatched cells are days with no departure (tap them
       to add one); <span style="color:var(--amber); font-weight:700;">amber</span> ones run but
       have nobody covering them.</span></details></div>
+    <section id="dp-equipo"></section>
     <div style="overflow-x:auto;"><div class="cal" id="eq-cal"></div></div>
     <div class="cal-leyenda" id="eq-cal-leyenda"></div>
     <p class="mini muted" style="margin:8px 0 0;"><b>And when there is no previous week to
@@ -2085,7 +2101,7 @@
       departure fits their hours; missing duration leaves that check unresolved. Changing hours does not remove assigned departures.
       The manager can lock availability through a date for the whole company. A guide who cannot cover an assigned
       departure can still decline with a reason; the manager reviews the replacement. Scheduling preserves the historical
-      guide of closed departures. This sample does not yet reproduce the time-slot and availability-lock forms.</p>
+      guide of closed departures. Try time windows and assignment review in the pattern below. Date locking is available in the real app.</p>
     <p class="mini muted">If a guide cannot cover a departure, they explain why in the app form. Their pending changes are checked before the departure becomes unassigned. The manager reviews the replacement, who then confirms coverage. The reason stays in the form if sending fails. This demo does not yet reproduce that form.</p>
     <details class="mas"><summary>Guide access without a connection</summary><span class="mas-p">In the app, guides can consult a previously downloaded manifest for the day and keep pending actions offline. If the server rejects their session, the app removes that copy and requires a new sign-in with a connection. Pending actions retain their guide. Access revocation cannot reach a device while it remains fully offline. This demo does not simulate sessions or offline storage.</span></details>
     <div id="eq-cal-picker" style="display:none; margin-top:14px;"></div>
@@ -2398,6 +2414,139 @@ function tourNuevo(nombre, fuente, valores){
            ticket: !!(valores && valores.ticket) };
 }
 
+/* DEMO_PLAN_JS_INICIO */
+/* Patrón semanal de demostración: sin servidor, fechas ni cambios de zona horaria.
+   Copia incrustada por scripts/sincroniza-planificacion-demo.py en ambos HTML. */
+var DemoPlan = (function () {
+  'use strict';
+  var en = document.documentElement.lang === 'en';
+  var dias = en ? ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'] : ['lunes','martes','miércoles','jueves','viernes','sábado','domingo'];
+  var borradores = new Map(), margenBorrador = null;
+  function t(es, ingles) { return en ? ingles : es; }
+  function el(tag, texto, padre) { var n = document.createElement(tag); if (texto) n.textContent = texto; if (padre) padre.appendChild(n); return n; }
+  function boton(texto, padre, accion) { var b = el('button', texto, padre); b.type = 'button'; b.className = 'btn mini sec'; b.onclick = accion; return b; }
+  function datos() { return S.equipo.planDemo || (S.equipo.planDemo = { dias: {}, margen: 0 }); }
+  function minuto(h, final) { if (final && h === '24:00') return 1440; if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(h)) return null; return +h.slice(0,2)*60 + +h.slice(3); }
+  function normaliza(tramos) {
+    if (!Array.isArray(tramos) || !tramos.length || tramos.length > 6) throw Error(t('Indica entre una y seis franjas.', 'Enter between one and six time windows.'));
+    var r = tramos.map(function (x) { var a=minuto(x.desde), b=minuto(x.hasta,true); if (a===null || b===null || a>=b) throw Error(t('Cada franja debe terminar después de empezar. Para cruzar medianoche, añade otra al día siguiente.', 'Each window must end after it starts. To cross midnight, add another window on the following day.')); return {desde:x.desde,hasta:x.hasta}; }).sort(function(a,b){return minuto(a.desde)-minuto(b.desde);});
+    for (var i=1;i<r.length;i++) if (minuto(r[i].desde)<minuto(r[i-1].hasta,true)) throw Error(t('Las franjas no pueden solaparse.', 'Time windows cannot overlap.'));
+    return r;
+  }
+  function dia(gi,d) { return datos().dias[gi+'|'+d] || {estado:'sinindicar',tramos:[]}; }
+  function guarda(gi,d,estado,tramos) {
+    if (!S.equipo.guias[gi] || !S.equipo.guias[gi].activo || !Number.isInteger(d) || d<0 || d>6) throw Error(t('Guía o día no disponible.', 'Guide or day unavailable.'));
+    if (!['sinindicar','no','franjas'].includes(estado)) throw Error(t('Estado no válido.', 'Invalid status.'));
+    datos().dias[gi+'|'+d] = {estado:estado,tramos:estado==='franjas'?normaliza(tramos):[]};
+  }
+  function duracion(slot) {
+    var nombre=slot.split('|')[0], tour=S.tours.find(function(x){return x.nombre===nombre;});
+    var txt=tour && String(tour.kb.dur||'').trim().toLowerCase();
+    // Formatos explícitos del ejemplo; una duración libre no reconocida queda desconocida.
+    var m=txt && txt.match(/^(?:(\d+(?:[.,]\d+)?)\s*(?:h|hr|hrs|hours?|horas?)\s*)?(?:(\d+)\s*(?:m|min|mins|minutes?|minutos?))?$/);
+    var n=m ? Number((m[1]||'0').replace(',','.'))*60 + Number(m[2]||0) : 0;
+    return n>0 && n<=1440 ? n : null;
+  }
+  function disponibilidad(gi,slot) {
+    var p=slot.split('|'), d=+p[2], a=minuto(p[1]), n=duracion(slot), g=S.equipo.guias[gi];
+    if (!g || !g.activo || g.dispo[slot]===false) return 'no';
+    if (a===null) return 'sinindicar';
+    var desconocido=!n;
+    for (var cursor=a, fin=a+(n||1); cursor<fin;) {
+      var fecha=(d+Math.floor(cursor/1440))%7, desde=cursor%1440, hasta=Math.min(1440,fin-Math.floor(cursor/1440)*1440), reg=dia(gi,fecha);
+      if (reg.estado==='no') return 'no';
+      if (reg.estado==='sinindicar') desconocido=true;
+      else {
+        var cubierto=desde;
+        reg.tramos.forEach(function(x){var x1=minuto(x.desde),x2=minuto(x.hasta,true); if(x1<=cubierto&&x2>cubierto) cubierto=x2;});
+        if (cubierto<hasta) return 'no';
+      }
+      cursor+=hasta-desde;
+    }
+    return desconocido?'sinindicar':'disponible';
+  }
+  function etiqueta(gi,slot) {
+    var e=disponibilidad(gi,slot);
+    return e==='no'?t('No disponible','Unavailable'):e==='disponible'?t('Cabe en sus horas','Fits their hours'):t('Horas sin comprobar','Hours unverified');
+  }
+  function revision() { return JSON.stringify([S.equipo.cobertura,S.equipo.guias,datos(),S.tours,franjasEmpresa()]); }
+  function avisos(gi,slot) {
+    var lista=[], p=slot.split('|'), n=duracion(slot), inicio=+p[2]*1440+minuto(p[1]), fin=inicio+(n||1), margen=datos().margen;
+    if(disponibilidad(gi,slot)!=='disponible') lista.push(etiqueta(gi,slot));
+    if(n===null) lista.push(t('Duración sin comprobar.', 'Duration unverified.'));
+    Object.keys(S.equipo.cobertura).forEach(function(k){
+      if(k===slot || !cobDe(k).includes(gi)) return;
+      var q=k.split('|'), dur=duracion(k), a=+q[2]*1440+minuto(q[1]);
+      if(dur===null) {lista.push(t('Final sin comprobar: ','End time unverified: ')+q[0]+' · '+dias[+q[2]]+' '+q[1]);return;}
+      if([-10080,0,10080].some(function(des){return a+des<fin+margen && a+des+dur+margen>inicio;})) lista.push(t('Solape o margen insuficiente: ','Overlap or insufficient gap: ')+q[0]+' · '+dias[+q[2]]+' '+q[1]);
+    });
+    // Las franjas del patrón no tienen idioma de salida: no inferirlo del catálogo.
+    lista.push(t('Comprueba el idioma de esta salida con el guía.', 'Check this departure’s language with the guide.'));
+    return lista;
+  }
+  function asigna(slot,gi) {
+    if(document.querySelector('.dp-dialogo[open]')) return;
+    document.querySelectorAll('.dp-dialogo:not([open])').forEach(function(x){x.remove();});
+    var g=S.equipo.guias[gi], p=slot.split('|');
+    if (!g || !g.activo || !franjasEmpresa().some(function(f){return f.key===p[0]+'|'+p[1] && f.dias.includes(+p[2]);})) return;
+    if (cobDe(slot).includes(gi)) return;
+    var sello=revision(), lista=avisos(gi,slot), dlg=el('dialog',null,document.body);dlg.className='dp-dialogo';
+    el('h2',t('Revisar asignación','Review assignment'),dlg).id='dp-titulo';dlg.setAttribute('aria-labelledby','dp-titulo');
+    el('p',g.n+' · '+dias[+p[2]]+' '+p[1]+' · '+p[0],dlg);
+    el('p',t('Patrón de ejemplo. Se aplica solo a esta demo; no se envía ningún aviso real.', 'Sample pattern. Applies only to this demo; no real notification is sent.'),dlg);
+    var ul=el('ul',null,dlg);lista.forEach(function(x){el('li',x,ul);});
+    var form=el('form',null,dlg), label=el('label',t('Motivo de la asignación revisada','Reason for the reviewed assignment'),form), motivo=el('textarea',null,label);motivo.name='motivo';motivo.maxLength=500;
+    var error=el('p',null,form);error.setAttribute('role','alert');
+    var acciones=el('div',null,form);acciones.className='dp-acciones';
+    boton(t('Cancelar','Cancel'),acciones,function(){dlg.close();});
+    var si=boton(t('Confirmar asignación','Confirm assignment'),acciones);si.type='submit';
+    form.onsubmit=function(e){e.preventDefault();if(sello!==revision()){error.textContent=t('Los datos han cambiado. Cierra y revisa la propuesta de nuevo.', 'The data has changed. Close and review the proposal again.');si.disabled=true;return;}
+      if(motivo.value.trim().length<3){error.textContent=t('Escribe un motivo de al menos 3 caracteres.', 'Enter a reason of at least 3 characters.');motivo.focus();return;}
+      S.equipo.cobertura[slot]=cobDe(slot).concat(gi);avisaAlGuia(gi,slot);
+      datos().ultimaRevision={slot:slot,guia:gi,motivo:motivo.value.trim()};dlg.close();pintaEquipo();toast(t('Asignación guardada en la demo.', 'Assignment saved in the demo.'));
+    };
+    dlg.onclose=function(){dlg.remove();};dlg.showModal();motivo.focus();
+  }
+  function formulario(gi) {
+    if(borradores.has(gi)) return borradores.get(gi);
+    var box=el('section');box.className='dp-panel';
+    el('h2',t('Mis horas disponibles','My available hours'),box);
+    boton(t('Ver calendario del encargado','View manager calendar'),box,function(){salirModoGuia();ir('equipo');window.scrollTo(0,0);});
+    el('p',t('Prueba el patrón de lunes a domingo. Las horas afectan a la revisión del calendario. Se guardan solo en esta pestaña y se reinician al recargar. La app real trabaja por fechas y zona horaria.', 'Try the Monday–Sunday pattern. These hours affect calendar reviews. Changes stay in this tab and reset on reload. The real app uses dates and time zones.'),box);
+    var form=el('form',null,box), ld=el('label',t('Día del ejemplo','Sample day'),form), sel=el('select',null,ld);sel.name='dia';
+    dias.forEach(function(x,i){var o=el('option',x,sel);o.value=i;});
+    var ls=el('label',t('Disponibilidad','Availability'),form), estado=el('select',null,ls);estado.name='estado';
+    ['sinindicar','no','franjas'].forEach(function(x,i){var o=el('option',[t('Sin indicar','Unspecified'),t('No puedo este día','Unavailable that day'),t('Indicar horas','Set hours')][i],estado);o.value=x;});
+    var filas=el('div',null,form), acciones=el('div',null,form);acciones.className='dp-acciones';
+    var add=boton(t('Añadir franja','Add window'),acciones,function(){fila('09:00','18:00');recuerda();});
+    var all=boton(t('Todo el día','All day'),acciones,function(){filas.replaceChildren();fila('00:00','24:00');recuerda();});
+    var save=boton(t('Guardar mis horas','Save my hours'),acciones);save.type='submit';
+    var status=el('p',null,form);status.setAttribute('role','status');
+    el('p',t('El final 00:00 significa medianoche (24:00). Cambiar las horas no retira tours que ya tengas asignados.', 'End time 00:00 means midnight (24:00). Changing hours does not remove tours already assigned to you.'),box);
+    var drafts={};
+    function valores(){return Array.from(filas.children).map(function(r){return {desde:r.querySelector('[name=desde]').value,hasta:r.querySelector('[name=hasta]').value==='00:00'?'24:00':r.querySelector('[name=hasta]').value};});}
+    function fila(a,b){if(filas.children.length>=6)return;var r=el('div',null,filas);r.className='dp-franja';[[t('Desde','From'),'desde',a],[t('Hasta','Until'),'hasta',b==='24:00'?'00:00':b]].forEach(function(v){var l=el('label',v[0],r),i=el('input',null,l);i.type='time';i.name=v[1];i.value=v[2];});boton(t('Quitar','Remove'),r,function(){r.remove();add.disabled=false;recuerda();});add.disabled=filas.children.length>=6;}
+    function muestra(){filas.hidden=estado.value!=='franjas';add.hidden=all.hidden=filas.hidden;}
+    function carga(){var reg=drafts[sel.value]||dia(gi,+sel.value);estado.value=reg.estado;filas.replaceChildren();(reg.tramos.length?reg.tramos:[{desde:'09:00',hasta:'18:00'}]).forEach(function(x){fila(x.desde,x.hasta);});muestra();status.textContent='';}
+    function recuerda(){drafts[sel.value]={estado:estado.value,tramos:valores()};}
+    form.oninput=function(e){if(e.target!==sel)recuerda();};estado.onchange=function(){muestra();recuerda();};sel.onchange=carga;
+    form.onsubmit=function(e){e.preventDefault();try{guarda(gi,+sel.value,estado.value,valores());delete drafts[sel.value];status.textContent=t('Horas guardadas en la demo. El encargado ya puede revisarlas.', 'Hours saved in the demo. The manager can now review them.');pintaEquipo();}catch(err){status.textContent=err.message;}};
+    carga();borradores.set(gi,box);return box;
+  }
+  function pintaGuia(gi){var host=document.getElementById('guia-dispo');if(host)host.prepend(formulario(gi));}
+  function pintaEquipoDemo(){
+    var host=document.getElementById('dp-equipo');if(!host)return;host.replaceChildren();
+    el('h3',t('Prueba las horas y la revisión','Try hours and assignment review'),host);
+    el('p',t('1. Abre el móvil del guía y guarda sus horas. 2. Vuelve al calendario y elige una salida. 3. Revisa los avisos antes de asignarla. El patrón no comprueba fechas, zonas ni idiomas; el panel real sí dispone de esos datos.', '1. Open the guide view and save their hours. 2. Return to the calendar and pick a departure. 3. Review warnings before assigning it. This pattern does not check dates, time zones or languages; the real panel has those fields.'),host);
+    var gi=S.equipo.guiaSel,g=S.equipo.guias[gi];if(!g)return;
+    boton(t('Probar como ','Try as ')+g.n,host,function(){entrarModoGuia(g.n);document.getElementById('guia-dispo').scrollIntoView({block:'start'});}).disabled=!g.activo;
+    var p=el('p',null,host);p.textContent=dias.map(function(x,d){var r=dia(gi,d);return x+': '+(r.estado==='sinindicar'?t('sin indicar','unspecified'):r.estado==='no'?t('no disponible','unavailable'):r.tramos.map(function(z){return z.desde+'–'+z.hasta;}).join(', '));}).join(' · ');
+    var l=el('label',t('Margen entre salidas (minutos, solo demo)','Gap between departures (minutes, demo only)'),host), input=el('input',null,l);input.type='number';input.min=0;input.max=240;input.step=1;input.value=margenBorrador===null?datos().margen:margenBorrador;
+    boton(t('Guardar margen','Save gap'),host,function(){var n=Number(input.value);if(input.value.trim()===''||!Number.isInteger(n)||n<0||n>240){input.setCustomValidity(t('Indica un número entero de 0 a 240.','Enter an integer from 0 to 240.'));input.reportValidity();return;}input.setCustomValidity('');datos().margen=n;margenBorrador=null;toast(t('Margen guardado en la demo.','Gap saved in the demo.'));});input.oninput=function(){margenBorrador=input.value;input.setCustomValidity('');};
+  }
+  return { dias:dias, normaliza:normaliza, guarda:guarda, disponibilidad:disponibilidad, etiqueta:etiqueta, avisos:avisos, asigna:asigna, pintaGuia:pintaGuia, pintaEquipo:pintaEquipoDemo };
+})();
+/* DEMO_PLAN_JS_FIN */
 var S = {
   ubi:false, ubiHace:null, ubiMapa:'maps.google.com/?q=55.9486,-3.1908',   // lo que comparte la guía: ESTADO, no texto de regla
   excs:6,
@@ -2529,7 +2678,7 @@ S.derivadas.push(
 );
 /* Team &amp; availability — como en el sistema real: cada guía marca su semana
    desde su enlace personal; el encargado ve el cuadro, asigna y da permisos. */
-var DIAS_SEM=['M','T','W','T','F','S','S'];   // Mon..Sun
+var DIAS_CAL=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];   // Mon..Sun
 S.equipo = {
   guiaSel:0,        // guía seleccionado en el cuadro de disponibilidad
   diasFranja:{},    // override de días por franja: { 'tour|hora':[0..6] }
@@ -6791,10 +6940,10 @@ function pintaGuiaDispo(nombre){
   var h = pintaAvisosGuia(gi) + '<div class="g-dispo"><h2>🗓 My availability</h2>'+
     '<p class="mini muted" style="margin:0;">Tap once to offer (✓), again to say you can’t do that departure (✗), again to leave it unsaid. Your manager sees it when assigning. '+
     '<span style="color:'+g.color+'; font-weight:700;">🔒 = already assigned to you</span>.</p>'+
-    '<table><tr><th></th>'+DIAS_SEM.map(function(x){return '<th>'+x+'</th>';}).join('')+'</tr>';
+    '<table><tr><th></th>'+DIAS_CAL.map(function(x){return '<th>'+x+'</th>';}).join('')+'</tr>';
   fr.forEach(function(f){
     h += '<tr><td><b class="num">'+f.hora+'</b> · '+f.tour+'</td>'+
-      DIAS_SEM.map(function(dn,d){
+      DIAS_CAL.map(function(dn,d){
         if (f.dias.indexOf(d)<0) return '<td style="text-align:center; color:var(--line);">·</td>';
         var slot=f.key+'|'+d, asig=estaAsignado(gi,slot), mar=g.dispo[slot];
         var est = asig ? 'background:'+g.color+'; color:#fff;'
@@ -6822,6 +6971,7 @@ function pintaGuiaDispo(nombre){
     '<a class="g-volver" href="#operaciones" onclick="salirModoGuia();return false;">'+
     'Demo view — <b>see the manager’s console →</b></a>';
   box.innerHTML = h;
+  DemoPlan.pintaGuia(gi);
 }
 
 if (location.hash) { var v=location.hash.slice(1);
@@ -9193,8 +9343,8 @@ function anadirGuia(){
 function pintaCalendario(){
   var cont=document.getElementById('eq-cal'); if(!cont) return;
   var fr=franjasEmpresa();
-  var HOY=5; // sábado (la agenda usa sáb como hoy)
-  var h='<div class="cal-h"></div>'+DIAS_SEM.map(function(dn,d){
+  var HOY=(dowDe(S.agendaBase)+6)%7; // La columna actual usa la misma fecha que la agenda.
+  var h='<div class="cal-h"></div>'+DIAS_CAL.map(function(dn,d){
     return '<div class="cal-h'+(d===HOY?' hoy':'')+'"><span>'+dn+'</span></div>'; }).join('');
   fr.forEach(function(f){
     h+='<div class="cal-slot"><span class="h">'+f.hora+'</span><span class="t">'+f.tour+'</span></div>';
@@ -9206,7 +9356,7 @@ function pintaCalendario(){
             return '<span class="ini'+(ix===0?' lead':'')+'" style="background:'+g.color+'" title="'+(ix+1)+'º · '+g.n+(ix===0?' (guía principal)':'')+'">'+iniGuia(g)+'</span>'; }).join('')
         : '';
       h+='<div class="cal-cell '+(cob.length?'cov':'free')+(sel?' sel':'')+'" '+
-         'onclick="calPick(\''+slot+'\')" title="'+DIAS_SEM[d]+' · '+f.hora+' '+f.tour+'">'+inner+'</div>';
+         'onclick="calPick(\''+slot+'\')" title="'+DIAS_CAL[d]+' · '+f.hora+' '+f.tour+'">'+inner+'</div>';
     }
   });
   cont.innerHTML=h;
@@ -9226,6 +9376,7 @@ function calAddDia(key, d){
 }
 function calPick(slot){ S.equipo.pick = S.equipo.pick===slot ? null : slot; pintaEquipo(); }
 function calToggleGuia(slot, gi){
+  if (!cobDe(slot).includes(gi)) { DemoPlan.asigna(slot,gi); return; }
   var cob=(S.equipo.cobertura[slot]||[]).slice(); var i=cob.indexOf(gi);
   if(i>=0) cob.splice(i,1); else cob.push(gi);   // orden de clic = jerarquía
   S.equipo.cobertura[slot]=cob; pintaEquipo();
@@ -9267,13 +9418,13 @@ function pintaCalPicker(){
     var disp=!!g.dispo[slot];
     return '<button class="btn mini'+(enSeq?'':' sec')+'" onclick="calToggleGuia(\''+slot+'\','+gi+')" '+
       'style="'+(enSeq?'background:'+g.color+'; border-color:'+g.color+';':'')+'">'+
-      (enSeq?'✓ ':'+ ')+iniGuia(g)+' · '+g.n+(disp?' <span title="marked themselves available">🟢</span>':'')+'</button>';
+      (enSeq?'✓ ':'+ ')+iniGuia(g)+' · '+g.n+' · '+DemoPlan.etiqueta(gi,slot)+'</button>';
   }).join('');
   p.style.cssText='display:block; margin-top:14px; background:var(--acc-soft); border:1.5px solid var(--acc); border-radius:12px; padding:14px;';
   p.innerHTML='<div class="fila" style="justify-content:space-between; align-items:center; flex-wrap:wrap;">'+
       '<b>🗓 '+DIA_LARGO[d]+' · '+f.hora+' · '+f.tour+'</b>'+
       '<button class="btn mini sec" onclick="S.equipo.pick=null; pintaEquipo();">Close</button></div>'+
-    '<p class="mini muted" style="margin:6px 0 8px;">Who’s out? Tap the guides in <b>running order</b> — the first one leads. 🟢 = has put themselves down for this departure.</p>'+
+    '<p class="mini muted" style="margin:6px 0 8px;">Who’s out? Tap the guides in <b>running order</b> — the first one leads. Before adding a guide, review their hours and warnings.</p>'+
     '<div style="display:flex; flex-direction:column; gap:6px; margin-bottom:10px;">'+seq+'</div>'+
     '<div class="fila" style="gap:6px; flex-wrap:wrap;">'+chips+'</div>'+
     '<div style="margin-top:10px;"><button class="btn mini sec" onclick="calQuitarSalida(\''+slot+'\')" style="border-color:var(--rojo); color:var(--rojo);">🗑 Quitar esta salida del horario</button></div>';
@@ -9446,6 +9597,7 @@ function cierraFichaGuia(){
 }
 
 function pintaEquipo(){
+  DemoPlan.pintaEquipo();
   pintaCalendario();
   pintaGpLista();
   var g=S.equipo.guias;
@@ -9481,11 +9633,11 @@ function pintaEquipo(){
   // matriz FRANJAS (tours diarios) × DÍAS de la semana, para el guía elegido
   var gs=g[S.equipo.guiaSel], fr=franjasEmpresa();
   var dp=document.getElementById('eq-dispo');
-  var h='<tr><th>Daily tour</th>'+DIAS_SEM.map(function(d){return '<th style="text-align:center;">'+d+'</th>'}).join('')+'<th>Days</th></tr>';
+  var h='<tr><th>Daily tour</th>'+DIAS_CAL.map(function(d){return '<th style="text-align:center;">'+d+'</th>'}).join('')+'<th>Days</th></tr>';
   var totSel=0;
   fr.forEach(function(f){
     var seSel=0;
-    var celdas=DIAS_SEM.map(function(dn, d){
+    var celdas=DIAS_CAL.map(function(dn, d){
       var corre=f.dias.indexOf(d)>=0;
       if(!corre) return '<td style="text-align:center; color:var(--line);">·</td>';
       var slot=f.key+'|'+d;
@@ -9531,7 +9683,7 @@ function pintaEquipo(){
     sc.innerHTML='<span>✅ <b>Every departure this week is covered.</b> Nice work.</span>';
   } else {
     var enc=document.createElement('p'); enc.className='mini muted'; enc.style.margin='0 0 8px';
-    enc.innerHTML='<b>'+descubiertas.length+' departure'+(descubiertas.length>1?'s':'')+' uncovered</b> this week (also in <span style="color:var(--amber);">amber</span> on the calendar). Guides who marked themselves available can be assigned in one tap:';
+    enc.innerHTML='<b>'+descubiertas.length+' departure'+(descubiertas.length>1?'s':'')+' uncovered</b> this week (also in <span style="color:var(--amber);">amber</span> on the calendar). Review hours and warnings before assigning a guide:';
     sc.appendChild(enc);
     descubiertas.forEach(function(u){
       var d=document.createElement('div'); d.className='fila';
@@ -9547,21 +9699,14 @@ function pintaEquipo(){
         .concat(todos.filter(function(p){ return p.x.dispo[u.slot]!==true; }));
       var hayOfertas=todos.some(function(p){ return p.x.dispo[u.slot]===true; });
       var txt='<span>⚠ <b>'+u.f.hora+' · '+u.f.tour+'</b> · '+DIA_L[u.d]+' — '+
-        (hayOfertas?'offered:':'nobody offered — these can:')+'</span>';
+        (hayOfertas?'offered:':'nobody offered — review these options:')+'</span>';
       d.innerHTML=txt;
       cand.forEach(function(p){
         var b=document.createElement('button'); b.className='btn mini';
         b.innerHTML='<span class="ini" style="background:'+p.x.color+'; width:18px; height:18px; font-size:11.5px; margin:0; border:0; display:inline-flex; vertical-align:middle;">'+iniGuia(p.x)+'</span> '+p.x.n+
           (p.x.dispo[u.slot]===true?' <b title="Offered for this departure">✋</b>':'')+
           (p.x.idiomas?' <span class="mini muted">'+p.x.idiomas+'</span>':'');
-        b.onclick=function(){ S.equipo.cobertura[u.slot]=[p.gi];
-          /* AVISA Y NO BLOQUEA, como el resto: el encargado manda. Antes de repintar,
-             porque `huecoCorto` mira la cobertura y esta salida ya cuenta. */
-          var h = huecoCorto(p.gi, u.slot);
-          avisaAlGuia(p.gi, u.slot);
-          pintaEquipo();
-          if (h !== null) toast('Careful: that leaves {h} hours between the night before and this one. Assigned anyway — you decide.'.replace('{h}', h));
-          toast('✅ '+p.x.n+' assigned to the '+gpHora12(u.f.hora)+' '+u.f.tour+' ('+DIA_L[u.d]+') — manifest created'); };
+        b.onclick=function(){ DemoPlan.asigna(u.slot,p.gi); };
         d.appendChild(b);
       });
       var vc=document.createElement('button'); vc.className='btn mini sec'; vc.textContent='See on the calendar';
@@ -9609,7 +9754,7 @@ function pintaAvisosGuia(gi){
       var p=slot.split('|');
       return '<div class="fila" style="gap:8px; align-items:center; margin-top:6px;">'+
         '<span class="mini" style="flex:1 1 10rem; font-weight:600;">'+p[1]+' · '+p[0]+' · '+
-          (DIAS_SEM[+p[2]]||'')+'</span>'+
+          (DIAS_CAL[+p[2]]||'')+'</span>'+
         '<button class="btn mini" onclick="daPorVisto('+gi+',\''+slot+'\')">Got it</button>'+
       '</div>';
     }).join('')+'</div>';
@@ -9638,29 +9783,10 @@ function toggleCheckin(gi){
   toast(x.checkin ? '✅ '+x.n+' can now check people in from their own manifest'
                   : 'Permission removed: the manager now checks people in on their tours');
 }
-function toggleDispoFranja(gi, key, d){
-  var x=S.equipo.guias[gi]; if(!x.activo){ toast(x.n+' is on leave: their availability is left alone'); return; }
-  var k=key+'|'+d;
-  if(x.dispo[k]==='asig'){ toast('That departure is already assigned to '+x.n+' — free it up from the departure itself'); return; }
-  /* El ✗ lo puso EL GUÍA sobre sí mismo, y el encargado no lo borra desde aquí: en el
-     sistema real la marca solo se escribe con la sesión del guía —esta pantalla la LEE—.
-     Un encargado que puede convertir un «no puedo» en un «me ofrezco» con un clic hace
-     que la marca no valga para lo único que sirve: protegerse. */
-  if(x.dispo[k]===false){ toast(''+x.n+' marked they cannot do that departure — only they can undo it'); return; }
-  if(x.dispo[k]) delete x.dispo[k]; else x.dispo[k]=true;
-  pintaEquipo();
-}
+function toggleDispoFranja(gi, key, d){ toast('Open the guide view to change their availability in this demo.'); }
 function asignarGuia(si, gi){
-  var s=S.equipo.sinGuia[si], x=S.equipo.guias[gi];
-  var slot=s.tourNombre+'|'+s.hora+'|'+s.dia;
-  x.dispo[slot]='asig';
-  s.asignada=x.n;
-  /* LAS DOS PUERTAS AVISAN. Solo una lo hacía y la otra no: la misma acción desde otra
-     pantalla y sin la guarda es el fallo que este fichero ya tiene documentado con el
-     aviso de solape. */
-  avisaAlGuia(gi, slot);
-  pintaEquipo();
-  toast('✅ '+x.n+' asignada al '+s.tourNombre+' ('+s.cuando+') — manifiesto creado y equipo avisado');
+  var salida=S.equipo.sinGuia[si];
+  if(salida) DemoPlan.asigna(salida.tourNombre+'|'+salida.hora+'|'+salida.dia,gi);
 }
 
 /* ============ proyección de ingresos (plan de negocio en vivo) ============ */
