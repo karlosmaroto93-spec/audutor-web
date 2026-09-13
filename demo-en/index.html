@@ -7054,7 +7054,7 @@ function pintaManifiestoReal(){
           '<button class="pax-b" data-d="1" title="one person more">+</button>'+
           '<button class="chk" title="Check in">'+'🧍'.repeat(Math.min(a.p,4)||1)+'</button>'+
         '</div>';
-      d.querySelector('.chk').onclick=function(){ var an=ancla(this.parentNode); a.ok=!a.ok; RECIEN_ATT=a; if (navigator.vibrate) { try { navigator.vibrate(8); } catch(e){} } pintaManifiesto(); RECIEN_ATT=null; anclaRestaura(an);
+      d.querySelector('.chk').onclick=function(){ if(dia.pasado&&!confirm('Correct attendance for this closed departure? Accounts may change. Review any claim already submitted.')) return; var an=ancla(this.parentNode); a.ok=!a.ok; if(dia.pasado){ a.nsAuto=!a.ok&&!a.walkin; (t.obs||(t.obs=[])).push({a:'sistema',rec:true,t:'Attendance corrected in the demo: '+a.n+' · '+(a.ok?'present':'absent')+'. No platform claim has been changed.'}); } RECIEN_ATT=a; if (navigator.vibrate) { try { navigator.vibrate(8); } catch(e){} } pintaManifiesto(); RECIEN_ATT=null; anclaRestaura(an);
         if(a.ok) toast(a.n+' checked in ✓ — it shows on the dashboard straight away'); };
       d.querySelectorAll('.pax-b').forEach(function(b){ b.onclick=function(){ var an=ancla(b.parentNode); ajustarPax(t, a, +b.dataset.d); anclaRestaura(an); }; });
       mov.appendChild(d);

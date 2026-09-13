@@ -8514,7 +8514,7 @@ function pintaManifiestoReal(){
               (i >= (Math.min(a.p,4)||1) ? ' style="visibility:hidden"' : '')+'>🧍</span>'; }).join('')+
           '</button>'+
         '</div>';
-      d.querySelector('.chk').onclick=function(){ var an=ancla(this.parentNode); a.ok=!a.ok; RECIEN_ATT=a; if (navigator.vibrate) { try { navigator.vibrate(8); } catch(e){} } pintaManifiesto(); RECIEN_ATT=null; anclaRestaura(an);
+      d.querySelector('.chk').onclick=function(){ if(dia.pasado&&!confirm('¿Rectificar la asistencia de esta salida cerrada? Puede cambiar las cuentas. Revisa cualquier reclamación ya presentada.')) return; var an=ancla(this.parentNode); a.ok=!a.ok; if(dia.pasado){ a.nsAuto=!a.ok&&!a.walkin; (t.obs||(t.obs=[])).push({a:'sistema',rec:true,t:'Asistencia rectificada en la demo: '+a.n+' · '+(a.ok?'presente':'ausente')+'. No cambia ningún trámite en la plataforma.'}); } RECIEN_ATT=a; if (navigator.vibrate) { try { navigator.vibrate(8); } catch(e){} } pintaManifiesto(); RECIEN_ATT=null; anclaRestaura(an);
         if(a.ok) toast(a.n+' marcado en el punto ✓ — Operaciones lo ve al instante'); };
       d.querySelectorAll('.pax-b').forEach(function(b){ b.onclick=function(){ var an=ancla(b.parentNode); ajustarPax(t, a, +b.dataset.d); anclaRestaura(an); }; });
       mov.appendChild(d);
