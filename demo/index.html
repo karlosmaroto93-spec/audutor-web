@@ -8467,6 +8467,7 @@ function pintaManifiestoReal(){
              : dia.pasado?'<span class="chip gris">cerrado</span>'
              : '<span class="chip gris">programado</span>';
     t.res.forEach(function(a){ if(a.res0==null) a.res0=a.p; });
+    var faltan=t.res.reduce(function(s,r){return s+(r.walkin?0:Math.max(0,r.res0-(r.ok?r.p:0)))},0);
     var descu=t.res.reduce(function(s,r){ return s+(r.res0-r.p); },0);  // reservado − real
     var h='<div class="fila" style="justify-content:space-between; margin-bottom:4px;">'+
       '<b>🕒 '+t.hora+' · '+t.tit+'</b>'+chip+'</div>'+
@@ -8475,7 +8476,7 @@ function pintaManifiestoReal(){
         (tarde.length?' · <b>⏰ '+tarde.length+' tarde</b>':'')+
         (dia.pasado && nsAuto.length
           ? ' · <b style="color:var(--rojo);">🚫 '+nsAuto.length+' no-shows (auto)</b>'
-          : ' · '+(pax-pres)+' por llegar')+
+          : '')+' · '+faltan+' sin llegar'+
         (descu!==0?' · <b style="color:'+(descu>0?'var(--rojo)':'var(--acc)')+';">descuadre '+(descu>0?'−':'+')+Math.abs(descu)+'</b>':'')+'</div>';
     mov.innerHTML=h;
     // aviso de grupo (solo tour live, con el grupo Cabrera si está)
@@ -8494,10 +8495,11 @@ function pintaManifiestoReal(){
     }
     // lista de reservas con check-in + ajuste de nº de personas por el guía
     t.res.forEach(function(a){
+      var parcial=a.ok&&!a.walkin&&a.p<a.res0;
       var dif=a.p-a.res0;
       var d=document.createElement('div');
       d.className='att'+(a.ok?' ok':'')+(a===RECIEN_ATT?' recien':'')+(a.grupo?' grupo-marca':'')+(a.walkin?' walkin':'')+(dif&&!a.walkin?' aju':'');
-      var difTxt = (dif&&!a.walkin) ? ' · <b style="color:'+(dif<0?'var(--rojo)':'var(--acc)')+';">reservó '+a.res0+' → '+a.p+' ('+(dif>0?'+':'−')+Math.abs(dif)+')</b>' : '';
+      var difTxt = parcial ? ' · <b>grupo parcial · '+a.p+' de '+a.res0+' presentes</b>' : (dif&&!a.walkin) ? ' · <b style="color:'+(dif<0?'var(--rojo)':'var(--acc)')+';">reservó '+a.res0+' → '+a.p+' ('+(dif>0?'+':'−')+Math.abs(dif)+')</b>' : '';
       d.innerHTML='<div class="info">'+(a.walkin?'➕ ':'')+a.n+' · '+a.p+'p'+
         '<small>'+a.canal+(a.tarde&&!a.ok?' · ⏰ avisó: llega tarde':'')+
         (a.nsAuto?' · <b style="color:var(--rojo);">🚫 no-show (se marcó solo)</b>':'')+
