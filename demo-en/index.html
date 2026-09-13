@@ -6957,6 +6957,22 @@ function agDia(dir){
    left the manifest BLANK and silent. And the manifest is the screen a guide opens in the
    street: going empty without a word is the worst possible failure in the whole demo,
    because it looks like there are no tours. */
+// En la demo, como en el panel, cada persona confirma su propia lectura.
+function lecturasObservacion(o) {
+  var lecturas=(o.lecturas||[]).slice();
+  if(o.rec && o.recPor && !lecturas.some(function(l){return l.quien===o.recPor}))
+    lecturas.push({quien:o.recPor,ts:o.recTs||null});
+  return lecturas;
+}
+function observacionLeida(t,o) {
+  return o.a==='guía' || o.a==='sistema' || !!(t.guia && lecturasObservacion(o).some(function(l){return l.quien===t.guia}));
+}
+function recibeObservacion(t,o) {
+  if(!t.guia || observacionLeida(t,o)) return;
+  o.lecturas=lecturasObservacion(o).concat([{quien:t.guia,ts:Date.now()}]);
+  o.rec=true; o.recPor=t.guia; o.recTs=o.lecturas[o.lecturas.length-1].ts;
+}
+
 function pintaManifiesto(){
   try { pintaManifiestoReal(); }
   catch (e) {
@@ -7133,22 +7149,33 @@ function pintaManifiestoReal(){
     // observaciones del tour (cambios de pax del guía + avisos de GuIA/encargado)
     t.obs = t.obs || [];
     var obsBox=document.createElement('div'); obsBox.style.cssText='margin-top:14px;';
-    var pend=t.obs.filter(function(o){return !o.rec}).length;
+    var pend=t.obs.filter(function(o){return !observacionLeida(t,o)}).length;
     obsBox.innerHTML='<strong>💬 Tour notes</strong>'+
       (pend?' <span class="chip rojo">'+pend+' to confirm</span>':'')+
-      '<div class="mini muted" style="margin:4px 0 6px;">The line between manager, GuIA and guide. <details class="mas"><summary>ⓘ more</summary><span class="mas-p">Head-count changes (above) and GuIA’s alerts land here on their own. Whatever the <b>manager</b> writes reaches the guide as “to confirm” and they read it when they open the manifest; every “got it” counts in the analytics.</span></details></div>';
+      '<div class="mini muted" style="margin:4px 0 6px;">The line between manager, GuIA and guide. <details class="mas"><summary>ⓘ more</summary><span class="mas-p">Head-count changes and notes appear here. The history shows which guide acknowledged each note. A replacement guide confirms their own reading.</span></details></div>';
     if (!t.obs.length){
       obsBox.innerHTML+='<p class="mini muted" style="margin:0 0 8px;">No notes yet — write one below, or adjust a head count above.</p>';
     }
     t.obs.forEach(function(o){
-      var d=document.createElement('div'); d.className='obs-item'+(o.rec?'':' pend');
+      var leida=observacionLeida(t,o);
+      var d=document.createElement('div'); d.className='obs-item'+(leida?'':' pend');
       var quien={ 'guía':'🧭 guide', 'GuIA':'🤖 GuIA', 'admin':'🧑‍💼 manager', 'sistema':'⚙️ system' }[o.a]||o.a;
-      d.innerHTML='<span><b>'+quien+'</b> · '+o.t+'</span>';
-      if (!o.rec){
+      var contenido=document.createElement('span'), autor=document.createElement('b');
+      autor.textContent=quien; contenido.append(autor,document.createTextNode(' · '+(o.t||''))); d.appendChild(contenido);
+      var lecturas=lecturasObservacion(o);
+      if(lecturas.length){
+        var historia=document.createElement('details'); historia.className='mini';
+        var resumen=document.createElement('summary'); resumen.textContent='Who has read this'; historia.appendChild(resumen);
+        lecturas.forEach(function(l){var p=document.createElement('p'); p.textContent=l.quien+' · '+(l.ts?new Date(l.ts).toLocaleString('en-GB'):'date not recorded'); historia.appendChild(p)});
+        d.appendChild(historia);
+      }
+      if (!leida){
         var b=document.createElement('button'); b.className='btn mini'; b.style.flexShrink='0';
         b.textContent='✓ Got it';
-        b.onclick=function(){ o.rec=true; pintaManifiesto();
-          toast('✓ Note confirmed by the guide — it now counts in the analytics and the reconciliation'); };
+        b.disabled=!t.guia;
+        if(!t.guia)b.textContent='Assign a guide first';
+        b.onclick=function(){ recibeObservacion(t,o); pintaManifiesto();
+          toast('✓ Reading recorded for '+t.guia); };
         d.appendChild(b);
       } else {
         var s=document.createElement('span'); s.className='mini'; s.style.cssText='color:var(--acc); flex-shrink:0; font-weight:700;';

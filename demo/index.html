@@ -8399,6 +8399,22 @@ function agDia(dir){
 
    Ahora si algo revienta se dice, y en la demo además se ve en consola: un blanco callado
    se confunde con «día libre» y un blanco que habla se arregla. */
+// En la demo, como en el panel, cada persona confirma su propia lectura.
+function lecturasObservacion(o) {
+  var lecturas=(o.lecturas||[]).slice();
+  if(o.rec && o.recPor && !lecturas.some(function(l){return l.quien===o.recPor}))
+    lecturas.push({quien:o.recPor,ts:o.recTs||null});
+  return lecturas;
+}
+function observacionLeida(t,o) {
+  return o.a==='guía' || o.a==='sistema' || !!(t.guia && lecturasObservacion(o).some(function(l){return l.quien===t.guia}));
+}
+function recibeObservacion(t,o) {
+  if(!t.guia || observacionLeida(t,o)) return;
+  o.lecturas=lecturasObservacion(o).concat([{quien:t.guia,ts:Date.now()}]);
+  o.rec=true; o.recPor=t.guia; o.recTs=o.lecturas[o.lecturas.length-1].ts;
+}
+
 function pintaManifiesto(){
   try { pintaManifiestoReal(); }
   catch (e) {
@@ -8593,22 +8609,33 @@ function pintaManifiestoReal(){
     // observaciones del tour (cambios de pax del guía + avisos de GuIA/encargado)
     t.obs = t.obs || [];
     var obsBox=document.createElement('div'); obsBox.style.cssText='margin-top:14px;';
-    var pend=t.obs.filter(function(o){return !o.rec}).length;
+    var pend=t.obs.filter(function(o){return !observacionLeida(t,o)}).length;
     obsBox.innerHTML='<strong>💬 Observaciones del tour</strong>'+
       (pend?' <span class="chip rojo">'+pend+' por confirmar</span>':'')+
-      '<div class="mini muted" style="margin:4px 0 6px;">El canal entre encargado, GuIA y guía. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Los cambios de nº de personas (arriba) y los avisos de GuIA caen aquí solos. Lo que escribe el <b>encargado</b> le llega al guía como «por confirmar» y lo lee al abrir el manifiesto; cada «recibido» cuenta en la analítica.</span></details></div>';
+      '<div class="mini muted" style="margin:4px 0 6px;">El canal entre encargado, GuIA y guía. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Los cambios de personas y los avisos se muestran aquí. El historial indica qué guía ha confirmado su lectura. Un sustituto confirma su propia lectura.</span></details></div>';
     if (!t.obs.length){
       obsBox.innerHTML+='<p class="mini muted" style="margin:0 0 8px;">Sin observaciones todavía — escribe una abajo o ajusta un nº de personas arriba.</p>';
     }
     t.obs.forEach(function(o){
-      var d=document.createElement('div'); d.className='obs-item'+(o.rec?'':' pend');
+      var leida=observacionLeida(t,o);
+      var d=document.createElement('div'); d.className='obs-item'+(leida?'':' pend');
       var quien={ 'guía':'🧭 guía', 'GuIA':'🤖 GuIA', 'admin':'🧑‍💼 encargado', 'sistema':'⚙️ sistema' }[o.a]||o.a;
-      d.innerHTML='<span><b>'+quien+'</b> · '+o.t+'</span>';
-      if (!o.rec){
+      var contenido=document.createElement('span'), autor=document.createElement('b');
+      autor.textContent=quien; contenido.append(autor,document.createTextNode(' · '+(o.t||''))); d.appendChild(contenido);
+      var lecturas=lecturasObservacion(o);
+      if(lecturas.length){
+        var historia=document.createElement('details'); historia.className='mini';
+        var resumen=document.createElement('summary'); resumen.textContent='Quién lo ha leído'; historia.appendChild(resumen);
+        lecturas.forEach(function(l){var p=document.createElement('p'); p.textContent=l.quien+' · '+(l.ts?new Date(l.ts).toLocaleString('es-ES'):'sin fecha registrada'); historia.appendChild(p)});
+        d.appendChild(historia);
+      }
+      if (!leida){
         var b=document.createElement('button'); b.className='btn mini'; b.style.flexShrink='0';
         b.textContent='✓ Recibido';
-        b.onclick=function(){ o.rec=true; pintaManifiesto();
-          toast('✓ Observación confirmada por el guía — ya cuenta en analítica y conciliación'); };
+        b.disabled=!t.guia;
+        if(!t.guia)b.textContent='Falta asignar guía';
+        b.onclick=function(){ recibeObservacion(t,o); pintaManifiesto();
+          toast('✓ Lectura registrada para '+t.guia); };
         d.appendChild(b);
       } else {
         var s=document.createElement('span'); s.className='mini'; s.style.cssText='color:var(--acc); flex-shrink:0; font-weight:700;';
