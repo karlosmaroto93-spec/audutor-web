@@ -475,24 +475,12 @@
      1) La hoja del hero vive sola: cambia de momento cada 7 s con un fundido, y en Encuentro
         una reserva pendiente pasa a «en el punto» con su tick dibujándose y los contadores
         subiendo. Se para al pasar el ratón y se rinde al primer toque del visitante.
-     2) La línea de «Un día» se dibuja al llegar a ella, cada hito entra escalonado y el punto
-        del hito clave late.
-     3) Las cifras de los planes suben desde cero al entrar en pantalla, una vez.
+     2) Las cifras de los planes suben desde cero al entrar en pantalla, una vez.
      Todo se apaga con prefers-reduced-motion. */
   .mock-panel:not([hidden]){ animation:hoja-entra .38s cubic-bezier(.22,1,.36,1); }
   @keyframes hoja-entra{ from{ opacity:0; transform:translateY(5px); } }
   .mock-row.recien{ animation:fila-asienta .5s cubic-bezier(.34,1.56,.64,1); }
   @keyframes fila-asienta{ 0%{ transform:none; } 35%{ transform:translateY(-3px); } 100%{ transform:none; } }
-  .dia::before{ clip-path:inset(0 0 100% 0); transition:clip-path 1.8s cubic-bezier(.22,1,.36,1) .2s; }
-  .dia.traza::before{ clip-path:inset(0 0 0 0); }
-  .anim .hito.in .punto{ animation:punto-entra .5s cubic-bezier(.34,1.56,.64,1) both; animation-delay:calc(var(--d,0ms) + .25s); }
-  @keyframes punto-entra{ from{ transform:scale(.3); } 60%{ transform:scale(1.25); } to{ transform:none; } }
-  .dia.traza .hito.clave .punto{ animation:punto-late 2.4s ease-in-out .9s infinite; }
-  @keyframes punto-late{ 0%,100%{ box-shadow:0 0 0 4px rgba(244,101,58,.25); } 50%{ box-shadow:0 0 0 9px rgba(244,101,58,.08); } }
-  @media (prefers-reduced-motion:reduce){
-    .mock-panel:not([hidden]), .mock-row.recien, .anim .hito.in .punto, .dia.traza .hito.clave .punto{ animation:none; }
-    .dia::before{ clip-path:none; transition:none; }
-  }
   /* ===== Y tres más: sellos que entran uno a uno, el botón que respira, la línea que se desliza ===== */
   .sellos.con-ticks li::before{ display:none; }
   .sellos .tick{ width:12px; height:12px; flex:none; fill:none; stroke:var(--acc); stroke-width:3;
@@ -601,45 +589,90 @@
   .contacto-pend{ display:inline-block; background:var(--gold-soft); border:1px solid #ecd9b0;
     border-radius:10px; padding:10px 16px; font-size:15px; color:var(--amber); font-weight:700; }
 
-  /* ---- un día con Audutor ---- */
-  /* La línea de la ruta y los puntos salen del MISMO cálculo. Estaban a ojo: el centro
-     del punto caía en x=101 y la línea en x=87,25 — 13,75 px de desviación. Y en móvil,
-     exactamente los mismos 13,75: se ajustó una vez mirando y se copió al breakpoint.
-     Ahora se deriva de las columnas: cambiar un ancho ya no la descoloca. */
-  .dia{ position:relative; margin-top:8px; --c1:70px; --cpunto:34px; --hgap:14px; }
-  .dia::before{ content:""; position:absolute; top:8px; bottom:8px; width:0;
-    left:calc(var(--c1) + var(--hgap) + var(--cpunto)/2); transform:translateX(-50%);
-    border-left:2.5px dashed #b3d6c6; }
-  .hito{ display:grid; grid-template-columns:var(--c1) var(--cpunto) 1fr;
-    gap:0 var(--hgap); padding:14px 0; align-items:start; }
-  .hito .hora{ font-family:var(--mono); font-size:13px; color:var(--muted); text-align:right; padding-top:6px; }
-  .hito .punto{ width:13px; height:13px; border-radius:50%; background:var(--paper);
-    border:3px solid var(--acc); margin:8px auto 0; position:relative; z-index:1; }
-  /* El coral es la marca del mapa: significa «aquí» y «ahora». Estaba alternando por
-     `nth-child(even)`, pintando los hitos 2 y 4 e insinuando dos categorías que no
-     existen — el lector busca el patrón y no lo hay. Se reserva al hito que ES el
-     producto: el turista perdido. Cada píxel de coral que no señala un sitio devalúa
-     el que sí. */
-  .hito.clave .punto{ border-color:var(--coral); box-shadow:0 0 0 4px var(--coral-soft); }
-  .hito .que{ background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:13px 17px;
-    font-size:15px; color:var(--ink2); }
-  .hito .que b{ color:var(--ink); }
-  section.alt .hito .que{ background:var(--bg); }
-  @media (max-width:640px){ .dia{ --c1:48px; } }
-  /* La jornada, sobre verde bosque: una superficie grande a mitad de página cambia el ritmo
-     (Clay, Beyonk y TrekkSoft en el estudio; la revisión del 5-sep lo propuso en azul pizarra,
-     aquí va en el verde de la casa). Las horas en oro, el hito del perdido sigue en coral. */
-  #dia{ background:var(--deep); color:var(--paper); border:0; }
-  #dia h2{ color:var(--paper); } #dia .sec-head p{ color:var(--acc-soft); }
-  #dia .dia::before{ border-left-color:rgba(255,255,255,.28); }
-  #dia .hito .hora{ color:var(--gold); }
-  #dia .hito .punto{ background:var(--deep); border-color:var(--gold); }
-  #dia .hito.clave .punto{ border-color:var(--coral); box-shadow:0 0 0 4px rgba(244,101,58,.25); }
-  #dia .hito .que{ background:transparent; border:0; border-bottom:1px solid rgba(255,255,255,.18);
-    border-radius:0; padding:6px 0 20px; color:var(--acc-soft); }
-  #dia .hito .que b{ color:var(--paper); }
-  #dia .brujula{ display:none; }
-
+  /* Cuaderno de ruta: ejemplo interactivo y datos ficticios, sin conexión con cuentas. */
+  #dia{ background:#203f43; color:var(--paper); border:0; }
+  #dia .cuaderno-intro{ display:flex; justify-content:space-between; align-items:end; gap:24px; margin-bottom:28px; }
+  #dia h2{ color:var(--paper); max-width:12ch; font-size:clamp(34px,4.6vw,58px); }
+  #dia .cuaderno-intro p{ color:#d1e3dc; max-width:38ch; margin:0; }
+  .cuaderno-kicker{ font:700 12px var(--mono); letter-spacing:.12em; text-transform:uppercase; color:#f4ca86; display:block; margin-bottom:12px; }
+  .cuaderno{ position:relative; padding:28px 32px 28px 48px; color:var(--ink);
+    background:linear-gradient(90deg,#f7e7c8 0 18px,#fffdf7 18px 100%);
+    border:1px solid #dccaa7; border-radius:12px 24px 24px 12px;
+    box-shadow:0 22px 60px rgba(4,23,23,.22),0 4px 0 #ddc79d; }
+  .cuaderno::before{ content:""; position:absolute; left:23px; top:20px; bottom:20px; width:9px;
+    background:radial-gradient(circle at center,#25484a 3px,transparent 3.5px) center top/9px 31px repeat-y; opacity:.55; pointer-events:none; }
+  .cuaderno-cab{ display:flex; align-items:center; justify-content:space-between; gap:12px;
+    border-bottom:1px solid var(--line); padding-bottom:14px; color:var(--muted); font:700 12px var(--mono); }
+  .cuaderno-cab strong{ color:var(--deep); }
+  .cuaderno-tabs{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; margin:18px 0 24px; }
+  .cuaderno-tabs button{ appearance:none; min-height:68px; border:1px solid var(--line); border-radius:12px;
+    background:#f7f4ec; color:var(--ink2); text-align:left; padding:11px 14px; cursor:pointer;
+    font:700 15px var(--sans); transition:background .2s,border-color .2s,transform .25s cubic-bezier(.2,1.4,.4,1),box-shadow .2s; }
+  .cuaderno-tabs button span{ display:block; font:700 11px var(--mono); color:var(--muted); margin-bottom:3px; }
+  .cuaderno-tabs button[aria-selected="true"]{ background:#dff1e9; color:var(--deep);
+    border-color:var(--acc); box-shadow:inset 0 0 0 1px var(--acc); transform:translateY(-3px); }
+  .cuaderno-tabs button:hover{ border-color:var(--acc); }
+  .cuaderno-tabs button:focus-visible,.cuaderno-siguiente:focus-visible,.cuaderno-ajuste button:focus-visible{
+    outline:3px solid var(--coral); outline-offset:2px; }
+  .cuaderno-panel[hidden]{ display:none; }
+  .cuaderno-panel:not([hidden]){ display:grid; grid-template-columns:minmax(220px,.8fr) minmax(0,1.2fr);
+    gap:30px; align-items:stretch; animation:cuaderno-entra .32s ease-out; }
+  @keyframes cuaderno-entra{ from{ opacity:.45; transform:translateY(7px); } }
+  .cuaderno-relato{ padding:16px 4px 16px 0; display:flex; flex-direction:column; align-items:start; }
+  .cuaderno-hora{ color:var(--amber); font:700 13px var(--mono); letter-spacing:.05em; }
+  .cuaderno-relato h3{ font-size:clamp(26px,3vw,38px); margin:12px 0 10px; color:var(--deep); }
+  .cuaderno-relato p{ color:var(--ink2); margin:0 0 18px; max-width:39ch; }
+  .cuaderno-sello{ display:inline-flex; gap:6px; align-items:center; border-radius:100px;
+    border:1px solid #ead7b2; background:var(--gold-soft); color:#765018;
+    padding:5px 10px; font:700 12px var(--mono); margin-top:auto; }
+  .cuaderno-sello.bien{ background:#e5f4e9; border-color:#b9ddc5; color:#155b3a; }
+  .cuaderno-sello.aviso{ background:var(--coral-soft); border-color:#f8c5b5; color:#a43b1d; }
+  .cuaderno-vista{ background:#f3f7f2; border:1px solid #cfdfd3; border-radius:18px;
+    padding:20px 22px; min-height:300px; box-shadow:0 8px 18px rgba(18,63,51,.06); }
+  .cuaderno-vista-head{ display:flex; align-items:baseline; justify-content:space-between;
+    gap:12px; padding-bottom:12px; border-bottom:1px solid #d5e3d7; font-size:13px; color:var(--muted); }
+  .cuaderno-vista-head b{ color:var(--deep); font-size:16px; }
+  .cuaderno-cifras{ display:flex; gap:18px; flex-wrap:wrap; margin:16px 0; }
+  .cuaderno-cifras span{ display:grid; gap:2px; font-size:12px; color:var(--muted); }
+  .cuaderno-cifras b{ font:700 27px var(--sans); color:var(--deep); line-height:1; }
+  .cuaderno-cifras .alerta b{ color:var(--coral2); }
+  .cuaderno-fila{ display:flex; align-items:center; justify-content:space-between;
+    gap:8px; padding:10px 0; border-top:1px solid #d5e3d7; font-size:14px; }
+  .cuaderno-fila strong{ color:var(--deep); }
+  .cuaderno-fila small{ display:block; color:var(--muted); font-size:12px; line-height:1.35; }
+  .cuaderno-fila .monto{ font:700 16px var(--mono); white-space:nowrap; }
+  .cuaderno-nota{ margin:12px 0 0; color:var(--muted); font-size:12px; line-height:1.45; }
+  .cuaderno-ajuste{ display:flex; align-items:center; gap:6px; white-space:nowrap; }
+  .cuaderno-ajuste button{ width:30px; height:30px; border:1px solid #bbd4c5; border-radius:8px;
+    background:white; color:var(--deep); font:800 19px var(--sans); cursor:pointer; }
+  .cuaderno-ajuste button:hover{ background:var(--acc-soft); }
+  .cuaderno-ajuste output{ min-width:23px; text-align:center; font-weight:800; font-variant-numeric:tabular-nums; }
+  .cuaderno-ajuste.cambia{ animation:cuaderno-salta .3s cubic-bezier(.2,1.6,.5,1); }
+  @keyframes cuaderno-salta{ 50%{ transform:translateY(-5px); } }
+  .cuaderno-pie{ display:flex; justify-content:space-between; align-items:center;
+    flex-wrap:wrap; gap:12px; border-top:1px solid var(--line); padding-top:16px; margin-top:24px;
+    font-size:12px; color:var(--muted); }
+  .cuaderno-pie a{ color:var(--acc2); font-weight:800; }
+  .cuaderno-siguiente{ border:0; background:transparent; color:var(--acc2);
+    cursor:pointer; font:800 14px var(--sans); padding:8px 0; }
+  .producto-desplegable{ margin-top:20px; }
+  .producto-desplegable summary{ cursor:pointer; padding:15px 18px; border:1px solid var(--line);
+    border-radius:12px; color:var(--acc2); font-weight:800; background:var(--paper); }
+  .producto-desplegable[open] summary{ margin-bottom:15px; }
+  @media(max-width:750px){
+    #dia .cuaderno-intro{ display:block; }
+    #dia .cuaderno-intro p{ margin-top:10px; }
+    .cuaderno{ padding:18px 16px 18px 29px; background:linear-gradient(90deg,#f7e7c8 0 11px,#fffdf7 11px 100%); }
+    .cuaderno::before{ left:13px; }
+    .cuaderno-tabs{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .cuaderno-panel:not([hidden]){ grid-template-columns:1fr; gap:8px; }
+    .cuaderno-vista{ min-height:0; padding:15px; }
+    .cuaderno-relato{ padding:4px 0; }
+  }
+  @media(prefers-reduced-motion:reduce){
+    .cuaderno-panel:not([hidden]),.cuaderno-ajuste.cambia{ animation:none; }
+    .cuaderno-tabs button{ transition:none; transform:none !important; }
+  }
   /* ================= pricing ================= */
   .planes{ display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:18px; align-items:stretch; }
   .plan{ background:var(--paper); border:1px solid var(--line); border-radius:6px; padding:26px;
@@ -1062,6 +1095,24 @@
   /* Foco visible con teclado: antes dependía del anillo por defecto, que el reset se comía. */
   :focus-visible{ outline:3px solid var(--deep); outline-offset:4px; }
   nav :focus-visible{ outline-color:var(--coral); }
+  /* En móvil, el producto entra en la primera pantalla y el cuaderno no queda tras una
+     secuencia de tarjetas, mapa y bocadillos que repiten la misma promesa. */
+  @media(max-width:600px){
+    header{ padding:34px 0 32px; }
+    .anim header .reveal{ opacity:1; transform:none; transition:none; }
+    .hero-grid{ gap:24px; }
+    h1{ font-size:clamp(34px,9.2vw,42px); line-height:1.06; }
+    .lede{ font-size:16px; line-height:1.45; margin:15px 0 20px; }
+    .hero-ctas{ gap:8px; }
+    .hero-ctas .btn{ flex:1 1 145px; text-align:center; padding:11px 10px; font-size:13px; }
+    header .guia-saludo,header .hero-nota,header .mock-pop,header .mock-mapa,
+    header .cifras,header .lee-de,header .para-quien{ display:none; }
+    header .mock{ display:block; min-height:0; }
+    header .mock-card.principal{ max-width:none; }
+    header .mock-cab{ font-size:10px; }
+    header .mock-row span{ white-space:normal; }
+    #dia{ padding:44px 0; }
+  }
 </style>
 </head>
 <body>
@@ -1154,7 +1205,7 @@
     <a href="#producto" data-i18n="nav.producto">Product</a>
     <a href="#asistente" data-i18n="nav.asistente">The assistant</a>
     <a href="#agente">The agent</a>
-    <a href="#dia" data-i18n="nav.dia">A day in the life</a>
+    <a href="#dia" data-i18n="nav.dia">Route book</a>
     <a href="#planes" data-i18n="nav.planes">Pricing</a>
     <!-- Mirror of the ES nav: hidden until APP_URL has a value. -->
     <a class="btn entrar" href="entrar/" data-i18n="nav.entrar">Log in</a>
@@ -1181,13 +1232,12 @@
   <div class="hero-grid">
     <div>
       <div class="kicker reveal" style="--d:80ms" data-i18n="hero.kicker">Operations for free tour and walking tour companies</div>
-      <h1 data-i18n="hero.h1">Your booking system forgets everything that happens after the booking.</h1>
-      <p class="lede reveal" style="--d:120ms">Audutor is <b>your tour company’s operations layer</b>: every channel’s bookings in
-      one list, your reminders ready to send in one tap, and every tour settled to the
-      penny. <b>Start with two modules and grow when you want to.</b></p>
+      <h1 data-i18n="hero.h1">Every departure under control. From booking to settlement.</h1>
+      <p class="lede reveal" style="--d:120ms">One view for bookings from every channel,
+      your guide at the meeting point and each tour's close.</p>
       <div class="hero-ctas reveal" style="--d:220ms">
-        <a class="btn" href="../demo-en/" data-demo>Try the interactive demo</a>
-      <a class="btn sec" href="#contacto">Book a guided demo</a>
+        <a class="btn" href="#dia">Explore a sample day</a>
+        <a class="btn sec" href="../demo-en/" data-demo>Try the demo</a>
       </div>
       <ul class="sellos"><li>No lock-in</li><li>0% commission</li><li>Data hosted in the EU</li><li>No cookies, no trackers</li></ul>
       <p class="hero-nota reveal" style="--d:300ms">It was built while running tours, not in a boardroom. Setting it up takes an afternoon: forward your booking emails and the inbox fills itself in.</p>
@@ -1216,22 +1266,23 @@
         </div>
         <div class="mock-panel" id="hoja-encuentro" role="tabpanel" aria-labelledby="tab-encuentro">
         <div class="mock-head"><span><span class="hora-m">10:00</span> · Old Town free tour</span> <span class="chipv">running now</span></div>
-        <div class="mock-sem"><span data-cuenta="avisadas">12</span>/14 messaged · ✓ <span data-cuenta="conf">9</span> confirmed · <b>1 running late (3 people)</b> · <span data-cuenta="sinresp">2</span> no reply</div>
-        <div class="mock-row ok" style="--i:0"><span>Hartley party · 4 people</span><span><svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>checked in</span></div>
-        <div class="mock-row"><span>Marco Bianchi · 2 people</span><span>pending</span></div>
+        <div class="mock-sem"><span data-cuenta="llegados">11</span>/14 at the meeting point · <b><span data-cuenta="faltan">3</span> yet to arrive</b></div>
+        <div class="mock-row ok" style="--i:0"><span>Ana García · 4 people</span><span><svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>checked in</span></div>
+        <div class="mock-row"><span>Marco Bianchi · 3 people</span><span>pending</span></div>
         <div class="mock-row ok" style="--i:1"><span>Dupont party · 5 people</span><span><svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>checked in</span></div>
+        <div class="mock-row ok" style="--i:2"><span>Samir · 2 people</span><span><svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>checked in</span></div>
         <button>Share where the group is</button>
         </div>
         <div class="mock-panel" id="hoja-cierre" role="tabpanel" aria-labelledby="tab-cierre" hidden>
           <div class="mock-head"><span><span class="hora-m">12:15</span> · after the tour</span> <span class="chipv">close</span></div>
-          <div class="mock-sem">11 at the meeting point · the guide notes the tips · <b>Audutor never touches that money</b></div>
+          <div class="mock-sem">14 booked guests and 1 walk-in by the end · the guide notes the tips · <b>Audutor never touches that money</b></div>
           <div class="mock-row"><span>Tips noted</span><span class="n" data-cuenta="cierre-0">£132</span></div>
           <div class="mock-row"><span>Channel cost · 12 booked through platforms</span><span class="n" data-cuenta="cierre-1">−£30</span></div>
           <div class="mock-row ok"><span>For the guide</span><span class="n" data-cuenta="cierre-2">£51</span></div>
           <div class="mock-row ok"><span>For the company</span><span class="n" data-cuenta="cierre-3">£51</span></div>
           <div class="mock-nota">A 50/50 split as an example: you set your own. It settles itself overnight.</div>
         </div>
-        <a class="mock-abrir" href="../demo-en/" data-demo>Open this departure in the demo</a>
+        <a class="mock-abrir" href="../demo-en/" data-demo>Explore the full demo</a>
       </figure>
       <div class="mock-pop pop2"><b>“I’m lost”</b> → GuIA sent them the group’s map (the guide’s location, 2 min ago). Without sharing any number.</div>
       <div class="mock-mapa">
@@ -1289,6 +1340,78 @@
 })();
 </script>
 
+<section id="dia" aria-labelledby="cuaderno-titulo"><div class="wrap">
+  <div class="cuaderno-intro">
+    <div><span class="cuaderno-kicker">ONE DEPARTURE · FOUR MOMENTS</span>
+      <h2 id="cuaderno-titulo">The living route book</h2></div>
+    <p>From the first booking to the final split. Choose a moment to see what changes on the same departure.</p>
+  </div>
+  <div class="cuaderno" data-cuaderno>
+    <div class="cuaderno-cab"><strong>Old Town free tour · today, 10:00</strong><span>Interactive example · fictional data</span></div>
+    <div class="cuaderno-tabs" role="tablist" aria-label="Moments of the departure">
+      <button type="button" role="tab" id="ruta-tab-0" aria-controls="ruta-panel-0" aria-selected="true"><span>08:41 · 01</span>Receive</button>
+      <button type="button" role="tab" id="ruta-tab-1" aria-controls="ruta-panel-1" aria-selected="false" tabindex="-1"><span>09:15 · 02</span>Prepare</button>
+      <button type="button" role="tab" id="ruta-tab-2" aria-controls="ruta-panel-2" aria-selected="false" tabindex="-1"><span>10:00 · 03</span>Guide</button>
+      <button type="button" role="tab" id="ruta-tab-3" aria-controls="ruta-panel-3" aria-selected="false" tabindex="-1"><span>12:15 · 04</span>Close</button>
+    </div>
+    <div class="cuaderno-panel" id="ruta-panel-0" role="tabpanel" aria-labelledby="ruta-tab-0">
+      <div class="cuaderno-relato"><span class="cuaderno-hora">08:41 · BEFORE DEPARTURE</span>
+        <h3>Every booking has its place.</h3>
+        <p>Recognised emails enter the departure. A message that cannot be verified stays aside for review.</p>
+        <span class="cuaderno-sello">1 email awaiting review</span></div>
+      <div class="cuaderno-vista"><div class="cuaderno-vista-head"><b>Departure bookings</b><span>4 bookings · 14 people</span></div>
+        <div class="cuaderno-cifras"><span><b>14</b>people expected</span><span><b>3</b>channels</span></div>
+        <div class="cuaderno-fila"><span><strong>GuruWalk</strong><small>2 bookings</small></span><b class="monto">9 people</b></div>
+        <div class="cuaderno-fila"><span><strong>Civitatis</strong><small>1 booking</small></span><b class="monto">3 people</b></div>
+        <div class="cuaderno-fila"><span><strong>Your website</strong><small>1 booking</small></span><b class="monto">2 people</b></div>
+        <p class="cuaderno-nota">The uncertain email does not change capacity until a manager confirms it.</p>
+      </div>
+    </div>
+    <div class="cuaderno-panel" id="ruta-panel-1" role="tabpanel" aria-labelledby="ruta-tab-1" hidden>
+      <div class="cuaderno-relato"><span class="cuaderno-hora">09:15 · PREPARING</span>
+        <h3>The guide knows whom to expect.</h3>
+        <p>The guide sees the departure and manifest. Reminders are ready to send from your WhatsApp or SMS; nobody receives one until you send it.</p>
+        <span class="cuaderno-sello bien">Guide assigned</span></div>
+      <div class="cuaderno-vista"><div class="cuaderno-vista-head"><b>Before the meeting</b><span>Old town walking tour</span></div>
+        <div class="cuaderno-cifras"><span><b>14</b>expected</span><span><b>4</b>bookings</span></div>
+        <div class="cuaderno-fila"><span><strong>Guide</strong><small>Opens this departure</small></span><b>Curro</b></div>
+        <div class="cuaderno-fila"><span><strong>Reminders</strong><small>Text ready for review and sending</small></span><b>WhatsApp / SMS</b></div>
+        <div class="cuaderno-fila"><span><strong>Uncertain email</strong><small>Outside the manifest</small></span><b>Review</b></div>
+      </div>
+    </div>
+    <div class="cuaderno-panel" id="ruta-panel-2" role="tabpanel" aria-labelledby="ruta-tab-2" hidden>
+      <div class="cuaderno-relato"><span class="cuaderno-hora">10:00 · MEETING POINT</span>
+        <h3>Every arrival changes the list.</h3>
+        <p>Try − and +: the totals in this example change immediately. You can also count someone who arrives without a booking.</p>
+        <span class="cuaderno-sello aviso">Still to arrive: <span data-ruta-faltan>3</span> booked people</span></div>
+      <div class="cuaderno-vista"><div class="cuaderno-vista-head"><b>Guide manifest</b><span>Example, nothing saved</span></div>
+        <div class="cuaderno-cifras" aria-live="polite" aria-atomic="true"><span><b data-ruta-llegados>11</b>booked people here</span><span class="alerta"><b data-ruta-faltan>3</b>not here yet</span><span><b data-ruta-total>12</b>here with walk-ins</span></div>
+        <div class="cuaderno-fila"><span><strong>Ana García · 4p</strong><small>GuruWalk</small></span><span class="cuaderno-ajuste" data-max="4" data-count="4" data-name="Ana García"><button type="button" data-delta="-1" aria-label="Remove one arrival for Ana García">−</button><output>4</output><button type="button" data-delta="1" aria-label="Add one arrival for Ana García">+</button></span></div>
+        <div class="cuaderno-fila"><span><strong>Dupont family · 5p</strong><small>GuruWalk</small></span><span class="cuaderno-ajuste" data-max="5" data-count="5" data-name="Dupont family"><button type="button" data-delta="-1" aria-label="Remove one arrival for the Dupont family">−</button><output>5</output><button type="button" data-delta="1" aria-label="Add one arrival for the Dupont family">+</button></span></div>
+        <div class="cuaderno-fila"><span><strong>Samir · 2p</strong><small>Your website</small></span><span class="cuaderno-ajuste" data-max="2" data-count="2" data-name="Samir"><button type="button" data-delta="-1" aria-label="Remove one arrival for Samir">−</button><output>2</output><button type="button" data-delta="1" aria-label="Add one arrival for Samir">+</button></span></div>
+        <div class="cuaderno-fila"><span><strong>Marco Bianchi · 3p</strong><small>Civitatis</small></span><span class="cuaderno-ajuste" data-max="3" data-count="0" data-name="Marco Bianchi"><button type="button" data-delta="-1" aria-label="Remove one arrival for Marco Bianchi">−</button><output>0</output><button type="button" data-delta="1" aria-label="Add one arrival for Marco Bianchi">+</button></span></div>
+        <div class="cuaderno-fila"><span><strong>Walk-ins</strong><small>People without a booking</small></span><span class="cuaderno-ajuste" data-max="20" data-count="1" data-walkin data-name="walk-ins"><button type="button" data-delta="-1" aria-label="Remove a walk-in">−</button><output>1</output><button type="button" data-delta="1" aria-label="Add a walk-in">+</button></span></div>
+      </div>
+    </div>
+    <div class="cuaderno-panel" id="ruta-panel-3" role="tabpanel" aria-labelledby="ruta-tab-3" hidden>
+      <div class="cuaderno-relato"><span class="cuaderno-hora">12:15 · AFTER THE TOUR</span>
+        <h3>The split is clear.</h3>
+        <p>The guide records tips collected outside Audutor. With this example policy, the system subtracts channel costs and calculates each share.</p>
+        <span class="cuaderno-sello bien">Example split · 50 / 50</span></div>
+      <div class="cuaderno-vista"><div class="cuaderno-vista-head"><b>Departure close</b><span>Fictional amounts</span></div>
+        <div class="cuaderno-cifras"><span><b>£132</b>tips recorded</span><span><b>£30</b>channel costs</span></div>
+        <div class="cuaderno-fila"><span><strong>Booked via platforms</strong><small>12 × £2.50 in this example</small></span><b class="monto">−£30</b></div>
+        <div class="cuaderno-fila"><span><strong>For the guide</strong><small>Half of £102</small></span><b class="monto">£51</b></div>
+        <div class="cuaderno-fila"><span><strong>For the company</strong><small>Half of £102</small></span><b class="monto">£51</b></div>
+        <p class="cuaderno-nota">Your actual split depends on your fees and rules. Audutor records and calculates; it does not collect tips.</p>
+      </div>
+    </div>
+    <div class="cuaderno-pie"><span>This example changes only in your browser and never touches an account.</span>
+      <button type="button" class="cuaderno-siguiente">See the next moment →</button>
+      <a href="../demo-en/" data-demo>Explore the full demo</a></div>
+  </div>
+</div></section>
+
 <section class="alt" id="producto"><div class="wrap">
   <div class="sec-head">
     <h2>Everything between the booking and the tip</h2>
@@ -1297,6 +1420,7 @@
        Each card used to carry a paragraph explaining its own workings — the last one ran
        to 141 words on how we verify platform emails — plus a «module: X» label. «Module»
        is system vocabulary; the person reading this runs a tour company. -->
+  <details class="producto-desplegable"><summary>Explore the other features when you need them</summary>
   <div class="grid3 producto-grid">
 <div class="celda reveal"><h3>From the inbox to a booking you can trust</h3><p>Check reception, compare the original with the extracted details and review uncertain messages before adding them. Email confirmations have an outbox with retries and items needing review.</p><p>You can enable an email alert if your connected mailbox keeps failing or stops updating for 15 minutes. It does not detect a complete Audutor outage.</p></div>
 <div class="celda reveal"><h3>Support you can follow</h3><p>Each support ticket keeps its conversation, owner and response target. You can opt into email alerts and reply from your panel, with retries that avoid duplicates if the connection fails. The Audutor team can opt into internal alerts for missed targets.</p></div>
@@ -1327,36 +1451,7 @@
       <p>Bookings from your platforms and your own site arrive and keep themselves up to date.</p>
       <p class="mini">And a booking we haven't tested never goes in without you looking at it.</p></div>
   </div>
-</div></section>
-
-<section id="dia">
-  <svg class="adorno brujula" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
-    <circle cx="32" cy="32" r="28.5" fill="#fffdf7" stroke="#c98a2d" stroke-width="2.2"/>
-    <circle cx="32" cy="32" r="22.5" fill="none" stroke="#e6dcc8" stroke-width="1.4"/>
-    <path d="M32 5.5v6M32 52.5v6M5.5 32h6M52.5 32h6" stroke="#c98a2d" stroke-width="2.4" stroke-linecap="round"/>
-    <path d="M32 13 L37.5 32 L26.5 32 Z" fill="#f4653a"/>
-    <path d="M32 51 L37.5 32 L26.5 32 Z" fill="#123f33"/>
-    <circle cx="32" cy="32" r="3.2" fill="#fffdf7" stroke="#c98a2d" stroke-width="1.8"/>
-  </svg>
-  <div class="wrap">
-  <div class="sec-head">
-    <h2>A normal day with Audutor</h2>
-    <p class="reveal">No spreadsheet, no copying bookings across, no “does anyone know where the guide is?”.</p>
-  </div>
-  <div class="dia">
-    <div class="hito reveal"><span class="hora">8:41 AM</span><span class="punto"></span>
-      <div class="que"><b>4 bookings land from two different platforms.</b> On their own. Nobody copied anything from an extranet: the mailbox reads them and they're already on the guide's manifest. Two share a surname, 4 minutes apart: the guide sees them together — 9 people — with your deposit policy alongside.</div></div>
-    <div class="hito reveal"><span class="hora">9:15 AM</span><span class="punto"></span>
-      <div class="que"><b>Tomorrow’s reminders, ready: you send them in one tap each.</b> One traveller writes “we’re 5 now” in the chat — the booking updates itself and the guide sees it on the manifest.</div></div>
-    <div class="hito clave reveal"><span class="hora">10:58 AM</span><span class="punto"></span>
-      <div class="que"><b>“I’m lost, I can’t find the group.”</b> GuIA checks their code, sends the map with the location the guide shared at the last stop, and leaves a note on the tour. Nobody had to phone anybody.</div></div>
-    <div class="hito reveal"><span class="hora">2:15 PM</span><span class="punto"></span>
-      <!-- Same correction as the Spanish page (11-Aug): there is no tip link and no group
-           QR. Audutor never handles the money — the guide records the tip in the manifest. -->
-      <div class="que"><b>End of the free tour: the guide records the tip.</b> However it was taken — cash, their own card reader, whatever — it goes into the manifest at close, and <b>Audutor never touches that money</b>: it only splits it and squares it. Two no-shows land on the board: tomorrow those reminders are ready earlier.</div></div>
-    <div class="hito reveal"><span class="hora">11:00 PM</span><span class="punto"></span>
-      <div class="que"><b>The day settles itself.</b> Tips and ticket sales, channel fees, the guide’s share and the company’s — tour by tour, ready for your accountant. Plus tomorrow’s brief: “2 things to check”.</div></div>
-  </div>
+  </details>
 </div></section>
 
 <section class="alt" id="planes">
@@ -1816,10 +1911,10 @@
    propias plataformas, moneda y canal de aviso — no es la misma traducida). */
 var I18N={
   en:{
-    'nav.producto':'Product', 'nav.asistente':'The assistant', 'nav.dia':'A day', 'nav.planes':'Pricing', 'nav.web':'Your site',
+    'nav.producto':'Product', 'nav.asistente':'The assistant', 'nav.dia':'Route book', 'nav.planes':'Pricing', 'nav.web':'Your site',
     'nav.demo':'Try the demo',
     'hero.kicker':'Operations software for walking tour companies with a team of guides — free tours, ticketed walks, food and bike tours',
-    'hero.h1':'Your booking system forgets everything that happens after the booking.'
+    'hero.h1':'Every departure under control. From booking to settlement.'
   }
 };
 /* ================= EL OTRO SITIO QUE HAY QUE TOCAR: DÓNDE VIVE LA APP =================
@@ -2108,9 +2203,8 @@ document.addEventListener('DOMContentLoaded', function(){
 })();
 </script>
 <script>
-/* La web enseña el cuidado del panel: la hoja del hero vive sola, la línea de «Un día» se
-   dibuja al llegar, y las cifras cuentan al entrar en pantalla. Sin JS o con movimiento
-   reducido, todo está quieto y completo. */
+/* La hoja del hero cambia sola y las cifras cuentan al entrar en pantalla.
+   El cuaderno de ruta, en cambio, solo cambia cuando actúa el visitante. */
 (function(){
   var quieto = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -2132,8 +2226,7 @@ document.addEventListener('DOMContentLoaded', function(){
       contadores.forEach(function(c, i){ fija(c, inicial[i]); });
     }
     function lanzaEscena(){
-      /* 2,4 s después de enseñar Encuentro, Marco llega: la fila pasa a verde con su tick
-         dibujándose, y avisadas/confirmadas suben y «sin responder» baja. */
+      /* Marco llega con su grupo de 3: cambia la fila y el recuento. */
       clearTimeout(escena);
       escena = setTimeout(function(){
         if (!pendiente || pendiente.classList.contains('ok')) return;
@@ -2141,7 +2234,7 @@ document.addEventListener('DOMContentLoaded', function(){
         pendiente.lastElementChild.innerHTML = textoOk;
         contadores.forEach(function(c, i){
           var k = c.getAttribute('data-cuenta'), v = parseInt(inicial[i], 10);
-          c.textContent = String(k === 'sinresp' ? v - 1 : v + 1);
+          c.textContent = String(k === 'faltan' ? v - 3 : v + 3);
         });
         if (window.cuentasHoja) window.cuentasHoja(encuentro.querySelector('.mock-sem'));
       }, 2400);
@@ -2166,17 +2259,8 @@ document.addEventListener('DOMContentLoaded', function(){
     if (abierta) alMostrar(abierta.getAttribute('aria-controls'));
   }
 
-  /* ── 2. La línea de «Un día» se dibuja al llegar ── */
-  var dia = document.querySelector('#dia .dia');
-  if (dia) {
-    Array.prototype.forEach.call(dia.querySelectorAll('.hito'), function(h, i){ h.style.setProperty('--d', (i * 120) + 'ms'); });
-    if (quieto) dia.classList.add('traza');
-  }
-
-  /* «Al llegar a ello», mirando la posición en cada scroll (barato: cuatro rectángulos) y
-     retirándose en cuanto se cumple. */
+  /* Cifras y sellos se activan al entrar en pantalla. */
   var pendientes = [];
-  if (dia && !quieto) pendientes.push({ el: dia, haz: function(){ dia.classList.add('traza'); }, umbral: 0.85 });
 
   /* ── 3. Las cifras cuentan al entrar en pantalla, una vez ── */
   if (!quieto && window.cuentasHoja) {
@@ -2265,6 +2349,65 @@ document.addEventListener('DOMContentLoaded', function(){
   };
   window.addEventListener('resize', recoloca);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(recoloca);
+})();
+</script>
+<script>
+/* La muestra del cuaderno solo cambia el DOM local. No realiza peticiones ni guarda datos. */
+(function(){
+  var libro=document.querySelector('[data-cuaderno]');
+  if(!libro) return;
+  var tabs=Array.prototype.slice.call(libro.querySelectorAll('.cuaderno-tabs [role="tab"]'));
+  function abre(i){
+    tabs.forEach(function(tab,n){
+      var activo=n===i;
+      tab.setAttribute('aria-selected',String(activo));
+      tab.tabIndex=activo?0:-1;
+      var panel=document.getElementById(tab.getAttribute('aria-controls'));
+      if(panel) panel.hidden=!activo;
+    });
+  }
+  tabs.forEach(function(tab,i){
+    tab.addEventListener('click',function(){ abre(i); });
+    tab.addEventListener('keydown',function(e){
+      var n=e.key==='ArrowRight'?(i+1)%tabs.length:e.key==='ArrowLeft'?(i+tabs.length-1)%tabs.length:
+        e.key==='Home'?0:e.key==='End'?tabs.length-1:null;
+      if(n!==null){ e.preventDefault(); abre(n); tabs[n].focus(); }
+    });
+  });
+  var siguiente=libro.querySelector('.cuaderno-siguiente');
+  if(siguiente) siguiente.addEventListener('click',function(){
+    var i=tabs.findIndex(function(t){return t.getAttribute('aria-selected')==='true';});
+    abre((i+1)%tabs.length);
+    tabs[(i+1)%tabs.length].focus();
+  });
+  var ajustes=Array.prototype.slice.call(libro.querySelectorAll('.cuaderno-ajuste'));
+  function actualiza(){
+    var reservados=0, walkins=0;
+    ajustes.forEach(function(a){
+      var n=Number(a.getAttribute('data-count'))||0;
+      if(a.hasAttribute('data-walkin')) walkins+=n; else reservados+=n;
+      a.querySelector('output').textContent=String(n);
+    });
+    libro.querySelectorAll('[data-ruta-llegados]').forEach(function(x){x.textContent=String(reservados);});
+    libro.querySelectorAll('[data-ruta-faltan]').forEach(function(x){x.textContent=String(14-reservados);});
+    libro.querySelectorAll('[data-ruta-total]').forEach(function(x){x.textContent=String(reservados+walkins);});
+  }
+  ajustes.forEach(function(a){
+    a.addEventListener('click',function(e){
+      var boton=e.target.closest('button[data-delta]');
+      if(!boton) return;
+      var n=Number(a.getAttribute('data-count'))||0;
+      var max=Number(a.getAttribute('data-max'))||0;
+      var nuevo=Math.max(0,Math.min(max,n+Number(boton.getAttribute('data-delta'))));
+      if(nuevo===n) return;
+      a.setAttribute('data-count',String(nuevo));
+      a.classList.remove('cambia');
+      void a.offsetWidth;
+      a.classList.add('cambia');
+      actualiza();
+    });
+  });
+  actualiza();
 })();
 </script>
 </body>
