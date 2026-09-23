@@ -634,6 +634,10 @@
   .comp-total{ margin-top:8px; font-size:13px; color:#33514a; }
   .comp-total b{ font-size:15px; color:var(--acc-deep); font-variant-numeric:tabular-nums; }
   .comp-total span{ display:block; font-size:11.5px; color:#7a6f55; font-style:italic; margin-top:2px; }
+  /* Lo que va EN el plan, sin casilla: la misma fila que un complemento, con ✓. */
+  .comp-incl{ padding:5px 0; color:#0c6b56; border-bottom:1px dashed rgba(122,111,85,.22); }
+  /* `.leyenda-planes b` pinta las negritas en claro para el fondo verde; esta caja es crema. */
+  .comp-incl b{ color:inherit; }
   .plan-sel{ display:flex; gap:4px; margin-top:8px; flex-wrap:wrap; }
   /* Tres botones en ~187 px: el nombre del plan debe caber sin desbordar la caja.
      “Esencial” a 12 px no cabía en los ~56 px útiles de cada botón. */
@@ -646,7 +650,8 @@
     .plan-sel button{ padding:8px 6px; font-size:11.5px; }
     .plan-sel button b{ font-size:13px; letter-spacing:0; }
   }
-  .plan-sel button.on{ background:var(--acc); border-color:var(--acc); }
+  /* El precio del plan activo iba en #5c6653 sobre el verde: no se leía el «0 €» de Esencial. */
+  .plan-sel button.on{ background:var(--acc); border-color:var(--acc); color:#e4efe9; }
   .plan-sel button.on b{ color:#fff; }
   #toast{ position:fixed; left:50%; bottom:26px; transform:translateX(-50%) translateY(90px);
     background:var(--ink); color:#fff; padding:10px 22px; border-radius:99px; font-weight:700;
@@ -655,7 +660,7 @@
 
   
   .es-plus{ display:none; margin-top:9px; border:1px dashed var(--gold); border-radius:9px;
-    background:rgba(217,154,51,.10); padding:9px 11px; font-size:11.5px; line-height:1.5; color:#5c6653; }
+    background:#f7ecd6; padding:9px 11px; font-size:11.5px; line-height:1.5; color:#5c6653; }
   .es-plus b{ color:#2f443b; }
   .es-plus button{ margin-top:7px; width:100%; border:1px solid var(--gold); background:transparent;
     color:var(--amber); border-radius:7px; padding:5px 8px; font-size:11.5px; font-weight:800;
@@ -1000,7 +1005,7 @@
         <div class="comp-tit">Add-ons</div>
         <label><input type="checkbox" id="c-guia" onchange="compTog('guia',this)"><span>GuIA, the assistant</span><b>+€39</b></label>
         <label><input type="checkbox" id="c-agente" onchange="compTog('agente',this)"><span>Agent preview</span><b>In preparation</b></label>
-        <label><input type="checkbox" id="c-web" onchange="compTog('web',this)"><span>Your website, always current</span><b>+€9</b></label>
+        <div class="comp-incl">✓ <b>Your booking website</b>, included in every plan</div>
         <div class="comp-total">Your plan: <b id="comp-tot">€39</b><span id="comp-desglose"></span></div>
       </div>
       <div style="font-size:11.5px; margin-top:8px; opacity:.85; line-height:1.5;">💶 Tips: <b>0 %</b>. Audutor does not take the tip nor a penny of it — it records it and squares it.</div>
@@ -6427,7 +6432,7 @@ function agComprueba(b){
 var SUPLEMENTOS={
   chat:      { n:'GuIA · Customer chat', plan:'Pro', d:'The assistant that handles your customers in the chat on your site: it answers with the facts of each tour and hands over anything it does not know. It never makes things up.' },
 cerebro:   { n:'GuIA’s brain', plan:'Pro', d:'The per-tour fact sheet that feeds the assistant, with AI filling it in from the tour’s own page and drafts you can edit.' },   // y L1991: n:'Smart anti-no-show sequence'
-  web:       { n:'Your website', plan:'Pro', d:'Your public page, built from what you already wrote in the Brain: one block per kind of question, and an empty field does not appear. THE TOUR IS BOOKED HERE, against the real capacity; the ones with a price need your payment address. It also opens each guide\'s own page with their QR. Cancel it and THIS page goes dark, along with the QR codes that point at it; bookings coming in through your own website keep coming.' },
+  web:       { n:'Your website', plan:'todos', d:'Your public page, built from what you already wrote in the Brain: one block per kind of question, and an empty field does not appear. THE TOUR IS BOOKED HERE, against the real capacity; the ones with a price need your payment address. It also opens each guide\'s own page with their QR. It comes with every plan: with a small “with Audutor” badge on Essential, with your brand on Pro and Premium.' },
   agente:    { n:'The platform agent', plan:'Premium', d:'Signs into your platform dashboards with YOUR session —Audutor stores no password—, counts how many people each one has on record and closes full departures. And even when it says it closed one, it stays unticked here until you check it yourself.' },
   carrito:   { n:'What you sell beyond the tour', plan:'todos', d:'Your catalogue of extras — ticketed walks, private tours, tastings — shows on your site and GuIA mentions it when people ask what else you do. Audutor charges for none of it: it sends people to where you already take payment.' },
   cuadro:    { n:'Analytics', plan:'todos', d:'The numbers behind the business: occupancy, channels, tips by guide and time slot, no-shows. So you decide on data, not on a hunch.' },
@@ -6448,7 +6453,9 @@ var PLANES={ esencial:{orden:0, n:'Essential', precio:'€0',   bono:150,  base:
 var COMPLEMENTOS = {
   guia:     { n:'GuIA, the assistant', precio:39, abre:['chat','cerebro'] },
   agente:   { n:'The platform agent', precio:29, abre:['agente'] },
-  web:      { n:'Your website, always current', precio:9, abre:['web'] },
+  /* “Your website” is no longer here: since 23-Sep-2026 it comes with EVERY plan (with the
+     “with Audutor” badge on Essential), as on the server, where it is `enTarifa`. The plan
+     opens it —`SUPLEMENTOS.web`, plan 'todos'—, not a checkbox that adds €9. */
   /* `conciliacion` también, como en la demo española. Sin ella aquí, la reconciliación con
      plataformas no colgaba de ningún complemento y caía al criterio de respaldo —el orden
      del plan—, así que el Pro pelado la REGALABA mientras la app la cobra 9 €. Enseñarle a
@@ -6461,7 +6468,7 @@ var COMPLEMENTOS = {
      que no hay nada que marcar aquí. El comentario largo que había describía el
      complemento como si existiera, y eso engaña más que aclarar. */
 };
-S.comp = { guia:false, agente:false, web:false, cuentas:false };
+S.comp = { guia:false, agente:false, cuentas:false };
 function abiertoPorComplemento(v){
   for (var k in COMPLEMENTOS)
     if (S.comp[k] && COMPLEMENTOS[k].abre.indexOf(v) !== -1) return true;

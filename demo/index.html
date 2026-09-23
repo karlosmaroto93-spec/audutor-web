@@ -784,6 +784,10 @@
   .comp-total{ margin-top:8px; font-size:13px; color:#33514a; }
   .comp-total b{ font-size:15px; color:var(--acc-deep); font-variant-numeric:tabular-nums; }
   .comp-total span{ display:block; font-size:11.5px; color:#7a6f55; font-style:italic; margin-top:2px; }
+  /* Lo que va EN el plan, sin casilla: la misma fila que un complemento, con ✓. */
+  .comp-incl{ padding:5px 0; color:#0c6b56; border-bottom:1px dashed rgba(122,111,85,.22); }
+  /* `.leyenda-planes b` pinta las negritas en claro para el fondo verde; esta caja es crema. */
+  .comp-incl b{ color:inherit; }
   .plan-sel{ display:flex; gap:4px; margin-top:8px; flex-wrap:wrap; }
   /* Tres botones en ~187 px: el nombre del plan debe caber sin desbordar la caja.
      «Esencial» a 12 px no cabía en los ~56 px útiles de cada botón. */
@@ -796,7 +800,8 @@
     .plan-sel button{ padding:8px 6px; font-size:11.5px; }
     .plan-sel button b{ font-size:13px; letter-spacing:0; }
   }
-  .plan-sel button.on{ background:var(--acc); border-color:var(--acc); }
+  /* El precio del plan activo iba en #5c6653 sobre el verde: no se leía el «0 €» de Esencial. */
+  .plan-sel button.on{ background:var(--acc); border-color:var(--acc); color:#e4efe9; }
   .plan-sel button.on b{ color:#fff; }
   #toast{ position:fixed; left:50%; bottom:26px; transform:translateX(-50%) translateY(90px);
     background:var(--ink); color:#fff; padding:10px 22px; border-radius:99px; font-weight:700;
@@ -805,7 +810,7 @@
 
   
   .es-plus{ display:none; margin-top:9px; border:1px dashed var(--gold); border-radius:9px;
-    background:rgba(217,154,51,.10); padding:9px 11px; font-size:11.5px; line-height:1.5; color:#5c6653; }
+    background:#f7ecd6; padding:9px 11px; font-size:11.5px; line-height:1.5; color:#5c6653; }
   .es-plus b{ color:#2f443b; }
   .es-plus button{ margin-top:7px; width:100%; border:1px solid var(--gold); background:transparent;
     color:var(--amber); border-radius:7px; padding:5px 8px; font-size:11.5px; font-weight:800;
@@ -1127,7 +1132,7 @@
   <div class="pie-demo">
     <div class="leyenda-planes">
       <b>Tu plan (demo):</b> cámbialo y mira qué se desbloquea. Esencial trae
-      <b>1 tour y 2 guías</b>; desde Pro, ilimitados. El plan es un <b>bono de viajeros</b>: GuIA, el agente y la web se suman aparte.
+      <b>1 tour y 2 guías</b>; desde Pro, ilimitados. El plan es un <b>bono de viajeros</b>: tu web va en todos; GuIA y el agente se suman aparte.
       <div class="mk-sel">
         <b>Mercado (demo):</b> el mismo producto, en el mismo idioma, adaptado a la moneda, el modelo de negocio y las costumbres de cada país.
         <div class="fila" id="mk-btns" style="gap:4px; margin-top:6px; flex-wrap:wrap;"></div>
@@ -1147,7 +1152,7 @@
         <div class="comp-tit">Complementos</div>
         <label><input type="checkbox" id="c-guia" onchange="compTog('guia',this)"><span>GuIA, el asistente</span><b>+39 €</b></label>
         <label><input type="checkbox" id="c-agente" onchange="compTog('agente',this)"><span>Vista previa del agente</span><b>En preparación</b></label>
-        <label><input type="checkbox" id="c-web" onchange="compTog('web',this)"><span>Tu web, siempre al día</span><b>+9 €</b></label>
+        <div class="comp-incl">✓ <b>Tu web de reservas</b>, incluida en todos los planes</div>
         <div class="comp-total">Tu tarifa: <b id="comp-tot">39 €</b><span id="comp-desglose"></span></div>
       </div>
       <div style="font-size:11.5px; margin-top:8px; opacity:.85; line-height:1.5;">💶 La propina: <b>0 %</b>. Audutor no la cobra ni se lleva nada de ella — la anota y la cuadra.</div>
@@ -6960,7 +6965,7 @@ var SUPLEMENTOS={
   chat:      { n:'GuIA · Chat del cliente', plan:'Pro', d:'El asistente que atiende a tus clientes en el chat de tu web: responde con los hechos de cada tour y deriva lo que no sabe. Nunca inventa.' },
   cerebro:   { n:'GuIA · Cerebro', plan:'Pro', d:'El formulario de hechos por tour que alimenta al asistente, con IA que lo rellena desde la web del tour y borradores editables.' },
   carrito:   { n:'Lo que vendes además del tour', plan:'todos', d:'Tu catálogo de extras —tours de pago, privados, degustaciones— sale en tu web y GuIA lo cuenta cuando preguntan qué más hacéis. Se contrata POR SEPARADO, sin depender de ningún otro complemento: vale igual en la página que te monta Audutor y en la que tú ya tengas. Audutor no cobra ninguno y no toca el dinero: lleva a donde tú ya cobras.' },
-  web:       { n:'Tu web', plan:'Pro', d:'Tu página pública, sacada de lo que ya escribiste en el Cerebro: un bloque por tipo de pregunta y un campo vacío no sale. EL TOUR SE RESERVA AQUÍ, contra el aforo de verdad; los que llevan precio necesitan tu dirección de cobro. También abre la página de cada guía con su QR. Si la quitas se apaga ESTA página y los QR de tus guías, que llevan a ella; las reservas que entren por tu propia web siguen entrando.' },
+  web:       { n:'Tu web', plan:'todos', d:'Tu página pública, sacada de lo que ya escribiste en el Cerebro: un bloque por tipo de pregunta y un campo vacío no sale. EL TOUR SE RESERVA AQUÍ, contra el aforo de verdad; los que llevan precio necesitan tu dirección de cobro. También abre la página de cada guía con su QR. Va en todos los planes: en Esencial con la marca «con Audutor», en Pro y Premium con la tuya.' },
   agente:    { n:'El agente de plataformas', plan:'Premium', d:'Entra en los paneles de tus plataformas con TU sesión —Audutor no guarda ninguna contraseña—, cuenta cuánta gente le consta a cada una y cierra las salidas llenas. Y aunque diga que cerró, aquí sigue sin ✓ hasta que lo compruebes tú.' },
   cuadro:    { n:'Cuadro de mando', plan:'todos', d:'La analítica del negocio: ocupación, canales, propina por guía y por franja, no-shows. Para decidir con datos, no a ojo.' },
   liquidacion:{ n:'Liquidación a guías', plan:'todos', d:'La cuenta de cada tour siempre cuadrada: reparto por % o tarifa fija, coste de canal, CSV e imprimir. El guía nunca paga.' },
@@ -6983,7 +6988,9 @@ var PLANES={ esencial:{orden:0, n:'Esencial', precio:'0 €',   bono:150,  base:
 var COMPLEMENTOS = {
   guia:     { n:'GuIA, el asistente', precio:39, abre:['chat','cerebro'] },
   agente:   { n:'El agente de plataformas', precio:29, abre:['agente'] },
-  web:      { n:'Tu web, siempre al día', precio:9, abre:['web'] },
+  /* «Tu web» ya no está aquí: desde el 23-sep-2026 va en TODOS los planes (en Esencial con
+     la marca «con Audutor»), igual que en el servidor, donde es `enTarifa`. La abre el plan
+     —`SUPLEMENTOS.web`, plan 'todos'—, no una casilla que sume 9 €. */
   /* `conciliacion` estaba fuera de aquí y caía al gating por PLAN, así que la demo la
      enseñaba «incluida en Pro» y ofrecía «Cambiar a Pro». En el servidor vive detrás de
      este complemento —`exigeComplemento('cuentas')` en las cuatro rutas de /api/cuentas—,
@@ -6997,7 +7004,7 @@ var COMPLEMENTOS = {
      que no hay nada que marcar aquí. El comentario largo que había describía el
      complemento como si existiera, y eso engaña más que aclarar. */
 };
-S.comp = { guia:false, agente:false, web:false, cuentas:false };
+S.comp = { guia:false, agente:false, cuentas:false };
 
 /* Un suplemento está disponible si algún complemento CONTRATADO lo abre, o si sigue
    colgando del plan (cuadro de mando, proyección: esos se quedan como estaban). */

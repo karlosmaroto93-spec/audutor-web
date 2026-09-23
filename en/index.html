@@ -666,6 +666,10 @@
      with the checkbox dead and said on the label: a price list that charges for something
      that doesn't exist is the most expensive lie this page could tell. */
   .tf-o.tf-pronto{ opacity:.72; }
+  /* What comes IN THE PLAN: the same row, no checkbox, a ✓ in its place. */
+  .tf-o.tf-incluida{ cursor:default; }
+  .tf-o.tf-incluida:hover{ background:none; }
+  .tf-ok{ flex:0 0 17px; margin-top:1px; color:var(--acc); font-weight:700; font-size:13px; text-align:center; }
   .tf-o.tf-pronto .tf-p b{ color:var(--gold); font-weight:700; }
   .tf-p.tf-dentro{ color:var(--acc); font-weight:700; }
   .cero{ background:var(--acc-soft); border:0; border-radius:0; padding:22px 26px; margin:0 0 22px; }
@@ -1576,7 +1580,7 @@
         <li>One reminder the day before, ready to send in one tap</li>
         <li>Split-group detection and rescue for stragglers</li>
         <li>1 tour · 2 guides · <b>150 travellers/month</b></li>
-        <li>A small “with Audutor” badge shows on the guide page and the tip screen</li>
+        <li><b>Your booking website</b>, each guide’s page with their QR and the tip screen, with a small “with Audutor” badge</li>
       </ul>
       <p class="plan-extra">Essential is free and caps at 150: when you get there we tell you, and you decide whether to move to Pro.</p>
       <a class="btn sec" href="#contacto">Start free</a>
@@ -1588,7 +1592,7 @@
       <div class="para">For companies running a team of guides · <b data-cuenta="plan-1" data-al-ver>1,000 travellers a month</b> · unlimited tours and guides</div>
       <ul>
         <li>Everything in Essential · <b>unlimited tours, guides and channels</b> · full history</li>
-        <li>No Audutor branding — your brand on the tip screen and the guide page</li>
+        <li>No Audutor branding — your brand on your booking website, the guide page and the tip screen</li>
         <li><b>The full smart anti-no-show sequence</b>: it adapts to how risky each booking looks — and
           leaves a record of who was contacted, when, and who confirmed</li>
         <li>Prepare SMS and WhatsApp reminders on your phone. <b>Audutor charges no per-message fee</b>; your mobile plan may charge for SMS</li>
@@ -1635,7 +1639,7 @@
       <p class="tf-gratis"><b>The first month of every add-on is free.</b> No card. If after a
       month one of them has not earned its place, drop it.</p>
 
-      <div class="tf-g">The assistant and your shopfront</div>
+      <div class="tf-g">The assistant</div>
       <label class="tf-o con-mas"><input type="checkbox" data-c="guia" data-eur="39" onchange="tarifa()">
         <span class="tf-n">GuIA, the assistant<small>You are out with a group and cannot look at your phone. It answers with your facts —and what it does not know it hands to you instead of making it up</small></span>
         <span class="tf-p">+€39</span></label>
@@ -1653,12 +1657,16 @@
             allergy, a guide dog— and it never quotes places it has not checked.</li>
         </ul>
       </details>
-      <label class="tf-o con-mas"><input type="checkbox" data-c="web" data-eur="9" onchange="tarifa()">
+      <!-- “Your website” moved into every plan on 23-Sep-2026. It stays here, with no
+           checkbox and no price, because it explains what the plan brings. -->
+      <div class="tf-g">Included in every plan</div>
+      <div class="tf-o con-mas tf-incluida" data-c="web">
+        <span class="tf-ok" aria-hidden="true">✓</span>
         <span class="tf-n">Your website, always current<small>The one you have today shows last summer’s timetable. This one reads the same data as the guide’s brief: change the meeting point once and it changes in both</small></span>
-        <span class="tf-p">+€9</span></label>
+        <span class="tf-p tf-dentro">included</span></div>
       <details class="tf-mas"><summary>What it does, exactly</summary>
         <ul>
-          <li><b>Already have a website?</b> Then you do not need this one: Audutor
+          <li><b>Already have a website?</b> Keep using it: Audutor
             <b>can synchronise through its API</b>. Your website needs an adapted connection that sends bookings and checks availability and changes. We verify it before treating it as operational; there is no universal plug-in.</li>
           <li>The panel distinguishes availability requests, change retrieval and failures, with a warning when your expected interval is exceeded.</li>
           <li><b>Your public page</b>, a front page and one per tour. You do not write it: it
@@ -1670,9 +1678,9 @@
             the walk — which is when people ask what else you run — and that recommendation
             lands on your site, not on the platform. And the analytics tell you which guide
             brings bookings.</li>
-          <li><b>Cancel it and THIS page goes dark</b> — along with your guides' QR codes,
-            which point at it. Bookings coming in through your own website keep coming: those
-            do not depend on this add-on.</li>
+          <li><b>It comes with every plan</b>: with a small “with Audutor” badge on Essential,
+            with your brand on Pro and Premium. Bookings coming in through your own website
+            arrive the same way: they do not depend on this page.</li>
           <li><b>No photos, on purpose.</b> A page with grey gaps where images should be
             looks worse than one without them. And <b>no AI</b>: these are your words.</li>
           <li>It goes live when you say so: you choose the address and flip the switch.

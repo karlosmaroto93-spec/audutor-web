@@ -670,6 +670,10 @@
      con la casilla muerta y dicho en la etiqueta: una tarifa que cobra por algo que no
      existe es la mentira más cara que puede tener esta página. */
   .tf-o.tf-pronto{ opacity:.72; }
+  /* Lo que va EN LA TARIFA: la misma fila, sin casilla y con un ✓ en su sitio. */
+  .tf-o.tf-incluida{ cursor:default; }
+  .tf-o.tf-incluida:hover{ background:none; }
+  .tf-ok{ flex:0 0 17px; margin-top:1px; color:var(--acc); font-weight:700; font-size:13px; text-align:center; }
   .tf-o.tf-pronto .tf-p b{ color:var(--gold); font-weight:700; }
   .tf-p.tf-dentro{ color:var(--acc); font-weight:700; }
   .cero{ background:var(--acc-soft); border:0; border-radius:0; padding:22px 26px; margin:0 0 22px; }
@@ -1608,7 +1612,7 @@
         <li>Un recordatorio el día antes, listo para mandar en un toque</li>
         <li>Detección de grupos grandes y rescate de rezagados</li>
         <li>1 tour · 2 guías · <b>150 viajeros/mes</b></li>
-        <li>Página del guía y propina con marca «con Audutor»</li>
+        <li><b>Tu web de reservas</b>, la página de cada guía con su QR y la propina, con marca «con Audutor»</li>
       </ul>
       <p class="plan-extra">Esencial es gratis y no se pasa de 150: al llegar, te avisamos y decides si subes a Pro.</p>
       <a class="btn sec" href="#contacto">Empezar gratis</a>
@@ -1620,7 +1624,7 @@
       <div class="para">Para la empresa con equipo · <b data-cuenta="plan-1" data-al-ver>1.000 viajeros al mes</b> · tours y guías ilimitados</div>
       <ul>
         <li>Todo lo de Esencial · <b>tours, guías y canales ilimitados</b> · historial completo</li>
-        <li>Sin marca «Audutor» — tu marca en la propina y la página del guía</li>
+        <li>Sin marca «Audutor» — tu marca en tu web de reservas, la página del guía y la propina</li>
         <li><b>Cadencia anti-no-show inteligente completa</b>: se adapta al riesgo de cada
           reserva — y deja registrado quién avisó, cuándo y quién confirmó</li>
         <li>Recordatorios preparados para WhatsApp y SMS desde tu móvil. <b>Audutor no cobra por mensaje</b>; los SMS dependen de tu tarifa móvil</li>
@@ -1668,7 +1672,7 @@
       y se ponen cuando quieras.</p>
       <p class="tf-gratis"><b>El primer mes de cada complemento no se cobra.</b> Sin tarjeta.</p>
 
-      <div class="tf-g">El asistente y tu escaparate</div>
+      <div class="tf-g">El asistente</div>
       <label class="tf-o con-mas"><input type="checkbox" data-c="guia" data-eur="39" onchange="tarifa()">
         <span class="tf-n">GuIA, el asistente<small>Estás andando con un grupo y no puedes mirar el móvil. Contesta con tus datos —y lo que no sabe te lo pasa a ti en vez de inventarlo</small></span>
         <span class="tf-p">+39 €</span></label>
@@ -1686,12 +1690,17 @@
             una alergia, un perro guía— ni da plazas que no ha comprobado.</li>
         </ul>
       </details>
-      <label class="tf-o con-mas"><input type="checkbox" data-c="web" data-eur="9" onchange="tarifa()">
+      <!-- «Tu web» pasó a la tarifa el 23-sep-2026: la página de reservas va incluida en casi
+           todo el mercado y era la puerta de las reservas directas al 0 %. Se queda aquí, sin
+           casilla ni precio, porque explica qué trae el plan. -->
+      <div class="tf-g">Incluido en todos los planes</div>
+      <div class="tf-o con-mas tf-incluida" data-c="web">
+        <span class="tf-ok" aria-hidden="true">✓</span>
         <span class="tf-n">Tu web, siempre al día<small>La que tienes hoy enseña el horario del verano pasado. Esta sale del mismo sitio que el parte del guía: cambias el punto de encuentro una vez y cambia en los dos</small></span>
-        <span class="tf-p">+9 €</span></label>
+        <span class="tf-p tf-dentro">incluida</span></div>
       <details class="tf-mas"><summary>Qué hace, exactamente</summary>
         <ul>
-          <li><b>¿Ya tienes web?</b> Entonces no necesitas esta: Audutor <b>puede sincronizarse mediante su API</b>. Tu web necesita una conexión adaptada que envíe reservas y consulte plazas y cambios. La comprobamos antes de darla por operativa; no hay un complemento universal.</li>
+          <li><b>¿Ya tienes web?</b> Puedes seguir usándola: Audutor <b>puede sincronizarse mediante su API</b>. Tu web necesita una conexión adaptada que envíe reservas y consulte plazas y cambios. La comprobamos antes de darla por operativa; no hay un complemento universal.</li>
           <li>El panel distingue consultas de disponibilidad, recogida de cambios y fallos, con aviso si se supera el plazo que esperabas.</li>
           <li><b>Tu página pública</b>, con una portada y una ficha por tour. No la escribes:
             sale de los hechos que ya metiste en el Cerebro para que GuIA no inventara. Un
@@ -1703,9 +1712,9 @@
           <li><b>La página de cada guía, con su QR.</b> El guía lo enseña al acabar el tour
             —que es cuando la gente pregunta qué más hacéis— y esa recomendación aterriza en
             tu web, no en la plataforma. Y la analítica te dice qué guía trae reservas.</li>
-          <li><b>Si la das de baja, se apaga ESTA página</b> —y con ella los QR de tus
-            guías, que llevan a ella—. Las reservas que entren por tu propia web siguen
-            entrando: eso no depende de este complemento.</li>
+          <li><b>Va en todos los planes</b>: en Esencial con la marca «con Audutor», en Pro y
+            Premium con la tuya. Las reservas que entren por tu propia web entran igual: no
+            dependen de esta página.</li>
           <li><b>Sin fotos, y es a propósito.</b> Una página con huecos grises donde debería
             haber imágenes se ve peor que una sin ellas. Y <b>sin IA</b>: son tus palabras.</li>
           <li>Sale a la calle cuando tú le das: eliges la dirección y enciendes el
