@@ -592,7 +592,7 @@
   /* Cuaderno de ruta: ejemplo interactivo y datos ficticios, sin conexión con cuentas. */
   #dia{ background:#203f43; color:var(--paper); border:0; }
   #dia .cuaderno-intro{ display:flex; justify-content:space-between; align-items:end; gap:24px; margin-bottom:28px; }
-  #dia h2{ color:var(--paper); max-width:12ch; font-size:clamp(34px,4.6vw,58px); }
+  #dia h2{ color:var(--paper); max-width:12ch; font-size:clamp(38px,5.2vw,58px); }
   #dia .cuaderno-intro p{ color:#d1e3dc; max-width:38ch; margin:0; }
   .cuaderno-kicker{ font:700 12px var(--mono); letter-spacing:.12em; text-transform:uppercase; color:#f4ca86; display:block; margin-bottom:12px; }
   .cuaderno{ position:relative; padding:28px 32px 28px 48px; color:var(--ink);
@@ -620,7 +620,7 @@
   @keyframes cuaderno-entra{ from{ opacity:.45; transform:translateY(7px); } }
   .cuaderno-relato{ padding:16px 4px 16px 0; display:flex; flex-direction:column; align-items:start; }
   .cuaderno-hora{ color:var(--amber); font:700 13px var(--mono); letter-spacing:.05em; }
-  .cuaderno-relato h3{ font-size:clamp(26px,3vw,38px); margin:12px 0 10px; color:var(--deep); }
+  .cuaderno-relato h3{ font-size:clamp(26px,3.4vw,34px); margin:12px 0 10px; color:var(--deep); }
   .cuaderno-relato p{ color:var(--ink2); margin:0 0 18px; max-width:39ch; }
   .cuaderno-sello{ display:inline-flex; gap:6px; align-items:center; border-radius:100px;
     border:1px solid #ead7b2; background:var(--gold-soft); color:#765018;
@@ -631,17 +631,17 @@
     padding:20px 22px; min-height:300px; box-shadow:0 8px 18px rgba(18,63,51,.06); }
   .cuaderno-vista-head{ display:flex; align-items:baseline; justify-content:space-between;
     gap:12px; padding-bottom:12px; border-bottom:1px solid #d5e3d7; font-size:13px; color:var(--muted); }
-  .cuaderno-vista-head b{ color:var(--deep); font-size:16px; }
+  .cuaderno-vista-head b{ color:var(--deep); font-size:17px; }
   .cuaderno-cifras{ display:flex; gap:18px; flex-wrap:wrap; margin:16px 0; }
-  .cuaderno-cifras span{ display:grid; gap:2px; font-size:12px; color:var(--muted); }
+  .cuaderno-cifras span{ display:grid; gap:2px; font-size:13px; color:var(--muted); }
   .cuaderno-cifras b{ font:700 27px var(--sans); color:var(--deep); line-height:1; }
   .cuaderno-cifras .alerta b{ color:var(--coral2); }
   .cuaderno-fila{ display:flex; align-items:center; justify-content:space-between;
-    gap:8px; padding:10px 0; border-top:1px solid #d5e3d7; font-size:14px; }
+    gap:8px; padding:10px 0; border-top:1px solid #d5e3d7; font-size:15px; }
   .cuaderno-fila strong{ color:var(--deep); }
-  .cuaderno-fila small{ display:block; color:var(--muted); font-size:12px; line-height:1.35; }
+  .cuaderno-fila small{ display:block; color:var(--muted); font-size:13px; line-height:1.35; }
   .cuaderno-fila .monto{ font:700 16px var(--mono); white-space:nowrap; }
-  .cuaderno-nota{ margin:12px 0 0; color:var(--muted); font-size:12px; line-height:1.45; }
+  .cuaderno-nota{ margin:12px 0 0; color:var(--muted); font-size:13px; line-height:1.45; }
   .cuaderno-ajuste{ display:flex; align-items:center; gap:6px; white-space:nowrap; }
   .cuaderno-ajuste button{ width:30px; height:30px; border:1px solid #bbd4c5; border-radius:8px;
     background:white; color:var(--deep); font:800 19px var(--sans); cursor:pointer; }
@@ -651,7 +651,7 @@
   @keyframes cuaderno-salta{ 50%{ transform:translateY(-5px); } }
   .cuaderno-pie{ display:flex; justify-content:space-between; align-items:center;
     flex-wrap:wrap; gap:12px; border-top:1px solid var(--line); padding-top:16px; margin-top:24px;
-    font-size:12px; color:var(--muted); }
+    font-size:13px; color:var(--muted); }
   .cuaderno-pie a{ color:var(--acc2); font-weight:800; }
   .cuaderno-siguiente{ border:0; background:transparent; color:var(--acc2);
     cursor:pointer; font:800 14px var(--sans); padding:8px 0; }
@@ -1101,15 +1101,15 @@
     header{ padding:34px 0 32px; }
     .anim header .reveal{ opacity:1; transform:none; transition:none; }
     .hero-grid{ gap:24px; }
-    h1{ font-size:clamp(34px,9.2vw,42px); line-height:1.06; }
-    .lede{ font-size:16px; line-height:1.45; margin:15px 0 20px; }
+    h1{ font-size:34px; line-height:1.06; }
+    .lede{ font-size:15px; line-height:1.45; margin:15px 0 20px; }
     .hero-ctas{ gap:8px; }
     .hero-ctas .btn{ flex:1 1 145px; text-align:center; padding:11px 10px; font-size:13px; }
     header .guia-saludo,header .hero-nota,header .mock-pop,header .mock-mapa,
     header .cifras,header .lee-de,header .para-quien{ display:none; }
     header .mock{ display:block; min-height:0; }
     header .mock-card.principal{ max-width:none; }
-    header .mock-cab{ font-size:10px; }
+    header .mock-cab{ font-size:11.5px; }
     header .mock-row span{ white-space:normal; }
     #dia{ padding:44px 0; }
   }
