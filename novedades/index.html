@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='112' fill='%2314634c'/><path d='M92 322 C 168 268, 236 372, 306 300' fill='none' stroke='%23c98a2d' stroke-width='15' stroke-linecap='round' stroke-dasharray='1 34'/><g transform='translate(330 150)'><path d='M60 0C26.9 0 0 26.9 0 60c0 45 60 112 60 112s60-67 60-112C120 26.9 93.1 0 60 0z' fill='%23f4653a'/><circle cx='60' cy='58' r='23' fill='%23fffdf7'/></g><text x='92' y='252' font-family='Georgia,serif' font-size='118' font-weight='700' fill='%23fdf9ee'>Au</text></svg>">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Novedades · Audutor</title>
+<meta name="description" content="Lo que cambia en Audutor, con su fecha.">
+<style>
+/* ── Por qué esta página existe ──────────────────────────────────────────────────────
+   TourDash y Ventrata publican sus cambios con fecha, y en el estudio de 20 sistemas del
+   23-sep-2026 fue lo único de organización que Audutor no tenía a la vista: el producto
+   cambia casi cada día y desde fuera no se veía. Una lista fechada responde a la pregunta
+   que se hace quien lo evalúa —«¿esto está vivo?»— sin que tengamos que decirlo.
+
+   Reglas de la página:
+   · Solo lo PUBLICADO. Lo que está en obras no entra aunque esté hecho en local.
+   · En palabras de quien lo usa, no de quien lo construyó: qué puede hacer ahora, no qué
+     módulo se tocó.
+   · Sin cifras de rendimiento ni promesas: lo que cambió, y ya. */
+:root{
+  --ink:#1f2a25; --ink2:#4a5d54; --muted:#5c6b64; --bg:#faf6ec; --paper:#fffdf7;
+  --acc:#128a6b; --acc2:#0b6b52; --gold:#c98a2d; --coral:#f4653a; --line:#e6dcc8;
+  --sans:Seravek,"Avenir Next",Avenir,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --serif:"Iowan Old Style",Palatino,"Palatino Linotype",Georgia,serif;
+  --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+*{ box-sizing:border-box; }
+html,body{ margin:0; }
+body{ background:var(--bg); color:var(--ink); font:17px/1.6 var(--sans); padding:34px 16px 60px; overflow-x:hidden; }
+.doc{ width:100%; max-width:720px; margin:0 auto; background:var(--paper); border:1px solid var(--line);
+  border-radius:18px; overflow:hidden; padding:34px 30px 30px;
+  box-shadow:0 1px 2px rgba(34,48,43,.05), 0 12px 34px -12px rgba(34,48,43,.16); }
+.doc::before{ content:""; display:block; height:4px; margin:-34px -30px 24px;
+  background:linear-gradient(90deg,var(--acc),var(--gold) 55%,var(--coral)); }
+.wm{ font:400 27px/1 var(--serif); color:var(--acc2); text-decoration:none; }
+h1{ font:400 34px/1.15 var(--serif); margin:22px 0 6px; text-wrap:balance; }
+.sub{ margin:0 0 20px; font-size:15px; color:var(--muted); }
+.nov{ display:grid; grid-template-columns:120px 1fr; gap:4px 20px; padding:18px 0; border-top:1px solid var(--line); }
+.nov time{ font:600 13px/1.5 var(--mono); color:var(--acc2); padding-top:3px; letter-spacing:.02em; }
+.nov ul{ margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:10px; }
+.nov li{ font-size:15px; color:var(--ink2); }
+.nov b{ color:var(--ink); }
+a{ color:var(--acc2); }
+.volver{ margin-top:26px; padding-top:18px; border-top:1px solid var(--line); font-size:15px; display:flex; flex-wrap:wrap; gap:6px 18px; }
+@media (max-width:560px){
+  .doc{ padding:28px 20px 24px; }
+  .doc::before{ margin:-28px -20px 20px; }
+  .nov{ grid-template-columns:1fr; }
+  h1{ font-size:27px; }
+}
+</style>
+</head>
+<body>
+<main class="doc">
+  <a class="wm" href="../">Audutor</a>
+  <h1>Novedades</h1>
+  <p class="sub">Lo que cambia en Audutor, con su fecha. Lo más reciente, arriba. Solo lo que ya está publicado.</p>
+
+  <section class="nov"><time datetime="2026-09-23">23 sep 2026</time><ul>
+    <li><b>La semana, en columnas.</b> «Equipo y disponibilidad» enseña los siete días uno al lado de otro, cada salida con su guía y los huecos sin guía en rojo. En el móvil, un día debajo de otro.</li>
+    <li><b>Avisar a todo el grupo de una salida</b> desde su tarjeta del manifiesto: por correo a quien lo dejó y con el WhatsApp preparado para los demás. El guía lo ve en las observaciones de la salida.</li>
+    <li><b>«¿Cuántos vinieron?» al cerrar el tour:</b> todos, algunos o ninguno, que es como lo pregunta GuruWalk. «Todos» marca de una vez a los que faltaban.</li>
+    <li><b>«Sugerir a quién» mira el idioma:</b> dice qué guía habla el idioma del tour y, con la misma carga, lo propone antes.</li>
+    <li><b>Entrar es más directo.</b> Crear una empresa pasa a un enlace debajo del acceso, y tras pedir el código un botón abre tu Gmail u Outlook buscando el correo, también en spam.</li>
+    <li><b>Panel más limpio:</b> campos a su medida, el aforo de cada salida en una barra y avisos que ya no se repiten en la sección a la que llevan.</li>
+    <li><b>El manifiesto del día, en secuencia:</b> todas las salidas de hoy seguidas, y el guía se asigna desde la cabecera de cada tarjeta.</li>
+    <li><b>Las salidas sin guía ni reservas</b> se agrupan en una lista corta con su desplegable, en vez de una tarjeta por salida.</li>
+  </ul></section>
+
+  <section class="nov"><time datetime="2026-09-22">22 sep 2026</time><ul>
+    <li><b>Walk-ins desde la oficina</b> y el manifiesto de cualquier día, desde un calendario.</li>
+    <li><b>Recuperar correos antiguos</b> del buzón conectado, para las reservas que llegaron antes de conectarlo.</li>
+  </ul></section>
+
+  <section class="nov"><time datetime="2026-09-21">21 sep 2026</time><ul>
+    <li><b>El Cerebro de GuIA se completa recorrido a recorrido</b> y propone las condiciones relacionadas —equipaje, wifi, no-show— con la frase de tu web de donde salen. Tú aceptas o corriges.</li>
+  </ul></section>
+
+  <section class="nov"><time datetime="2026-09-20">20 sep 2026</time><ul>
+    <li><b>Un tour en dos idiomas ya no se mezcla:</b> las reservas se asocian por plataforma, nombre e idioma, y ante la duda te preguntan una vez.</li>
+    <li><b>Al conectar el buzón se traen las reservas que ya tenías</b>, y se distingue lo importado de lo que entra solo.</li>
+    <li><b>Ayuda para entrar sin haber entrado:</b> qué hacer si no llega el código o ya no puedes abrir tu buzón.</li>
+  </ul></section>
+
+  <section class="nov"><time datetime="2026-09-19">19 sep 2026</time><ul>
+    <li><b>Qué te llega de cada plataforma</b>, por separado: altas, cambios y cancelaciones de GuruWalk, Freetour y Civitatis.</li>
+    <li><b>Soporte desde el panel</b>, con su conversación, y un aviso por correo cuando te contestamos si lo activas.</li>
+    <li><b>Si se corta la conexión, el panel se recupera</b> y el guía sigue viendo su día.</li>
+  </ul></section>
+
+  <section class="nov"><time datetime="2026-09-14">14 sep 2026</time><ul>
+    <li><b>«No puedo cubrirla», sin perderse:</b> si el guía rechaza una salida estando sin señal, su motivo llega igual, y antes se envían los cambios que tenía pendientes.</li>
+  </ul></section>
+
+  <section class="nov"><time datetime="2026-09-13">13 sep 2026</time><ul>
+    <li><b>Disponibilidad por franjas horarias</b> y, cuando ya has revisado el reparto, un bloqueo para que no cambie.</li>
+    <li><b>El reparto de la semana se revisa antes de guardarlo</b> y se guarda entero o no se guarda: nunca a medias.</li>
+    <li><b>Margen entre salidas del mismo guía</b>, para que no le toque salir de un tour y empezar otro en la otra punta.</li>
+  </ul></section>
+
+  <p class="volver"><a href="../">← Volver a la web</a><a href="../demo/">Probar la demo</a><a href="../aviso-legal/">Aviso legal y privacidad</a></p>
+</main>
+</body>
+</html>
