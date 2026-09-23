@@ -342,7 +342,7 @@
     nav .nav-mobile-panel a:is(:hover,:focus-visible),nav .nav-mobile-panel a[aria-current="location"]{
       background:rgba(255,255,255,.14); }
     nav .nav-mobile-panel a[aria-current="location"]{ box-shadow:inset 3px 0 var(--gold); }
-    nav .nav-mobile-panel .entrar-menu{ display:none; }
+    nav .links .nav-mobile-panel a.entrar-menu{ display:none; }
   }
   /* En móvil el botón se salía por la derecha y el selector de idioma se cortaba: con
      los enlaces ya ocultos, lo que sobra es el padding del botón y el hueco del flex. */
@@ -351,7 +351,7 @@
     nav .links{ gap:8px; }
     nav .links a.btn{ padding:10px 15px; font-size:13px; white-space:nowrap; }
     nav .links > a.btn.entrar{ display:none; }
-    nav .nav-mobile-panel .entrar-menu{ display:block; }
+    nav .links .nav-mobile-panel a.entrar-menu{ display:flex; }
     nav .logo{ font-size:20px; }
   }
   @media (max-width:400px){ nav .nav-mobile summary span{ display:none; }
