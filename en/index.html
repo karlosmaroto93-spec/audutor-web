@@ -1061,7 +1061,10 @@
   .vs-row .malo::before{ content:"✕ "; color:#b3453a; font-weight:800; }
   .vs-row .bueno{ background:#edf6f2; }
   .vs-row .bueno::before{ content:"✓ "; color:var(--acc); font-weight:800; }
-  @media (max-width:640px){ .vs-row{ grid-template-columns:1fr; } .vs-row .malo{ opacity:.8; } }
+  @media (max-width:640px){ .vs-row{ grid-template-columns:1fr; } .vs-row .malo{ opacity:.8; }
+    /* Apiladas, las dos cabeceras eran un bloque de 250 px sin contenido: cada fila ya se lee
+       como problema y respuesta (la respuesta lleva su ✓). */
+    .vs-row:first-child{ display:none; } }
 
   /* ================= CTA / footer ================= */
   .final{ text-align:center; padding:84px 0; position:relative; }
@@ -1202,11 +1205,11 @@
   <a class="logo" href="#" aria-label="Audutor, home"><span class="wm">Audutor<svg class="ruta" viewBox="0 0 100 14" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M1 10.5 Q 24 5 46 9 T 86 8"/><path class="rpin" d="M93 1.2c-2.6 0-4.7 2.1-4.7 4.7 0 3.4 4.7 7.5 4.7 7.5s4.7-4.1 4.7-7.5c0-2.6-2.1-4.7-4.7-4.7z"/><circle class="rhueco" cx="93" cy="6" r="1.8"/></svg></span></a>
   <div class="links">
     <div class="gota" aria-hidden="true"></div>
+    <a href="#dia" data-i18n="nav.dia">Route book</a>
     <a href="#producto" data-i18n="nav.producto">Product</a>
+    <a href="#planes" data-i18n="nav.planes">Pricing</a>
     <a href="#asistente" data-i18n="nav.asistente">The assistant</a>
     <a href="#agente">The agent</a>
-    <a href="#dia" data-i18n="nav.dia">Route book</a>
-    <a href="#planes" data-i18n="nav.planes">Pricing</a>
     <!-- Mirror of the ES nav: hidden until APP_URL has a value. -->
     <a class="btn entrar" href="entrar/" data-i18n="nav.entrar">Log in</a>
     <a class="btn" href="../demo-en/" data-demo data-i18n="nav.demo">Try the demo</a>
@@ -1415,7 +1418,21 @@
 <section class="alt" id="producto"><div class="wrap">
   <div class="sec-head">
     <h2>Everything between the booking and the tip</h2>
+    <p class="reveal">Keep bookings, your team, attendance and support issues together throughout the day.</p>
   </div>
+  <!-- This table used to sit at the end, in its own section, and this one only held the
+       closed disclosure: «Product» in the menu landed on a heading and a button. Now the
+       link lands on what the product does, and the detail is one click away. -->
+  <div class="vs reveal">
+    <div class="vs-row"><div>In your daily work</div><div>How Audutor helps</div></div>
+    <div class="vs-row"><div>Bookings arrive through email and your website</div><div class="bueno">A shared calendar for bookings received through the compatible connections you configure.</div></div>
+    <div class="vs-row"><div>You need to understand your software costs</div><div class="bueno">A fee based on your plan and add-ons, with no Audutor commission per booking.</div></div>
+    <div class="vs-row"><div>Your team changes and departures need cover</div><div class="bueno">Guide assignments, availability and reviewed replacements in the panel.</div></div>
+    <div class="vs-row"><div>Attendance and money need checking after the tour</div><div class="bueno">Check-in, walk-ins, tips and settlement per departure.</div></div>
+    <div class="vs-row"><div>A question needs a person to step in</div><div class="bueno">GuIA uses your configured information; travellers can request human help and your team replies in their chat.</div></div>
+    <div class="vs-row"><div>You have a support issue and are waiting for a reply</div><div class="bueno">A support thread with visible progress and optional email alerts when the team replies.</div></div>
+  </div>
+
   <!-- One sentence per card, and the sentence says WHAT HAPPENS, not how it is built.
        Each card used to carry a paragraph explaining its own workings — the last one ran
        to 141 words on how we verify platform emails — plus a «module: X» label. «Module»
@@ -1811,19 +1828,6 @@
     <a href="../demo-en/" style="color:var(--acc); font-weight:700;">See it in the demo →</a></p>
 </div></section>
 
-
-<section class="alt" id="porque"><div class="wrap">
-  <div class="sec-head"><h2>From incoming bookings to the end of the tour</h2><p class="reveal">Keep bookings, your team, attendance and support issues together throughout the day.</p></div>
-  <div class="vs reveal">
-    <div class="vs-row"><div>In your daily work</div><div>How Audutor helps</div></div>
-    <div class="vs-row"><div>Bookings arrive through email and your website</div><div class="bueno">A shared calendar for bookings received through the compatible connections you configure.</div></div>
-    <div class="vs-row"><div>You need to understand your software costs</div><div class="bueno">A fee based on your plan and add-ons, with no Audutor commission per booking.</div></div>
-    <div class="vs-row"><div>Your team changes and departures need cover</div><div class="bueno">Guide assignments, availability and reviewed replacements in the panel.</div></div>
-    <div class="vs-row"><div>Attendance and money need checking after the tour</div><div class="bueno">Check-in, walk-ins, tips and settlement per departure.</div></div>
-    <div class="vs-row"><div>A question needs a person to step in</div><div class="bueno">GuIA uses your configured information; travellers can request human help and your team replies in their chat.</div></div>
-    <div class="vs-row"><div>You have a support issue and are waiting for a reply</div><div class="bueno">A support thread with visible progress and optional email alerts when the team replies.</div></div>
-  </div>
-</div></section>
 
 <div class="final wrap">
   <svg class="adorno ruta-linea final-ruta" viewBox="0 0 1000 60" preserveAspectRatio="none" aria-hidden="true" focusable="false">

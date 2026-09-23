@@ -1068,7 +1068,10 @@
   .vs-row .malo::before{ content:"✕ "; color:#b3453a; font-weight:800; }
   .vs-row .bueno{ background:#edf6f2; }
   .vs-row .bueno::before{ content:"✓ "; color:var(--acc); font-weight:800; }
-  @media (max-width:640px){ .vs-row{ grid-template-columns:1fr; } .vs-row .malo{ opacity:.8; } }
+  @media (max-width:640px){ .vs-row{ grid-template-columns:1fr; } .vs-row .malo{ opacity:.8; }
+    /* Apiladas, las dos cabeceras eran un bloque de 250 px sin contenido: cada fila ya se lee
+       como problema y respuesta (la respuesta lleva su ✓). */
+    .vs-row:first-child{ display:none; } }
 
   /* ================= CTA / footer ================= */
   .final{ text-align:center; padding:84px 0; position:relative; }
@@ -1209,11 +1212,11 @@
   <a class="logo" href="#" aria-label="Audutor, inicio"><span class="wm">Audutor<svg class="ruta" viewBox="0 0 100 14" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M1 10.5 Q 24 5 46 9 T 86 8"/><path class="rpin" d="M93 1.2c-2.6 0-4.7 2.1-4.7 4.7 0 3.4 4.7 7.5 4.7 7.5s4.7-4.1 4.7-7.5c0-2.6-2.1-4.7-4.7-4.7z"/><circle class="rhueco" cx="93" cy="6" r="1.8"/></svg></span></a>
   <div class="links">
     <div class="gota" aria-hidden="true"></div>
+    <a href="#dia" data-i18n="nav.dia">Cuaderno</a>
     <a href="#producto" data-i18n="nav.producto">Producto</a>
+    <a href="#planes" data-i18n="nav.planes">Planes</a>
     <a href="#asistente" data-i18n="nav.asistente">El asistente</a>
     <a href="#agente">El agente</a>
-    <a href="#dia" data-i18n="nav.dia">Cuaderno</a>
-    <a href="#planes" data-i18n="nav.planes">Planes</a>
     <!-- El cliente que YA es cliente. Sale antes que la demo porque el que vuelve no
          viene a probar nada: viene a entrar. Nace oculto y solo aparece si APP_URL
          tiene valor — un «Entrar» que lleva a un 404 es peor que no tener «Entrar». -->
@@ -1426,7 +1429,21 @@
 <section class="alt" id="producto"><div class="wrap">
   <div class="sec-head">
     <h2>Todo lo que pasa entre la reserva y la propina</h2>
+    <p class="reveal">Cada parte del día tiene un lugar en Audutor: las reservas, el equipo, la asistencia y las incidencias.</p>
   </div>
+  <!-- La tabla vivía al final, en su propia sección, y aquí solo quedaba el desplegable
+       cerrado: quien pulsaba «Producto» en el menú llegaba a un titular y un botón. Ahora el
+       enlace aterriza en lo que el producto hace, y el detalle sigue a un clic. -->
+  <div class="vs reveal">
+    <div class="vs-row"><div>En tu día a día</div><div>Cómo te ayuda Audutor</div></div>
+    <div class="vs-row"><div>Reservas repartidas entre correo y web</div><div class="bueno">Calendario compartido con reservas recibidas por las conexiones compatibles que configures.</div></div>
+    <div class="vs-row"><div>Necesitas conocer el coste del sistema</div><div class="bueno">Cuota según tu plan y complementos, sin comisión de Audutor por reserva.</div></div>
+    <div class="vs-row"><div>El equipo cambia y hay salidas sin cubrir</div><div class="bueno">Asignación de guías, disponibilidad y revisión de sustituciones desde el panel.</div></div>
+    <div class="vs-row"><div>Hay que cuadrar asistencia y dinero al terminar</div><div class="bueno">Llegadas, walk-ins, propinas y liquidación por salida.</div></div>
+    <div class="vs-row"><div>Una pregunta necesita que intervenga una persona</div><div class="bueno">GuIA utiliza los datos configurados; el viajero puede pedir ayuda humana y el equipo responde en su chat.</div></div>
+    <div class="vs-row"><div>Tienes una incidencia y esperas respuesta</div><div class="bueno">Un hilo de soporte con seguimiento y avisos por correo que puedes activar cuando te conteste el equipo.</div></div>
+  </div>
+
   <!-- Una frase por tarjeta, y la frase dice QUÉ PASA, no cómo está construido.
        Antes cada una llevaba un párrafo explicando su propio funcionamiento —la última,
        de 131 palabras, sobre cómo verificamos los correos de las plataformas— y una
@@ -1851,19 +1868,6 @@
     <a href="demo/#agente" style="color:var(--acc); font-weight:700;">Verlo en la demo →</a></p>
 </div></section>
 
-
-<section class="alt" id="porque"><div class="wrap">
-  <div class="sec-head"><h2>Del correo al cierre del tour</h2><p class="reveal">Cada parte del día tiene un lugar en Audutor: las reservas, el equipo, la asistencia y las incidencias.</p></div>
-  <div class="vs reveal">
-    <div class="vs-row"><div>En tu día a día</div><div>Cómo te ayuda Audutor</div></div>
-    <div class="vs-row"><div>Reservas repartidas entre correo y web</div><div class="bueno">Calendario compartido con reservas recibidas por las conexiones compatibles que configures.</div></div>
-    <div class="vs-row"><div>Necesitas conocer el coste del sistema</div><div class="bueno">Cuota según tu plan y complementos, sin comisión de Audutor por reserva.</div></div>
-    <div class="vs-row"><div>El equipo cambia y hay salidas sin cubrir</div><div class="bueno">Asignación de guías, disponibilidad y revisión de sustituciones desde el panel.</div></div>
-    <div class="vs-row"><div>Hay que cuadrar asistencia y dinero al terminar</div><div class="bueno">Llegadas, walk-ins, propinas y liquidación por salida.</div></div>
-    <div class="vs-row"><div>Una pregunta necesita que intervenga una persona</div><div class="bueno">GuIA utiliza los datos configurados; el viajero puede pedir ayuda humana y el equipo responde en su chat.</div></div>
-    <div class="vs-row"><div>Tienes una incidencia y esperas respuesta</div><div class="bueno">Un hilo de soporte con seguimiento y avisos por correo que puedes activar cuando te conteste el equipo.</div></div>
-  </div>
-</div></section>
 
 <div class="final wrap">
   <svg class="adorno ruta-linea final-ruta" viewBox="0 0 1000 60" preserveAspectRatio="none" aria-hidden="true" focusable="false">
