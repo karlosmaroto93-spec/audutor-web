@@ -532,14 +532,29 @@
         padding:9px 10px; border-radius:9px; margin:2px 0; border-left:3px solid transparent; }
   .att .info{ font-weight:600; font-size:13px; }
   .att .info small{ display:block; color:var(--muted); font-weight:400; font-size:11.5px; }
-  .att button{ background:none; border:0; font-size:20px; cursor:pointer; filter:grayscale(1) opacity(.4);
-               transition:filter .2s; letter-spacing:-3px; }
-  .att.ok{ background:#ecf7ef; border-left-color:#16a34a; }
-  .att.ok button{ filter:none; }
+  /* La fila con las MISMAS medidas y estados que la app (24-sep-2026): el − y el + eran de
+     23 px —la app los tiene de 40—, el número no estaba entre ellos, «llegó» y «walk-in» iban
+     en un verde y un azul que no son de la casa, y llegar se distinguía solo por el color. */
+  .att button{ cursor:pointer; }
+  .att .chk{ position:relative; min-height:44px; padding:0 8px; font:inherit; font-size:20px; line-height:1;
+    letter-spacing:-1px; border:1.5px solid var(--line); border-radius:11px; background:var(--paper);
+    filter:grayscale(1); opacity:.42; transition:opacity .18s ease, filter .18s ease; }
+  .att.ok .chk{ filter:none; opacity:1; border-color:var(--acc); background:rgba(18,128,95,.12); }
+  .att.ok .chk::after{ content:"✓"; position:absolute; top:-7px; right:-7px; width:19px; height:19px;
+    border-radius:50%; background:var(--acc); color:#fff; font-size:13px; font-weight:800;
+    line-height:19px; text-align:center; letter-spacing:0; }
+  @media (prefers-reduced-motion:reduce){ .att .chk{ transition:none; } }
+  .att.ok{ background:#eef7f2; border-left-color:var(--acc); }
   .att.grupo-marca{ box-shadow:inset 0 0 0 1.5px var(--gold); }
-  .att.walkin{ background:#f4f8fb; border-left-color:#3b82f6; }
-  .att .pax-b{ width:23px; height:23px; border:1px solid var(--line); background:#fff; border-radius:6px;
-    font-size:13px; font-weight:800; color:var(--ink2); filter:none; letter-spacing:0; line-height:1; }
+  .att.walkin{ background:#faf6ec; border-left:3px dashed var(--acc2); }
+  .att .pax-b{ width:38px; min-height:40px; border:1.5px solid var(--line); background:var(--paper);
+    border-radius:10px; font:inherit; font-size:17px; font-weight:700; color:var(--acc2); line-height:1; }
+  /* Los mandos en UNA fila: con seis personas los muñecos caían solos debajo. Encoge el
+     nombre, no los botones. */
+  .att .info{ min-width:0; }
+  .att > .fila{ flex-wrap:nowrap; flex:0 0 auto; }
+  .att .pax-n{ min-width:2ch; text-align:center; font-size:17px; font-weight:800;
+    font-variant-numeric:tabular-nums; color:var(--ink); }
   .att.aju{ box-shadow:inset 0 0 0 1.5px var(--gold); }
   .obs-item{ display:flex; justify-content:space-between; align-items:center; gap:8px; padding:6px 9px;
     border-left:3px solid var(--acc); background:#f2f7f4; border-radius:0 8px 8px 0; margin:5px 0; font-size:11.5px; }
@@ -8677,6 +8692,7 @@ function pintaManifiestoReal(){
         (a.grupo?' · 👥 grupo':'')+(a.walkin?' · walk-in':'')+difTxt+'</small></div>'+
         '<div class="fila" style="gap:4px; align-items:center;" data-ancla="att:'+String(a.n).replace(/"/g,'')+'">'+
           '<button class="pax-b" data-d="-1" title="una persona menos">−</button>'+
+          '<span class="pax-n" aria-hidden="true">'+a.p+'</span>'+
           '<button class="pax-b" data-d="1" title="una persona más">+</button>'+
           /* Los cuatro huecos siempre, los que sobran invisibles — igual que la app: el botón
              crecía con cada muñeco y eso DESPLAZABA los «+/−» de al lado, así que pulsar

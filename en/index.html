@@ -53,15 +53,6 @@
     margin-top:7px; text-align:left; hyphens:manual; }
   .cero-c a{ color:var(--acc); }
   /* La conclusión, a lo ancho de la rejilla y en el verde de la casa. */
-  .cero-yo{ grid-column:1 / -1; display:flex; align-items:center; gap:14px; flex-wrap:wrap;
-    background:var(--acc-soft); border:1.5px solid var(--acc); border-radius:12px;
-    padding:14px 16px; }
-  .cero-yo .p{ font-family:var(--serif); font-size:34px; line-height:1; color:var(--acc);
-    font-variant-numeric:tabular-nums; }
-  .cero-yo .n{ font-size:15px; font-weight:800; color:var(--acc2); }
-  .cero-yo small{ flex:1; min-width:180px; font-size:13px; color:var(--ink2);
-    line-height:1.45; text-align:left; hyphens:manual; }
-
   /* ── TEXTO CORRIDO, JUSTIFICADO ─────────────────────────────────────────────────────
      Todo el cuerpo de la página iba en bandera (borde derecho dentado). Justificado con
      `hyphens:auto`, que es lo que lo hace viable: en español, justificar SIN partir
@@ -98,16 +89,15 @@
      izquierda, que es lo que se lee bien en un móvil. */
   @media (max-width:560px){ .nota-pie{ text-align:left; text-align-last:left; } }
   :root{
-    --ink:#1f2a25; --ink2:#4a5d54; --muted:#5c6b64; --bg:#faf6ec; --paper:#fffdf7;
-    --acc:#128a6b; --acc2:#0b6b52; --deep:#123f33; --acc-soft:#e4f2ea;
-    --coral:#f4653a; --coral2:#d94e24; --coral-soft:#ffece3;
+    --ink:#1c2b25; --ink2:#40554c; --muted:#5c6b64; --bg:#faf6ec; --paper:#fffefa;
+    --acc:#12805f; --acc2:#0c6b56; --deep:#123f33; --acc-soft:#e2f1e9;
+    --coral:#f4653a; --coral2:#d94e24; --coral-soft:#ffeee6;
     --teal:#2bb3a3; --teal-ink:#1e8f82; --teal-soft:#e3f4f1;
-    --gold:#c98a2d; --gold-soft:#faf0da; --amber:#a36a10;
-    --line:#e6dcc8;
+    --gold:#c98a2d; --gold-soft:#fbf3e1; --amber:#a36a10;
+    --line:#e5dccb;
     /* El pin del mapa, en un solo sitio: lo usan el remate de las listas de plan y
        cualquier otro cierre de ruta. Se pinta con `mask`, así que hereda el color de
        quien lo use en vez de traer el suyo. */
-    --pin:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 16'%3E%3Cpath d='M6 0C2.7 0 0 2.7 0 6c0 4.4 6 10 6 10s6-5.6 6-10c0-3.3-2.7-6-6-6z' fill='%23000'/%3E%3C/svg%3E");
     --sans:Seravek,"Avenir Next",Avenir,system-ui,-apple-system,"Segoe UI",sans-serif;
     --serif:"Iowan Old Style",Palatino,"Palatino Linotype",Georgia,serif;
     --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
@@ -131,7 +121,7 @@
     transition-delay:var(--d,0ms); }
   @media (prefers-reduced-motion: reduce){
     .anim .reveal{ opacity:1 !important; transform:none !important; transition:none !important; }
-    .mock-pop, .mock, .guia{ animation:none !important; }
+    .mock, .guia{ animation:none !important; }
     .precio .imp, .fact-toggle button, .barra-fill{ transition:none !important; }
   }
 
@@ -152,7 +142,9 @@
   @media (max-width:720px){ .brujula{ display:none; } .topo.hero-topo{ right:-130px; } }
 
   /* ================= mascota GuIA ================= */
-  .guia{ width:142px; height:auto; flex:none; animation:flota 8s ease-in-out infinite; }
+  /* GuIA saluda: dos balanceos al cargar y se queda quieta. Sin parar distraía de lo que
+     se está leyendo al lado. */
+  .guia{ width:142px; height:auto; flex:none; animation:flota 8s ease-in-out 2; }
   .bocadillo{ position:relative; background:var(--paper); border:1.5px solid var(--line);
     border-radius:16px; padding:13px 18px; font-size:15px; line-height:1.5;
     color:var(--ink2); max-width:300px; margin:0; }
@@ -278,16 +270,10 @@
   nav .links > a:not(.btn):hover{ color:#fff; }
   nav .lang-sw{ background:rgba(253,249,238,.14); border-color:rgba(253,249,238,.42);
     color:#fdf9ee; }
+  /* Con el dedo, 44 px (24-sep-2026): el idioma medía 29 y «Ver el siguiente momento», 33. */
+  @media (pointer:coarse){ nav .lang-sw, .cuaderno-siguiente{ min-height:44px; } }
   nav .lang-sw:hover{ background:rgba(253,249,238,.24); border-color:#fdf9ee; color:#fff; }
   nav .links a.btn{ color:#fff !important; }
-  /* El «Entrar» tiene que pesar. Con el contorno de `.btn.sec` sobre verde se leía como
-     un enlace más y la demo se lo comía; relleno en crema sobre la barra verde es el
-     contraste más alto que hay aquí, y no compite con el coral porque no es coral: son
-     dos acciones distintas para dos personas distintas —el que vuelve y el que llega. */
-  nav .links a.btn.entrar{
-    background:#fdf9ee; color:#0e4a3a !important; border:0; font-weight:700;
-  }
-  nav .links a.btn.entrar:hover{ background:#fff; }
   nav .links a.btn.sec{ color:#fdf9ee !important; border-color:rgba(253,249,238,.62);
     background:transparent; }
   nav .links a.btn.sec:hover{ background:rgba(253,249,238,.16); border-color:#fdf9ee; }
@@ -311,18 +297,21 @@
   .hero-ctas .btn[data-demo]:hover{ background:#d8983a; transform:translateY(-2px);
     box-shadow:0 14px 28px -10px rgba(201,138,45,.9); }
 
-  /* A quiet hover pill and a persistent marker for the section in view. */
-  nav .links > a:not(.btn){ position:relative; transition:background .18s ease, color .18s ease, transform .18s ease, box-shadow .18s ease; }
-  nav .links > a:not(.btn):is(:hover,:focus-visible){
-    background:rgba(255,255,255,.14); box-shadow:inset 0 0 0 1px rgba(255,255,255,.28);
-    color:#fff; transform:translateY(-1px);
-  }
+  /* Tres estados que no se confunden (24-sep-2026). Antes el paso del ratón pintaba una
+     pastilla translúcida con borde blanco que además subía 1 px, y pesaba MÁS que la
+     sección en la que estás —una raya dorada de 2 px, nueve píxeles por debajo—: con
+     «Planes» activa y el ratón sobre «Producto», parecía que estabas en Producto.
+     Ahora la sección actual va en blanco con su raya dorada pegada al texto; el paso del
+     ratón es un fondo muy suave y nada más, y el foco del teclado, un anillo dorado. */
+  nav .links > a:not(.btn){ position:relative; transition:background .12s ease, color .12s ease; }
+  nav .links > a:not(.btn):hover{ background:rgba(255,255,255,.08); color:#fff; }
+  nav .links > a:not(.btn)[aria-current="location"]{ color:#fff; }
   nav .links > a:not(.btn)[aria-current="location"]::after{
-    content:""; position:absolute; left:11px; right:11px; bottom:-9px;
-    height:2px; border-radius:2px; background:var(--gold);
+    content:""; position:absolute; left:11px; right:11px; bottom:1px;
+    height:3px; border-radius:2px; background:var(--gold);
   }
-  @media (prefers-reduced-motion:reduce){ nav .links > a:not(.btn){ transition:none; }
-    nav .links > a:not(.btn):is(:hover,:focus-visible){ transform:none; } }
+  nav .links > a:not(.btn):focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
+  @media (prefers-reduced-motion:reduce){ nav .links > a:not(.btn){ transition:none; } }
   nav .nav-mobile{ display:none; }
   @media (max-width:1050px){
     nav .nav-mobile{ display:block; }
@@ -378,10 +367,14 @@
   .hero-nota{ font-size:13px; color:var(--muted); margin-top:14px; }
 
   /* ---- mockup del producto (CSS puro) ---- */
-  .mock{ position:relative; min-height:600px; }
+  /* Una sola escena del producto (24-sep-2026). Aquí flotaban tres hojas en tres estilos
+     —la nota de GuIA, esta y el mapa—, las tres en movimiento sin parar: el collage
+     repetía mensajes que la página cuenta después y, en tableta, se apilaba en cuatro cajas
+     con un mapa vacío. Queda la salida, que es el producto, y quieta. */
+  .mock{ position:relative; align-self:center; }
   .mock-card{ background:var(--paper); border:1px solid var(--ink); border-radius:0;
-    padding:18px 20px; font-size:13px; animation:flota 7s ease-in-out infinite; }
-  .mock-card.principal{ max-width:380px; margin-left:auto; }
+    padding:18px 20px; font-size:13px; }
+  .mock-card.principal{ max-width:440px; margin-left:auto; }
   .mock-head{ display:flex; justify-content:space-between; align-items:center; gap:8px;
     font-weight:800; font-size:15px; margin-bottom:6px; }
   .chipv{ font-size:11.5px; font-weight:800; letter-spacing:.05em; text-transform:uppercase;
@@ -392,35 +385,17 @@
   .mock-row{ display:flex; justify-content:space-between; gap:10px; padding:8px 8px; border-radius:8px;
     color:var(--ink2); }
   .mock-row span{ font-size:11.5px; color:var(--muted); white-space:nowrap; }
-  .mock-row.ok{ background:#ecf7ef; color:#14532d; }
-  .mock-row.ok span{ color:#16a34a; font-weight:700; }
+  .mock-row.ok{ background:var(--acc-soft); color:var(--deep); }
+  .mock-row.ok span{ color:var(--acc2); font-weight:700; }
   .mock-panel > button{ width:100%; margin-top:10px; border:1.5px solid var(--acc); background:var(--acc-soft);
     color:var(--acc); font-weight:800; font-size:13px; border-radius:9px; padding:9px; cursor:default; }
-  .mock-pop{ position:absolute; z-index:2; background:var(--paper); border:1px solid var(--line);
-    border-left:4px solid var(--gold); border-radius:0; padding:11px 14px; font-size:13px;
-    color:var(--ink2); transform:rotate(-1.2deg); max-width:270px; }
-  .mock-pop b{ color:var(--ink); }
-  .pop1{ left:0; top:-96px; animation:flota 8s ease-in-out infinite reverse; }
-  .pop2{ left:0; bottom:44px; border-left-color:var(--coral); animation:flota2 9s ease-in-out 1s infinite; }
   @keyframes flota{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-9px); } }
-  @keyframes flota2{ 0%,100%{ transform:translateY(0) rotate(1deg); } 50%{ transform:translateY(-8px) rotate(1deg); } }
-  @keyframes flota3{ 0%,100%{ transform:translateY(0) rotate(1.4deg); } 50%{ transform:translateY(-7px) rotate(1.4deg); } }
   /* Quien pide menos movimiento no ve ninguno: las hojas se quedan quietas y giradas. */
   @media (prefers-reduced-motion:reduce){
     *, *::before, *::after{ animation:none !important; transition:none !important; }
-    .mock-card, .mock-pop, .mock-mapa{ animation:none !important; }
-    .pop2{ transform:rotate(1deg); } .mock-mapa{ transform:rotate(1.4deg); }
+    .mock-card{ animation:none !important; }
   }
 
-  /* La hoja del mapa: el plano de operación (ruta, punto de encuentro, dónde está el grupo)
-     como imagen del hero, no otro pantallazo. Es la referencia principal del estudio
-     (SevenRooms enseña el plano de mesas a tamaño gigante; aquí, el plano de la calle). */
-  .mock-card.principal{ position:relative; z-index:1; }
-  .mock-mapa{ position:absolute; right:-24px; bottom:-46px; width:300px; z-index:0; background:var(--paper);
-    border:1px solid var(--line); padding:8px 8px 7px; transform:rotate(1.4deg); }
-  .mock-mapa{ animation:flota3 8.5s ease-in-out .4s infinite; }
-  .mock-mapa svg{ display:block; width:100%; height:auto; }
-  .mapa-eti{ display:block; margin-top:7px; font-family:var(--mono); font-size:11.5px; color:var(--muted); letter-spacing:.02em; }
   .hora-m{ font-family:var(--mono); font-weight:600; letter-spacing:.02em; }
   /* La hoja del hero con sus tres momentos: antes de salir, en el punto y al terminar.
      Una sola hoja que cambia con pestañas (Boulevard, WeTravel e Intercom en el estudio de
@@ -502,11 +477,11 @@
   .mock-abrir{ display:block; margin:0; padding:11px 16px; background:var(--deep); color:#fff !important; font-weight:700;
     font-size:13px; text-decoration:none; }
   .mock-abrir:hover{ background:var(--acc2); }
-  @media (max-width:900px){ .mock-mapa{ position:static; width:auto; transform:none; } }
-  @media (max-width:900px){ .mock{ min-height:0; display:grid; gap:12px; }
-    .mock-pop{ position:static; max-width:none; } .mock-card.principal{ margin:0; max-width:none; } }
+  @media (max-width:900px){ .mock-card.principal{ margin:0; max-width:none; } }
 
   .cifras{ display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:14px; margin:58px 0 0; }
+  /* En tableta, dos y dos: con cuatro cifras a 190 px caían tres y una suelta debajo. */
+  @media (min-width:601px) and (max-width:1000px){ .cifras{ grid-template-columns:repeat(2,1fr); } }
   .cifra{ background:var(--paper); border:1px solid var(--line); border-radius:4px; padding:18px 20px; }
   .cifra .f{ display:block; margin-top:8px; font-family:var(--mono); font-size:11.5px; color:var(--muted); letter-spacing:.02em; }
   .cifra .v{ font-family:var(--serif); font-size:27px; font-weight:600; color:var(--acc); display:block; }
@@ -559,7 +534,7 @@
   /* ---- contacto ---- */
   .contacto-caja{ background:var(--paper); border:1.5px solid var(--acc); border-radius:16px;
     padding:38px; max-width:620px; margin:0 auto; text-align:center;
-    box-shadow:0 14px 40px rgba(18,138,107,.10); }
+    box-shadow:0 14px 40px rgba(18,128,95,.10); }
   .contacto-caja h2{ font-size:clamp(26px,3.4vw,34px); margin:0 0 10px; }
   .contacto-caja p{ color:var(--ink2); font-size:15px; margin:0 0 14px; }
   .contacto-dir{ font-size:20px !important; font-weight:800; margin:18px 0 10px !important; }
@@ -574,21 +549,21 @@
   #dia .cuaderno-intro{ display:flex; justify-content:space-between; align-items:end; gap:24px; margin-bottom:28px; }
   #dia h2{ color:var(--paper); max-width:12ch; font-size:clamp(38px,5.2vw,58px); }
   #dia .cuaderno-intro p{ color:#d1e3dc; max-width:38ch; margin:0; }
-  .cuaderno-kicker{ font:700 12px var(--mono); letter-spacing:.12em; text-transform:uppercase; color:#f4ca86; display:block; margin-bottom:12px; }
+  .cuaderno-kicker{ font:700 11.5px var(--mono); letter-spacing:.12em; text-transform:uppercase; color:#f4ca86; display:block; margin-bottom:12px; }
   .cuaderno{ position:relative; padding:28px 32px 28px 48px; color:var(--ink);
-    background:linear-gradient(90deg,#f7e7c8 0 18px,#fffdf7 18px 100%);
+    background:linear-gradient(90deg,#f7e7c8 0 18px,#fffefa 18px 100%);
     border:1px solid #dccaa7; border-radius:12px 24px 24px 12px;
     box-shadow:0 22px 60px rgba(4,23,23,.22),0 4px 0 #ddc79d; }
   .cuaderno::before{ content:""; position:absolute; left:23px; top:20px; bottom:20px; width:9px;
     background:radial-gradient(circle at center,#25484a 3px,transparent 3.5px) center top/9px 31px repeat-y; opacity:.55; pointer-events:none; }
   .cuaderno-cab{ display:flex; align-items:center; justify-content:space-between; gap:12px;
-    border-bottom:1px solid var(--line); padding-bottom:14px; color:var(--muted); font:700 12px var(--mono); }
+    border-bottom:1px solid var(--line); padding-bottom:14px; color:var(--muted); font:700 11.5px var(--mono); }
   .cuaderno-cab strong{ color:var(--deep); }
   .cuaderno-tabs{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; margin:18px 0 24px; }
   .cuaderno-tabs button{ appearance:none; min-height:68px; border:1px solid var(--line); border-radius:12px;
     background:#f7f4ec; color:var(--ink2); text-align:left; padding:11px 14px; cursor:pointer;
     font:700 15px var(--sans); transition:background .2s,border-color .2s,transform .25s cubic-bezier(.2,1.4,.4,1),box-shadow .2s; }
-  .cuaderno-tabs button span{ display:block; font:700 11px var(--mono); color:var(--muted); margin-bottom:3px; }
+  .cuaderno-tabs button span{ display:block; font:700 11.5px var(--mono); color:var(--muted); margin-bottom:3px; }
   .cuaderno-tabs button[aria-selected="true"]{ background:#dff1e9; color:var(--deep);
     border-color:var(--acc); box-shadow:inset 0 0 0 1px var(--acc); transform:translateY(-3px); }
   .cuaderno-tabs button:hover{ border-color:var(--acc); }
@@ -604,7 +579,7 @@
   .cuaderno-relato p{ color:var(--ink2); margin:0 0 18px; max-width:39ch; }
   .cuaderno-sello{ display:inline-flex; gap:6px; align-items:center; border-radius:100px;
     border:1px solid #ead7b2; background:var(--gold-soft); color:#765018;
-    padding:5px 10px; font:700 12px var(--mono); margin-top:auto; }
+    padding:5px 10px; font:700 11.5px var(--mono); margin-top:auto; }
   .cuaderno-sello.bien{ background:#e5f4e9; border-color:#b9ddc5; color:#155b3a; }
   .cuaderno-sello.aviso{ background:var(--coral-soft); border-color:#f8c5b5; color:#a43b1d; }
   .cuaderno-vista{ background:#f3f7f2; border:1px solid #cfdfd3; border-radius:18px;
@@ -620,7 +595,7 @@
     gap:8px; padding:10px 0; border-top:1px solid #d5e3d7; font-size:15px; }
   .cuaderno-fila strong{ color:var(--deep); }
   .cuaderno-fila small{ display:block; color:var(--muted); font-size:13px; line-height:1.35; }
-  .cuaderno-fila .monto{ font:700 16px var(--mono); white-space:nowrap; }
+  .cuaderno-fila .monto{ font:700 15px var(--mono); white-space:nowrap; }
   .cuaderno-nota{ margin:12px 0 0; color:var(--muted); font-size:13px; line-height:1.45; }
   /* Pensado para el dedo (23-sep-2026): con 30 px y el zoom del doble toque, dos toques
      rápidos en «+» ampliaban la página en vez de contar, y se leía como «no funciona». */
@@ -642,7 +617,7 @@
     font-size:13px; color:var(--muted); }
   .cuaderno-pie a{ color:var(--acc2); font-weight:800; }
   .cuaderno-siguiente{ border:0; background:transparent; color:var(--acc2);
-    cursor:pointer; font:800 14px var(--sans); padding:8px 0; }
+    cursor:pointer; font:800 15px var(--sans); padding:8px 0; }
   .producto-desplegable{ margin-top:20px; }
   .producto-desplegable summary{ cursor:pointer; padding:15px 18px; border:1px solid var(--line);
     border-radius:12px; color:var(--acc2); font-weight:800; background:var(--paper); }
@@ -650,7 +625,7 @@
   @media(max-width:750px){
     #dia .cuaderno-intro{ display:block; }
     #dia .cuaderno-intro p{ margin-top:10px; }
-    .cuaderno{ padding:18px 16px 18px 29px; background:linear-gradient(90deg,#f7e7c8 0 11px,#fffdf7 11px 100%); }
+    .cuaderno{ padding:18px 16px 18px 29px; background:linear-gradient(90deg,#f7e7c8 0 11px,#fffefa 11px 100%); }
     .cuaderno::before{ left:13px; }
     .cuaderno-tabs{ grid-template-columns:repeat(2,minmax(0,1fr)); }
     .cuaderno-panel:not([hidden]){ grid-template-columns:1fr; gap:8px; }
@@ -760,14 +735,9 @@
   .plan .precio small{ font-size:15px; color:var(--muted); font-family:var(--sans); font-weight:600; }
   .plan .para{ color:var(--muted); font-size:13px; margin-bottom:14px; }
   .plan ul{ margin:0 0 20px; padding:0; list-style:none; font-size:15px; color:var(--ink2); flex:1; }
-  /* Una lista con punteado no puede acabar cortada al aire. El remate no es otro filete:
-     es el pin. Es la misma frase que ya lleva dentro el icono de la app — toda ruta
-     acaba en un sitio donde alguien te espera. Va como máscara sobre un fondo verde: si
-     el navegador no soporta `mask`, queda un rectángulo pequeño en verde. Feo, pero
-     presente; nunca un hueco. */
-  .plan ul::after{ content:""; display:block; width:9px; height:12px; margin:14px 0 2px 3px;
-    background:var(--acc); opacity:.5;
-    -webkit-mask:var(--pin) center/contain no-repeat; mask:var(--pin) center/contain no-repeat; }
+  /* Aquí remataba cada lista un pin verde de 9 px. En las tarjetas estiradas quedaba solo en
+     mitad del hueco y parecía un carácter suelto (24-sep-2026): la lista termina en su
+     último elemento, y el hueco lo absorbe el pie de la tarjeta. */
   .plan li{ padding:6px 0 6px 26px; position:relative; border-top:1px dashed var(--line); }
   .plan li:first-child{ border-top:0; }
   .plan li::before{ content:"✓"; position:absolute; left:2px; color:var(--acc); font-weight:800; }
@@ -858,7 +828,7 @@
      página que promete «no hay letra pequeña» no puede esconder justo el número que
      aparece el mes que creces. */
   .plan-extra{ margin:-6px 0 16px; padding:9px 11px; border-radius:9px;
-    background:rgba(18,138,107,.07); border:1px dashed var(--line);
+    background:rgba(18,128,95,.07); border:1px dashed var(--line);
     font-size:13px; line-height:1.5; color:var(--ink2); }
   .plan-extra b{ color:var(--amber); }
   .plan.premium .plan-extra{ background:rgba(201,138,45,.10); border-color:rgba(163,106,16,.28); }
@@ -879,7 +849,7 @@
   .tf-g:first-of-type{ margin-top:0; }
   .tf-o{ display:flex; gap:9px; align-items:flex-start; padding:8px 0; cursor:pointer;
     border-bottom:1px dashed var(--line); }
-  .tf-o:hover{ background:rgba(18,138,107,.04); }
+  .tf-o:hover{ background:rgba(18,128,95,.04); }
   .tf-o input{ width:17px; height:17px; margin-top:2px; accent-color:var(--acc); cursor:pointer; flex:0 0 auto; }
   .tf-o .tf-n{ flex:1; font-size:13px; font-weight:700; color:var(--ink); line-height:1.35; }
   .tf-o .tf-n small{ display:block; font-weight:400; font-size:11.5px; color:var(--muted); margin-top:2px; }
@@ -891,8 +861,8 @@
   .tf-o.con-mas{ border-bottom:none; padding-bottom:2px; }
   /* El aviso del mes gratis. Va pegado al subtítulo del panel y NO grita: si pareciera una
      pegatina de oferta, el visitante lo lee como un truco y desconfía del precio de al lado. */
-  .tf-gratis{ font-size:11.5px; line-height:1.45; color:var(--deep); background:rgba(18,138,107,.07);
-    border:1px solid rgba(18,138,107,.22); border-radius:8px; padding:8px 10px; margin:0 0 14px; }
+  .tf-gratis{ font-size:11.5px; line-height:1.45; color:var(--deep); background:rgba(18,128,95,.07);
+    border:1px solid rgba(18,128,95,.22); border-radius:8px; padding:8px 10px; margin:0 0 14px; }
   .tf-gratis b{ color:var(--acc); }
   .tf-mas{ margin:0 0 2px 26px; padding-bottom:8px; border-bottom:1px dashed var(--line); }
   .tf-mas summary{ font-size:11.5px; font-weight:800; color:var(--acc); cursor:pointer;
@@ -1100,7 +1070,7 @@
     .lede{ font-size:15px; line-height:1.45; margin:15px 0 20px; }
     .hero-ctas{ gap:8px; }
     .hero-ctas .btn{ flex:1 1 145px; text-align:center; padding:11px 10px; font-size:13px; }
-    header .guia-saludo,header .hero-nota,header .mock-pop,header .mock-mapa,
+    header .guia-saludo,header .hero-nota,
     header .cifras,header .lee-de,header .para-quien{ display:none; }
     header .mock{ display:block; min-height:0; }
     header .mock-card.principal{ max-width:none; }
@@ -1117,8 +1087,8 @@
     <symbol id="guia" viewBox="0 0 150 158">
       <!-- sombra en el suelo, con desvanecido -->
       <radialGradient id="g-sombra" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stop-color="#1f2a25" stop-opacity=".14"/>
-        <stop offset="100%" stop-color="#1f2a25" stop-opacity="0"/>
+        <stop offset="0%" stop-color="#1c2b25" stop-opacity=".14"/>
+        <stop offset="100%" stop-color="#1c2b25" stop-opacity="0"/>
       </radialGradient>
       <ellipse cx="72" cy="150" rx="46" ry="7" fill="url(#g-sombra)"/>
       <!-- paraguas: EL icono de los free tours -->
@@ -1146,15 +1116,15 @@
       <path d="M28 46 Q24 56 26 66" fill="none" stroke="#fdf6e8" stroke-width="3" stroke-linecap="round" opacity=".35"/>
       <circle cx="52" cy="66" r="21" fill="#fdf6e8"/>
       <!-- ojos con brillo -->
-      <circle cx="44.5" cy="62" r="3" fill="#1f2a25"/>
-      <circle cx="59.5" cy="62" r="3" fill="#1f2a25"/>
+      <circle cx="44.5" cy="62" r="3" fill="#1c2b25"/>
+      <circle cx="59.5" cy="62" r="3" fill="#1c2b25"/>
       <circle cx="45.6" cy="60.8" r="1" fill="#fff"/>
       <circle cx="60.6" cy="60.8" r="1" fill="#fff"/>
       <!-- cejitas amables -->
-      <path d="M41 55.5 Q44.5 53.5 48 55.2" fill="none" stroke="#1f2a25" stroke-width="1.6" stroke-linecap="round" opacity=".7"/>
-      <path d="M56 55.2 Q59.5 53.5 63 55.5" fill="none" stroke="#1f2a25" stroke-width="1.6" stroke-linecap="round" opacity=".7"/>
+      <path d="M41 55.5 Q44.5 53.5 48 55.2" fill="none" stroke="#1c2b25" stroke-width="1.6" stroke-linecap="round" opacity=".7"/>
+      <path d="M56 55.2 Q59.5 53.5 63 55.5" fill="none" stroke="#1c2b25" stroke-width="1.6" stroke-linecap="round" opacity=".7"/>
       <!-- sonrisa abierta -->
-      <path d="M43.5 70 Q52 79 60.5 70 Q52 74.5 43.5 70 Z" fill="#1f2a25"/>
+      <path d="M43.5 70 Q52 79 60.5 70 Q52 74.5 43.5 70 Z" fill="#1c2b25"/>
       <circle cx="37" cy="68.5" r="3.4" fill="#ff8a5f" opacity=".6"/>
       <circle cx="67" cy="68.5" r="3.4" fill="#ff8a5f" opacity=".6"/>
       <!-- bracito que sujeta el paraguas -->
@@ -1171,17 +1141,17 @@
       <use href="#guia"/>
       <circle cx="52" cy="66" r="21" fill="#fdf6e8"/>
       <!-- los ojos, iguales que la base: cambiar la mirada cambiaría de personaje -->
-      <circle cx="44.5" cy="62" r="3" fill="#1f2a25"/>
-      <circle cx="59.5" cy="62" r="3" fill="#1f2a25"/>
+      <circle cx="44.5" cy="62" r="3" fill="#1c2b25"/>
+      <circle cx="59.5" cy="62" r="3" fill="#1c2b25"/>
       <circle cx="45.6" cy="60.8" r="1" fill="#fff"/>
       <circle cx="60.6" cy="60.8" r="1" fill="#fff"/>
       <!-- cejas más altas y más arqueadas: es lo que se lee como seguridad. Un punto más
            y pasa a ser sorpresa, que es otra cosa -->
-      <path d="M40.6 54 Q44.6 50.7 48.4 53.7" fill="none" stroke="#1f2a25" stroke-width="1.7" stroke-linecap="round" opacity=".75"/>
-      <path d="M55.6 53.7 Q59.4 50.7 63.4 54" fill="none" stroke="#1f2a25" stroke-width="1.7" stroke-linecap="round" opacity=".75"/>
+      <path d="M40.6 54 Q44.6 50.7 48.4 53.7" fill="none" stroke="#1c2b25" stroke-width="1.7" stroke-linecap="round" opacity=".75"/>
+      <path d="M55.6 53.7 Q59.4 50.7 63.4 54" fill="none" stroke="#1c2b25" stroke-width="1.7" stroke-linecap="round" opacity=".75"/>
       <!-- boca ABIERTA: la base tiene una sonrisa de media luna de 4,5 de alto; esta es
            una «D» de 8,5, que es lo que se lee como «está diciendo algo» -->
-      <path d="M42.6 68.4 Q52 85.5 61.4 68.4 Z" fill="#1f2a25"/>
+      <path d="M42.6 68.4 Q52 85.5 61.4 68.4 Z" fill="#1c2b25"/>
       <circle cx="37" cy="68.5" r="3.4" fill="#ff8a5f" opacity=".6"/>
       <circle cx="67" cy="68.5" r="3.4" fill="#ff8a5f" opacity=".6"/>
     </symbol>
@@ -1249,7 +1219,6 @@
     </div>
 
     <div class="mock reveal" style="--d:260ms">
-      <div class="mock-pop pop1"><b>A group of 11 in the chat</b> — GuIA checked today's departures, quoted your deposit policy and passed them over with their size.</div>
       <figure class="mock-card principal">
         <figcaption class="mock-cab"><span>One departure · Old Town free tour</span><span>Sample data</span></figcaption>
         <div class="mock-tabs" role="tablist" aria-label="The three moments of a departure">
@@ -1285,17 +1254,6 @@
         </div>
         <a class="mock-abrir" href="../demo-en/" data-demo>Explore the full demo</a>
       </figure>
-      <div class="mock-pop pop2"><b>“I’m lost”</b> → GuIA sent them the group’s map (the guide’s location, 2 min ago). Without sharing any number.</div>
-      <div class="mock-mapa">
-        <svg viewBox="0 0 300 190" aria-hidden="true" focusable="false">
-          <defs><pattern id="ret-mapa" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" fill="none" stroke="#1f2a25" stroke-opacity=".09"/></pattern></defs>
-          <rect width="300" height="190" fill="url(#ret-mapa)"/>
-          <path d="M-10 142 C 60 112, 110 164, 170 124 S 260 74, 320 96" fill="none" stroke="#123f33" stroke-width="2" stroke-dasharray="2 8" stroke-linecap="round"/>
-          <circle cx="104" cy="140" r="4" fill="#128a6b"/><circle cx="118" cy="152" r="4" fill="#128a6b"/><circle cx="131" cy="143" r="4" fill="#128a6b"/><circle cx="113" cy="130" r="4" fill="#128a6b"/>
-          <circle cx="170" cy="124" r="13" fill="none" stroke="#f4653a" stroke-opacity=".35"/><circle cx="170" cy="124" r="6" fill="#f4653a"/>
-        </svg>
-        <span class="mapa-eti">Meeting point · 55.9486 N 3.1999 W · the group, 2 min away</span>
-      </div>
     </div>
   </div>
 
@@ -1515,8 +1473,6 @@
         <small>Choose a plan for your operation and check the volume tiers below.</small></div>
       <div class="cero-c"><span class="n">Other providers</span><span class="p">Separate fees</span>
         <small>Platform and payment provider fees depend on your contracts with them.</small></div>
-      <div class="cero-yo"><span class="p">Your tips</span><span class="n">Yours in full</span>
-        <small>Audutor does not retain a share of your tips.</small></div>
     </div>
     <p class="cero-fin">Compare the total cost for your volume: subscription, add-ons and external services.
     <b>Audutor’s prices are listed below.</b></p>
