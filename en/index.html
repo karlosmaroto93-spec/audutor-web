@@ -10,6 +10,13 @@
 <title>Audutor — the operations layer for walking and free tour companies</title>
 <meta name="description" content="The operations layer for walking and free tour companies: bookings from every channel, guides, no-shows, split groups, tips and an assistant that never makes things up.">
 <style>
+  /* Las dos letras de Audutor, servidas desde aquí (24-sep-2026): con las del sistema la
+     marca cambiaba de cara en Android y Windows. Solo el subconjunto latino (92 KB las dos),
+     y sin CDN: la web promete «sin rastreadores». Licencia OFL en fuentes/OFL-*.txt. */
+  @font-face{ font-family:"Atkinson Hyperlegible Next"; src:url(../fuentes/atkinson-hyperlegible-next.woff2) format("woff2");
+    font-weight:200 800; font-style:normal; font-display:swap; unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face{ font-family:"Newsreader"; src:url(../fuentes/newsreader.woff2) format("woff2");
+    font-weight:400 700; font-style:normal; font-display:swap; unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
   /* `color-scheme: light` NO es una preferencia estética: es lo que APAGA el
      auto-oscurecido de los navegadores móviles. Sin esta línea, Chrome en Android (y
      Safari en iOS con la web en modo oscuro) invierte la página por su cuenta y lo hace
@@ -98,8 +105,8 @@
     /* El pin del mapa, en un solo sitio: lo usan el remate de las listas de plan y
        cualquier otro cierre de ruta. Se pinta con `mask`, así que hereda el color de
        quien lo use en vez de traer el suyo. */
-    --sans:Seravek,"Avenir Next",Avenir,system-ui,-apple-system,"Segoe UI",sans-serif;
-    --serif:"Iowan Old Style",Palatino,"Palatino Linotype",Georgia,serif;
+    --sans:"Atkinson Hyperlegible Next",Seravek,"Avenir Next",Avenir,system-ui,-apple-system,"Segoe UI",sans-serif;
+    --serif:Newsreader,"Iowan Old Style",Palatino,"Palatino Linotype",Georgia,serif;
     --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
   }
   *{ box-sizing:border-box; }
@@ -111,6 +118,9 @@
      asfixiante a 18,5. Cada nivel el suyo. */
   h1,h2,h3{ font-family:var(--serif); text-wrap:balance; margin:0; }
   h2{ line-height:1.14; letter-spacing:-.006em; }
+  /* Titulares a dos tonos (Stripe, Linear): la afirmación en tinta, la consecuencia en el
+     verde de la casa. Solo donde el titular tiene de verdad dos partes. */
+  h1 .tono, h2 .tono{ color:var(--acc2); }
   h3{ line-height:1.32; }
   a{ color:var(--acc); }
 
@@ -427,9 +437,9 @@
     .cuenta-cambia{ animation:none; }
   }
   /* ===== La web enseña el cuidado del panel =====
-     1) La hoja del hero vive sola: cambia de momento cada 7 s con un fundido, y en Encuentro
-        una reserva pendiente pasa a «en el punto» con su tick dibujándose y los contadores
-        subiendo. Se para al pasar el ratón y se rinde al primer toque del visitante.
+     1) La hoja del hero vive sola: cuenta cómo funciona en tres escenas (ver «El recorrido
+        de la hoja», más abajo). Retiene el salto con el ratón encima, se pausa con su botón y
+        se rinde al primer toque del visitante.
      2) Las cifras de los planes suben desde cero al entrar en pantalla, una vez.
      Todo se apaga con prefers-reduced-motion. */
   .mock-panel:not([hidden]){ animation:hoja-entra .38s cubic-bezier(.22,1,.36,1); }
@@ -477,6 +487,92 @@
   .mock-abrir{ display:block; margin:0; padding:11px 16px; background:var(--deep); color:#fff !important; font-weight:700;
     font-size:13px; text-decoration:none; }
   .mock-abrir:hover{ background:var(--acc2); }
+  /* ===== El recorrido de la hoja (24-sep) =====
+     La hoja ya no solo cambia de pestaña: cuenta cómo funciona. 01 · llega un correo de
+     GuruWalk, se lee y su «+3» salta a la fila de la plataforma; 02 · el guía toca la
+     llegada de Marco; 03 · el reparto se dibuja y la cuenta cuadra. Lo que se queda quieto
+     (sin JS o con movimiento reducido) es el FINAL de cada escena: el correo ya leído, el
+     reparto entero, el sello puesto. La línea de la pestaña hace de barra de avance y hay un
+     botón de pausa (WCAG 2.2.2). Superhuman, Deputy y Framer enseñan así su producto en
+     marcha; aquí con los mismos componentes de la hoja, sin vídeo y sin descargar nada. */
+  .mock-cab{ align-items:center; }
+  .mock-cab > span + span{ margin-left:auto; }
+  .mock-cab .mock-pausa{ margin:-6px -8px -6px 0; }
+  .mock-pausa{ display:inline-grid; place-items:center; width:28px; height:28px; flex:none; padding:0;
+    border:1px solid var(--line); border-radius:6px; background:var(--paper); color:var(--deep); cursor:pointer; }
+  .mock-pausa:hover{ border-color:var(--acc); color:var(--acc); }
+  .mock-pausa:focus-visible{ outline:2px solid var(--coral); outline-offset:2px; }
+  .mock-pausa svg{ width:14px; height:14px; fill:none; stroke:currentColor; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; }
+  .mock-pausa [data-ico]{ display:none; }
+  .mock-pausa[data-estado="corre"] [data-ico="pausa"],
+  .mock-pausa[data-estado="pausa"] [data-ico="sigue"],
+  .mock-pausa[data-estado="fin"] [data-ico="otra"]{ display:block; }
+  .mock-linea.con-avance{ background:rgba(18,128,95,.22); }
+  .mock-linea > i{ position:absolute; inset:0; border-radius:inherit; background:var(--acc); transform-origin:left center; }
+  .mock-panel{ position:relative; }
+  /* Las tres escenas ocupan la misma celda: la hoja mide lo que la más alta y no salta
+     (ni ella en el hero ni la página en el móvil) al cambiar de pestaña. */
+  .mock-card.principal{ display:grid; grid-template-columns:minmax(0,1fr); }
+  .mock-card.principal > .mock-panel{ grid-row:3; grid-column:1; }
+  .mock-card.principal > .mock-panel[hidden]{ display:block !important; visibility:hidden; }   /* gana al [hidden] global */
+  .mock-card.principal > .mock-abrir{ grid-row:4; align-self:end; }
+  .mock-card.sin-trans, .mock-card.sin-trans *{ transition:none !important; }
+
+  /* 01 · el correo */
+  .mock-correo{ position:relative; margin:4px 0 8px; }
+  .mc-carta{ display:flex; align-items:center; gap:10px; padding:8px 10px; background:#fff; border:1px solid var(--line);
+    border-radius:8px; box-shadow:0 8px 20px -14px rgba(18,63,51,.45);
+    transition:opacity .35s ease, transform .5s cubic-bezier(.22,1,.36,1); }
+  .mc-de{ display:grid; place-items:center; width:28px; height:28px; flex:none; border-radius:6px;
+    background:var(--gold-soft); color:var(--amber); font-family:var(--mono); font-size:11.5px; font-weight:800; }
+  .mc-txt{ flex:1; min-width:0; display:flex; flex-direction:column; gap:1px; }
+  .mc-txt b{ font-size:13px; color:var(--ink); }
+  .mc-campos{ font-size:11.5px; color:var(--muted); }
+  .mc-campos i{ font-style:normal; color:var(--ink2); padding:0 2px; border-radius:3px;
+    background:linear-gradient(var(--acc-soft),var(--acc-soft)) no-repeat 0 0 / 100% 100%;
+    transition:background-size .45s ease; transition-delay:calc(var(--i,0) * 260ms); }
+  .mc-est{ flex:none; font-size:11.5px; font-weight:700; color:var(--acc2); white-space:nowrap; transition:opacity .3s ease; }
+  .mc-est .tick{ width:12px; height:12px; vertical-align:-2px; margin-right:3px; fill:none; stroke:var(--acc);
+    stroke-width:3; stroke-linecap:round; stroke-linejoin:round; }
+  .mc-espera{ position:absolute; inset:0; display:flex; align-items:center; gap:8px; padding:0 10px;
+    border:1px dashed var(--line); border-radius:8px; font-family:var(--mono); font-size:11.5px; color:var(--muted);
+    opacity:0; pointer-events:none; transition:opacity .3s ease; }
+  .mc-espera::before{ content:''; width:7px; height:7px; border-radius:50%; background:var(--acc); flex:none;
+    animation:mc-late 1.4s ease-in-out infinite; }
+  @keyframes mc-late{ 50%{ opacity:.25; } }
+  .mock-correo[data-estado="espera"] .mc-espera{ opacity:1; }
+  .mock-correo[data-estado="espera"] .mc-carta{ opacity:0; transform:translateX(28px); }
+  .mock-correo:not([data-estado="espera"]) .mc-espera::before{ animation:none; }
+  .mock-correo[data-estado="espera"] .mc-campos i,
+  .mock-correo[data-estado="llega"] .mc-campos i{ background-size:0 100%; transition-delay:0s; }
+  .mock-correo:not([data-estado="leido"]) .mc-est{ opacity:0; }
+  .mock-vuela{ position:absolute; left:0; top:0; z-index:2; pointer-events:none; font-family:var(--mono); font-size:11.5px;
+    font-weight:800; color:#fff; background:var(--acc); border-radius:99px; padding:2px 8px; }
+
+  /* 02 · el toque del guía */
+  .mock-row{ position:relative; }
+  .mock-toque{ position:absolute; right:26px; top:50%; width:30px; height:30px; margin:-15px -15px 0 0; border-radius:50%;
+    border:2px solid var(--acc); pointer-events:none; opacity:0; }
+  .mock-toque.va{ animation:mock-toque .75s ease-out 2; }
+  @keyframes mock-toque{ 0%{ opacity:.7; transform:scale(.35); } 100%{ opacity:0; transform:scale(1.5); } }
+
+  /* 03 · el reparto y el sello */
+  .ley{ display:inline-block; width:8px; height:8px; border-radius:2px; margin-right:6px; vertical-align:0; }
+  .ley-canal{ background:var(--gold); } .ley-guia{ background:var(--acc); } .ley-emp{ background:var(--deep); }
+  .mock-reparto{ display:flex; align-items:center; gap:12px; margin:10px 8px 0; }
+  .mock-barra{ flex:1; display:flex; gap:2px; height:10px; border-radius:3px; background:rgba(18,63,51,.07); }
+  .mock-barra i{ border-radius:2px; transform-origin:left center; transition:transform .6s cubic-bezier(.22,1,.36,1); }
+  .mock-barra .ley-canal{ flex:30 1 0; } .mock-barra .ley-guia{ flex:51 1 0; } .mock-barra .ley-emp{ flex:51 1 0; }
+  .mock-barra.vacia i:not(.va){ transform:scaleX(0); }
+  .mock-sello{ flex:none; display:inline-flex; align-items:center; gap:4px; padding:3px 8px; border:2px solid var(--acc);
+    border-radius:4px; color:var(--acc); font-family:var(--mono); font-size:11.5px; font-weight:800; letter-spacing:.1em;
+    text-transform:uppercase; transform:rotate(-6deg);
+    transition:opacity .2s ease, transform .4s cubic-bezier(.34,1.56,.64,1); }
+  .mock-sello .tick{ width:12px; height:12px; fill:none; stroke:currentColor; stroke-width:3; stroke-linecap:round; stroke-linejoin:round; }
+  .mock-sello.oculto{ opacity:0; transform:rotate(-6deg) scale(1.7); }
+  @media (prefers-reduced-motion:reduce){
+    .mc-espera::before, .mock-toque.va{ animation:none; }
+  }
   @media (max-width:900px){ .mock-card.principal{ margin:0; max-width:none; } }
 
   .cifras{ display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:14px; margin:58px 0 0; }
@@ -1203,7 +1299,7 @@
   <div class="hero-grid">
     <div>
       <div class="kicker reveal" style="--d:80ms" data-i18n="hero.kicker">Operations for free tour and walking tour companies</div>
-      <h1 data-i18n="hero.h1">Every departure under control. From booking to settlement.</h1>
+      <h1 data-i18n="hero.h1">Every departure under control. <span class="tono">From booking to settlement.</span></h1>
       <p class="lede reveal" style="--d:120ms">One view for bookings from every channel,
       your guide at the meeting point and each tour's close.</p>
       <div class="hero-ctas reveal" style="--d:220ms">
@@ -1219,7 +1315,7 @@
     </div>
 
     <div class="mock reveal" style="--d:260ms">
-      <figure class="mock-card principal">
+      <figure class="mock-card principal" data-txt-pausa="Pause the animation" data-txt-sigue="Resume the animation" data-txt-otra="Watch again">
         <figcaption class="mock-cab"><span>One departure · Old Town free tour</span><span>Sample data</span></figcaption>
         <div class="mock-tabs" role="tablist" aria-label="The three moments of a departure">
           <button type="button" role="tab" id="tab-reservas" aria-controls="hoja-reservas" aria-selected="false" tabindex="-1">01 · Bookings</button>
@@ -1227,16 +1323,21 @@
           <button type="button" role="tab" id="tab-cierre" aria-controls="hoja-cierre" aria-selected="false" tabindex="-1">03 · Close</button>
         </div>
         <div class="mock-panel" id="hoja-reservas" role="tabpanel" aria-labelledby="tab-reservas" hidden>
-          <div class="mock-head"><span><span class="hora-m">08:41</span> · before departure</span> <span class="chipv">4 bookings</span></div>
-          <div class="mock-sem">Every channel in its place. Nobody copied anything from an extranet.</div>
-          <div class="mock-row"><span>GuruWalk · 2 bookings</span><span class="n" data-cuenta="res-0">9 people</span></div>
+          <div class="mock-head"><span><span class="hora-m">08:41</span> · before departure</span> <span class="chipv" data-antes="3 bookings">4 bookings</span></div>
+          <div class="mock-correo" data-estado="leido">
+            <div class="mc-carta"><span class="mc-de" aria-hidden="true">GW</span>
+              <span class="mc-txt"><b>GuruWalk · new booking</b><span class="mc-campos"><i style="--i:0">Marco Bianchi</i> · <i style="--i:1" data-vuela="+3">3 people</i> · <i style="--i:2">10:00</i></span></span>
+              <span class="mc-est"><svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>read</span></div>
+            <div class="mc-espera" aria-hidden="true">Inbox connected · waiting for bookings</div>
+          </div>
+          <div class="mock-row" data-destino><span data-antes="GuruWalk · 1 booking">GuruWalk · 2 bookings</span><span class="n" data-cuenta="res-0" data-antes="6 people">9 people</span></div>
           <div class="mock-row"><span>Civitatis · 1 booking</span><span class="n" data-cuenta="res-1">3 people</span></div>
           <div class="mock-row"><span>Your website · 1 booking</span><span class="n" data-cuenta="res-2">2 people</span></div>
-          <div class="mock-total"><span>People expected</span><b data-cuenta="esperadas">14</b></div>
+          <div class="mock-total"><span>People expected</span><b data-cuenta="esperadas" data-antes="11">14</b></div>
         </div>
         <div class="mock-panel" id="hoja-encuentro" role="tabpanel" aria-labelledby="tab-encuentro">
         <div class="mock-head"><span><span class="hora-m">10:00</span> · Old Town free tour</span> <span class="chipv">running now</span></div>
-        <div class="mock-sem"><span data-cuenta="llegados">11</span>/14 at the meeting point · <b><span data-cuenta="faltan">3</span> yet to arrive</b></div>
+        <div class="mock-sem"><span data-cuenta="llegados">11</span>/14 at the meeting point · <b data-todos="everyone’s here"><span data-cuenta="faltan">3</span> yet to arrive</b></div>
         <div class="mock-row ok" style="--i:0"><span>Ana García · 4 people</span><span><svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>checked in</span></div>
         <div class="mock-row"><span>Marco Bianchi · 3 people</span><span>pending</span></div>
         <div class="mock-row ok" style="--i:1"><span>Dupont party · 5 people</span><span><svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>checked in</span></div>
@@ -1247,9 +1348,10 @@
           <div class="mock-head"><span><span class="hora-m">12:15</span> · after the tour</span> <span class="chipv">close</span></div>
           <div class="mock-sem">14 booked guests and 1 walk-in by the end · the guide notes the tips · <b>Audutor never touches that money</b></div>
           <div class="mock-row"><span>Tips noted</span><span class="n" data-cuenta="cierre-0">£132</span></div>
-          <div class="mock-row"><span>Channel cost · 12 booked through platforms</span><span class="n" data-cuenta="cierre-1">−£30</span></div>
-          <div class="mock-row ok"><span>For the guide</span><span class="n" data-cuenta="cierre-2">£51</span></div>
-          <div class="mock-row ok"><span>For the company</span><span class="n" data-cuenta="cierre-3">£51</span></div>
+          <div class="mock-row"><span><i class="ley ley-canal" aria-hidden="true"></i>Channel cost · 12 booked through platforms</span><span class="n" data-cuenta="cierre-1">−£30</span></div>
+          <div class="mock-row ok"><span><i class="ley ley-guia" aria-hidden="true"></i>For the guide</span><span class="n" data-cuenta="cierre-2">£51</span></div>
+          <div class="mock-row ok"><span><i class="ley ley-emp" aria-hidden="true"></i>For the company</span><span class="n" data-cuenta="cierre-3">£51</span></div>
+          <div class="mock-reparto"><span class="mock-barra" aria-hidden="true"><i class="ley-canal"></i><i class="ley-guia"></i><i class="ley-emp"></i></span><span class="mock-sello"><svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Balanced</span></div>
           <div class="mock-nota">A 50/50 split as an example: you set your own. It settles itself overnight.</div>
         </div>
         <a class="mock-abrir" href="../demo-en/" data-demo>Explore the full demo</a>
@@ -1438,7 +1540,7 @@
   </svg>
   <div class="wrap">
   <div class="sec-head">
-    <h2>You pay for what you run, not for your team</h2>
+    <h2>You pay for what you run, <span class="tono">not for your team</span></h2>
     <p class="reveal">No booking commission, no lock-in, support included.<br>
     <b>Pro runs your day. Premium also helps you sell.</b></p>
   </div>
@@ -1730,7 +1832,7 @@
          know— instead of an anonymous claim from the seller. -->
     <div class="guia-dice reveal">
       <svg class="guia" aria-hidden="true" focusable="false"><use href="#guia-habla"/></svg>
-      <h2 class="bocadillo">Every booking system has an assistant now.<br>Ask them what it does when it doesn’t know.</h2>
+      <h2 class="bocadillo">Every booking system has an assistant now.<br><span class="tono">Ask them what it does when it doesn’t know.</span></h2>
     </div>
     <p class="reveal">An assistant plugged into a booking engine knows your products, your prices and your
     availability. Everything else it makes up — and everything else is most of what a customer asks.</p>
@@ -1756,7 +1858,7 @@
      didn't sell: a whole product explained in fourteen words. -->
 <section class="alt" id="agente"><div class="wrap">
   <div class="sec-head">
-    <h2>The platforms don't tell you everything.<br>Someone has to go in and look.</h2>
+    <h2>The platforms don't tell you everything.<br><span class="tono">Someone has to go in and look.</span></h2>
     <p class="reveal">Each platform keeps its own books and only emails you when it feels
     like it. The rest of the time your list and theirs are two different numbers — and the
     first to find out is the guide, at the meeting point.</p>
@@ -2170,56 +2272,200 @@ document.addEventListener('DOMContentLoaded', function(){
 (function(){
   var quieto = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ── 1. La hoja del hero vive sola ── */
+  /* ── 1. La hoja del hero cuenta cómo funciona ──
+     Cada pestaña es una escena con sus pasos en el tiempo: 01 llega y se lee un correo,
+     02 el guía marca una llegada, 03 el reparto cuadra. El reloj es propio (no setTimeout)
+     para poder pararlo: se detiene con el botón de pausa, fuera de pantalla y con la
+     pestaña del navegador oculta. Pasar el ratón o el foco solo retiene el salto a la
+     siguiente pestaña. Tocar una pestaña la repite y deja de avanzar sola. Tras dos
+     vueltas se queda en el cierre con «Ver otra vez». ?hoja=… la deja quieta (capturas). */
   var tabs = Array.prototype.slice.call(document.querySelectorAll('.mock-tabs [role="tab"]'));
   var carta = document.querySelector('.mock-card.principal');
-  var encuentro = document.getElementById('hoja-encuentro');
-  if (tabs.length === 3 && carta && encuentro && !quieto) {
-    var pendiente = encuentro.querySelector('.mock-row:not(.ok)');
-    var textoPendiente = pendiente ? pendiente.lastElementChild.innerHTML : '';
-    var textoOk = (function(){ var ok = encuentro.querySelector('.mock-row.ok'); return ok ? ok.lastElementChild.innerHTML : ''; })();
-    var contadores = Array.prototype.slice.call(encuentro.querySelectorAll('.mock-sem [data-cuenta]'));
-    var inicial = contadores.map(function(c){ return c.textContent; });
-    var escena = null, manual = false, pausa = false, reloj = null;
-    function fija(el, v){ if (window.cuentasHoja) window.cuentasHoja.fija(el, parseInt(v, 10)); else el.textContent = v; }
-    function reponEscena(){
-      clearTimeout(escena); escena = null;
-      if (pendiente) { pendiente.classList.remove('ok', 'recien'); pendiente.lastElementChild.innerHTML = textoPendiente; }
-      contadores.forEach(function(c, i){ fija(c, inicial[i]); });
+  var fijada = /[?&]hoja=/.test(location.search);
+  if (tabs.length === 3 && carta && !quieto && !fijada) (function(){
+    var C = window.cuentasHoja;
+    var panel = function(id){ return document.getElementById(id); };
+    var reservas = panel('hoja-reservas'), encuentro = panel('hoja-encuentro'), cierre = panel('hoja-cierre');
+    var linea = carta.querySelector('.mock-linea'), avance = null;
+    if (linea) { avance = document.createElement('i'); linea.appendChild(avance); }
+    var boton = document.createElement('button');
+    boton.type = 'button'; boton.className = 'mock-pausa';
+    boton.innerHTML = '<svg data-ico="pausa" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5v14M15 5v14"/></svg>' +
+      '<svg data-ico="sigue" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z"/></svg>' +
+      '<svg data-ico="otra" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>';
+    var cab = carta.querySelector('.mock-cab'); if (cab) cab.appendChild(boton);
+
+    var t = 0, dur = 0, pasos = [], auto = true, pausa = false, retiene = false, visible = false, arrancada = false;
+    var vueltas = 0, corre = false, previo = 0, congeladas = [];
+    function estadoBoton(e){
+      boton.setAttribute('data-estado', e);
+      var txt = carta.getAttribute(e === 'corre' ? 'data-txt-pausa' : e === 'pausa' ? 'data-txt-sigue' : 'data-txt-otra') || '';
+      boton.setAttribute('aria-label', txt); boton.title = txt;
     }
-    function lanzaEscena(){
-      /* Marco llega con su grupo de 3: cambia la fila y el recuento. */
-      clearTimeout(escena);
-      escena = setTimeout(function(){
-        if (!pendiente || pendiente.classList.contains('ok')) return;
-        pendiente.classList.add('ok', 'recien'); pendiente.style.setProperty('--i', '0');
-        pendiente.lastElementChild.innerHTML = textoOk;
-        contadores.forEach(function(c, i){
-          var k = c.getAttribute('data-cuenta'), v = parseInt(inicial[i], 10);
-          c.textContent = String(k === 'faltan' ? v - 3 : v + 3);
-        });
-        if (window.cuentasHoja) window.cuentasHoja(encuentro.querySelector('.mock-sem'));
-      }, 2400);
+    function activo(){ return !pausa && visible && !document.hidden; }
+    function pinta(){
+      if (!avance) return;
+      var p = auto && dur ? Math.min(1, t / dur) : 1;
+      linea.classList.toggle('con-avance', auto);
+      avance.style.transform = 'scaleX(' + p.toFixed(3) + ')';
     }
-    function alMostrar(panelId){ reponEscena(); if (panelId === 'hoja-encuentro') lanzaEscena(); }
+    function tic(ahora){
+      if (!activo() || (retiene && auto && t >= dur && !pasos.length)) { corre = false; return; }
+      var dt = previo ? Math.min(100, ahora - previo) : 0; previo = ahora;
+      t += dt;
+      while (pasos.length && pasos[0][0] <= t) pasos.shift()[1]();
+      pinta();
+      if (t >= dur && !pasos.length) {
+        if (!auto) { corre = false; return; }
+        siguiente();
+      }
+      requestAnimationFrame(tic);
+    }
+    function arranca(){ if (!corre && activo()) { corre = true; previo = 0; requestAnimationFrame(tic); } }
     function siguiente(){
-      if (manual || pausa || document.hidden) return;
-      var i = tabs.findIndex(function(t){ return t.getAttribute('aria-selected') === 'true'; });
+      var i = tabs.findIndex(function(x){ return x.getAttribute('aria-selected') === 'true'; });
+      if (i === tabs.length - 1) vueltas++;
+      if (vueltas >= 2) { auto = false; estadoBoton('fin'); pinta(); return; }
       tabs[(i + 1) % tabs.length].click();
     }
-    tabs.forEach(function(t){
-      t.addEventListener('click', function(){ alMostrar(t.getAttribute('aria-controls')); });
-      t.addEventListener('pointerdown', function(){ manual = true; clearInterval(reloj); });
-      t.addEventListener('keydown', function(){ manual = true; clearInterval(reloj); });
+
+    /* Poner un texto sin que cuente, y luego contarlo desde ahí. */
+    function pon(el, texto){
+      if (el.hasAttribute('data-cuenta') && C) { var m = /\d+/.exec(texto.replace(/[.,](?=\d{3})/g, '')); C.fija(el, m ? +m[0] : 0); }
+      el.textContent = texto;
+    }
+    function cuenta(el, texto){ el.textContent = texto; if (el.hasAttribute('data-cuenta') && C) C.uno(el); }
+    function finales(raiz){ Array.prototype.forEach.call(raiz.querySelectorAll('[data-antes]'), function(el){
+      if (!el.hasAttribute('data-final')) el.setAttribute('data-final', el.textContent); }); }
+    [reservas, encuentro, cierre].forEach(function(p){ if (p) finales(p); });
+    function sinTransicion(haz){ carta.classList.add('sin-trans'); haz(); void carta.offsetWidth; carta.classList.remove('sin-trans'); }
+
+    var ESCENAS = {
+      'hoja-reservas': function(){
+        var correo = reservas.querySelector('.mock-correo'), fila = reservas.querySelector('[data-destino]');
+        var antes = Array.prototype.slice.call(reservas.querySelectorAll('[data-antes]'));
+        sinTransicion(function(){
+          if (correo) correo.setAttribute('data-estado', 'espera');
+          antes.forEach(function(el){ pon(el, el.getAttribute('data-antes')); });
+          Array.prototype.forEach.call(reservas.querySelectorAll('[data-cuenta]:not([data-antes])'), function(el){ pon(el, el.textContent); });
+        });
+        return [[900, function(){ if (correo) correo.setAttribute('data-estado', 'llega'); }],
+          [1700, function(){ if (correo) correo.setAttribute('data-estado', 'lee'); }],
+          [2750, function(){
+            if (correo) correo.setAttribute('data-estado', 'leido');
+            var de = reservas.querySelector('[data-vuela]'), a = fila && fila.querySelector('.n');
+            if (!de || !a || !reservas.animate) return;
+            var r0 = reservas.getBoundingClientRect(), r1 = de.getBoundingClientRect(), r2 = a.getBoundingClientRect();
+            var v = document.createElement('span'); v.className = 'mock-vuela'; v.setAttribute('aria-hidden', 'true');
+            v.textContent = de.getAttribute('data-vuela'); reservas.appendChild(v);
+            var x0 = r1.left - r0.left, y0 = r1.top - r0.top - 2, x1 = r2.right - r0.left - v.offsetWidth, y1 = r2.top - r0.top - 2;
+            var vuelo = v.animate([
+              { transform: 'translate(' + x0 + 'px,' + y0 + 'px) scale(.8)', opacity: 0 },
+              { transform: 'translate(' + x0 + 'px,' + (y0 - 6) + 'px) scale(1)', opacity: 1, offset: .2 },
+              { transform: 'translate(' + x1 + 'px,' + y1 + 'px) scale(1)', opacity: 1, offset: .85 },
+              { transform: 'translate(' + x1 + 'px,' + y1 + 'px) scale(.6)', opacity: 0 }
+            ], { duration: 950, easing: 'cubic-bezier(.45,0,.2,1)', fill: 'forwards' });
+            vuelo.onfinish = function(){ v.remove(); };
+          }],
+          [3550, function(){
+            if (fila) { fila.classList.remove('recien'); void fila.offsetWidth; fila.classList.add('recien'); }
+            antes.forEach(function(el){ cuenta(el, el.getAttribute('data-final')); });
+          }],
+          [6800, function(){}]];
+      },
+      'hoja-encuentro': function(){
+        var fila = encuentro.querySelector('[data-pendiente]') || encuentro.querySelector('.mock-row:not(.ok)');
+        var ok = encuentro.querySelector('.mock-row.ok:not(.recien)');
+        var sem = encuentro.querySelector('.mock-sem'), b = sem && sem.querySelector('[data-todos]');
+        if (!fila) return [[5600, function(){}]];
+        var est = [].filter.call(fila.children, function(c){ return c.tagName === 'SPAN'; }).pop();
+        if (!fila.hasAttribute('data-pendiente')) fila.setAttribute('data-pendiente', est.innerHTML);
+        if (b && !b.hasAttribute('data-final')) b.setAttribute('data-final', b.innerHTML);
+        var toque = fila.querySelector('.mock-toque');
+        if (!toque) { toque = document.createElement('i'); toque.className = 'mock-toque'; toque.setAttribute('aria-hidden', 'true'); fila.appendChild(toque); }
+        sinTransicion(function(){
+          fila.classList.remove('ok', 'recien'); est.innerHTML = fila.getAttribute('data-pendiente');
+          if (b) b.innerHTML = b.getAttribute('data-final');
+          toque.classList.remove('va');
+          Array.prototype.forEach.call(sem.querySelectorAll('[data-cuenta]'), function(el){
+            if (!el.hasAttribute('data-inicio')) el.setAttribute('data-inicio', el.textContent);
+            pon(el, el.getAttribute('data-inicio')); });
+        });
+        return [[1500, function(){ toque.classList.remove('va'); void toque.offsetWidth; toque.classList.add('va'); }],
+          [2200, function(){
+            fila.classList.add('ok', 'recien'); fila.style.setProperty('--i', '0');
+            if (ok) est.innerHTML = ok.lastElementChild.innerHTML;
+            var n = sem.querySelector('[data-cuenta="llegados"]');
+            if (n) cuenta(n, String(parseInt(n.textContent, 10) + 3));
+            if (b) { b.textContent = b.getAttribute('data-todos'); b.classList.remove('cuenta-cambia'); void b.offsetWidth; b.classList.add('cuenta-cambia'); }
+          }],
+          [5600, function(){}]];
+      },
+      'hoja-cierre': function(){
+        var filas = Array.prototype.slice.call(cierre.querySelectorAll('.mock-row .n[data-cuenta]'));
+        var barra = cierre.querySelector('.mock-barra'), trozos = barra ? Array.prototype.slice.call(barra.children) : [];
+        var sello = cierre.querySelector('.mock-sello');
+        filas.forEach(function(el){ if (!el.hasAttribute('data-final')) el.setAttribute('data-final', el.textContent); });
+        sinTransicion(function(){
+          filas.forEach(function(el){ pon(el, el.getAttribute('data-final').replace(/[−-]/, '').replace(/\d[\d.,]*/, '0')); });
+          if (barra) barra.classList.add('vacia'); trozos.forEach(function(i){ i.classList.remove('va'); });
+          if (sello) sello.classList.add('oculto');
+        });
+        var p = [[300, function(){ if (filas[0]) cuenta(filas[0], filas[0].getAttribute('data-final')); }]];
+        [1100, 1800, 2400].forEach(function(en, k){
+          p.push([en, function(){ var el = filas[k + 1]; if (el) cuenta(el, el.getAttribute('data-final')); if (trozos[k]) trozos[k].classList.add('va'); }]);
+        });
+        p.push([3300, function(){ if (sello) sello.classList.remove('oculto'); }]);
+        p.push([6200, function(){}]);
+        return p;
+      }
+    };
+    var actual = null;
+    function seleccionada(){ var s = tabs.filter(function(x){ return x.getAttribute('aria-selected') === 'true'; })[0]; return s && s.getAttribute('aria-controls'); }
+    function escena(id){
+      var hazla = ESCENAS[id]; if (!hazla || !panel(id)) return;
+      actual = id; pasos = hazla(); t = 0; dur = pasos.length ? pasos[pasos.length - 1][0] : 0; pinta(); arranca();
+    }
+
+    function aMano(){
+      if (auto) { auto = false; estadoBoton('fin'); pinta(); }
+      if (pausa) { pausa = false; congela(false); estadoBoton('fin'); }
+      arrancada = true;
+    }
+    tabs.forEach(function(x){
+      x.addEventListener('click', function(){ if (arrancada) escena(x.getAttribute('aria-controls')); });
+      x.addEventListener('pointerdown', aMano);
+      x.addEventListener('keydown', function(e){
+        if (!/^(Arrow|Home|End|Enter| )/.test(e.key)) return;
+        aMano(); setTimeout(function(){ var s = seleccionada(); if (s && s !== actual) escena(s); }, 0);
+      });
     });
-    carta.addEventListener('mouseenter', function(){ pausa = true; });
-    carta.addEventListener('mouseleave', function(){ pausa = false; });
-    carta.addEventListener('focusin', function(){ pausa = true; });
-    carta.addEventListener('focusout', function(){ pausa = false; });
-    reloj = setInterval(siguiente, 7000);
-    var abierta = tabs.find(function(t){ return t.getAttribute('aria-selected') === 'true'; });
-    if (abierta) alMostrar(abierta.getAttribute('aria-controls'));
-  }
+    function suelta(){ retiene = false; arranca(); }
+    carta.addEventListener('pointerenter', function(e){ if (e.pointerType === 'mouse') retiene = true; });
+    carta.addEventListener('pointerleave', function(e){ if (e.pointerType === 'mouse') suelta(); });
+    carta.addEventListener('focusin', function(e){ if (e.target !== boton) retiene = true; });
+    carta.addEventListener('focusout', suelta);
+    function congela(si){
+      if (!carta.getAnimations) return;
+      if (si) { congeladas = carta.getAnimations({ subtree: true }).filter(function(a){ return a.playState === 'running'; }); congeladas.forEach(function(a){ a.pause(); }); }
+      else { congeladas.forEach(function(a){ if (a.playState === 'paused') a.play(); }); congeladas = []; }
+    }
+    boton.addEventListener('click', function(){
+      var e = boton.getAttribute('data-estado');
+      if (e === 'corre') { pausa = true; congela(true); estadoBoton('pausa'); }
+      else if (e === 'pausa') { pausa = false; congela(false); estadoBoton('corre'); arranca(); }
+      else { pausa = false; auto = true; vueltas = 0; arrancada = true; estadoBoton('corre'); tabs[0].click(); }
+    });
+    document.addEventListener('visibilitychange', arranca);
+    function empieza(){ if (arrancada) return; arrancada = true; tabs[0].click(); }
+    estadoBoton('corre');
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function(es){
+        visible = es[es.length - 1].intersectionRatio >= 0.35;
+        if (visible) { empieza(); arranca(); }
+      }, { threshold: [0, 0.35, 0.7] }).observe(carta);
+    } else { visible = true; empieza(); }
+  })();
 
   /* Cifras y sellos se activan al entrar en pantalla. */
   var pendientes = [];

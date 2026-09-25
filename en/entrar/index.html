@@ -7,6 +7,13 @@
 <title>Log in · Audutor</title>
 <meta name="robots" content="noindex">
 <style>
+  /* Las dos letras de Audutor, servidas desde aquí (24-sep-2026): con las del sistema la
+     marca cambiaba de cara en Android y Windows. Solo el subconjunto latino (92 KB las dos),
+     y sin CDN: la web promete «sin rastreadores». Licencia OFL en fuentes/OFL-*.txt. */
+  @font-face{ font-family:"Atkinson Hyperlegible Next"; src:url(../fuentes/atkinson-hyperlegible-next.woff2) format("woff2");
+    font-weight:200 800; font-style:normal; font-display:swap; unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face{ font-family:"Newsreader"; src:url(../fuentes/newsreader.woff2) format("woff2");
+    font-weight:400 700; font-style:normal; font-display:swap; unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 /* ── Por qué esta página existe ──────────────────────────────────────────────
    El «Entrar» del menú apuntaba a `#`: se veía y no llevaba a ninguna parte. Y no podía
    llevar a la app, porque la app es un proceso de Node que vive en otro sitio y todavía
@@ -27,7 +34,7 @@
 html,body{ margin:0; }
 body{
   min-height:100vh; background:var(--bg); color:var(--ink);
-  font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font:16px/1.55 "Atkinson Hyperlegible Next",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   padding:28px 18px; position:relative; overflow-x:hidden;
 }
@@ -54,7 +61,7 @@ body::before{
   content:""; display:block; height:4px; margin:-30px -26px 22px;
   background:linear-gradient(90deg,var(--acc),var(--gold) 55%,var(--coral));
 }
-.wm{ font:400 27px/1 Iowan Old Style,Palatino,Georgia,serif; color:var(--acc); display:block; }
+.wm{ font:400 27px/1 Newsreader,"Iowan Old Style",Palatino,Georgia,serif; color:var(--acc); display:block; }
 .wm svg{ display:block; width:96px; height:12px; margin:5px 0 0; }
 .pie{ display:block; margin-top:9px; font-size:12.5px; color:var(--muted); }
 h1{ font:600 19px/1.25 inherit; margin:22px 0 6px; }

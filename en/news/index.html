@@ -7,6 +7,13 @@
 <title>What’s new · Audutor</title>
 <meta name="description" content="What changes in Audutor, with its date.">
 <style>
+  /* Las dos letras de Audutor, servidas desde aquí (24-sep-2026): con las del sistema la
+     marca cambiaba de cara en Android y Windows. Solo el subconjunto latino (92 KB las dos),
+     y sin CDN: la web promete «sin rastreadores». Licencia OFL en fuentes/OFL-*.txt. */
+  @font-face{ font-family:"Atkinson Hyperlegible Next"; src:url(../fuentes/atkinson-hyperlegible-next.woff2) format("woff2");
+    font-weight:200 800; font-style:normal; font-display:swap; unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face{ font-family:"Newsreader"; src:url(../fuentes/newsreader.woff2) format("woff2");
+    font-weight:400 700; font-style:normal; font-display:swap; unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 /* ── Por qué esta página existe ──────────────────────────────────────────────────────
    TourDash y Ventrata publican sus cambios con fecha, y en el estudio de 20 sistemas del
    23-sep-2026 fue lo único de organización que Audutor no tenía a la vista: el producto
@@ -21,8 +28,8 @@
 :root{
   --ink:#1c2b25; --ink2:#40554c; --muted:#5c6b64; --bg:#faf6ec; --paper:#fffefa;
   --acc:#12805f; --acc2:#0c6b56; --gold:#c98a2d; --coral:#f4653a; --line:#e5dccb;
-  --sans:Seravek,"Avenir Next",Avenir,system-ui,-apple-system,"Segoe UI",sans-serif;
-  --serif:"Iowan Old Style",Palatino,"Palatino Linotype",Georgia,serif;
+  --sans:"Atkinson Hyperlegible Next",Seravek,"Avenir Next",Avenir,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --serif:Newsreader,"Iowan Old Style",Palatino,"Palatino Linotype",Georgia,serif;
   --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
 }
 *{ box-sizing:border-box; }
@@ -56,6 +63,14 @@ a{ color:var(--acc2); }
   <a class="wm" href="../">Audutor</a>
   <h1>What’s new</h1>
   <p class="sub">What changes in Audutor, with its date. Newest first. Only what is already live.</p>
+
+  <section class="nov"><time datetime="2026-09-24">24 Sep 2026</time><ul>
+    <li><b>The home page shows how it works.</b> A departure sheet tells a day in three scenes: a GuruWalk email arrives and is read, the guide checks someone in, and the split balances. It has a pause button and stays still if your device asks for less motion.</li>
+    <li><b>The same lettering everywhere.</b> The website, the demo and the app use their own fonts, served by Audutor with no third parties. Menu icons are drawings, not emoji that change from phone to phone.</li>
+    <li><b>Occupancy in the week.</b> In “Team and availability” each departure shows its booked places against capacity (12/20), with a bar that turns gold near full and red when it goes over.</li>
+    <li><b>The guide app keeps itself up to date</b> every minute while it is open. It doesn’t repaint when nothing changed, nor while a card is open or something is waiting to be sent.</li>
+    <li><b>Creating your account, clearer.</b> With no connection, a notice says nothing has been created yet and what to do. And moving between steps while creating your tours, the keyboard stays where you were.</li>
+  </ul></section>
 
   <section class="nov"><time datetime="2026-09-23">23 Sep 2026</time><ul>
     <li><b>GuruWalk changes reach the manifest again.</b> GuruWalk changed the subject line of those emails and they were stopping in “Emails to review”. And an email that stopped there over something we can now read has a new <b>“Read again”</b> button.</li>
