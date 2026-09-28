@@ -5088,16 +5088,31 @@ function respuestaGuiaES(t){
   if (/que (se )?visit|que vemos|que veremos|que vamos a ver|que se ve|que sitios|que monumentos?|que recorrido|como es el recorrido|que ruta|cual es la ruta|el recorrido incluye|(?:la visita|el tour|el recorrido|la ruta) pasa por/.test(m)
       && !/bano|aseo|lavabo|urinario|retrete|wc|comer|comida|beber|agua|fumar|foto|nino|bebe|perro|wifi|internet|descanso|parada|embaraz|silla de ruedas|carrito|escaleras|cuestas|desnivel|ritmo|es segur|carterista|robo/.test(m)){
     var vi=kb('visita'); if(!vi) return derivaPorHueco('visita', t);
-    return 'Veremos '+vi+' — sin prisas y con las mejores historias 🙂';
+    /* Solo el hecho. Llevaba pegado «— sin prisas y con las mejores historias», y el ritmo
+       tiene su propio campo: un tour a paso ligero lo contradecía sin que nadie lo hubiera
+       escrito (revisión del 28-sep-2026). */
+    return 'Veremos '+vi+' 🙂';
   }
   /* La otra mitad del corte de «tarde»: si ya no es un retraso, es una franja del día, y
      esa pregunta la contestan los horarios. Sin esto, separar los dos sentidos dejaba
      «¿hay tour por la tarde?» derivando cuando el hecho está delante. */
+  /* LA HORA DE FIN NO ES LA DE SALIDA (revisión del 28-sep-2026). «¿A qué hora acaba?» caía
+     en la regla de horario de abajo y contestaba, con toda seguridad, la hora de SALIDA. No
+     se calcula nada —sumar una duración a un horario de varias salidas es una respuesta
+     que nadie ha confirmado—: se dan los dos datos, o se deriva nombrando el que falta. */
+  if (/(a que hora|que hora|cuando|hasta que hora)[^.?!]{0,25}(acaba|termina|terminamos|acabamos|finaliza|volvemos|regresamos|estamos de vuelta|estaremos de vuelta)/.test(m)){
+    var duF=kb('dur'), hoF=kb('horas');
+    if(!duF) return derivaPorHueco('dur', t);
+    if(!hoF) return derivaPorHueco('horas', t);
+    return 'Salimos '+enMedio(sinPuntoFinal(hoF))+' y el tour dura '+sinPuntoFinal(enMedio(duF.replace(/^(el tour |la ruta )?dura /i,'')))+' 🙂';
+  }
   if (/(cuanta?|con cuanta) antelacion|cuanto antes (hay que|tengo que|debo|conviene|se debe) (llegar|estar|venir|presentarse)|a que hora (hay que|tengo que|debo|conviene) (estar|llegar|venir)/.test(m)){
     var ante=kb('antelacion'); if(!ante) return derivaPorHueco('antelacion', t);
     return sinPuntoFinal(ante)+' 🙂';
   }
-  if (/a que hora|que hora|horario|cuando sal|que dias|(dime|dices|dame|decirme|saber|sabes|pasame) (la |el )?(hora|horario)|(hay|teneis|haceis|salis|sale)[^.?!]{0,14}(por la |de )?(manana|tarde|noche)|(hay|teneis|haceis|hacen) tour (el |los |en )?(lunes|martes|miercoles|jueves|viernes|sabado|domingo|festivos?)|(el |los )(lunes|martes|miercoles|jueves|viernes|sabado|domingo) hay tour/.test(m)){
+  // La hora de FIN es de la regla de arriba, no de esta: aquí se contestaba la de salida.
+  if (/a que hora|que hora|horario|cuando sal|que dias|(dime|dices|dame|decirme|saber|sabes|pasame) (la |el )?(hora|horario)|(hay|teneis|haceis|salis|sale)[^.?!]{0,14}(por la |de )?(manana|tarde|noche)|(hay|teneis|haceis|hacen) tour (el |los |en )?(lunes|martes|miercoles|jueves|viernes|sabado|domingo|festivos?)|(el |los )(lunes|martes|miercoles|jueves|viernes|sabado|domingo) hay tour/.test(m)
+      && !/acaba|termina|terminamos|acabamos|finaliza|volvemos|regresamos|de vuelta/.test(m)){
     var ho=kb('horas'); if(!ho) return derivaPorHueco('horas', t);
     /* El «desde X» solo si el horario es corto. Madrid publica «todos los días a las
        10:45, y los sábados también a las 16:00, con reserva», y encadenarle el punto
@@ -5116,7 +5131,10 @@ function respuestaGuiaES(t){
      peor que derivar: el viajero se queda creyendo que le han respondido. */
   if (/cuanto (tiempo )?(dura|tarda|tardan|se tarda|estaremos|estamos|lleva)|cuantas horas (dura|es|son)|duracion|how long/.test(m)){
     var du=kb('dur'); if(!du) return derivaPorHueco('dur', t);
-    return 'El tour dura '+sinPuntoFinal(enMedio(du.replace(/^(el tour |la ruta )?dura /i,'')))+', a ritmo tranquilo y con paradas para las explicaciones (y alguna foto 📸).';
+    /* Sin «a ritmo tranquilo y con paradas»: eso es el campo `ritmo`, y afirmarlo aquí era
+       un dato que el operador no había confirmado (y, a quien preguntaba tras una operación,
+       un consejo médico disfrazado de dato). */
+    return 'El tour dura '+sinPuntoFinal(enMedio(du.replace(/^(el tour |la ruta )?dura /i,'')))+'.';
   }
   if (/idioma|ingles|english|language|frances|aleman|italiano|portugues|espanol|castellano|catalan/.test(m)){
     var id=kb('idiomas'); if(!id) return derivaPorHueco('idiomas', t);
@@ -5777,6 +5795,12 @@ function respuestaEN(t){
       (v('senal')?' Look for '+conThe(v('senal'))+'.':'') : falta('punto');
   /* «hasta cuándo puedo reservar» lleva «cuando» y no es una pregunta de horarios: es el
      corte de reservas, que tiene su regla más abajo. */
+  // La hora de FIN no es la de salida: los dos datos, sin sumar nada (ver la regla española).
+  if (/hora|cuando/.test(m) && (/termina|acaba|finaliza|volvemos/.test(m) || /\b(end|ends|finish|finishes|over|get back|be back)\b/i.test(t))){
+    if (!v('dur')) return falta('dur');
+    if (!v('horas')) return falta('horas');
+    return 'We run '+sinPuntoFinal(v('horas'))+' and the tour lasts '+sinPuntoFinal(v('dur').replace(/^(the (tour|walk) )?lasts? /i,''))+' 🙂';
+  }
   if (/hora|empieza|cuando/.test(m) && !/hasta cuando|hasta que hora/.test(m)){
     if (!v('horas')) return falta('horas');
     return 'We run '+sinPuntoFinal(v('horas'))+
@@ -5784,7 +5808,8 @@ function respuestaEN(t){
       ' 🙂 Want me to save you a spot?';
   }
   if (/dura|duracion/.test(m) && !/espera/.test(m))
-    return v('dur') ? 'The tour lasts '+v('dur').replace(/^(the (tour|walk) )?lasts? /i,'')+' — relaxed pace, with stops for the stories (and photos 📸).' : falta('dur');
+    // Solo la duración: el ritmo es el campo `ritmo` (ver la regla española).
+    return v('dur') ? 'The tour lasts '+sinPuntoFinal(v('dur').replace(/^(the (tour|walk) )?lasts? /i,''))+'.' : falta('dur');
   /* Pago online de los tours DE PAGO: «can I pay online with card?» contestaba el
      modelo del free tour. Campo opcional: sin él, cae a la regla de precio de siempre. */
   if ((/pagar|pago/.test(m) && /online|web|pasarela|gateway/.test(m+' '+t.toLowerCase())) || /paid tours?/i.test(t)){
@@ -6115,7 +6140,8 @@ function respuestaEN(t){
     }
     var q=salidaDelMensaje(m);
     if (q.ninguna)
-      return 'Each departure takes up to '+afN+' people — a manageable group where you can actually hear the guide 🙂';
+      // Solo el número, como la regla española: «where you can actually hear the guide» no lo ha confirmado nadie.
+      return 'Each departure takes up to '+afN+' people 🙂';
     /* LA MORDAZA POR DESCUADRE — y solo estaba en el motor español. Un viajero inglés
        preguntando por plazas durante un descuadre recibía «X of 25 booked in 🙂» con toda
        la seguridad del mundo, sobre un recuento que el propio sistema ya sabe corto. La
@@ -6155,7 +6181,7 @@ function respuestaEN(t){
      + nadie— vive más abajo, así que aquí basta con apartarse: quien dice que no ve a nadie
      está perdido, no preguntando qué se visita. */
   if (/visita|\bver\b|veremos|\b(?:tour|route)\b.*\b(?:visit|pass by|pass through)\b/.test(m) && !/nadie|ninguno|no encuentro/.test(m))
-    return v('visita') ? 'We\'ll see '+v('visita')+' — no rush, and with the best stories 🙂' : falta('visita');
+    return v('visita') ? 'We\'ll see '+v('visita')+' 🙂' : falta('visita');
   if (/camina|distancia/.test(m))
     return v('distancia') ? 'We cover '+(/^(about|around|some|roughly|approx)/i.test(v('distancia'))?'':'about ')+v('distancia')+' at an easy pace, with plenty of stops.' : falta('distancia');
   if (/entrada|museo|dentro/.test(m))
@@ -7655,11 +7681,11 @@ var TRAD_DEMO = {
       'Hallo! 👋 Ich bin GuIA. Fragen Sie mich alles zur Tour 🙂',
     'We meet at ⟦H0⟧ 📍 We start ⟦H1⟧. Look for the ⟦H2⟧.':
       'Wir treffen uns an ⟦H0⟧ 📍 Wir starten ⟦H1⟧. Achten Sie auf den ⟦H2⟧.',
-    'The tour lasts ⟦H0⟧ — relaxed pace, with stops for the stories (and photos 📸).':
-      'Die Tour dauert ⟦H0⟧ — gemütliches Tempo, mit Pausen für die Geschichten (und Fotos 📸).',
+    'The tour lasts ⟦H0⟧.':
+      'Die Tour dauert ⟦H0⟧.',
     '⟦H0⟧ ☔': '⟦H0⟧ ☔',
-    'Each departure takes up to ⟦V0⟧ people — a manageable group where you can actually hear the guide 🙂':
-      'Jede Tour nimmt bis zu ⟦V0⟧ Personen — eine überschaubare Gruppe, in der man die Reiseleitung wirklich hört 🙂',
+    'Each departure takes up to ⟦V0⟧ people 🙂':
+      'Jede Tour nimmt bis zu ⟦V0⟧ Personen 🙂',
     'The tour ends at ⟦H0⟧ — a great spot to carry on exploring on your own 🙂':
       'Die Tour endet an ⟦H0⟧ — ein guter Ausgangspunkt, um auf eigene Faust weiterzugehen 🙂',
     /* hechos */
@@ -7679,8 +7705,8 @@ var TRAD_DEMO = {
       'Bonjour ! 👋 Je suis GuIA. Posez-moi vos questions sur la visite 🙂',
     'We meet at ⟦H0⟧ 📍 We start ⟦H1⟧. Look for the ⟦H2⟧.':
       'On se retrouve à ⟦H0⟧ 📍 On part ⟦H1⟧. Cherchez le ⟦H2⟧.',
-    'The tour lasts ⟦H0⟧ — relaxed pace, with stops for the stories (and photos 📸).':
-      'La visite dure ⟦H0⟧ — rythme tranquille, avec des pauses pour les histoires (et les photos 📸).',
+    'The tour lasts ⟦H0⟧.':
+      'La visite dure ⟦H0⟧.',
     'Mercat Cross, outside St Giles’ Cathedral on the Royal Mile':
       'Mercat Cross, devant la cathédrale St Giles, sur le Royal Mile',
     'every day · 10:00 AM and 5:00 PM': 'tous les jours · à 10h00 et 17h00',
@@ -7704,12 +7730,12 @@ function fraseGuia(k, o){
     case 'titulo':  return 'Hi! 👋 I’m GuIA. Ask me anything about “'+v+'” 🙂';
     case 'modelo':  return 'It works like this: '+v+'. At the end you give whatever you think it was worth 💛';
     case 'horas':   return 'We set off '+v+(punto?' from '+punto:'')+' 🙂 Shall I book you a place?';
-    case 'dur':     return 'It runs '+v+', at a gentle pace with stops for the stories (and the odd photo 📸).';
+    case 'dur':     return 'The tour lasts '+v.replace(/\.$/,'')+'.';
     case 'punto':   return 'We meet at '+v+' 📍'+(horas?' We set off '+horas+'.':'')+(senal?' Get there a few minutes early and look for the '+senal+'.':'');
     case 'fin':     return 'The walk finishes at '+v+' — we leave you well placed there to carry on by yourself 🙂';
-    case 'visita':  return 'We’ll see '+v+' — no rushing, and all the best stories 🙂';
+    case 'visita':  return 'We’ll see '+v+' 🙂';
     case 'idiomas': return 'El tour es en '+v+'. If you need another language, tell me and I’ll check with the manager.';
-    case 'aforo':   return 'Each departure takes a maximum of '+v+' people — a manageable group and a guide you can actually hear 🙂';
+    case 'aforo':   return 'Each departure takes up to '+v+' people 🙂';
     case 'grupomin':return 'For groups of more than 6 (even if you split it across several bookings), the guide will ask for a deposit of '+v.replace(/ per person\.?$/i,'')+' per person AT MINIMUM at the start — never less. It comes off what you give at the end.';
     case 'minimo':  return v+' 🙂';
     case 'senal':   return 'Easy: look for the '+v+(punto?' en '+punto:'')+'. The guide gets there a few minutes before the start 🙂';
