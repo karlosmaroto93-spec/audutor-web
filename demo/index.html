@@ -93,6 +93,18 @@
        canal —#f7f2e8 contra #fffefa—, o sea a nada: por muchas sombras que se pongan, si
        el suelo y el objeto son del mismo color no hay altura que valga. Flotar es
        CONTRASTE; la sombra solo lo confirma. */
+    /* LOS TONOS DE LOS ICONOS DEL MENÚ (25-sep). Al cambiar los emoji por trazos el menú se
+       quedó de un solo color, y Carlos lo echó en falta: los emoji eran lo que daba color a la
+       columna y lo que dejaba encontrar una entrada sin leerla. Siete tonos, cada uno en claro
+       (sobre el verde del menú) y hondo (sobre la crema de la entrada activa). El mismo mapa
+       icono → tono en la app (`mando.js`, TONO) y en la demo; `mismo-aspecto` lo vigila. */
+    --tono-verde:#86dfb4; --tono-verde-hondo:#12805f;
+    --tono-oro:#f2c46a;   --tono-oro-hondo:#94600f;
+    --tono-coral:#ff9e80; --tono-coral-hondo:#c0461d;
+    --tono-azul:#93ccf5;  --tono-azul-hondo:#1f67a0;
+    --tono-teal:#72d9ca;  --tono-teal-hondo:#12776b;
+    --tono-lila:#c7b8fb;  --tono-lila-hondo:#6a4cbf;
+    --tono-rosa:#f7aac6;  --tono-rosa-hondo:#ad3d67;
     --ink:#1c2b25; --ink2:#40554c; --muted:#5c6b64; --bg:#eee7d7; --paper:#fffefa;
     --acc:#12805f; --acc2:#0c6b56; --acc-deep:#0a5847; --acc-soft:#e2f1e9;
     --gold:#d99a33; --gold-soft:#fbf3e1; --amber:#96690f;
@@ -168,8 +180,19 @@
            letter-spacing:-.01em; }
   .tenant small{ display:block; color:#93b3a7; font-size:11.5px; margin-top:2px; }
   /* Los iconos del menú: trazos que heredan el color, igual que en la app. */
-  aside nav .ico{ width:17px; height:17px; flex:0 0 auto; vertical-align:-3px; }
-  aside nav a{ display:flex; gap:10px; align-items:center; color:#cfe3da; text-decoration:none;
+  aside nav .ico{ flex:0 0 auto; vertical-align:-3px; }
+  /* Cada icono en su baldosa de color, como en el menú de la app (mismo mapa icono → tono). */
+  aside nav .ico{ width:15px; height:15px; padding:3.5px; box-sizing:content-box; border-radius:6px;
+    color:var(--t, #eaf4ef); background:color-mix(in srgb, var(--t, #eaf4ef) 17%, transparent); }
+  aside nav a.act .ico{ color:var(--th, #0c4133); background:color-mix(in srgb, var(--th, #0c4133) 13%, transparent); }
+  .t-verde{ --t:var(--tono-verde); --th:var(--tono-verde-hondo); }
+  .t-oro{ --t:var(--tono-oro); --th:var(--tono-oro-hondo); }
+  .t-coral{ --t:var(--tono-coral); --th:var(--tono-coral-hondo); }
+  .t-azul{ --t:var(--tono-azul); --th:var(--tono-azul-hondo); }
+  .t-teal{ --t:var(--tono-teal); --th:var(--tono-teal-hondo); }
+  .t-lila{ --t:var(--tono-lila); --th:var(--tono-lila-hondo); }
+  .t-rosa{ --t:var(--tono-rosa); --th:var(--tono-rosa-hondo); }
+  aside nav a{ display:flex; gap:8px; align-items:center; color:#cfe3da; text-decoration:none;
     padding:9px 10px; border-radius:9px; font-size:13px; font-weight:600; margin-bottom:2px;
     transition:background .14s, color .14s; }
   aside nav a:hover{ background:rgba(255,255,255,.09); color:#fff; }
@@ -284,7 +307,7 @@
     aside.menu-abierto .pie-demo{ display:block; }
 
   }
-  .nav-g-cab{ display:flex; gap:10px; align-items:center; width:100%; text-align:left; border:0;
+  .nav-g-cab{ display:flex; gap:8px; align-items:center; width:100%; text-align:left; border:0;
     background:transparent; color:#cfe3da; padding:9px 10px; border-radius:9px; font-size:13px;
     font-weight:600; margin-bottom:2px; cursor:pointer; font-family:inherit;
     transition:background .14s, color .14s; }
@@ -1122,38 +1145,38 @@
          —que es de lo primero que hay que enseñar— quedaba detrás de un clic que nadie
          sabía que tenía que dar: para quien mira la demo, eso es que no existe. Un menú
          de nueve entradas cabe entero; plegarlo no ahorraba espacio, escondía producto. -->
-    <a href="#operaciones" data-v="operaciones" class="act destacada"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-layout-dashboard"/></svg> Operaciones <span class="n" id="n-exc">6</span></a>
+    <a href="#operaciones" data-v="operaciones" class="act destacada"><svg class="ico t-verde" aria-hidden="true" focusable="false"><use href="#i-layout-dashboard"/></svg> Operaciones <span class="n" id="n-exc">6</span></a>
     <div class="nav-g" id="ng-dia">
-      <button class="nav-g-cab" onclick="this.parentElement.classList.toggle('abierto')"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-calendar-days"/></svg> El día a día <span class="flecha">▾</span></button>
+      <button class="nav-g-cab" onclick="this.parentElement.classList.toggle('abierto')"><svg class="ico t-coral" aria-hidden="true" focusable="false"><use href="#i-calendar-days"/></svg> El día a día <span class="flecha">▾</span></button>
       <div class="nav-g-hijos">
-        <a href="#manifiesto" data-v="manifiesto"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-clipboard-list"/></svg> Manifiesto del guía</a>
-        <a href="#equipo" data-v="equipo"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-users"/></svg> Equipo y disponibilidad</a>
+        <a href="#manifiesto" data-v="manifiesto"><svg class="ico t-oro" aria-hidden="true" focusable="false"><use href="#i-clipboard-list"/></svg> Manifiesto del guía</a>
+        <a href="#equipo" data-v="equipo"><svg class="ico t-azul" aria-hidden="true" focusable="false"><use href="#i-users"/></svg> Equipo y disponibilidad</a>
       </div>
     </div>
     <div class="nav-g" id="ng-guia">
-      <button class="nav-g-cab" onclick="this.parentElement.classList.toggle('abierto')"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-bot"/></svg> GuIA, el asistente <span class="sup-chip">supl.</span><span class="flecha">▾</span></button>
+      <button class="nav-g-cab" onclick="this.parentElement.classList.toggle('abierto')"><svg class="ico t-teal" aria-hidden="true" focusable="false"><use href="#i-bot"/></svg> GuIA, el asistente <span class="sup-chip">supl.</span><span class="flecha">▾</span></button>
       <div class="nav-g-hijos">
-        <a href="#chat" data-v="chat"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-message-circle"/></svg> Chat del cliente <span class="cand">🔒</span></a>
-        <a href="#cerebro" data-v="cerebro"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-brain"/></svg> Cerebro de GuIA <span class="cand">🔒</span><span class="n" id="n-der" style="display:none;">0</span></a>
+        <a href="#chat" data-v="chat"><svg class="ico t-teal" aria-hidden="true" focusable="false"><use href="#i-message-circle"/></svg> Chat del cliente <span class="cand">🔒</span></a>
+        <a href="#cerebro" data-v="cerebro"><svg class="ico t-rosa" aria-hidden="true" focusable="false"><use href="#i-brain"/></svg> Cerebro de GuIA <span class="cand">🔒</span><span class="n" id="n-der" style="display:none;">0</span></a>
       </div>
     </div>
     <div class="nav-g" id="ng-ventas">
-      <button class="nav-g-cab" onclick="this.parentElement.classList.toggle('abierto')"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-megaphone"/></svg> Reservas y ventas <span class="flecha">▾</span></button>
+      <button class="nav-g-cab" onclick="this.parentElement.classList.toggle('abierto')"><svg class="ico t-coral" aria-hidden="true" focusable="false"><use href="#i-megaphone"/></svg> Reservas y ventas <span class="flecha">▾</span></button>
       <div class="nav-g-hijos">
-        <a href="#web" data-v="web"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-globe"/></svg> Tu web <span class="cand">🔒</span></a>
-        <a href="#canales" data-v="canales"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-plug"/></svg> Canales y sincronización</a>
-        <a href="#agente" data-v="agente"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-bot"/></svg> El agente de plataformas <span class="cand">🔒</span></a>
-        <a href="#noshow" data-v="noshow"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-send"/></svg> Anti no-show</a>
-        <a href="#carrito" data-v="carrito"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-shopping-basket"/></svg> Lo que vendes además <span class="cand">🔒</span></a>
+        <a href="#web" data-v="web"><svg class="ico t-azul" aria-hidden="true" focusable="false"><use href="#i-globe"/></svg> Tu web <span class="cand">🔒</span></a>
+        <a href="#canales" data-v="canales"><svg class="ico t-lila" aria-hidden="true" focusable="false"><use href="#i-plug"/></svg> Canales y sincronización</a>
+        <a href="#agente" data-v="agente"><svg class="ico t-teal" aria-hidden="true" focusable="false"><use href="#i-bot"/></svg> El agente de plataformas <span class="cand">🔒</span></a>
+        <a href="#noshow" data-v="noshow"><svg class="ico t-coral" aria-hidden="true" focusable="false"><use href="#i-send"/></svg> Anti no-show</a>
+        <a href="#carrito" data-v="carrito"><svg class="ico t-oro" aria-hidden="true" focusable="false"><use href="#i-shopping-basket"/></svg> Lo que vendes además <span class="cand">🔒</span></a>
       </div>
     </div>
     <div class="nav-g" id="nav-eco">
-      <button class="nav-g-cab" onclick="this.parentElement.classList.toggle('abierto')"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-briefcase"/></svg> Gestión económica <span class="flecha">▾</span></button>
+      <button class="nav-g-cab" onclick="this.parentElement.classList.toggle('abierto')"><svg class="ico t-oro" aria-hidden="true" focusable="false"><use href="#i-briefcase"/></svg> Gestión económica <span class="flecha">▾</span></button>
       <div class="nav-g-hijos">
-        <a href="#ahorro" data-v="ahorro"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-scale"/></svg> Conciliación y ahorro</a>
-        <a href="#cuadro" data-v="cuadro"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-trending-up"/></svg> Cuadro de mando <span class="cand">🔒</span></a>
-        <a href="#liquidacion" data-v="liquidacion"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-banknote"/></svg> Liquidación a guías <span class="cand">🔒</span></a>
-        <a href="#proyeccion" data-v="proyeccion"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-chart-column"/></svg> Proyección de ingresos <span class="cand">🔒</span></a>
+        <a href="#ahorro" data-v="ahorro"><svg class="ico t-azul" aria-hidden="true" focusable="false"><use href="#i-scale"/></svg> Conciliación y ahorro</a>
+        <a href="#cuadro" data-v="cuadro"><svg class="ico t-verde" aria-hidden="true" focusable="false"><use href="#i-trending-up"/></svg> Cuadro de mando <span class="cand">🔒</span></a>
+        <a href="#liquidacion" data-v="liquidacion"><svg class="ico t-verde" aria-hidden="true" focusable="false"><use href="#i-banknote"/></svg> Liquidación a guías <span class="cand">🔒</span></a>
+        <a href="#proyeccion" data-v="proyeccion"><svg class="ico t-lila" aria-hidden="true" focusable="false"><use href="#i-chart-column"/></svg> Proyección de ingresos <span class="cand">🔒</span></a>
       </div>
     </div>
   </nav>
