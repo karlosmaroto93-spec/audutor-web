@@ -1156,7 +1156,7 @@
     <div class="nav-g" id="ng-guia">
       <button class="nav-g-cab" onclick="this.parentElement.classList.toggle('abierto')"><svg class="ico t-teal" aria-hidden="true" focusable="false"><use href="#i-bot"/></svg> GuIA, el asistente <span class="sup-chip">supl.</span><span class="flecha">▾</span></button>
       <div class="nav-g-hijos">
-        <a href="#chat" data-v="chat"><svg class="ico t-teal" aria-hidden="true" focusable="false"><use href="#i-message-circle"/></svg> Chat del cliente <span class="cand">🔒</span></a>
+        <a href="#chat" data-v="chat"><svg class="ico t-teal" aria-hidden="true" focusable="false"><use href="#i-message-circle"/></svg> Probar GuIA <span class="cand">🔒</span></a>
         <a href="#cerebro" data-v="cerebro"><svg class="ico t-rosa" aria-hidden="true" focusable="false"><use href="#i-brain"/></svg> Cerebro de GuIA <span class="cand">🔒</span><span class="n" id="n-der" style="display:none;">0</span></a>
       </div>
     </div>
@@ -3632,6 +3632,10 @@ function ejCod(){
   var c = (typeof PG!=='undefined' && PG && PG.cod) || '';
   return c ? ' (' + c + '-…)' : '';
 }
+/* ¿Este canal sabe quién escribe? El chat de la web no (S.canalIdentificado === false), y
+   ahí el servidor rechaza toda acción con código. Ofrecer «dime tu código y le aviso / lo
+   marco / te lo aplico» era prometer algo que se iba a negar (revisión del 29-sep-2026). */
+function canalConIdentidad(){ return S.canalIdentificado !== false; }
 
 /* ── «Tu enlace de gestión»: solo si el operador TIENE web ───────────────────────────
    Ocho frases daban por hecho que la había. «Abre tu enlace de gestión», «si reservaste
@@ -4321,6 +4325,42 @@ function fechaObjetivo(m, t){
     }
   }
   return null;
+}
+
+/* EL HORARIO DE UN DÍA CONCRETO sale del calendario, no de la frase general (29-sep-2026).
+   «Salimos todos los días a las 10:00» es falso el día que hay cierre, y el calendario que
+   manda el servidor —14 días de salidas reales— ya lo sabe. Devuelve null si el mensaje no
+   nombra un día que se pueda resolver (entonces vale el horario general), {fuera:true} si
+   cae más allá del calendario, o {horas, idx, iso}. Si este tour no tiene NINGUNA salida en
+   todo el calendario no se sabe nada, y no se afirma que ese día no haya. */
+var DIAS_SEM_TXT=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+function horarioDelDia(m, t){
+  var tl=String(t||'').toLowerCase();
+  var f = (/\bhoy\b|esta (tarde|noche)/.test(m) || /\b(today|tonight)\b/.test(tl)) ? {idx:0} : fechaObjetivo(m, t);
+  // Al consultar el horario, «este miércoles» incluye hoy. Mover una reserva al
+  // miércoles conserva su semántica de próxima semana en fechaObjetivo().
+  if (f && f.idx===7 && S.agendaBase && !/proximo|\bnext\b/.test(m+' '+tl)
+      && (new RegExp('\\b'+DIAS_SEM[dowDe(S.agendaBase)]+'\\b').test(m)
+        || new RegExp('\\b'+DIAS_SEM_EN[dowDe(S.agendaBase)]+'\\b').test(tl))) f={idx:0};
+  if (!f) return null;
+  if (!(S.agenda||[]).length) return { fuera:true };
+  var alguna = S.agenda.some(function(d){ return ((d||{}).tours||[]).some(esMismoTour); });
+  if (!alguna) return { fuera:true };
+  var dia = S.agenda[(S.agDia||0)+f.idx];
+  if (!dia) return { fuera:true };
+  return { idx:f.idx, iso:S.agendaBase ? isoMas(S.agendaBase, f.idx) : null,
+    horas:(dia.tours||[]).filter(esMismoTour).map(function(x){ return x.hora; }) };
+}
+function nombreDelDia(r, lang){
+  if (r.idx===0) return lang==='en' ? 'Today' : 'Hoy';
+  if (r.idx===1) return lang==='en' ? 'Tomorrow' : 'Mañana';
+  if (!r.iso) return lang==='en' ? 'That day' : 'Ese día';
+  var d=dowDe(r.iso), n=+r.iso.slice(8,10);
+  return lang==='en' ? 'On '+DIAS_SEM_EN[d].charAt(0).toUpperCase()+DIAS_SEM_EN[d].slice(1)+' the '+n : 'El '+DIAS_SEM_TXT[d]+' '+n;
+}
+function listaHoras(hs, lang){
+  if (hs.length<2) return hs[0]||'';
+  return hs.slice(0,-1).join(', ')+(lang==='en'?' and ':' y ')+hs[hs.length-1];
 }
 
 /* La salida a la que se refiere el mensaje. Una hora con «pm» implícito también cuenta:
@@ -5070,7 +5110,7 @@ function respuestaGuiaES(t){
   }
   /* El código perdido tiene respuesta de producto: está en el email de confirmación. */
   if (/perd(i|ido)[^.?!]{0,25}(codigo|reserva|email|correo|confirmacion)|no (tengo|encuentro) (el |mi )?codigo/.test(m))
-    return 'Tu código está en el email de confirmación de tu reserva'+(PG.cod ? ' (busca «'+PG.cod+'-» en tu correo, también en spam)' : ' — míralo también en spam')+'. Si no aparece, dime tu nombre y el encargado te lo busca 🙂';
+    return 'Tu código está en el email de confirmación de tu reserva'+(PG.cod ? ' (busca «'+PG.cod+'-» en tu correo, también en spam)' : ' — míralo también en spam')+'. Si no aparece, '+(canalConIdentidad() ? 'dime tu nombre y el encargado te lo busca 🙂' : 'escribe PERSONA y te paso con el equipo 🙂');
   if (/perdido|\bno( os| te| le| lo| la| les| los)? (encuentro|encontramos)\b|donde esta el grupo|donde estais\b|where are you|no veo a nadie|no hay nadie|no ha venido nadie/.test(m)
       && !/movil|telefono|cartera|monedero|mochila|gafas|chaqueta|abrigo|paraguas|llaves|camara|bolso|maleta|sombrero|gorra|botella|vuelo|avion|\btren\b|autobus|\bbus\b|metro|barco|crucero|conexion|traslado|transfer|reserva|codigo|email|correo|confirmacion|booking|voucher|bono|pasaporte|dni|documentacion/.test(m)){
     if (/que pasa|y si/.test(m))
@@ -5108,9 +5148,11 @@ function respuestaGuiaES(t){
      que las formas ambiguas se van a la regla de retrasos y aquí solo quedan las que no
      dejan lugar a dudas. */
   if (/me perdi (el tour|la salida)|perdi el tour|no pude (llegar|venir|ir)|ya se habian ido|se habian ido|cuando llegue ya no estaban/.test(m)){
-    var hN=kb('horas');
-    return '¡No pasa nada! Puedes unirte a la próxima salida'+(hN?' ('+hN+')':'')+
-      ' con tu misma reserva. Si prefieres cancelar, dime tu código'+ejCod()+' y la libero al instante.';
+    /* «Puedes unirte a la próxima salida con tu misma reserva» era una política que nadie
+       había escrito: sale de los hechos de no presentarse o de cambios, o se deriva. */
+    var nsP=kb('noshow')||kb('cambios'); if(!nsP) return derivaPorHueco('noshow', t);
+    return 'Vaya, lo siento. '+sinPuntoFinal(nsP)+'.'+
+      (canalConIdentidad() ? ' Si prefieres cancelar, dime tu código'+ejCod()+' y la libero al instante.' : '');
   }
   // Confirmación de asistencia — nunca si lleva «?»: una pregunta no confirma.
   // Faltan datos → se omite esa parte, no se deriva.
@@ -5130,6 +5172,10 @@ function respuestaGuiaES(t){
        la agenda delante— no había ocurrido. Con código, se anota con el mismo mecanismo
        que ya usa la regla de retrasos, que está verificado. */
     var codC=codDe(t);
+    if (!canalConIdentidad()) {
+      registraDerivada(t, 'persona');
+      return 'Gracias por avisar. No puedo verificar tu reserva desde este chat: paso tu confirmación al equipo para que la revise.';
+    }
     if (!codC)
       return '¡Genial! Para dejarlo apuntado de verdad, dime tu código de reserva'+ejCod()+' y lo marco ahora mismo. '+
         'Te esperamos'+(partes.length?': '+partes.join(', '):'')+(kb('senal')?' — busca '+conArt(kb('senal')):'')+'.';
@@ -5172,7 +5218,13 @@ function respuestaGuiaES(t){
         '\n\n<i>— GuIA solo ve el parte de HOY. Para otro día prefiere no darte un número que no ha mirado.</i>';
     }
     var q=salidaDelMensaje(m);
-    if (q.ninguna) return 'Hoy no hay salida de este tour — dime tu código'+ejCod()+' y te digo la próxima al momento 🙂';
+    if (q.ninguna) return 'Hoy no hay salida de este tour.'+(function(){
+      for (var i=(S.agDia||0)+1;i<(S.agenda||[]).length;i++){
+        var ss=((S.agenda[i]||{}).tours||[]).filter(esMismoTour);
+        if (ss.length) return ' La próxima es '+nombreDelDia({ idx:i-(S.agDia||0), iso:S.agendaBase?isoMas(S.agendaBase,i-(S.agDia||0)):null },'es').toLowerCase()+' a las '+ss[0].hora+' 🙂';
+      }
+      return '';
+    })();
 
     /* ── LA MORDAZA POR DESCUADRE ──────────────────────────────────────────────
        No es que la cifra sea dudosa: es que ya está DESMENTIDA por otra fuente.
@@ -5254,16 +5306,26 @@ function respuestaGuiaES(t){
     var cor=kb('corte'); if(!cor) return derivaPorHueco('corte', t);
     /* «¿Lo puedo reservar para el jueves?»: el corte es política y vale cualquier día,
        pero sin los horarios delante la respuesta parecía hablar solo de hoy. */
-    if (hablaDeOtroDia(m) && kb('horas'))
-      return 'Salimos '+enMedio(sinPuntoFinal(kb('horas')))+' y puedes reservar hasta '+cor+' 🙂';
-    return 'Puedes reservar hasta '+cor+'. Si ya cerró, vente al punto y, si queda hueco, el guía te apunta allí mismo 🙂';
+    var ddC=hablaDeOtroDia(m) ? horarioDelDia(m, t) : null;
+    if (ddC && ddC.horas)
+      return ddC.horas.length ? nombreDelDia(ddC,'es')+' salimos a las '+listaHoras(ddC.horas,'es')+' y puedes reservar hasta '+cor+' 🙂'
+                              : nombreDelDia(ddC,'es')+' no hay salida de este tour.';
+    if (hablaDeOtroDia(m) && (!ddC || ddC.fuera)){
+      registraDerivada(t, 'persona');
+      return 'Para esa fecha necesito que el equipo confirme el calendario. El límite general para reservar es: '+sinPuntoFinal(cor)+'.';
+    }
+    /* «Si ya cerró, vente al punto y el guía te apunta» era una política inventada: sale del
+       hecho de venir sin reserva, si está escrito. */
+    var sinR=kbE('sinreserva');
+    return 'Puedes reservar hasta '+sinPuntoFinal(cor)+'.'+(sinR ? ' '+sinPuntoFinal(sinR)+'.' : '');
   }
   // Distancia — va ANTES de «ritmo», que casa «se camina».
   if (/cuanto se camina|cuantos (km|kilometros)|que distancia|cuanta distancia|cuanto hay que andar|cuanto se anda|se camin\w* mucho/.test(m)){
     var dis=kb('distancia'); if(!dis) return derivaPorHueco('distancia', t);
     var duC=kb('dur');
-    return duC ? 'El tour dura '+sinPuntoFinal(enMedio(duC.replace(/^(el tour |la ruta )?dura /i,'')))+' y se recorren '+conAprox(dis)+', con paradas frecuentes.'
-               : 'Se recorren '+conAprox(dis)+', con paradas frecuentes.';
+    // Sin «con paradas frecuentes»: el ritmo es el campo `ritmo`, y puede decir lo contrario.
+    return duC ? 'El tour dura '+sinPuntoFinal(enMedio(duC.replace(/^(el tour |la ruta )?dura /i,'')))+' y se recorren '+sinPuntoFinal(conAprox(dis))+'.'
+               : 'Se recorren '+sinPuntoFinal(conAprox(dis))+'.';
   }
   // Propina orientativa — campo OPCIONAL: vacío NO deriva, responde la versión
   // libre. Si pregunta por tarjeta/efectivo, manda la regla de pago (abajo).
@@ -5610,7 +5672,7 @@ function respuestaGuiaES(t){
     var cbio=kb('cambios'); if(!cbio) return derivaPorHueco('cambios', t);
     return cbio+'\n\n'+(hayWeb() ? 'Desde tu <b>enlace de gestión</b> (el del email de confirmación) cambias fecha o nº de personas en un clic si reservaste en nuestra web; si fue por una plataforma, el cambio se hace allí.' : 'Si reservaste por una plataforma, el cambio se hace allí mismo.')+''+
       (codB ? ' Le he dejado aviso al guía para que os espere bien 🙂'
-            : ' Y si me dices tu código'+ejCod()+' con el cambio de personas, te lo aplico yo aquí mismo.');
+            : canalConIdentidad() ? ' Y si me dices tu código'+ejCod()+' con el cambio de personas, te lo aplico yo aquí mismo.' : '');
   }
   /* «tarde» es dos cosas distintas: una hora del día y un retraso. Sin separarlas, «¿hay
      tour por la tarde?» recibía la política de retrasos. La disyunción importa y no vale
@@ -5636,7 +5698,7 @@ function respuestaGuiaES(t){
     return (esFrase(es)
       ? '¡Tranquilo! '+sinPuntoFinal(es)+', así que unos minutos no son problema 🙂'
       : '¡Tranquilo! El guía espera en el punto de encuentro '+conAprox(es)+', así que unos minutos no son problema 🙂')+
-      ' Si me dices tu código'+ejCod()+', le aviso ahora mismo — y aparecerás en su manifiesto como «⏰ llega tarde».'+
+      (canalConIdentidad() ? ' Si me dices tu código'+ejCod()+', le aviso ahora mismo — y aparecerás en su manifiesto como «⏰ llega tarde».' : '')+
       (codT ? '\n\n<i>— Aviso registrado: escrito en las observaciones del tour de hoy (míralo en el 📋 Manifiesto).</i>' : '');
   }
   /* «¿El punto de encuentro tiene sombra/rampa/wifi?» no pregunta DÓNDE es: la sola
@@ -5665,7 +5727,7 @@ function respuestaGuiaES(t){
        del Casco Antiguo». Es un dato, está publicado, y no es un sitio — así que ni la
        preposición ni el «desde allí te dejamos bien situado» valen. Se suelta su frase. */
     if (esFrase(fi)) return sinPuntoFinal(fi)+' 🙂';
-    return 'El recorrido termina '+conEn(fi)+' — desde allí te dejamos bien situado para seguir por tu cuenta 🙂';
+    return 'El recorrido termina '+conEn(fi)+' 🙂';
   }
   /* La lista negra de aquí abajo llegó a tener 17 palabras y seguía creciendo: cada
      pregunta nueva que caía mal añadía una. El problema de fondo no era la lista, era el
@@ -5688,9 +5750,14 @@ function respuestaGuiaES(t){
      en la regla de horario de abajo y contestaba, con toda seguridad, la hora de SALIDA. No
      se calcula nada —sumar una duración a un horario de varias salidas es una respuesta
      que nadie ha confirmado—: se dan los dos datos, o se deriva nombrando el que falta. */
-  if (/(a que hora|que hora|cuando|hasta que hora)[^.?!]{0,25}(acaba|termina|terminamos|acabamos|finaliza|volvemos|regresamos|estamos de vuelta|estaremos de vuelta)/.test(m)){
+  /* Y «¿hasta qué hora dura?», que no lleva ninguno de esos verbos y volvía a la regla de
+     horario (29-sep-2026). */
+  if (/(a que hora|que hora|cuando|hasta que hora)[^.?!]{0,25}(acaba|termina|terminamos|acabamos|finaliza|volvemos|regresamos|estamos de vuelta|estaremos de vuelta)|hasta que hora (dura|es|va|sera|estamos|estaremos)|hasta cuando dura/.test(m)){
     var duF=kb('dur'), hoF=kb('horas');
     if(!duF) return derivaPorHueco('dur', t);
+    var ddF=horarioDelDia(m, t);
+    if(ddF && ddF.fuera){ registraDerivada(t, 'persona'); return 'El tour dura '+sinPuntoFinal(duF)+', pero necesito que el equipo confirme el horario de esa fecha.'; }
+    if(ddF) return ddF.horas.length ? nombreDelDia(ddF,'es')+' salimos a las '+listaHoras(ddF.horas,'es')+' y el tour dura '+sinPuntoFinal(duF)+'.' : nombreDelDia(ddF,'es')+' no hay salida de este tour.';
     if(!hoF) return derivaPorHueco('horas', t);
     return 'Salimos '+enMedio(sinPuntoFinal(hoF))+' y el tour dura '+sinPuntoFinal(enMedio(duF.replace(/^(el tour |la ruta )?dura /i,'')))+' 🙂';
   }
@@ -5700,7 +5767,16 @@ function respuestaGuiaES(t){
   }
   // La hora de FIN es de la regla de arriba, no de esta: aquí se contestaba la de salida.
   if (/a que hora|que hora|horario|cuando sal|que dias|(dime|dices|dame|decirme|saber|sabes|pasame) (la |el )?(hora|horario)|(hay|teneis|haceis|salis|sale)[^.?!]{0,14}(por la |de )?(manana|tarde|noche)|(hay|teneis|haceis|hacen) tour (el |los |en )?(lunes|martes|miercoles|jueves|viernes|sabado|domingo|festivos?)|(el |los )(lunes|martes|miercoles|jueves|viernes|sabado|domingo) hay tour/.test(m)
-      && !/acaba|termina|terminamos|acabamos|finaliza|volvemos|regresamos|de vuelta/.test(m)){
+      && !/acaba|termina|terminamos|acabamos|finaliza|volvemos|regresamos|de vuelta|hasta que hora|hasta cuando/.test(m)){
+    /* Un día concreto se contesta con el calendario, no con la frase general: el día de
+       cierre no hay salida aunque la ficha diga «todos los días» (29-sep-2026). */
+    var ddH=horarioDelDia(m, t);
+    if (ddH && ddH.fuera){
+      registraDerivada(t, 'persona');
+      return 'Para esa fecha todavía no tengo el calendario delante, así que no te doy una hora a ciegas: se lo paso al equipo 🙂';
+    }
+    if (ddH) return ddH.horas.length ? nombreDelDia(ddH,'es')+' salimos a las '+listaHoras(ddH.horas,'es')+' 🙂'
+                                     : nombreDelDia(ddH,'es')+' no hay salida de este tour.';
     var ho=kb('horas'); if(!ho) return derivaPorHueco('horas', t);
     /* El «desde X» solo si el horario es corto. Madrid publica «todos los días a las
        10:45, y los sábados también a las 16:00, con reserva», y encadenarle el punto
@@ -5708,7 +5784,9 @@ function respuestaGuiaES(t){
        bastante solo. */
     var puH=kb('punto');
     return 'Salimos '+enMedio(sinPuntoFinal(ho))+
-      (esSimple(ho,60)&&esSimple(puH,85) ? ' '+conEn(puH,'desde') : '')+' 🙂 ¿Te reservo plaza?';
+      (esSimple(ho,60)&&esSimple(puH,85) ? ' '+conEn(puH,'desde') : '')+' 🙂';
+    /* Sin «¿Te reservo plaza?»: GuIA no reserva en ningún canal, y el «sí» que seguía solo
+       recibía el hecho de venir sin reserva (29-sep-2026). */
   }
   /* «tarda» va aquí y no en la de precio, donde caía por el «cuánto». Va antes que la
      de precio, así que la regla de la casa obliga a probarlo contra «¿cuánto cuesta?»:
@@ -5726,7 +5804,8 @@ function respuestaGuiaES(t){
   }
   if (/idioma|ingles|english|language|frances|aleman|italiano|portugues|espanol|castellano|catalan/.test(m)){
     var id=kb('idiomas'); if(!id) return derivaPorHueco('idiomas', t);
-    return 'El tour es en '+id+'. Si necesitáis otro idioma, dímelo y lo consulto con el encargado.';
+    // Sin «dímelo y lo consulto con el encargado»: decírselo a GuIA no llega a nadie.
+    return 'El tour es en '+sinPuntoFinal(id)+'.';
   }
   /* Objetos olvidados. Esto NO se contesta nunca: es de una persona y GuIA no puede
      saberlo. Lo importante es que no lo intente y que llegue a alguien deprisa, porque el
@@ -5840,7 +5919,8 @@ function respuestaGuiaES(t){
   }
   if (/lluev|llov|lluvia|rain|mal tiempo|haga malo|niev/.test(m)){
     var lu=kb('lluvia'); if(!lu) return derivaPorHueco('lluvia', t);
-    return lu+' ☔ Si hubiera que cancelar, te avisamos por aquí con antelación.';
+    // Sin «te avisamos por aquí con antelación»: el chat de la web no puede avisar a nadie.
+    return sinPuntoFinal(lu)+' ☔';
   }
   if (/calor|frio|nieve|nieva|clima|temperatura|sombra|\bsol\b|\bsoleado\b/.test(m)){
     var cli=kb('clima'); if(!cli) return derivaPorHueco('clima', t);
@@ -6242,7 +6322,8 @@ function respuestaEN(t){
   /* «Hi, we booked for today» sin pregunta no es una duda: es un aviso. Un OK generico
      y a su disposición — derivarlo metía ruido en la bandeja. */
   if (/\b(we|i)( have)? (booked|reserved)\b/.test(t.toLowerCase()) && t.indexOf('?')===-1)
-    return 'Great — you\'re all set 🙂 Anything you need before or during the walk, I\'m right here.';
+    // Sin «you're all set»: nadie ha mirado la reserva.
+    return 'Great 🙂 Anything you need before or during the walk, ask me here.';
   var toksC=t.toLowerCase().replace(/[^a-z\s]/g,' ').split(/\s+/).filter(Boolean);
   var CORT_EN=['ok','okay','oki','thanks','thank','you','so','much','a','lot','perfect','great',
     'sure','alright','right','fine','noted','got','it','cheers','bye','goodbye','see','u',
@@ -6355,6 +6436,10 @@ function respuestaEN(t){
     if (v('horas')) partesC.push(v('horas'));
     if (v('punto')) partesC.push(conAt(v('punto')));
     var codY=codDe(t);
+    if (!canalConIdentidad()) {
+      registraDerivada(t, 'persona');
+      return "Thanks for letting us know. I cannot verify your booking from this chat: I am passing your confirmation to the team to check.";
+    }
     if (!codY)
       return 'Great! To mark it properly, send me your booking code'+ejCod()+' and I\'ll note it right now. We\'ll be expecting you'+
         (partesC.length?': '+partesC.join(', '):'')+(v('senal')?' — look for '+conThe(v('senal')):'')+'.';
@@ -6385,15 +6470,27 @@ function respuestaEN(t){
      corte de reservas, que tiene su regla más abajo. */
   // La hora de FIN no es la de salida: los dos datos, sin sumar nada (ver la regla española).
   if (/hora|cuando/.test(m) && (/termina|acaba|finaliza|volvemos/.test(m) || /\b(end|ends|finish|finishes|over|get back|be back)\b/i.test(t))){
+    var ddFin=horarioDelDia(m, t);
+    if(ddFin && ddFin.horas && !ddFin.horas.length) return nombreDelDia(ddFin,'en')+' there is no departure of this tour.';
     if (!v('dur')) return falta('dur');
+    if(ddFin && ddFin.fuera){ registraDerivada(t, 'persona'); return 'The tour lasts '+sinPuntoFinal(v('dur'))+', but the team needs to confirm the schedule for that date.'; }
+    if(ddFin) return ddFin.horas.length ? nombreDelDia(ddFin,'en')+' we start at '+listaHoras(ddFin.horas.map(gpHora12),'en')+' and the tour lasts '+sinPuntoFinal(v('dur'))+'.' : nombreDelDia(ddFin,'en')+' there is no departure of this tour.';
     if (!v('horas')) return falta('horas');
     return 'We run '+sinPuntoFinal(v('horas'))+' and the tour lasts '+sinPuntoFinal(v('dur').replace(/^(the (tour|walk) )?lasts? /i,''))+' 🙂';
   }
   if (/hora|empieza|cuando/.test(m) && !/hasta cuando|hasta que hora/.test(m)){
+    // Un día concreto, del calendario (ver la regla española).
+    var ddE=horarioDelDia(m, t);
+    if (ddE && ddE.fuera){
+      registraDerivada(t, 'persona');
+      return 'I don\'t have the calendar for that date yet, so I won\'t guess a time: I\'m passing it to the team 🙂';
+    }
+    if (ddE) return ddE.horas.length ? nombreDelDia(ddE,'en')+' we start at '+listaHoras(ddE.horas.map(gpHora12),'en')+' 🙂'
+                                     : nombreDelDia(ddE,'en')+' there is no departure of this tour.';
     if (!v('horas')) return falta('horas');
     return 'We run '+sinPuntoFinal(v('horas'))+
       (esSimple(v('horas'),60)&&esSimple(v('punto'),85) ? ' '+conAt(v('punto'),'from') : '')+
-      ' 🙂 Want me to save you a spot?';
+      ' 🙂';
   }
   if (/dura|duracion/.test(m) && !/espera/.test(m))
     // Solo la duración: el ritmo es el campo `ritmo` (ver la regla española).
@@ -6455,7 +6552,7 @@ function respuestaEN(t){
     /* Paridad con el español: un punto final cuyo valor es «depende» no admite ni la
        preposición ni el «a great spot to carry on». */
     if (esFrase(v('fin'),'en')) return sinPuntoFinal(v('fin'))+' 🙂';
-    return 'The tour ends '+conAt(v('fin'))+' — a great spot to carry on exploring on your own 🙂';
+    return 'The tour ends '+conAt(v('fin'))+' 🙂';
   }
   if (/lluvia/.test(m) || (/tiempo/.test(m) && !/calor|frio|viento|nieva|tormenta/.test(m)))
     return v('lluvia') ? v('lluvia')+' ☔' : falta();
@@ -6583,7 +6680,7 @@ function respuestaEN(t){
     if (!v('cambios')) return falta();
     return v('cambios')+(codB2
       ? ' I\'ve left the guide a note so they expect you right 🙂'
-      : ''+(hayWeb() ? ' If you booked on our website, your manage-booking link changes date or numbers in a click; if it was through a platform, make the change there.' : ' If you booked through a platform, make the change there.')+' And if you send me your code'+ejCod()+' with the new numbers, I\'ll apply it right here.');
+      : ''+(hayWeb() ? ' If you booked on our website, your manage-booking link changes date or numbers in a click; if it was through a platform, make the change there.' : ' If you booked through a platform, make the change there.')+(canalConIdentidad() ? ' And if you send me your code'+ejCod()+' with the new numbers, I\'ll apply it right here.' : ''));
   }
   /* Misma separación que en el motor español: «tarde» es hora del día o es retraso. Y con
      el mismo límite de palabra, que aquí hace más falta todavía: un mercado inglés escribe
@@ -6598,10 +6695,10 @@ function respuestaEN(t){
     if (!v('espera')) return falta();
     return 'Don\'t worry! The guide waits around '+v('espera')+' at the meeting point, so a few minutes are fine 🙂'+
       (codL ? '\n\n<i>— Logged: written into today\'s tour notes, and they show on the manifest as “⏰ running late”.</i>'
-            : ' If you\'re running later, send me your code'+ejCod()+' and I\'ll let the guide know.');
+            : canalConIdentidad() ? ' If you\'re running later, send me your code'+ejCod()+' and I\'ll let the guide know.' : '');
   }
   if (/idioma|ingles/.test(m))
-    return v('idiomas') ? 'The tour runs in '+v('idiomas')+'. If you need another language, tell me and I\'ll check with the team.' : falta('idiomas');
+    return v('idiomas') ? 'The tour runs in '+sinPuntoFinal(v('idiomas'))+'.' : falta('idiomas');
   if (/guia|paraguas|bandera|chaleco|reconoc/.test(m) && !/llevar|calzado|ropa/.test(m)){
     if (!v('senal')) return falta('senal');
     return 'Easy: look for '+conThe(v('senal'))+
@@ -6755,7 +6852,7 @@ function respuestaEN(t){
     }
     if (q.salida){
       var paxOk=paxDeSalida(q.salida), afS=aforoDe(q.salida,afN);
-      if (paxOk<afS) return 'There\'s room on the '+q.salida.hora+' departure 🙂 Want me to save you a spot?';
+      if (paxOk<afS) return 'There\'s room on the '+q.salida.hora+' departure 🙂';
       return 'That departure is full 😔 Ask me about another departure or another day, or drop us a line and the manager will see what can be done.';
     }
     var conSitioEN=q.varias.filter(function(s){ return paxDeSalida(s)<aforoDe(s,afN); });
@@ -6771,7 +6868,8 @@ function respuestaEN(t){
   if (/visita|\bver\b|veremos|\b(?:tour|route)\b.*\b(?:visit|pass by|pass through)\b/.test(m) && !/nadie|ninguno|no encuentro/.test(m))
     return v('visita') ? 'We\'ll see '+v('visita')+' 🙂' : falta('visita');
   if (/camina|distancia/.test(m))
-    return v('distancia') ? 'We cover '+(/^(about|around|some|roughly|approx)/i.test(v('distancia'))?'':'about ')+v('distancia')+' at an easy pace, with plenty of stops.' : falta('distancia');
+    // Solo la distancia: «at an easy pace, with plenty of stops» contradecía un ritmo exigente confirmado.
+    return v('distancia') ? 'We cover '+(/^(about|around|some|roughly|approx)/i.test(v('distancia'))?'':'about ')+sinPuntoFinal(v('distancia'))+'.' : falta('distancia');
   if (/entrada|museo|dentro/.test(m))
     return v('entradas') || falta('entradas');
 
@@ -6798,7 +6896,7 @@ function respuestaEN(t){
   /* «Until when can I book?» normaliza a «hasta cuando puedo reservar» y no lleva
      «corte»: sin el sinónimo caía en la regla de reservar y contestaba otra cosa. */
   if (/corte|hasta cuando/.test(m))
-    return v('corte') ? 'You can book up to '+v('corte')+'. If it has already closed, come to the meeting point anyway — if there is room the guide adds you on the spot 🙂' : falta('corte');
+    return v('corte') ? 'You can book up to '+sinPuntoFinal(v('corte'))+'.'+(EMP('sinreserva') ? ' '+sinPuntoFinal(EMP('sinreserva'))+'.' : '') : falta('corte');
   /* «Does it run with few people?» normaliza a «pocas personas» y no a «minimo»: sin
      estos sinónimos la pregunta del mínimo derivaba con el hecho escrito al lado. */
   /* «minimum age» llega como «minimo edad» y caía en la regla del MÍNIMO DE PERSONAS:
@@ -7039,7 +7137,7 @@ function tdArranca(){
    pérdidas, el MVP. La cadencia inteligente completa es Pro. Suplementos = lo
    que añade valor pero no es la base. */
 var SUPLEMENTOS={
-  chat:      { n:'GuIA · Chat del cliente', plan:'Pro', d:'El asistente que atiende a tus clientes en el chat de tu web: responde con los hechos de cada tour y deriva lo que no sabe. Nunca inventa.' },
+  chat:      { n:'GuIA · Probar GuIA', plan:'Pro', d:'El asistente que atiende a tus clientes en el chat de tu web: responde con los hechos de cada tour y deriva lo que no sabe. Nunca inventa.' },
   cerebro:   { n:'GuIA · Cerebro', plan:'Pro', d:'El formulario de hechos por tour que alimenta al asistente, con IA que lo rellena desde la web del tour y borradores editables.' },
   carrito:   { n:'Lo que vendes además del tour', plan:'todos', d:'Tu catálogo de extras —tours de pago, privados, degustaciones— sale en tu web y GuIA lo cuenta cuando preguntan qué más hacéis. Se contrata POR SEPARADO, sin depender de ningún otro complemento: vale igual en la página que te monta Audutor y en la que tú ya tengas. Audutor no cobra ninguno y no toca el dinero: lleva a donde tú ya cobras.' },
   web:       { n:'Tu web', plan:'todos', d:'Tu página pública, sacada de lo que ya escribiste en el Cerebro: un bloque por tipo de pregunta y un campo vacío no sale. EL TOUR SE RESERVA AQUÍ, contra el aforo de verdad; los que llevan precio necesitan tu dirección de cobro. También abre la página de cada guía con su QR. Va en todos los planes: en Esencial con la marca «con Audutor», en Pro y Premium con la tuya.' },
