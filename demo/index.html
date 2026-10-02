@@ -1165,7 +1165,6 @@
       <div class="nav-g-hijos">
         <a href="#web" data-v="web"><svg class="ico t-azul" aria-hidden="true" focusable="false"><use href="#i-globe"/></svg> Tu web <span class="cand">🔒</span></a>
         <a href="#canales" data-v="canales"><svg class="ico t-lila" aria-hidden="true" focusable="false"><use href="#i-plug"/></svg> Canales y sincronización</a>
-        <a href="#agente" data-v="agente"><svg class="ico t-teal" aria-hidden="true" focusable="false"><use href="#i-bot"/></svg> El agente de plataformas <span class="cand">🔒</span></a>
         <a href="#noshow" data-v="noshow"><svg class="ico t-coral" aria-hidden="true" focusable="false"><use href="#i-send"/></svg> Anti no-show</a>
         <a href="#carrito" data-v="carrito"><svg class="ico t-oro" aria-hidden="true" focusable="false"><use href="#i-shopping-basket"/></svg> Lo que vendes además <span class="cand">🔒</span></a>
       </div>
@@ -1183,7 +1182,7 @@
   <div class="pie-demo">
     <div class="leyenda-planes">
       <b>Tu plan (demo):</b> cámbialo y mira qué se desbloquea. Esencial trae
-      <b>1 tour y 2 guías</b>; desde Pro, ilimitados. El plan es un <b>bono de viajeros</b>: tu web va en todos; GuIA y el agente se suman aparte.
+      <b>1 tour y 2 guías</b>; desde Pro, ilimitados. El plan es un <b>bono de viajeros</b>: tu web va en todos; GuIA se suma aparte.
       <div class="mk-sel">
         <b>Mercado (demo):</b> el mismo producto, en el mismo idioma, adaptado a la moneda, el modelo de negocio y las costumbres de cada país.
         <div class="fila" id="mk-btns" style="gap:4px; margin-top:6px; flex-wrap:wrap;"></div>
@@ -1202,7 +1201,6 @@
         <div class="comp-gratis">🎁 El primer mes de cada complemento no se cobra.</div>
         <div class="comp-tit">Complementos</div>
         <label><input type="checkbox" id="c-guia" onchange="compTog('guia',this)"><span>GuIA, el asistente</span><b>+39 €</b></label>
-        <label><input type="checkbox" id="c-agente" onchange="compTog('agente',this)"><span>Vista previa del agente</span><b>En preparación</b></label>
         <div class="comp-incl">✓ <b>Tu web de reservas</b>, incluida en todos los planes</div>
         <div class="comp-total">Tu tarifa: <b id="comp-tot">39 €</b><span id="comp-desglose"></span></div>
       </div>
@@ -1288,7 +1286,7 @@
       <div class="mini muted" style="margin:4px 0 8px;">Triana · hoy 18:30 · <b>22/25</b> — quedan 3 plazas. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Cierra primero la plataforma que más cobra por persona; tu web, la última (cuesta 0 € y te da el
         contacto). El cierre se hace en el panel de cada plataforma; marca aquí cada una al cerrarla
         para no perder la cuenta.</span></details></div>
-      <div class="fila" id="cupo-plataformas" style="gap:6px; flex-wrap:wrap;"></div>
+      <div class="fila" id="cupo-plataformas" style="gap:6px; flex-wrap:wrap; justify-content:flex-start;"></div>
     </div>
   </div>
 
@@ -1753,7 +1751,7 @@
     <p><b>Correo:</b> crea, modifica o cancela reservas con formatos reconocidos. Los mensajes ambiguos quedan para revisar. No cambia disponibilidad en las plataformas.</p>
     <p><b>Tu web:</b> la página publicada por Audutor consulta su aforo. La sincronización de una web externa requiere implementar y comprobar su conexión a la API. En el panel ves por separado cuándo consulta disponibilidad y cuándo recoge cambios, los intentos fallidos y si supera el plazo que esperabas. Recibir una respuesta no demuestra que tu web la haya aplicado.</p>
     <p><b>WhatsApp / SMS:</b> preparas recordatorios para enviarlos desde tu móvil. El transporte automático de GuIA y los avisos por WhatsApp/SMS aún requieren integración.</p>
-    <p class="mini muted">Una muestra simulada no acredita la salud de un proveedor real. OAuth y el agente que opera plataformas siguen pendientes; el agente no se puede contratar.</p>
+    <p class="mini muted">Una muestra simulada no acredita la salud de un proveedor real. OAuth sigue pendiente.</p>
   </div>
 </section>
 
@@ -7162,7 +7160,6 @@ var PLANES={ esencial:{orden:0, n:'Esencial', precio:'0 €',   bono:150,  base:
    vistas que abre — así añadir uno nuevo es una línea y no hay que tocar el gating. */
 var COMPLEMENTOS = {
   guia:     { n:'GuIA, el asistente', precio:39, abre:['chat','cerebro'] },
-  agente:   { n:'El agente de plataformas', precio:29, abre:['agente'] },
   /* «Tu web» ya no está aquí: desde el 23-sep-2026 va en TODOS los planes (en Esencial con
      la marca «con Audutor»), igual que en el servidor, donde es `enTarifa`. La abre el plan
      —`SUPLEMENTOS.web`, plan 'todos'—, no una casilla que sume 9 €. */
@@ -7179,7 +7176,7 @@ var COMPLEMENTOS = {
      que no hay nada que marcar aquí. El comentario largo que había describía el
      complemento como si existiera, y eso engaña más que aclarar. */
 };
-S.comp = { guia:false, agente:false, cuentas:false };
+S.comp = { guia:false, cuentas:false };
 
 /* Un suplemento está disponible si algún complemento CONTRATADO lo abre, o si sigue
    colgando del plan (cuadro de mando, proyección: esos se quedan como estaban). */
@@ -7220,7 +7217,7 @@ function disponible(v){ if(!SUPLEMENTOS[v]) return true;
 
 function totalCesta(){
   var t = PLANES[S.plan].base, piezas = [];
-  for (var k in COMPLEMENTOS) if (S.comp[k] && k !== 'agente') {
+  for (var k in COMPLEMENTOS) if (S.comp[k]) {
     t += COMPLEMENTOS[k].precio; piezas.push(COMPLEMENTOS[k].n);
   }
   return { total:t, piezas:piezas };
@@ -7581,6 +7578,9 @@ function cierraMenuMovil(){
 }
 
 function ir(v){
+  /* El agente de plataformas dejó de ofrecerse el 3-oct-2026 (decisión de Carlos): sin menú
+     ni casilla. Un enlace viejo a #agente lleva a «Canales», que es de lo que hablaba. */
+  if (v === 'agente') v = 'canales';
   document.querySelectorAll('.vista').forEach(function(s){ s.classList.remove('act'); s.classList.remove('borroso'); });
   var sec=document.getElementById('v-'+v); sec.classList.add('act');
   sec.querySelectorAll('.card').forEach(function(c, i){ c.style.setProperty('--i', String(Math.min(i, 10))); });

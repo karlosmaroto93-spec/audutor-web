@@ -752,7 +752,10 @@
   .tf-o.tf-incluida{ cursor:default; }
   .tf-o.tf-incluida:hover{ background:none; }
   .tf-ok{ flex:0 0 17px; margin-top:1px; color:var(--acc); font-weight:700; font-size:13px; text-align:center; }
-  .tf-o.tf-pronto .tf-p b{ color:var(--gold); font-weight:700; }
+  /* «en preparación» debajo del precio (2-oct-2026): en la misma línea le robaba 60 px a la
+     descripción, que se quedaba en una columna de tres palabras. */
+  .tf-o.tf-pronto .tf-p{ text-align:right; }
+  .tf-o.tf-pronto .tf-p b{ display:block; color:var(--gold); font-weight:700; font-size:11.5px; }
   .tf-p.tf-dentro{ color:var(--acc); font-weight:700; }
   .cero{ background:var(--acc-soft); border:0; border-radius:0; padding:22px 26px; margin:0 0 22px; }
   .cero > b{ display:block; font-size:17px; margin-bottom:6px; }
@@ -1020,7 +1023,9 @@
      Va en las TARIFAS y no en la sección de funciones a propósito: la pregunta que frena
      una compra no es «qué hace» sino «cuánto me va a costar ponerlo en marcha». Quien ya
      ha migrado una vez de plataforma sabe que ese coste no está en el precio. */
-  .integra{ margin:22px auto 0; max-width:960px; border:1px solid var(--line);
+  /* Con margen debajo (2-oct-2026): sin él, la caja se apoyaba en el bloque verde de «0 €» y
+     parecían una sola pieza mal cortada. */
+  .integra{ margin:22px auto 28px; max-width:960px; border:1px solid var(--line);
     border-radius:14px; background:var(--paper); padding:18px 20px; }
   .integra > b{ display:block; font-size:15px; margin-bottom:10px; }
   .integra ul{ list-style:none; margin:0; padding:0; display:grid;
@@ -1108,8 +1113,6 @@
      plataformas y la caja. Tintas de la casa; las tarjetas vuelven a papel encima. */
   #asistente{ background:var(--teal-soft); }
   #asistente .celda{ background:var(--paper); border-color:rgba(43,179,163,.4); }
-  #agente{ background:var(--gold-soft); border-color:rgba(201,138,45,.35); }
-  #agente .celda{ background:var(--paper); border-color:rgba(201,138,45,.4); }
   .paso h3{ font-family:var(--sans); font-weight:700; font-size:15px; margin:0 0 4px; }
   .paso p{ font-size:13px; color:var(--ink2); margin:0; }
   .fase{ display:inline-block; font-family:var(--mono); font-size:11.5px; font-weight:700;
@@ -1133,9 +1136,13 @@
     .vs-row:first-child{ display:none; } }
 
   /* ================= CTA / footer ================= */
-  .final{ text-align:center; padding:84px 0; position:relative; }
+  /* El relleno lateral, explícito (2-oct-2026): `padding:84px 0` pisaba el de `.wrap` y en el
+     móvil el párrafo iba pegado a los bordes de la pantalla. */
+  .final{ text-align:center; padding:84px 24px; position:relative; }
   .final h2{ font-size:clamp(26px,3.4vw,34px); max-width:24ch; margin:0 auto; }
-  .final p{ color:var(--ink2); max-width:52ch; margin:16px auto 28px; }
+  /* Solo el párrafo propio: con `.final p` el bocadillo de GuIA también cogía `margin:auto` y
+     se iba al centro, lejos de la mascota a la que pertenece. */
+  .final > p{ color:var(--ink2); max-width:52ch; margin:16px auto 28px; }
   footer{ border-top:1px solid var(--line); padding:28px 0 46px; color:var(--muted); font-size:13px; }
   footer .wrap{ display:flex; gap:18px; flex-wrap:wrap; justify-content:space-between; }
 
@@ -1174,6 +1181,10 @@
     .lede{ font-size:15px; line-height:1.45; margin:15px 0 20px; }
     .hero-ctas{ gap:8px; }
     .hero-ctas .btn{ flex:1 1 145px; text-align:center; padding:11px 10px; font-size:13px; }
+    /* El dorado tiene su propio tamaño (17 px) y más especificidad: en el móvil salía en dos
+       líneas y el doble de alto que el de al lado (2-oct-2026). */
+    .hero-ctas{ align-items:stretch; }
+    .hero-ctas .btn[data-demo]{ font-size:15px; padding:11px 10px; }
     header .guia-saludo,header .hero-nota,
     header .cifras,header .lee-de,header .para-quien{ display:none; }
     header .mock{ display:block; min-height:0; }
@@ -1273,7 +1284,7 @@
     <details class="nav-mobile"><summary aria-label="Menú de secciones">☰ <span>Secciones</span></summary>
       <div class="nav-mobile-panel">
         <a href="#dia" aria-label="Cuaderno">Cuaderno</a><a href="#producto" aria-label="Producto">Producto</a><a href="#planes" aria-label="Planes">Planes</a>
-        <a href="#asistente" aria-label="El asistente">El asistente</a><a href="#agente" aria-label="El agente">El agente</a>
+        <a href="#asistente" aria-label="El asistente">El asistente</a>
         <a class="entrar-menu" href="entrar/" aria-label="Entrar">Entrar</a>
       </div>
     </details>
@@ -1281,7 +1292,6 @@
     <a href="#producto" data-i18n="nav.producto">Producto</a>
     <a href="#planes" data-i18n="nav.planes">Planes</a>
     <a href="#asistente" data-i18n="nav.asistente">El asistente</a>
-    <a href="#agente">El agente</a>
     <!-- El cliente que YA es cliente. Sale antes que la demo porque el que vuelve no
          viene a probar nada: viene a entrar. Nace oculto y solo aparece si APP_URL
          tiene valor — un «Entrar» que lleva a un 404 es peor que no tener «Entrar». -->
@@ -1675,7 +1685,7 @@
         <li>Un recordatorio el día antes, listo para mandar en un toque</li>
         <li>Detección de grupos grandes y rescate de rezagados</li>
         <li>1 tour · 2 guías · <b>150 viajeros/mes</b></li>
-        <li><b>Tu web de reservas</b>, la página de cada guía con su QR y la propina, con marca «con Audutor»</li>
+        <li><b>Tu web de reservas</b>, la página de cada guía con su QR, con marca «con Audutor»</li>
       </ul>
       <p class="plan-extra">Esencial es gratis y no se pasa de 150: al llegar, te avisamos y decides si subes a Pro.</p>
       <a class="btn sec" href="#contacto">Empezar gratis</a>
@@ -1687,7 +1697,7 @@
       <div class="para">Para la empresa con equipo · <b data-cuenta="plan-1" data-al-ver>1.000 viajeros al mes</b> · tours y guías ilimitados</div>
       <ul>
         <li>Todo lo de Esencial · <b>tours, guías y canales ilimitados</b> · historial completo</li>
-        <li>Sin marca «Audutor» — tu marca en tu web de reservas, la página del guía y la propina</li>
+        <li>Sin marca «Audutor» — tu marca en tu web de reservas y en la página del guía</li>
         <li><b>Cadencia anti-no-show inteligente completa</b>: se adapta al riesgo de cada
           reserva — y deja registrado quién avisó, cuándo y quién confirmó</li>
         <li>Recordatorios preparados para WhatsApp y SMS desde tu móvil. <b>Audutor no cobra por mensaje</b>; los SMS dependen de tu tarifa móvil</li>
@@ -1788,30 +1798,6 @@
 
       
 
-      <div class="tf-g">Las plataformas y la caja</div>
-      <label class="tf-o con-mas tf-pronto"><input type="checkbox" data-c="agente" data-eur="29" disabled onchange="tarifa()">
-        <span class="tf-n">El agente de plataformas<small>Tú llevas 14 en la lista; una plataforma tiene 17. Lo sabes antes de salir, no con los tres delante</small></span>
-        <span class="tf-p">+29 € <b>· en preparación</b></span></label>
-      <details class="tf-mas"><summary>Qué hace, exactamente</summary>
-        <ul>
-          <li><b>En preparación.</b> Hoy están construidos la cola de órdenes, su comprobación y el panel;
-            el programa que entra en los paneles todavía no está disponible. Este
-            complemento no se puede contratar ni se incluye en la cuota mientras esté en preparación.</li>
-          <li>Entrará en los paneles de tus plataformas <b>con tu sesión y en tu ordenador</b>. Audutor
-            no guarda ninguna contraseña de plataforma, y no va a guardarlas.</li>
-          <li><b>Cuenta</b>: cuánta gente le consta a cada plataforma y cuántas plazas quedan. Si a
-            una le constan 17 y a ti te han llegado 14, aparecen las tres que faltan.</li>
-          <li><b>Cierra</b> las salidas llenas, panel por panel — que es lo que hoy haces tú a mano
-            cada vez que se llena una.</li>
-          <li>Que diga que cerró <b>no es que esté cerrado</b>: la orden se queda en «dice que la
-            hizo» hasta que se comprueba, y el ✓ verde lo pone una persona.</li>
-          <li>Si se queda a medias, la orden <b>vuelve sola a la cola</b>. Nunca se da por buena por
-            llevar tiempo parada.</li>
-          <li>Y mientras los números no cuadren, <b>GuIA deja de dar plazas</b> hasta que alguien
-            mire.</li>
-        </ul>
-      </details>
-
       <div class="tf-res">
         <div id="tf-lineas"><p class="tf-vacio">Sin complementos: pagas solo el bono de viajeros.</p></div>
         <div class="tf-tot"><span>Con <b id="tf-plan">Pro</b></span><b id="tf-total">45 €</b></div>
@@ -1891,44 +1877,6 @@
     <a href="demo/#operaciones&tu=" style="color:var(--acc); font-weight:700;">O móntala con
     tus propios tours →</a> <span class="mini">seis datos, y no se envían a ninguna parte</span></p>
 </div></section>
-<!-- EL AGENTE. Hasta ahora solo tenía una línea en el tarifador, y por eso no se vendía:
-     un producto entero explicado en catorce palabras. Va DESPUÉS del asistente porque
-     resuelve el problema contrario —GuIA habla con tus clientes, el agente mira lo que
-     dicen las plataformas— y porque el orden de la página va de lo que ya conocen a lo
-     que no ha visto nunca. -->
-<section class="alt" id="agente"><div class="wrap">
-  <div class="sec-head">
-    <h2>Las plataformas no te cuentan todo.<br><span class="tono">Alguien tiene que entrar a mirar.</span></h2>
-    <p class="reveal">Cada plataforma lleva su propia contabilidad, y solo te manda un correo cuando
-    le apetece. El resto del tiempo tu lista y la suya son dos números distintos, y el primero que
-    se entera de la diferencia es el guía, en el punto de encuentro, con la gente delante.</p>
-    <p class="reveal mini" style="margin-top:8px"><b>En preparación:</b> la cola de órdenes, su comprobación y el panel están
-    construidos; el programa que entra en los paneles todavía no está disponible.</p>
-  </div>
-  <div class="grid3">
-    <div class="celda star reveal"><span class="eti-num">01 · Cuenta</span><h3>Podrá contrastar los recuentos</h3>
-      <p>La función prevista es consultar cuánta gente tiene apuntada cada plataforma y
-      <b>señalar las diferencias con tu manifiesto</b> para que puedas revisarlas.</p>
-      <span class="mini">previsto: contrastar el manifiesto con la plataforma</span></div>
-    <div class="celda star reveal" style="--d:70ms"><span class="eti-num">02 · Cierra</span><h3>Podrá cerrar las salidas llenas</h3>
-      <p>Cuando un tour se llena hay que cerrarlo en cada panel, y si tardas entra gente que
-      ya no cabe. El agente lo hará solo — pero <b>aquí seguirá como no cerrada hasta que lo
-      compruebes tú</b>.</p>
-      <span class="mini">el ✓ lo pone una persona, siempre</span></div>
-    <div class="celda star reveal" style="--d:140ms"><span class="eti-num">03 · Calla</span><h3>Las discrepancias limitan lo que dice GuIA</h3>
-      <p>Cuando el sistema registra una discrepancia, GuIA <b>deja de decir cuántas plazas quedan</b>
-      hasta que alguien la revise. Esta protección ya existe; la detección mediante el agente
-      depende del programa que estamos preparando.</p>
-      <span class="mini">solo puede hacer que GuIA diga menos, nunca más</span></div>
-  </div>
-  <p class="reveal nota-pie" style="color:var(--muted); font-size:13px; margin:20px 0 0; max-width:74ch; margin-inline:auto;">
-    <b>Está previsto que funcione en tu ordenador y con tu sesión.</b> El diseño utiliza
-    la sesión que ya tienes abierta en cada plataforma. No está disponible para contratar
-    y no se incluye en tu cuota mientras siga en preparación.
-    <a href="demo/#agente" style="color:var(--acc); font-weight:700;">Verlo en la demo →</a></p>
-</div></section>
-
-
 <div class="final wrap">
   <svg class="adorno ruta-linea final-ruta" viewBox="0 0 1000 60" preserveAspectRatio="none" aria-hidden="true" focusable="false">
     <path d="M-10 14 C 200 52, 420 8, 620 42 S 870 16, 1010 38"/>
@@ -2185,7 +2133,9 @@ function pintaCalc(){
 
 function porViajero(euros, bono){
   if (!bono) return '';
-  var v = euros / bono;
+  /* Redondeo igual que la calculadora de arriba (2-oct-2026): `toFixed` sobre 0,045 da
+     0,04 y la calculadora decía 0,05 para el mismo plan en la misma pantalla. */
+  var v = Math.round(euros / bono * 100) / 100;
   return v.toFixed(2).replace('.', ',');
 }
 function pintaUnidad(totalPorPlan){
