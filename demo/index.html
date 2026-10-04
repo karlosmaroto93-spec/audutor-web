@@ -2241,12 +2241,12 @@
   </div>
 
   <div class="card">
-    <h2>🔗 Página del guía — el QR que convierte un buen tour en la próxima reserva</h2>
-    <div class="mini muted" style="margin:0 0 10px;">Cada guía tiene una página pública con sus tours y
-      las plazas que quedan de verdad, y de ahí a <b>tu propia web</b>. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">El
+    <h2>🔗 El QR de cada guía — que un buen tour se convierta en la próxima reserva</h2>
+    <div class="mini muted" style="margin:0 0 10px;">Cada guía tiene su QR: abre <b>tu web de reservas</b>, con
+      los tours y las plazas que quedan de verdad, y deja anotado qué guía la recomendó. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">El
       momento de oro es el final del tour: la gente acaba de pasarlo bien y pregunta «¿qué más hacéis?».
-      El guía enseña su QR y esa recomendación aterriza en tu web, no en la plataforma. Cada página lleva
-      el nombre del guía, así la analítica te dice qué guías traen reservas.</span></details></div>
+      El guía enseña su QR y esa recomendación aterriza en tu web, no en la plataforma. El QR lleva el
+      código de ese guía, así la analítica te dice cuántas reservas trae cada uno.</span></details></div>
     <div id="gp-lista" class="fila" style="gap:14px; align-items:stretch; flex-wrap:wrap;"></div>
   </div>
 
@@ -7043,7 +7043,18 @@ function tdDescodifica(s){
 }
 
 /* Aplicar lo suyo. Se VACÍA todo lo demás a propósito — ver la regla de arriba. */
+/* LIMPIOS AL APLICARLOS (4-oct-2026, revisión de seguridad antes de v185): estos datos llegan
+   también de un enlace (`#…&tu=`), y varias pantallas los pintan con innerHTML. Con
+   `<img onerror=…>` en un campo, un enlace de audutor.com ejecutaba lo que quisiera un tercero.
+   Fuera los caracteres que abren una etiqueta o cierran un atributo, y un tope de largo: son
+   nombres y horarios, no textos. Solo los seis campos que la demo conoce. */
+function tdLimpia(datos){
+  var limpio = {};
+  TD_CAMPOS.forEach(function(c){ limpio[c.k] = String((datos && datos[c.k]) == null ? '' : datos[c.k]).replace(/'/g, '’').replace(/[<>"`\\]/g, '').slice(0, 120); });
+  return limpio;
+}
 function tdAplica(datos){
+  datos = tdLimpia(datos);
   TD = datos;
   MK = JSON.parse(JSON.stringify(MK));      // copia: no se toca el preset del mercado
   MK.empresa = datos.empresa || 'Tu empresa';
@@ -9802,27 +9813,30 @@ function postSet(k,v){
    en su dominio y no en la plataforma. */
 /* ===== Página del guía (reserva directa): QR por guía + vista previa en el móvil ===== */
 function gpSlug(n){ return n.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
+/* El código del QR, como en la app: ocho letras que no son el nombre (recomienda.js). Aquí se
+   deriva del nombre para que la demo no cambie cada vez que se abre. */
+function gpCodigo(n){ return (gpSlug(n).replace(/[^a-z]/g,'') + 'kqrvwxyz').slice(0, 8); }
 function pintaGpLista(){
   var box=document.getElementById('gp-lista'); if(!box) return;
   box.innerHTML=S.equipo.guias.filter(function(g){return g.activo}).map(function(g){
     return '<div style="border:1px solid var(--line); border-radius:12px; padding:12px 14px; text-align:center; flex:0 0 170px;">'+
       '<span class="ini grande" style="background:'+g.color+'; margin:0 auto 6px; display:inline-flex;">'+iniGuia(g)+'</span>'+
       '<div style="font-weight:800;">'+g.n+'</div>'+
-      '<div class="mini muted num">patioycompas.example/g/'+gpSlug(g.n)+'</div>'+
-      '<div style="margin:8px 0 6px;">'+qrSvg('patioycompas.example/g/'+gpSlug(g.n)).replace('width="128" height="128"','width="92" height="92"')+'</div>'+
-      '<button class="btn mini sec" onclick="abrirGuidePage(\''+g.n+'\')">📱 Ver su página</button></div>';
+      '<div class="mini muted num">tu web · ?g='+gpCodigo(g.n)+'</div>'+
+      '<div style="margin:8px 0 6px;">'+qrSvg('patioycompas.example/?g='+gpCodigo(g.n)).replace('width="128" height="128"','width="92" height="92"')+'</div>'+
+      '<button class="btn mini sec" onclick="abrirGuidePage(\''+g.n+'\')">📱 Ver lo que abre</button></div>';
   }).join('');
 }
 var NOTA_VIAJERO0=null;
 function abrirGuidePage(nombre){
   var nota=document.getElementById('vj-nota');
   if (NOTA_VIAJERO0===null) NOTA_VIAJERO0=nota.innerHTML;
-  nota.innerHTML='<h3>La página del guía 🔗</h3><ul>'+
+  nota.innerHTML='<h3>Lo que abre el QR del guía 🔗</h3><ul>'+
     '<li>🎯 <b>El momento de oro:</b> el final del tour. El guía enseña su QR y la recomendación aterriza en <b>tu web</b>, no en la plataforma.</li>'+
     '<li>🗓 <b>Los horarios y las plazas son los de verdad</b> — salen de tu cuadrante y de lo que le consta a cada canal, no de una tabla escrita a mano.</li>'+
-    '<li>📈 La página lleva el <b>nombre del guía</b>: la analítica te dice qué guías traen reservas (y eso también motiva).</li>'+
+    '<li>📈 El QR lleva el <b>código del guía</b>: lo que se reserve desde ahí queda a su nombre, y la analítica te dice cuántas reservas trae cada uno.</li>'+
     '</ul>'+
-    '<p class="mini">La reserva se hace <b>en tu web</b> —el free tour a 0 €; el de pago guarda la plaza y <b>el dinero va a tu pasarela</b>: Audutor no cobra ni un euro. La página real viviría en tu dominio.</p>';
+    '<p class="mini">Es <b>tu web de reservas</b>, la misma para todos los guías: el QR solo añade quién la recomendó. El free tour se reserva a 0 €; el de pago guarda la plaza y <b>el dinero va a tu pasarela</b>: Audutor no cobra ni un euro.</p>';
   document.getElementById('viajero-overlay').classList.add('ver');
   document.body.style.overflow='hidden';
   pintaGuidePage(nombre);
@@ -9834,15 +9848,12 @@ function pintaGuidePage(nombre){
   franjasEmpresa().forEach(function(f){ if(!tours[f.tour]) tours[f.tour]=f.hora; });
   pant.innerHTML='<div class="vj-estado"><span>18:52</span><span>📶&nbsp;&nbsp;🔋</span></div>'+
     '<div class="vj-cab"><span class="dot"></span><b>Patio y Compás · Sevilla</b>'+
-    '<span class="vj-seguro">su página</span></div>'+
+    '<span class="vj-seguro">tu web</span></div>'+
     '<div class="vj-cuerpo">'+
-    '<div style="text-align:center; margin:6px 0 2px;">'+
-      '<span class="ini grande" style="background:'+g.color+'; width:56px; height:56px; font-size:20px; display:inline-flex; margin:0;">'+iniGuia(g)+'</span>'+
-      '<h3 style="margin:8px 0 2px; font-size:20px;">'+g.n+'</h3>'+
-      '<p class="mini muted" style="margin:0;">guía en Patio y Compás · ⭐ '+(g.nota||'—')+' · te lo cuenta como nadie</p></div>'+
-    '<div class="vj-burbuja" style="margin-top:10px;">💬 <i>«La visita con '+g.n+' fue lo mejor del viaje. Repetiríamos mañana.»</i>'+
-      '<span class="vj-hora">reseña verificada</span></div>'+
-    '<p class="vj-tit">Sus próximas salidas</p>'+
+    /* Sin foto, nota ni «reseña verificada» del guía (revisión del 3-oct-2026): el QR abre la
+       web del operador, no una página personal, y una reseña inventada no se enseña nunca. */
+    '<p class="mini muted" style="margin:6px 0 0;">Recomendado por <b>'+g.n+'</b> · queda anotado en tus resultados, el viajero no ve nada distinto</p>'+
+    '<p class="vj-tit">Próximas salidas</p>'+
     Object.keys(tours).map(function(t){
       /* SÍ es un botón de reservar, desde el 17-ago-2026: el motor de la web propia. El
          free tour se reserva a 0 € —código al momento y enlace de autogestión—; el de

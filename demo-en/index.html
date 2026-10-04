@@ -2104,12 +2104,12 @@
   </div>
 
   <div class="card">
-    <h2>🔗 Guide page — the QR that turns a good tour into the next booking</h2>
-    <div class="mini muted" style="margin:0 0 10px;">Every guide gets a public page with their tours and
-      the places that are really left, and from there to <b>your own site</b>. <details class="mas"><summary>ⓘ more</summary><span class="mas-p">The
+    <h2>🔗 Each guide’s QR — turning a good tour into the next booking</h2>
+    <div class="mini muted" style="margin:0 0 10px;">Every guide has their own QR: it opens <b>your booking website</b>,
+      with the walks and the places really left, and records which guide recommended it. <details class="mas"><summary>ⓘ more</summary><span class="mas-p">The
       moment that counts is the end of the tour: people have just had a good time and ask “what else do you run?”.
-      The guide shows their QR and that recommendation lands on your site, not the platform’s. Each page carries
-      the guide’s name, so the analytics tell you which guides bring bookings in.</span></details></div>
+      The guide shows their QR and that recommendation lands on your site, not the platform’s. The QR carries
+      that guide’s code, so the analytics tell you how many bookings each one brings in.</span></details></div>
     <div id="gp-lista" class="fila" style="gap:14px; align-items:stretch; flex-wrap:wrap;"></div>
   </div>
 
@@ -8523,28 +8523,31 @@ function postSet(k,v){
 
 /* ===== Guide page (reserva directa): QR por guía + vista previa en el móvil ===== */
 function gpSlug(n){ return n.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
+/* El código del QR, como en la app: ocho letras que no son el nombre (recomienda.js). Aquí se
+   deriva del nombre para que la demo no cambie cada vez que se abre. */
+function gpCodigo(n){ return (gpSlug(n).replace(/[^a-z]/g,'') + 'kqrvwxyz').slice(0, 8); }
 function pintaGpLista(){
   var box=document.getElementById('gp-lista'); if(!box) return;
   box.innerHTML=S.equipo.guias.filter(function(g){return g.activo}).map(function(g){
     return '<div style="border:1px solid var(--line); border-radius:12px; padding:12px 14px; text-align:center; flex:0 0 170px;">'+
       '<span class="ini grande" style="background:'+g.color+'; margin:0 auto 6px; display:inline-flex;">'+iniGuia(g)+'</span>'+
       '<div style="font-weight:800;">'+g.n+'</div>'+
-      '<div class="mini muted num">oldtownwalks.co.uk/g/'+gpSlug(g.n)+'</div>'+
-      '<div style="margin:8px 0 6px;">'+qrSvg('oldtownwalks.co.uk/g/'+gpSlug(g.n)).replace('width="128" height="128"','width="92" height="92"')+'</div>'+
-      '<button class="btn mini sec" onclick="abrirGuidePage(\''+g.n+'\')">📱 See their page</button></div>';
+      '<div class="mini muted num">your site · ?g='+gpCodigo(g.n)+'</div>'+
+      '<div style="margin:8px 0 6px;">'+qrSvg('oldtownwalks.co.uk/?g='+gpCodigo(g.n)).replace('width="128" height="128"','width="92" height="92"')+'</div>'+
+      '<button class="btn mini sec" onclick="abrirGuidePage(\''+g.n+'\')">📱 See what it opens</button></div>';
   }).join('');
 }
 var NOTA_VIAJERO0=null;
 function abrirGuidePage(nombre){
   var nota=document.getElementById('vj-nota');
   if (NOTA_VIAJERO0===null) NOTA_VIAJERO0=nota.innerHTML;
-  nota.innerHTML='<h3>The guide’s page 🔗</h3><ul>'+
+  nota.innerHTML='<h3>What the guide’s QR opens 🔗</h3><ul>'+
     '<li>🎯 <b>The moment that counts:</b> the end of the walk. The guide shows their QR and the recommendation lands on <b>your site</b>, not the platform’s.</li>'+
     '<li>🗓 <b>Real availability, not a contact form.</b> The walks, days and times come straight from your schedule — add a departure in Team &amp; availability and it appears here on its own.</li>'+
     '<li>👥 <b>The group size is already filled in</b> with the booking they just walked on. Five of you this morning, five for the ghost walk tonight — one tap instead of a form.</li>'+
     '<li>🗓 <b>The days, times and places left are the real ones</b> — straight from your schedule and from what each channel has, not a table typed by hand.</li>'+
-    '<li>📈 The page carries the <b>guide’s name</b>, so you can see which guides bring bookings in.</li></ul>'+
-    '<p class="mini">Audutor <b>does not take the booking</b>: it shows what is left and sends people where you already sell. The real page would live on your own domain.</p>';
+    '<li>📈 The QR carries the <b>guide’s code</b>: whatever is booked from it is credited to them, and the analytics tell you how many bookings each one brings.</li></ul>'+
+    '<p class="mini">It is <b>your booking website</b>, the same for every guide: the QR only adds who recommended it.</p>';
   document.getElementById('viajero-overlay').classList.add('ver');
   document.body.style.overflow='hidden';
   GP.paso='tours'; GP.tour=null; GP.hora=null; GP.diaIdx=0;
@@ -8652,7 +8655,7 @@ function pintaGuidePage(nombre){
   var pant=document.getElementById('viajero-pantalla');
   var cab='<div class="vj-estado"><span>18:52</span><span>📶&nbsp;&nbsp;🔋</span></div>'+
     '<div class="vj-cab"><span class="dot"></span><b>'+MK.empresa+'</b>'+
-    '<span class="vj-seguro">their page</span></div>';
+    '<span class="vj-seguro">your site</span></div>';
 
   /* ---- paso 2: cuándo y cuántos ---- */
   if (GP.paso==='cuando'){
@@ -8717,13 +8720,10 @@ function pintaGuidePage(nombre){
   var tours=gpTours();
   pant.innerHTML=cab+
     '<div class="vj-cuerpo">'+
-    '<div style="text-align:center; margin:6px 0 2px;">'+
-      '<span class="ini grande" style="background:'+g.color+'; width:56px; height:56px; font-size:20px; display:inline-flex; margin:0;">'+iniGuia(g)+'</span>'+
-      '<h3 style="margin:8px 0 2px; font-size:20px;">'+g.n+'</h3>'+
-      '<p class="mini muted" style="margin:0;">Guide at '+empresaCorta()+' · ⭐ '+(g.nota||'—')+'</p></div>'+
-    '<div class="vj-burbuja" style="margin-top:10px;">💬 <i>“The walk with '+g.n+' was the best thing we did all trip. We’d do it again tomorrow.”</i>'+
-      '<span class="vj-hora">verified review</span></div>'+
-    '<p class="vj-tit">Their next walks</p>'+
+    /* Sin foto, nota ni «verified review» del guía (revisión del 3-oct-2026): el QR abre la
+       web del operador, no una página personal, y una reseña inventada no se enseña nunca. */
+    '<p class="mini muted" style="margin:6px 0 0;">Recommended by <b>'+g.n+'</b> · recorded in your results; the traveller sees nothing different</p>'+
+    '<p class="vj-tit">Next walks</p>'+
     tours.map(function(t){
       var kb=gpKb(t.tour);
       var dias=gpDiasDe(t.tour);
