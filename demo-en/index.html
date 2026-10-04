@@ -409,6 +409,44 @@
   .att .pax-n{ min-width:2ch; text-align:center; font-size:17px; font-weight:800;
     font-variant-numeric:tabular-nums; color:var(--ink); }
   .att.aju{ box-shadow:inset 0 0 0 1.5px var(--gold); }
+  /* La fila de la OFICINA, compacta como en el panel (4-oct-2026): una línea por reserva y los
+     mandos más pequeños; el móvil del guía conserva los suyos, que se usan en la calle. */
+  body:not(.modo-guia) .att{ padding:6px 8px; gap:6px; flex-wrap:nowrap; }
+  body:not(.modo-guia) .att .info{ flex:1 1 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  body:not(.modo-guia) .att .info small{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  body:not(.modo-guia) .att .pax-b{ width:30px; min-height:32px; font-size:15px; }
+  body:not(.modo-guia) .att .pax-n{ font-size:15px; }
+  body:not(.modo-guia) .att .chk{ min-height:32px; padding:0 4px; font-size:11.5px; letter-spacing:-3px; }
+  body:not(.modo-guia) .att.ok .chk::after{ top:-5px; right:-5px; width:15px; height:15px; line-height:15px; font-size:11.5px; }
+  body:not(.modo-guia) .btn-walkin{ width:auto; padding:7px 14px; font-size:13px; }
+  .att:has(> .att-acciones:not([hidden])){ flex-wrap:wrap; }
+  .att-mas{ flex:0 0 auto; width:30px; height:32px; padding:0; border:1.5px solid var(--line); border-radius:10px;
+    background:var(--paper); color:var(--ink2); font:inherit; font-size:17px; font-weight:800; line-height:1; }
+  .att-mas[aria-expanded="true"]{ border-color:var(--acc); background:var(--acc-soft); color:var(--acc); }
+  .att-acciones{ flex:1 0 100%; display:flex; flex-wrap:wrap; justify-content:flex-end; gap:6px; padding:4px 0 2px; }
+  .att-acciones[hidden]{ display:none; }
+  .att-porque{ flex:1 0 100%; text-align:right; font-size:11.5px; color:var(--muted); }
+  /* El diálogo de mover: los días de la semana de la demo y, debajo, las salidas del elegido. */
+  .mv-dlg{ width:min(520px, 92vw); max-height:84vh; overflow:auto; padding:18px; border:0; border-radius:16px;
+    background:var(--paper); color:var(--ink); box-shadow:0 16px 44px rgba(21,32,28,.22); }
+  .mv-dlg::backdrop{ background:rgba(18,63,51,.35); }
+  .mv-dlg h3{ margin:0 0 4px; font-size:17px; }
+  .mv-aviso{ margin:6px 0 10px; padding:8px 10px; border-radius:9px; background:var(--gold-soft); color:var(--ink2); }
+  .mv-dias{ display:grid; grid-template-columns:repeat(auto-fill, minmax(96px, 1fr)); gap:6px; margin:10px 0; }
+  .mv-dias button{ display:flex; flex-direction:column; align-items:center; gap:2px; min-height:48px; padding:6px;
+    border:1px solid var(--line); border-radius:10px; background:var(--paper); font:inherit; font-size:13px; color:var(--ink); cursor:pointer; }
+  .mv-dias button small{ font-size:11.5px; color:var(--muted); }
+  .mv-dias button.elegido{ background:var(--acc); border-color:var(--acc); color:#fff; }
+  .mv-dias button.elegido small{ color:#fff; }
+  .mv-dias button:disabled{ opacity:.38; cursor:default; }
+  .mv-tit{ margin:10px 0 4px; font-weight:700; color:var(--ink); }
+  .mv-ops{ display:flex; flex-direction:column; gap:6px; }
+  .mv-op{ display:flex; align-items:center; gap:8px; min-height:44px; padding:8px 12px; border:1px solid var(--line);
+    border-radius:10px; font-size:13px; cursor:pointer; }
+  .mv-op:has(input:checked){ border-color:var(--acc); background:var(--acc-soft); }
+  .mv-op.no-caben{ opacity:.55; cursor:not-allowed; }
+  .mv-acc{ gap:8px; margin-top:12px; }
+  .mv-acc .btn{ flex:1; }
   .obs-item{ display:flex; justify-content:space-between; align-items:center; gap:8px; padding:6px 9px;
     border-left:3px solid var(--acc); background:#f2f7f4; border-radius:0 8px 8px 0; margin:5px 0; font-size:11.5px; }
   .obs-item.pend{ border-left-color:var(--gold); background:var(--gold-soft); }
@@ -7327,6 +7365,95 @@ function pintaManifiesto(){
     if (window.console) console.error('manifest:', e);
   }
 }
+/* ══ MOVER UNA RESERVA, COMO EL PANEL (4-oct-2026) ══
+   En el manifiesto del encargado cada reserva tiene «⋯» con «Mover a otra salida», y mover
+   abre un calendario: se elige el día y salen sus salidas con las plazas que quedan. La demo
+   no lo tenía y Carlos no encontraba en ella nada de lo nuevo. Solo en la vista de la oficina:
+   el móvil del guía no mueve reservas. Aquí el calendario son los días de la semana de la demo
+   que aún no han pasado, y mover cambia de verdad la reserva de salida en la demo. */
+function aforoMover(t){
+  if (typeof aforoDeTour === 'function') return aforoDeTour(t);
+  var ficha = (S.tours||[]).filter(function(tr){ return tr.nombre === t.tit; })[0];
+  var a = ficha && ficha.kb && parseInt(ficha.kb.aforo, 10);
+  return a > 0 ? a : 25;
+}
+function masDemo(d, t, a, dia){
+  var porQue = dia.pasado ? 'This departure is already closed.' : a.ok ? 'Attendance is already recorded on this departure.' : '';
+  var b = document.createElement('button'); b.type = 'button'; b.className = 'att-mas'; b.textContent = '⋯';
+  b.setAttribute('aria-expanded', 'false'); b.setAttribute('aria-label', 'More actions for the booking of ' + a.n);
+  var panel = document.createElement('div'); panel.className = 'att-acciones'; panel.hidden = true;
+  var mv = document.createElement('button'); mv.type = 'button'; mv.className = 'btn mini sec'; mv.textContent = 'Move to another departure';
+  mv.disabled = !!porQue;
+  mv.onclick = function(){ panel.hidden = true; b.setAttribute('aria-expanded', 'false'); abreMoverDemo(t, a, dia, b); };
+  panel.appendChild(mv);
+  if (porQue){ var n = document.createElement('span'); n.className = 'att-porque'; n.textContent = porQue; panel.appendChild(n); }
+  b.onclick = function(){
+    var abrir = panel.hidden;
+    document.querySelectorAll('.att-acciones').forEach(function(p){ p.hidden = true; });
+    document.querySelectorAll('.att-mas').forEach(function(x){ x.setAttribute('aria-expanded', 'false'); });
+    panel.hidden = !abrir; b.setAttribute('aria-expanded', String(abrir));
+  };
+  d.querySelector('.fila').appendChild(b);
+  d.appendChild(panel);
+}
+function abreMoverDemo(t, a, diaAhora, origen){
+  var dlg = document.createElement('dialog'); dlg.className = 'mv-dlg';
+  var dias = S.agenda.map(function(dia, i){ return { dia:dia, i:i }; }).filter(function(x){ return !x.dia.pasado; });
+  var libres = function(x){ return aforoMover(x) - paxDe(x.res); };
+  var opciones = function(dia){ return dia.tours.filter(function(x){ return x !== t; })
+    .sort(function(p, q){ return ((q.tit === t.tit) - (p.tit === t.tit)) || p.hora.localeCompare(q.hora); }); };
+  var caben = function(dia){ return opciones(dia).some(function(o){ return libres(o) >= a.p; }); };
+  var conSitio = dias.filter(function(x){ return caben(x.dia); });
+  var elegido = conSitio.length ? conSitio[0].i : null;
+  var propias = ['Own site','walk-in'];
+  function pinta(){
+    var h = '<h3>Move to another departure</h3><p class="mini muted">' + escHtml(a.n) + ' · ' + a.p + ' people · now on ' +
+      escHtml(diaAhora.fecha) + ' ' + t.hora + ' · ' + escHtml(t.tit) + '</p>' +
+      (propias.indexOf(a.canal) === -1 ? '<p class="mini mv-aviso">This moves it in Audutor. On ' + escHtml(a.canal) + ' it stays on the old departure: change it there too if needed.</p>' : '');
+    if (!conSitio.length){ h += '<p class="mini">No departures with room in the coming days of the demo.</p>'; }
+    else {
+      h += '<div class="mv-dias" aria-label="Days with departures">' + dias.map(function(x){
+        var n = opciones(x.dia).length;
+        return '<button type="button" data-i="' + x.i + '" class="' + (x.i === elegido ? 'elegido' : '') + '"' + (caben(x.dia) ? '' : ' disabled') +
+          ' aria-pressed="' + (x.i === elegido) + '"><b>' + escHtml(x.dia.fecha) + '</b><small>' + n + (n === 1 ? ' departure' : ' departures') + '</small></button>';
+      }).join('') + '</div>';
+      var dia = S.agenda[elegido];
+      h += '<p class="mini mv-tit">Departures on ' + escHtml(dia.fecha) + ':</p><div class="mv-ops" role="radiogroup">' +
+        opciones(dia).map(function(o, k){
+          var l = libres(o), cabe = l >= a.p;
+          return '<label class="mv-op' + (cabe ? '' : ' no-caben') + '"><input type="radio" name="mv-destino" value="' + k + '"' + (cabe ? '' : ' disabled') + '> ' +
+            o.hora + ' · ' + escHtml(o.tit) + ' · ' + (cabe ? l + (l === 1 ? ' left' : ' left') : 'won\'t fit (' + Math.max(0, l) + ' left)') + '</label>';
+        }).join('') + '</div>';
+    }
+    h += '<p class="mini mv-estado" role="status"></p><div class="fila mv-acc"><button type="button" class="btn mv-si"' + (conSitio.length ? '' : ' disabled') + '>Move</button>' +
+      '<button type="button" class="btn sec mv-no">Cancel</button></div>';
+    dlg.innerHTML = h;
+    dlg.querySelectorAll('.mv-dias button').forEach(function(bd){ bd.onclick = function(){ elegido = +bd.dataset.i; pinta(); }; });
+    var unicas = dlg.querySelectorAll('.mv-ops input:not(:disabled)');
+    if (unicas.length === 1) unicas[0].checked = true;
+    dlg.querySelector('.mv-no').onclick = function(){ dlg.close(); };
+    dlg.querySelector('.mv-si').onclick = function(){
+      var marcada = dlg.querySelector('.mv-ops input:checked');
+      if (!marcada){ dlg.querySelector('.mv-estado').textContent = 'Choose the departure to move it to.'; return; }
+      var diaDestino = S.agenda[elegido], destino = opciones(diaDestino)[+marcada.value];
+      t.res.splice(t.res.indexOf(a), 1);
+      var copia = {}; for (var k in a) copia[k] = a[k];
+      copia.ok = false; copia.nsAuto = false; copia.res0 = copia.p;
+      destino.res.push(copia);
+      var quien = a.n + ' · ' + a.p + 'p';
+      (t.obs || (t.obs = [])).push({ a:'sistema', rec:true, t: quien + ' moved to ' + diaDestino.fecha + ' ' + destino.hora + ' · ' + destino.tit + '.' });
+      (destino.obs || (destino.obs = [])).push({ a:'sistema', rec:true, t: quien + ' comes from ' + diaAhora.fecha + ' ' + t.hora + ' · ' + t.tit + '.' });
+      dlg.close();
+      pintaManifiesto();
+      toast(a.n + ' moved to ' + destino.hora + ' · ' + destino.tit + ' (' + diaDestino.fecha + ')' + '. Each departure\'s guide sees it in their notes.');
+    };
+  }
+  function escHtml(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  document.body.appendChild(dlg);
+  dlg.addEventListener('close', function(){ dlg.remove(); if (origen && origen.isConnected) origen.focus(); });
+  pinta();
+  dlg.showModal();
+}
 function pintaManifiestoReal(){
   var tt=agTotales();
   document.getElementById('ag-sem-pax').textContent=tt.semPax;
@@ -7405,6 +7532,7 @@ function pintaManifiestoReal(){
       d.querySelector('.chk').onclick=function(){ if(dia.pasado&&!confirm('Correct attendance for this closed departure? Accounts may change. Review any claim already submitted.')) return; var an=ancla(this.parentNode); a.ok=!a.ok; if(dia.pasado){ a.nsAuto=!a.ok&&!a.walkin; (t.obs||(t.obs=[])).push({a:'sistema',rec:true,t:'Attendance corrected in the demo: '+a.n+' · '+(a.ok?'present':'absent')+'. No platform claim has been changed.'}); } RECIEN_ATT=a; if (navigator.vibrate) { try { navigator.vibrate(8); } catch(e){} } pintaManifiesto(); RECIEN_ATT=null; anclaRestaura(an);
         if(a.ok) toast(a.n+' checked in ✓ — it shows on the dashboard straight away'); };
       d.querySelectorAll('.pax-b').forEach(function(b){ b.onclick=function(){ var an=ancla(b.parentNode); ajustarPax(t, a, +b.dataset.d); anclaRestaura(an); }; });
+      if (!S.guiaVista && !a.walkin) masDemo(d, t, a, dia);   // «⋯» con mover, solo en la oficina
       mov.appendChild(d);
     });
     /* No-shows automáticos: al cerrar el tour, las reservas sin marcar pasan SOLAS
@@ -7425,7 +7553,7 @@ function pintaManifiestoReal(){
     }
     // botón walk-in + formulario
     var wbtn=document.createElement('button'); wbtn.className='btn sec btn-walkin';
-    wbtn.textContent='➕ Add walk-in (no booking)';
+    wbtn.textContent='➕ Walk-in'; wbtn.setAttribute('aria-label','Add walk-in (no booking)');
     var wform=document.createElement('div'); wform.className='walkin-form';
     wform.innerHTML='<input placeholder="Name (optional)" class="wk-nombre">'+
       '<div class="fila" style="gap:10px; margin:8px 0;">'+
