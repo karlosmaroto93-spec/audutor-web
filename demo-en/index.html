@@ -1273,7 +1273,7 @@
 <!-- ================= CHAT ================= -->
 <section class="vista" id="v-chat">
   <div class="cab"><svg class="guia-cab" aria-hidden="true" focusable="false"><use href="#guia"/></svg>
-    <h1>GuIA</h1><span class="sub">handles SMS, WhatsApp and the chat on your site — and passes anything it can’t answer straight to you</span>
+    <h1>GuIA</h1><span class="sub">answers in your website chat; SMS and WhatsApp are simulated here and still require integration</span>
     <span class="canal-sw" style="margin-left:auto;" role="group" aria-label="Conversation channel">
       <button id="sw-wa" class="on" aria-pressed="true" onclick="cambiaCanalChat('wa')">WhatsApp</button>
       <button id="sw-web" aria-pressed="false" onclick="cambiaCanalChat('web')">🌐 Your website</button>
@@ -1283,7 +1283,7 @@
   <div class="der-chat" id="der-chat">
     <div class="fila" style="justify-content:space-between; flex-wrap:wrap; gap:8px;">
       <b style="font-size:13px;">⚑ Questions handed to you</b>
-      <span class="mini muted">GuIA never guesses: what it doesn’t know comes to you — answer it once and it learns it</span>
+      <span class="mini muted">Review questions handed to the team, confirm the facts and test the answer.</span>
     </div>
     <div id="der-chat-lista"></div>
   </div>
@@ -1307,7 +1307,7 @@
   <div class="chat" id="chat-wa-wrap">
     <div class="fila" style="margin-bottom:8px;">
       <span class="mini muted">The customer is asking about:</span>
-      <select id="chat-tour" onchange="cambiaTourChat()"></select>
+      <select id="chat-tour" aria-label="Tour for the question" onchange="cambiaTourChat()"></select>
       <span class="chip gris" title="Every tour and every company has its own brain: answers never cross over">🔒 no cross-over</span>
     </div>
     <div class="chat-caja" id="chat-caja"></div>
@@ -1343,7 +1343,7 @@
   <div class="guia-bocadillo">
     <svg class="guia-m" aria-hidden="true" focusable="false"><use href="#guia"/></svg>
     <p class="mini" style="margin:0;"><b>I’m GuIA 👋</b> What you confirm here is the only thing I will
-    tell your customers — anything I don’t know, I hand to you. I never make things up.</p>
+    use to answer your customers; missing information goes to the team. Test my answers.</p>
   </div>
 
   <div class="card" id="card-respuestas">
@@ -1422,7 +1422,7 @@
       <textarea id="ens-a" style="min-height:70px; font-family:inherit; font-size:13px;"
         placeholder="The answer, in your own voice — e.g. Yes! We stop halfway round next to a café with toilets 🚻"></textarea>
       <div class="fila">
-        <select id="ens-ambito">
+        <select id="ens-ambito" aria-label="Scope of the taught answer">
           <option value="tour">This tour only</option>
           <option value="empresa">The whole company</option>
         </select>
@@ -1467,7 +1467,8 @@
     <p style="margin:6px 0;"><span class="chip" style="background:rgba(201,138,45,.25); color:var(--amber);">Included in the Pro plan · €45/month</span></p>
     <p style="color:var(--ink2); max-width:52ch; margin:8px auto 0;">Your plan includes the <b>basic
       confirmation reminder</b> (one nudge: the text the day before). The smart sequence
-      adapts to how risky each booking looks — last month it brought back <b>+34 people ≈ £410</b> in tips.
+      adapts to how risky each booking looks. This simulated example estimates <b>+34 people ≈ £410</b> in tips;
+      these are not measured customer results.
       <b>€45/month</b> keeps it.</p>
     <div class="fila" style="gap:8px; justify-content:center; flex-wrap:wrap; margin-top:14px;">
       <button class="btn" onclick="cambiarPlan('pro')">Upgrade to Pro</button>
@@ -1480,9 +1481,10 @@
   </div>
 
   <div class="card" id="ns-franja" style="box-shadow:inset 4px 0 0 var(--acc);">
-    🌙 <b>Quiet hours: messages only go out between 8:00 AM and 9:00 PM.</b>
-    Anything that would fall outside that window waits until 8:00 — <b>nobody gets a text at 11:40 PM</b>.
-    And a post-tour message that would land at night (after the 9:00 PM night walk, say) goes out the next morning.
+    🌙 <b>Reminders are prepared between 8:00 AM and 9:00 PM.</b>
+    Anything outside that window is proposed for 8:00 AM.
+    Audutor prepares the text: <b>you send it from your own phone</b>, via WhatsApp or SMS.
+    It is not sent automatically, and delivery is not verified here.
   </div>
 
   <div class="card" id="ns-smart">
@@ -1518,7 +1520,7 @@
     </table>
     <div class="mini muted" style="margin:10px 0 0;">Every reply (“coming”, “running late”, silence)
       re-scores the risk and adjusts the next nudge. <details class="mas"><summary>ⓘ more</summary><span class="mas-p">The guide sees it as a traffic light on their manifest.<br>
-      ⏰→8:00 = that nudge would fall outside the sending window (8:00 AM–9:00 PM), so it goes at 8:00 — nobody gets a text at 11:40 PM.</span></details></div>
+      ⏰→8:00 = preparation of that reminder is proposed for 8:00 AM; you decide when to send it.</span></details></div>
   </div>
 </section>
 
@@ -1568,8 +1570,9 @@
        PERSONA. Audutor no cobra este tour — lleva a donde el operador ya cobra. -->
   <div class="card">
     <h2>🎟️ Your private tour, modular</h2>
-    <p class="mini muted" style="margin:0 0 12px;">This is how your customer sees it on <b>your
-      site</b>: they choose and the price moves. The “from” comes from your Brain.</p>
+    <p class="mini muted" style="margin:0 0 12px;"><b>This configurator is only simulated in the demo.</b>
+      The delivered website displays the catalogue and confirmed private-tour facts from the Brain;
+      it does not include this interactive quote selector.</p>
 
     <div class="tp-wrap">
       <div class="tp-form">
@@ -1630,9 +1633,9 @@
            es el «Leith food & whisky walk», y es de PROPINA, no de £35—, y el precio del
            otro estaba clavado en £24: al pasar el mercado a Estados Unidos la ficha decía
            $32 y esta pantalla seguía ofreciendo £24. -->
-      <select id="combo-a"></select>
+      <select id="combo-a" aria-label="First tour in the bundle"></select>
       <span>→ offers →</span>
-      <select id="combo-b"></select>
+      <select id="combo-b" aria-label="Second tour in the bundle"></select>
       <label class="mini">discount <input type="range" id="combo-dto" min="0" max="30" step="5" value="15"> <b><span id="combo-dto-v">15</span> %</b></label>
       <button class="btn mini" onclick="verMsj('msj-combo')">Preview</button>
     </div>
@@ -1850,9 +1853,9 @@
 
   <div class="card">
     <div class="fila" style="justify-content:space-between;">
-      <span class="fila">From <input type="date" id="liq-del" value="2026-07-01" onchange="pintaLiq()"
+      <span class="fila">From <input type="date" id="liq-del" aria-label="Settlement start date" value="2026-07-01" onchange="pintaLiq()"
           style="border:1.5px solid var(--line); border-radius:8px; padding:7px 9px; font-family:var(--mono); font-size:13px;">
-        to <input type="date" id="liq-al" value="2026-07-18" onchange="pintaLiq()"
+        to <input type="date" id="liq-al" aria-label="Settlement end date" value="2026-07-18" onchange="pintaLiq()"
           style="border:1.5px solid var(--line); border-radius:8px; padding:7px 9px; font-family:var(--mono); font-size:13px;">
       </span>
       <span class="chip">always balances: takings = booking costs + guide + company ✓</span>
@@ -2082,7 +2085,7 @@
   <div class="card">
     <h2>👁️ How it will look</h2>
     <div class="fila" style="gap:8px; flex-wrap:wrap; margin:0 0 10px; align-items:center;">
-      <select id="web-pagina" onchange="pintaWeb()" style="border:1.5px solid var(--line); border-radius:8px; padding:7px 10px; font-size:13px; font-family:inherit;"></select>
+      <select id="web-pagina" aria-label="Page to preview" onchange="pintaWeb()" style="border:1.5px solid var(--line); border-radius:8px; padding:7px 10px; font-size:13px; font-family:inherit;"></select>
       <span class="chip gris" id="web-marca"></span>
     </div>
     <div id="web-previa" style="border:1.5px solid var(--line); border-radius:10px; background:#fff; color:#1a1a1a; padding:18px 20px; max-height:460px; overflow:auto;"></div>
@@ -2095,7 +2098,7 @@
     <h2>🌍 Publishing it</h2>
     <div class="fila" style="gap:6px; align-items:center; margin:0 0 8px; flex-wrap:wrap;">
       <span class="mini">audutor.com/w/</span>
-      <input id="web-slug" value="old-town-walks" style="flex:1; min-width:140px; border:1.5px solid var(--line); border-radius:8px; padding:7px 10px; font-size:13px; font-family:var(--mono);">
+      <input id="web-slug" aria-label="Website address" value="old-town-walks" style="flex:1; min-width:140px; border:1.5px solid var(--line); border-radius:8px; padding:7px 10px; font-size:13px; font-family:var(--mono);">
       <button class="btn mini" onclick="publicaWeb()" id="web-pub">Publish it now</button>
     </div>
     <p class="mini muted" style="margin:0;">Choose the address carefully: it will end up on posters
@@ -3687,7 +3690,9 @@ function sizeDelMensaje(m){
      MÁS natural de decir el tamaño no se leía, y la regla de grupos contestaba con el
      tamaño en blanco — «Sois null». Se vio en los dos idiomas a la vez, porque los dos
      comparten este extractor. */
-  var x=m.match(/\bsomos (\d{1,3})\b/)||m.match(/\b(\d{1,3}) personas?\b/)||m.match(/\bpara (\d{1,3})\b/)||m.match(/\bwe are (\d{1,3})\b/)||m.match(/\bgrupo (?:de|of) (\d{1,3})\b/);
+  /* «50 seats» llega como «50 plazas»: ignorar ese número afirmaba que había sitio
+     mirando una sola plaza, aunque el grupo superara el aforo de todas las salidas. */
+  var x=m.match(/\bsomos (\d{1,3})\b/)||m.match(/\b(\d{1,3}) (?:personas?|plazas?)\b/)||m.match(/\bpara (\d{1,3})\b/)||m.match(/\bwe are (\d{1,3})\b/)||m.match(/\bgrupo (?:de|of) (\d{1,3})\b/);
   return x?parseInt(x[1],10):null;
 }
 /* Cuánta gente dice el mensaje que CAMBIA: un delta («2 personas más», «una menos»,
@@ -4170,9 +4175,9 @@ function avisoNoHablo(idi){
   var propio = AVISO_IDIOMA[idi];
   return (propio ? propio + '\n\n' : '') +
     'Sorry — I can\'t answer in your language yet, but a colleague can. ' +
-    'I\'ve passed your message on and they\'ll reply here shortly 🙂\n\n' +
+    'I\'ve passed your message on and they\'ll be able to reply here 🙂\n\n' +
     'Lo siento, todavía no contesto en tu idioma. Se lo he pasado a una persona y te ' +
-    'responde enseguida 🙂';
+    'responde cuando pueda 🙂';
 }
 
 function idiomaDe(t){
@@ -4388,10 +4393,10 @@ function capaCritica(t, lang){
       : RE_PERRO_GUIA.test(m)
       ? 'A guide dog is not a pet and the pet policy does not apply to it, but I would rather the office confirm it themselves and have everything ready.'
       : 'I cannot promise you that, and here I would rather fall short: I do not give medical advice and I do not decide for you.';
-    var colaES = ' Se lo paso ahora mismo y te contesta enseguida 🙂\n\n' +
+    var colaES = ' Se lo paso al equipo para que pueda responderte en este chat 🙂\n\n' +
       '<i>— Estas preguntas van SIEMPRE a una persona, tenga GuIA el dato o no: la respuesta ' +
       'no es un dato, es un permiso.</i>';
-    var colaEN = ' I am passing it on right now and they will reply here shortly 🙂\n\n' +
+    var colaEN = ' I am passing it on right now and they will be able to reply here 🙂\n\n' +
       '<i>— These questions ALWAYS go to a person, whether GuIA has the fact or not: the answer ' +
       'is not a fact, it is a permission.</i>';
     return xx ? quienEN+colaEN+'\n\n'+quienES+colaES : (es ? quienES+colaES : quienEN+colaEN);
@@ -4642,7 +4647,7 @@ function respuestaGuiaES(t){
     if (man && man.tours && man.tours.length)
       return 'El próximo tour es mañana a las '+man.tours[0].hora+' ('+man.tours[0].tit+') 🙂';
     registraDerivada(t, 'persona');
-    return 'No veo más salidas cargadas esta semana: se lo paso al encargado y te confirma enseguida 🙂';
+    return 'No veo más salidas cargadas esta semana: se lo paso al encargado y te confirmará cuando lo revise 🙂';
   }
   // «¿Queda sitio?» — aforo del cerebro × reservas confirmadas de la agenda de hoy.
   /* «se llena / se suele llenar» es como lo publican los operadores reales (Barkeno
@@ -4660,7 +4665,7 @@ function respuestaGuiaES(t){
       registraDerivada(t, 'persona');
       var hsP=kb('horas'), coP=kb('corte');
       return 'El aforo de otro día no lo tengo delante, así que no te lo aseguro yo: se lo paso '+
-        'al encargado y te lo confirma enseguida 🙂'+
+        'al encargado y te lo confirmará cuando lo revise 🙂'+
         (hsP ? '\n\nLo que sí te digo es que salimos '+hsP+'.' : '')+
         (coP ? ' Se puede reservar hasta '+coP+'.' : '')+
         '\n\n<i>— GuIA solo ve el parte de HOY. Para otro día prefiere no darte un número que no ha mirado.</i>';
@@ -5502,7 +5507,7 @@ function respuestaGuiaES(t){
   if (/hola|buenas|hello/.test(m))
     return '¡Hola! 👋 Soy GuIA, el asistente automático que atiende este chat. Ahora mismo te atiendo sobre «'+tourChat().nombre+'»: horarios, punto de encuentro, duración…'+(S.canalIdentificado!==false ? ' y con tu código puedo cancelar, avisar de un retraso o pasarte el mapa del grupo.' : ' Si necesitas gestionar una reserva, te orientaré para hacerlo por un canal verificado.')+'\n\nSi prefieres hablar con una persona, escribe <b>PERSONA</b> y te paso 🙂';
   registraDerivada(t);
-  return 'Esto prefiero no responderlo yo para no equivocarme: se lo paso al encargado y te contesta enseguida 🙂\n\n<i>— Regla de oro: GuIA nunca inventa. Esta pregunta queda registrada en el Cerebro: respóndela una vez allí y la sabrá para siempre.</i>';
+  return 'Esto prefiero no responderlo yo para no equivocarme: se lo paso al encargado 🙂\n\n<i>— En esta demo la pregunta se conserva solo en este navegador. En tu sistema puedes revisar las preguntas que pasan al equipo y confirmar los datos en el Cerebro. Prueba después la respuesta.</i>';
 }
 
 /* ---- bandeja de derivadas arriba del chat + conmutador de canal ---- */
@@ -5743,12 +5748,12 @@ function respuestaEN(t){
     var crudo = campo ? String(o[campo] || (S.kbEmpresa || {})[campo] || '').trim() : '';
     if (crudo){
       registraDerivada(t, 'traduccion', campo);
-      return 'Let me check that with a colleague so I don\'t give you the wrong info — they\'ll reply here shortly 🙂'+
+      return 'Let me check that with a colleague so I don\'t give you the wrong info — they\'ll be able to reply here 🙂'+
         (c ? '\n\n<i>— GuIA does have «'+c.l+'», but written in the operator\'s own language. '+
              'It hands the question over rather than answer half in another language.</i>' : '');
     }
     registraDerivada(t, campo ? 'hueco' : 'sin-regla', campo || null);
-    return 'Let me check that with a colleague so I don\'t give you the wrong info — they\'ll reply here shortly 🙂'+
+    return 'Let me check that with a colleague so I don\'t give you the wrong info — they\'ll be able to reply here 🙂'+
       (c ? '\n\n<i>— GuIA hands it over because the fact «'+c.l+'» is empty for THIS tour. Fill it in '+
            'under 🧠 Cerebro and this question stops reaching you — in every language.</i>' : ''); }
 
@@ -5760,7 +5765,7 @@ function respuestaEN(t){
   function faltaEmp(campo){
     registraDerivada(t, 'empresa', campo);
     var c = CAMPOS_EMPRESA.filter(function(x){ return x.k===campo })[0];
-    return 'Let me check that with a colleague so I don\'t give you the wrong info — they\'ll reply here shortly 🙂'+
+    return 'Let me check that with a colleague so I don\'t give you the wrong info — they\'ll be able to reply here 🙂'+
       (c ? '\n\n<i>— GuIA hands it over because the company fact «'+c.l+'» is empty. Fill it in '+
            'under 🧠 Cerebro (🏢 block) and it covers every tour at once.</i>' : ''); }
   /* Cortesías inglesas POR TOKENS, antes de traducir nada: «thank you so much» pasaba por
@@ -6269,7 +6274,7 @@ function respuestaEN(t){
       registraDerivada(t, 'persona');
       return 'I only have today\'s sheet in front of me, so I won\'t guess another day\'s numbers — '+
         (v('horas')?'we run '+v('horas')+'. ':'')+
-        'I\'ve passed it to the manager and they\'ll confirm right away 🙂';
+        'I\'ve passed it to the manager and they\'ll review it with you 🙂';
     }
     var q=salidaDelMensaje(m);
     if (q.ninguna)
@@ -6376,8 +6381,12 @@ function respuestaEN(t){
                             return EMP('catalogo')  || falta();
 
   /* ===== Acciones sobre la reserva ===== */
-  if (/reserva|reservar|confirmar/.test(m))
+  if (/reserva|reservar|confirmar/.test(m)) {
+    /* La confirmación en inglés también cae aquí: el chat público no puede comprobar
+       una reserva con un código escrito, así que no debe ofrecer hacerlo. */
+    if (!canalConIdentidad()) return gestionSinIdentificar(t, 'en');
     return ''+(hayWeb() ? 'You can book on our website (' + webEnlace() + ') in a minute — no card needed. ' : '')+'If you already booked, send me your code'+ejCod()+' and I\'ll check it for you 🙂';
+  }
   if (/resena/.test(m))
     return 'That would mean a lot 💛'+(EMP('resena') ? ' You can leave one here: '+EMP('resena')+'.' : '')+
       ' Mentioning your guide by name helps enormously.';
@@ -6641,7 +6650,7 @@ function agComprueba(b){
    pérdidas, el MVP. La cadencia inteligente completa es Pro. Suplementos = lo
    que añade valor pero no es la base. */
 var SUPLEMENTOS={
-  chat:      { n:'GuIA · Test GuIA', plan:'Pro', d:'The assistant that handles your customers in the chat on your site: it answers with the facts of each tour and hands over anything it does not know. It never makes things up.' },
+  chat:      { n:'GuIA · Test GuIA', plan:'Pro', d:'The assistant that handles your customers in the chat on your site: it answers with the facts of each tour and hands over anything it does not know. Test its answers before using it with travellers.' },
 cerebro:   { n:'GuIA’s brain', plan:'Pro', d:'The per-tour fact sheet that feeds the assistant, with AI filling it in from the tour’s own page and drafts you can edit.' },   // y L1991: n:'Smart anti-no-show sequence'
   web:       { n:'Your website', plan:'todos', d:'Your public page, built from what you already wrote in the Brain: one block per kind of question, and an empty field does not appear. THE TOUR IS BOOKED HERE, against the real capacity; the ones with a price need your payment address. It also opens each guide\'s own page with their QR. It comes with every plan: with a small “with Audutor” badge on Essential, with your brand on Pro and Premium.' },
   agente:    { n:'The platform agent', plan:'Premium', d:'Signs into your platform dashboards with YOUR session —Audutor stores no password—, counts how many people each one has on record and closes full departures. And even when it says it closed one, it stays unticked here until you check it yourself.' },
@@ -7033,13 +7042,8 @@ function qrSvg(txt){
 function desbloquear(v){ S.desbloqueado[v]=true; pintaCandados();
   ir(document.getElementById('v-'+v) ? v : ((location.hash.slice(1))||'operaciones'));   // las claves inline no tienen vista propia: repinta la actual
   toast('🔓 “'+SUPLEMENTOS[v].n+'” unlocked so you can try it in the demo'); }
-
-function pintaEsPlus(){
-  var e=document.getElementById('es-plus'); if(!e) return;
-  e.style.display = S.plan==='esencial' ? 'block' : 'none';
-}
-function ofertaEsencialPlus(){}   /* oferta no pública: fuera del build */
-function cambiarPlan(p){ S.plan=p; pintaPlanSel(); pintaComplementos(); pintaCandados(); pintaWaTope(); pintaEsPlus();
+/* Solo se ofrecen los planes que existen en la aplicación. */
+function cambiarPlan(p){ S.plan=p; pintaPlanSel(); pintaComplementos(); pintaCandados(); pintaWaTope();
   ir((location.hash.slice(1))||'operaciones');   // re-evalúa el bloqueo de la vista actual
   toast('Plan '+PLANES[p].n+' active — the modules it includes are unlocked'); }
 var TXT_MENU = 'Menu', TXT_CERRAR = 'Close';
@@ -7087,7 +7091,7 @@ function ir(v){
 document.querySelectorAll('aside nav a').forEach(function(a){
   a.addEventListener('click', function(ev){ ev.preventDefault(); ir(a.dataset.v); });
 });
-pintaCandados(); pintaPlanSel(); pintaComplementos(); pintaEsPlus(); pintaMkSel(); pintaDineroEstatico();
+pintaCandados(); pintaPlanSel(); pintaComplementos(); pintaMkSel(); pintaDineroEstatico();
 /* APLAZADO con setTimeout, por lo mismo que en la demo española: este punto del fichero se
    ejecuta ANTES de que se asignen `S.tours` y el motor —las declaraciones de función se
    elevan, las asignaciones de `var` no—, y llamar aquí a algo que los lee revienta la demo
@@ -7659,7 +7663,7 @@ function pintaManifiestoReal(){
     // recuadro para escribir una observación a mano
     var addObs=document.createElement('div'); addObs.style.cssText='display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; align-items:center;';
     addObs.innerHTML='<textarea class="obs-in" rows="2" placeholder="Write a note (delay, incident, change…)" style="flex:1; min-width:180px; border:1.5px solid var(--line); border-radius:9px; padding:8px 10px; font-size:13px; font-family:inherit; resize:vertical;"></textarea>'+
-      '<select class="obs-quien" style="border:1.5px solid var(--line); border-radius:8px; padding:7px 8px; font-size:13px; font-family:inherit;"><option value="admin">as manager → notify the guide</option><option value="guía">as guide → my own note</option></select>'+
+      '<select aria-label="Author of the note" class="obs-quien" style="border:1.5px solid var(--line); border-radius:8px; padding:7px 8px; font-size:13px; font-family:inherit;"><option value="admin">as manager → notify the guide</option><option value="guía">as guide → my own note</option></select>'+
       '<button class="btn mini obs-add">+ Add</button>';
     addObs.querySelector('.obs-add').onclick=function(){
       var v=addObs.querySelector('.obs-in').value.trim();
@@ -8056,8 +8060,8 @@ function pintaCoste(){
 }
 function caraDeriva(lang){
   return (lang==='es')
-    ? 'Esa no te la puedo asegurar yo: se la paso al encargado y te contesta enseguida 🙂'
-    : 'That one I can’t confirm myself: I’ll pass it to the manager and they’ll get back to you shortly 🙂';
+    ? 'Esa no te la puedo asegurar yo: se la paso al encargado y el equipo podrá responderte en este chat 🙂'
+    : 'That one I can’t confirm myself: I’ll pass it to the manager and they’ll be able to get back to you 🙂';
 }
 function derivaPorHueco(campoKey, pregunta, lang){
   lang = lang || 'es';   /* el motor compartido llama sin idioma: aquí, español */
@@ -8099,8 +8103,8 @@ function derivaSiempre(t, lang){
   lang = lang || 'es';   /* el motor compartido llama sin idioma: aquí, español */
   registraDerivada(t, 'cortafuegos');
   var cara = (lang==='es')
-    ? 'Esto prefiero que lo vea una persona para no equivocarme: se lo paso al encargado y te contesta enseguida 🙂'
-    : 'I’d rather not answer this one myself and risk getting it wrong: I’ll pass it to the manager and they’ll reply shortly 🙂';
+    ? 'Esto prefiero que lo vea una persona para no equivocarme: se lo paso al encargado y el equipo podrá responderte en este chat 🙂'
+    : 'I’d rather not answer this one myself and risk getting it wrong: I’ll pass it to the manager and they’ll be able to reply 🙂';
   return cara+'\n\n<i>— Firewall: invoices, refunds, complaints, press and allergies ALWAYS come to you. GuIA never improvises on those.</i>';
 }
 /* GuIA no solo contesta: lo que gestiona queda escrito en el tour en curso —
@@ -8273,7 +8277,7 @@ function pintaChatWeb(){
   c.innerHTML=
     convo('Website visitor · today 11:42 AM',
       burb('cli','Where do we meet?')+
-      burb('bot', fraseGuia('punto', k)||'I’ll confirm that for you shortly 🙂')+
+      burb('bot', fraseGuia('punto', k)||'I’ll pass that to the manager to confirm 🙂')+
       burb('cli','What if it rains?')+
       burb('bot', (k.lluvia||'We walk in the rain too')+' ☔ If we did have to call it off, we’d let you know here in advance.'))+
     convo('Website visitor · today 9:15 AM',
@@ -8281,7 +8285,7 @@ function pintaChatWeb(){
       burb('bot', k.propina ? 'It really is up to you. If it helps, most people give around '+k.propina+'.'
                             : 'It’s entirely up to you: everyone gives what feels right at the end 💛')+
       burb('cli','Is it wheelchair accessible?')+
-      burb('bot', k.acces||'I’ll confirm that with the manager shortly 🙂'));
+      burb('bot', k.acces||'I’ll pass that to the manager to confirm 🙂'));
 }
 
 /* ============ cerebro de GuIA ============ */
@@ -9468,8 +9472,8 @@ function pintaCanales(){
     var h='<tr><th>Platform</th><th>How it charges</th><th>Cost per person</th><th>No-show deadline</th><th>If you miss it</th></tr>';
     S.canales.recon.forEach(function(r, i){
       h+='<tr><td><b>'+r.plat+'</b></td><td>'+r.base+'</td>'+
-        '<td>'+(r.coste?'<input value="'+String(r.coste).replace('.',',')+'" onchange="setRecon('+i+',\'coste\',this.value)" style="width:52px; border:1.5px solid var(--line); border-radius:6px; padding:4px 6px; font-family:var(--mono); font-size:13px;"> '+MK.moneda.sim+'':'—')+'</td>'+
-        '<td>'+(r.ventanaH?'<input value="'+r.ventanaH+'" onchange="setRecon('+i+',\'ventanaH\',this.value)" style="width:44px; border:1.5px solid var(--line); border-radius:6px; padding:4px 6px; font-family:var(--mono); font-size:13px;"> h':'—')+'</td>'+
+        '<td>'+(r.coste?'<input aria-label="Channel cost per person" value="'+String(r.coste).replace('.',',')+'" onchange="setRecon('+i+',\'coste\',this.value)" style="width:52px; border:1.5px solid var(--line); border-radius:6px; padding:4px 6px; font-family:var(--mono); font-size:13px;"> '+MK.moneda.sim+'':'—')+'</td>'+
+        '<td>'+(r.ventanaH?'<input aria-label="Channel claim window, in hours" value="'+r.ventanaH+'" onchange="setRecon('+i+',\'ventanaH\',this.value)" style="width:44px; border:1.5px solid var(--line); border-radius:6px; padding:4px 6px; font-family:var(--mono); font-size:13px;"> h':'—')+'</td>'+
         '<td class="mini muted">'+r.nota+'</td></tr>';
     });
     rt.innerHTML=h;
