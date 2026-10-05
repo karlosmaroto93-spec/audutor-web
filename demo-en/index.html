@@ -7406,7 +7406,7 @@ function abreMoverDemo(t, a, diaAhora, origen){
   var dias = S.agenda.map(function(dia, i){ return { dia:dia, i:i }; }).filter(function(x){ return !x.dia.pasado; });
   var libres = function(x){ return aforoMover(x) - paxDe(x.res); };
   var opciones = function(dia){ return dia.tours.filter(function(x){ return x !== t; })
-    .sort(function(p, q){ return ((q.tit === t.tit) - (p.tit === t.tit)) || p.hora.localeCompare(q.hora); }); };
+    .sort(function(p, q){ return p.hora.localeCompare(q.hora) || ((q.tit === t.tit) - (p.tit === t.tit)) || p.tit.localeCompare(q.tit); }); };  // por hora, como en la app (5-oct-2026)
   var caben = function(dia){ return opciones(dia).some(function(o){ return libres(o) >= a.p; }); };
   var conSitio = dias.filter(function(x){ return caben(x.dia); });
   var elegido = conSitio.length ? conSitio[0].i : null;
@@ -7427,7 +7427,7 @@ function abreMoverDemo(t, a, diaAhora, origen){
         opciones(dia).map(function(o, k){
           var l = libres(o), cabe = l >= a.p;
           return '<label class="mv-op' + (cabe ? '' : ' no-caben') + '"><input type="radio" name="mv-destino" value="' + k + '"' + (cabe ? '' : ' disabled') + '> ' +
-            o.hora + ' · ' + escHtml(o.tit) + ' · ' + (cabe ? l + (l === 1 ? ' left' : ' left') : 'won\'t fit (' + Math.max(0, l) + ' left)') + '</label>';
+            o.hora + ' · ' + escHtml(o.tit) + (o.tit === t.tit ? ' (same tour)' : '') + ' · ' + (cabe ? l + (l === 1 ? ' left' : ' left') : 'won\'t fit (' + Math.max(0, l) + ' left)') + '</label>';
         }).join('') + '</div>';
     }
     h += '<p class="mini mv-estado" role="status"></p><div class="fila mv-acc"><button type="button" class="btn mv-si"' + (conSitio.length ? '' : ' disabled') + '>Move</button>' +
