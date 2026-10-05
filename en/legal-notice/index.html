@@ -12,9 +12,9 @@
   /* Las dos letras de Audutor, servidas desde aquí (24-sep-2026): con las del sistema la
      marca cambiaba de cara en Android y Windows. Solo el subconjunto latino (92 KB las dos),
      y sin CDN: la web promete «sin rastreadores». Licencia OFL en fuentes/OFL-*.txt. */
-  @font-face{ font-family:"Atkinson Hyperlegible Next"; src:url(../fuentes/atkinson-hyperlegible-next.woff2) format("woff2");
+  @font-face{ font-family:"Atkinson Hyperlegible Next"; src:url(../../fuentes/atkinson-hyperlegible-next.woff2) format("woff2");
     font-weight:200 800; font-style:normal; font-display:swap; unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
-  @font-face{ font-family:"Newsreader"; src:url(../fuentes/newsreader.woff2) format("woff2");
+  @font-face{ font-family:"Newsreader"; src:url(../../fuentes/newsreader.woff2) format("woff2");
     font-weight:400 700; font-style:normal; font-display:swap; unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 /* ── Por qué esta página existe ──────────────────────────────────────────────────────
    El artículo 10.1 de la Ley 34/2002 (LSSI-CE) obliga a todo prestador de servicios de la
@@ -32,35 +32,33 @@
      es POTESTATIVA (art. 19.1 del Código de Comercio). Si no está inscrito no hay dato que
      publicar, y copiarlo de una plantilla de sociedad sería una manifestación falsa.
 
-   · NO hay banner de cookies, y es a propósito. Este sitio no escribe ninguna cookie ni usa
-     `localStorage`, analítica, píxeles ni tipografías remotas. Sin almacenamiento en el
-     equipo del visitante no se activa el art. 22.2 LSSI. Poner un banner «por si acaso»
-     sería peor: pediría un consentimiento que no hace falta y obligaría a mantener una
-     política que no describe nada.
+   · La portada informativa no añade analítica ni fuentes remotas. El acceso, el alta y la
+     app son circuitos distintos: los formularios sí envían datos y la app mantiene sesión.
+     La descripción de la antigua web cerrada no se puede aplicar al servicio operativo.
 
-   La política de privacidad va DENTRO de esta misma página en vez de en otra aparte. Hoy el
-   sitio no trata ningún dato —no hay formulario activo—, así que dos documentos separados
-   serían dos sitios donde quedarse desactualizado en lugar de uno. */
+   La información de consultas por correo no se extiende sin comprobarla a las cuentas,
+   los datos operativos ni los servicios técnicos. Su revisión específica se registra en
+   el informe, en lugar de inventar destinatarios o plazos en este documento. */
 :root{
-  --ink:#22302b; --ink2:#3d4f47; --muted:#5c6b64; --paper:#fffefa; --bg:#f4f1e8;
-  --acc:#14634c; --acc-deep:#0e4a3a; --coral:#f4653a; --line:#e2dccc; --gold:#c98a2d;
+  --ink:#183b32; --ink2:#344a43; --muted:#556a62; --paper:#fff; --bg:#fbfaf6;
+  --acc:#14634c; --acc-deep:#123f33; --coral:#b7452a; --line:#d5e0d9; --gold:#c98a2d;
 }
 *{ box-sizing:border-box; }
 html,body{ margin:0; }
 body{
   background:var(--bg); color:var(--ink);
-  font:16px/1.62 "Atkinson Hyperlegible Next",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font:17px/1.62 "Atkinson Hyperlegible Next",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   padding:34px 18px 60px; position:relative; overflow-x:hidden;
 }
 body::before{
   content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
   background:
     radial-gradient(760px 420px at 12% -8%, rgba(20,99,76,.07), transparent 62%),
-    radial-gradient(680px 380px at 108% 8%, rgba(244,101,58,.06), transparent 60%);
+    radial-gradient(680px 380px at 108% 8%, rgba(255,234,220,.5), transparent 60%);
 }
 .doc{
-  position:relative; z-index:1; width:100%; max-width:640px; margin:0 auto;
-  background:var(--paper); border:1px solid var(--line); border-radius:18px;
+  position:relative; z-index:1; width:100%; max-width:720px; margin:0 auto;
+  background:var(--paper); border:1px solid var(--line); border-radius:22px;
   /* La curva la pone la tarjeta y no la franja de color: con su propio radio, una franja de
      3 px dibujaba otra curva distinta y sobresalía 1 px por lado. Ver entrar.html. */
   overflow:hidden;
@@ -69,15 +67,15 @@ body::before{
 }
 .doc::before{
   content:""; display:block; height:4px; margin:-34px -30px 24px;
-  background:linear-gradient(90deg,var(--acc),var(--gold) 55%,var(--coral));
+  background:linear-gradient(90deg,var(--acc),#e9f0ff 62%,#ffeadc);
 }
 .wm{ font:400 27px/1 Newsreader,"Iowan Old Style",Palatino,Georgia,serif; color:var(--acc); display:block; }
-h1{ font:600 23px/1.25 inherit; margin:20px 0 4px; }
-.sub{ margin:0 0 26px; font-size:13.5px; color:var(--muted); }
-h2{ font:700 15px/1.3 inherit; margin:30px 0 9px; color:var(--acc-deep);
+h1{ font:500 34px/1.15 Newsreader,Georgia,serif; margin:20px 0 4px; }
+.sub{ margin:0 0 26px; font-size:13px; color:var(--muted); }
+h2{ font:700 20px/1.3 "Atkinson Hyperlegible Next",system-ui,sans-serif; margin:30px 0 9px; color:var(--acc-deep);
   letter-spacing:.01em; }
-p{ margin:0 0 13px; font-size:15px; color:var(--ink2); }
-ul{ margin:0 0 13px; padding-left:20px; font-size:15px; color:var(--ink2); }
+p{ margin:0 0 13px; font-size:17px; color:var(--ink2); }
+ul{ margin:0 0 13px; padding-left:20px; font-size:17px; color:var(--ink2); }
 li{ margin-bottom:6px; }
 a{ color:var(--acc); }
 b,strong{ color:var(--ink); }
@@ -91,21 +89,31 @@ b,strong{ color:var(--ink); }
 }
 .ficha dt{ font-weight:700; color:var(--muted); font-size:13px; text-transform:uppercase;
   letter-spacing:.03em; padding-top:2px; }
-.ficha dd{ margin:0; color:var(--ink); }
+.ficha dd{ margin:0; color:var(--ink); overflow-wrap:anywhere; }
 @media (max-width:520px){
   .ficha{ grid-template-columns:1fr; gap:2px 0; }
   .ficha dd{ margin-bottom:10px; }
   .doc{ padding:28px 20px 24px; }
   .doc::before{ margin:-28px -20px 20px; }
 }
-.volver{ margin-top:30px; padding-top:18px; border-top:1px solid var(--line); font-size:14px; }
+.volver{ margin-top:30px; padding-top:18px; border-top:1px solid var(--line); font-size:15px; display:flex; flex-wrap:wrap; gap:8px 18px; }
+
+/* El marco comparte el papel, el contraste y el acento de la portada renovada. */
+:root{color-scheme:light}
+.wm{text-decoration:none}.wm span{color:var(--coral)}
+a:focus-visible{outline:3px solid var(--acc);outline-offset:4px}
+.salto-documento{position:absolute;top:-100px;left:16px;background:white;padding:12px;z-index:3}
+.salto-documento:focus{top:12px}
+.volver a{min-height:44px;display:inline-flex;align-items:center}
+@media(max-width:560px){h1{font-size:27px}}
 </style>
 </head>
 <body>
-<div class="doc">
-  <span class="wm">Audutor</span>
+<a class="salto-documento" href="#contenido">Skip to content</a>
+<main class="doc" id="contenido">
+  <a class="wm" href="../">Audutor<span aria-hidden="true">.</span></a>
   <h1>Legal notice and privacy</h1>
-  <p class="sub">Last updated: 4 August 2026</p>
+  <p class="sub">Last updated: 5 October 2026</p>
 
   <h2>Who is behind this site</h2>
   <dl class="ficha">
@@ -120,16 +128,21 @@ b,strong{ color:var(--ink); }
   no such registration exists, so there is no registry number to publish.</p>
 
   <h2>What this site is</h2>
-  <p>A presentation page for a product that is not yet open to the public, with a demo that
-  runs <b>entirely inside your browser</b>: the data you see is fictional, nothing you do in
-  it is sent to any server, and nothing is kept once you close it.</p>
-  <p>Prices shown exclude VAT. None of them is a contractual offer: the service is not on
-  sale yet.</p>
+  <p>Audutor’s commercial website presents the management system for tour operators and
+  lets you request access or create a company from the “Log in” page. The demo uses
+  <b>fictional data inside your browser</b>; it does not create real bookings or change
+  customer accounts.</p>
+  <p>Published prices exclude VAT. Each plan’s limits and conditions are described in the
+  pricing section of the website.</p>
 
   <h2>Your data</h2>
-  <p><b>This site collects no personal data today.</b> There are no active forms, no sign-up
-  and nothing is sent to any server. If you write to the address above, your email address is
-  used solely to reply to you.</p>
+  <p>When requesting access, the form sends your <b>email</b> to Audutor’s server to request
+  a login link. When creating a company, it sends your email, <b>company name</b> and
+  optional <b>country</b> to process the registration. Information you add to the system
+  afterwards is stored to provide its features; the demo and a real account are separate
+  spaces.</p>
+  <h2>Email enquiries</h2>
+  <p>The following information concerns enquiries sent to the contact address above.</p>
   <ul>
     <li><b>Controller:</b> the owner named above.</li>
     <li><b>Purpose:</b> to answer your enquiry and, if there is interest on both sides, to
@@ -147,10 +160,11 @@ b,strong{ color:var(--ink); }
   Commissioner&rsquo;s Office</a>; if you are in the EU, to your national authority or to the
   <a href="https://www.aepd.es/" rel="noopener">Spanish Data Protection Agency</a>.</p>
 
-  <h2>Cookies: there are none</h2>
-  <p>This site <b>sets no cookies</b> and uses no local storage, analytics, tracking pixels
-  or fonts loaded from third-party servers. That is why you will not see a banner asking for
-  your permission: there is nothing to permit.</p>
+  <h2>Technology used by the website and app</h2>
+  <p>The information pages do not include analytics or tracking pixels, and fonts are served
+  by Audutor. The login and registration forms communicate with its server. The app manages
+  sessions and uses device storage to retain data and supported actions while offline;
+  it should not be confused with the information pages or the demo.</p>
 
   <h2>Intellectual property</h2>
   <p>The text, design, code and trade marks on this site belong to its owner unless stated
@@ -170,6 +184,6 @@ b,strong{ color:var(--ink); }
   you may have as a consumer under the mandatory law of your country of residence.</p>
 
   <p class="volver"><a href="../">&larr; Back to the site</a> &middot; <a href="../../aviso-legal/">Versi&oacute;n en espa&ntilde;ol</a></p>
-</div>
+</main>
 </body>
 </html>

@@ -30,14 +30,15 @@
    Es la misma regla de `CONTACTO_EMAIL` en la portada: un solo sitio que tocar, y
    mientras esté vacío se dice en vez de simularlo. */
 :root{
-  --ink:#22302b; --ink2:#3d4f47; --muted:#5c6b64; --paper:#fffefa; --bg:#f4f1e8;
-  --acc:#14634c; --acc-deep:#0e4a3a; --coral:#f4653a; --line:#e2dccc; --gold:#c98a2d;
+  color-scheme:light;
+  --ink:#183b32; --ink2:#344a43; --muted:#556a62; --paper:#fff; --bg:#fbfaf6;
+  --acc:#14634c; --acc-deep:#0e4a3a; --coral:#b7452a; --line:#d5e0d9; --gold:#c98a2d;
 }
 *{ box-sizing:border-box; }
 html,body{ margin:0; }
 body{
   min-height:100vh; background:var(--bg); color:var(--ink);
-  font:16px/1.55 "Atkinson Hyperlegible Next",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font:17px/1.55 "Atkinson Hyperlegible Next",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   padding:28px 18px; position:relative; overflow-x:hidden;
 }
@@ -45,18 +46,19 @@ body{
 body::before{
   content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
   background:
-    radial-gradient(760px 420px at 12% -8%, rgba(20,99,76,.07), transparent 62%),
-    radial-gradient(680px 380px at 108% 8%, rgba(244,101,58,.06), transparent 60%);
+    radial-gradient(760px 420px at 12% -8%, rgba(20,99,76,.06), transparent 62%),
+    radial-gradient(680px 380px at 108% 8%, rgba(185,208,238,.24), transparent 60%);
 }
 .caja{
-  position:relative; z-index:1; width:100%; max-width:392px; background:var(--paper);
-  border:1px solid var(--line); border-radius:18px; padding:30px 26px 26px;
+  position:relative; z-index:1; width:100%; max-width:440px; background:var(--paper);
+  border:1px solid var(--line); border-radius:22px; padding:30px 26px 26px;
   /* La franja de color de arriba se sale con `margin` negativo para llegar de lado a
      lado, y con su propio `border-radius` NO seguía la curva de la tarjeta: un radio
      de 18 px sobre una franja de 3 px de alto dibuja otra curva distinta, y encima
      sobresalía 1 px por cada lado porque el margen no contaba el borde.
      Con `overflow:hidden` la curva la pone la TARJETA y la franja se recorta contra
-     ella: deja de adivinarla y por eso encaja exacta. */
+     ella: deja de adivinarla y por eso encaja exacta. La curva sigue perteneciendo a
+     la tarjeta al ampliar el radio con la nueva portada. */
   overflow:hidden;
   box-shadow:0 1px 2px rgba(34,48,43,.05), 0 12px 34px -12px rgba(34,48,43,.16);
 }
@@ -66,24 +68,24 @@ body::before{
 }
 .wm{ font:400 27px/1 Newsreader,"Iowan Old Style",Palatino,Georgia,serif; color:var(--acc); display:block; }
 .wm svg{ display:block; width:96px; height:12px; margin:5px 0 0; }
-.pie{ display:block; margin-top:9px; font-size:12.5px; color:var(--muted); }
-h1{ font:600 19px/1.25 inherit; margin:22px 0 6px; }
-.lead{ margin:0 0 20px; font-size:14px; color:var(--ink2); }
-label{ display:block; font-size:12px; font-weight:600; letter-spacing:.02em;
-  text-transform:uppercase; color:var(--muted); margin:0 0 5px; }
+.pie{ display:block; margin-top:9px; font-size:13px; color:var(--muted); }
+h1{ font:500 34px/1.14 Newsreader,Georgia,serif; margin:24px 0 10px; letter-spacing:-.025em; }
+.lead{ margin:0 0 20px; font-size:15px; color:var(--ink2); }
+label{ display:block; font-size:15px; font-weight:600;
+  color:var(--ink); margin:0 0 6px; }
 input{
-  width:100%; min-height:48px; padding:11px 13px; font:inherit; font-size:16px;
-  color:var(--ink); background:#faf7ef; border:1.5px solid var(--line); border-radius:11px;
+  width:100%; min-height:48px; padding:11px 13px; font:inherit; font-size:17px;
+  color:var(--ink); background:#fbfdfb; border:1.5px solid var(--line); border-radius:12px;
 }
 select{
-  width:100%; min-height:48px; padding:11px 13px; font:inherit; font-size:16px;
-  color:var(--ink); background:#faf7ef; border:1.5px solid var(--line); border-radius:11px;
+  width:100%; min-height:48px; padding:11px 13px; font:inherit; font-size:17px;
+  color:var(--ink); background:#fbfdfb; border:1.5px solid var(--line); border-radius:12px;
 }
 select:focus{ outline:none; border-color:var(--acc); box-shadow:0 0 0 3.5px rgba(20,99,76,.15); }
 input:focus{ outline:none; border-color:var(--acc);
   box-shadow:0 0 0 3.5px rgba(20,99,76,.15); }
 button{
-  width:100%; min-height:50px; margin-top:14px; border:0; border-radius:11px;
+  width:100%; min-height:50px; margin-top:14px; border:0; border-radius:12px;
   background:var(--acc); color:#fff; font:inherit; font-weight:700; font-size:15px;
   cursor:pointer; transition:background .15s;
 }
@@ -94,18 +96,18 @@ button:disabled{ background:var(--line); color:var(--muted); cursor:default; }
    que es. Ahora son dos pestañas de verdad arriba de la tarjeta —lo primero que se ve al
    llegar— con la elegida en relieve sobre un carril hundido.
 
-   `width:auto` y `min-height:0` no sobran: la página tiene un `button{ width:100% }`
+   `width:auto` y el alto propio no sobran: la página tiene un `button{ width:100% }`
    global para los botones de enviar, y sin desactivarlo aquí cada pestaña se comía una
    línea entera. Es el mismo choque de siempre entre una regla de elemento y una clase
    nueva. */
 .modos{
   display:flex; gap:4px; margin:0 0 20px; padding:4px;
-  background:#f1ece0; border-radius:12px; border:1px solid var(--line);
+  background:#eef4f0; border-radius:12px; border:1px solid var(--line);
 }
 .modo{
-  flex:1; width:auto; min-height:42px; margin:0; padding:0 10px;
+  flex:1; width:auto; min-height:44px; margin:0; padding:0 10px;
   border:0; border-radius:9px; background:transparent; cursor:pointer;
-  font:inherit; font-size:14px; font-weight:700; color:var(--ink2);
+  font:inherit; font-size:15px; font-weight:700; color:var(--ink2);
   transition:background .16s ease, color .16s ease, box-shadow .16s ease;
 }
 /* La elegida se distingue por RELIEVE y no solo por color: sobre el carril hundido, la
@@ -114,21 +116,31 @@ button:disabled{ background:var(--line); color:var(--muted); cursor:default; }
   background:var(--paper); color:var(--ink);
   box-shadow:0 1px 2px rgba(74,61,32,.10), 0 2px 6px -2px rgba(74,61,32,.16);
 }
-.modo:focus-visible{ outline:3px solid var(--acc); outline-offset:2px; }
+.modo:focus-visible,button:focus-visible,a:focus-visible{ outline:3px solid var(--coral); outline-offset:3px; }
+.acceso-app{ display:flex; align-items:center; justify-content:center; min-height:48px;
+  padding:12px; border-radius:12px; background:var(--acc); color:#fff;
+  text-align:center; text-decoration:none; font-size:15px; font-weight:700; }
+.acceso-app:hover{ background:var(--acc-deep); }
+.acceso-nota{ margin:14px 0 18px; font-size:13px; color:var(--muted); }
+.alta-condiciones{ margin:0 0 20px; padding:14px; border:1px solid var(--line);
+  border-radius:12px; background:#e9f5ef; font-size:13px; color:var(--ink2); }
+.alta-condiciones b{ display:block; color:var(--ink); margin-bottom:4px; }
 @media (prefers-reduced-motion:reduce){ .modo{ transition:none; } }
 .campo-mas{ margin-top:14px; }
-.aviso{ margin:16px 0 0; font-size:13.5px; line-height:1.45; }
+.aviso{ margin:16px 0 0; font-size:13px; line-height:1.45; }
 .aviso.malo{ color:var(--coral); }
 .aviso.bueno{ color:var(--acc); }
 .cerrado{ margin:0; padding:14px 15px; border-radius:12px; background:#faf7ef;
   border:1px solid var(--line); border-left:3px solid var(--gold);
-  font-size:13.5px; line-height:1.45; color:var(--ink2); }
+  font-size:13px; line-height:1.45; color:var(--ink2); }
 .abajo{ margin:20px 0 0; padding-top:16px; border-top:1px dashed var(--line);
   font-size:13px; color:var(--muted); }
 .abajo a{ color:var(--acc); font-weight:600; }
 .volver{ position:relative; z-index:1; margin:16px 0 0; font-size:13px; }
 .volver a{ color:var(--muted); text-decoration:none; }
 .volver a:hover{ color:var(--acc); }
+@media(max-width:400px){ .caja{ padding:26px 20px 22px; }
+  .caja::before{ margin:-26px -20px 20px; } h1{ font-size:27px; } }
 @media (prefers-reduced-motion:no-preference){
   .caja{ animation:sube .45s cubic-bezier(.16,.7,.22,1) both; }
   @keyframes sube{ from{ opacity:0; transform:translateY(10px); } }
@@ -143,20 +155,23 @@ button:disabled{ background:var(--line); color:var(--muted); cursor:default; }
       stroke-width="1.7" stroke-dasharray="0.1 5.2" stroke-linecap="round"/>
     <path d="M90 1.4c-2.4 0-4.4 2-4.4 4.4 0 3.2 4.4 7 4.4 7s4.4-3.8 4.4-7c0-2.4-2-4.4-4.4-4.4z"
       fill="#f4653a"/><circle cx="90" cy="5.9" r="1.7" fill="#fffefa"/></svg>
-    <span class="pie">la agenda del guía</span></span>
+    <span class="pie">De la reserva al reparto</span></span>
 
   <h1>Entra en Audutor</h1>
   <p class="lead">Entra con tu correo o el acceso guardado en tu dispositivo.</p>
+  <p class="alta-condiciones" id="alta-condiciones" hidden><b>Empiezas en Esencial, sin tarjeta.</b>
+    1 tour · 2 guías · 150 viajeros al mes. Si eliges un plan de pago, su primer mes es gratis.
+    El panel y la app del guía funcionan en español.</p>
 
   <div class="modos" role="tablist" aria-label="Entrar o crear cuenta">
     <button type="button" class="modo" id="tab-entrar" role="tab" aria-selected="true"
-            aria-controls="f">Entrar</button>
+            aria-controls="f" tabindex="0">Entrar</button>
     <button type="button" class="modo" id="tab-alta" role="tab" aria-selected="false"
-            aria-controls="fa">Crear cuenta</button>
+            aria-controls="fa" tabindex="-1">Crear empresa</button>
   </div>
-  <form id="f" hidden>
-    <a id="acceso-app" href="https://audutor.fly.dev/" style="display:block;padding:14px;border-radius:10px;background:#165344;color:#fffefa;text-align:center;text-decoration:none;font-weight:700;">Entrar con código o dispositivo</a>
-    <p style="font-size:13px;line-height:1.6;">Abre Audutor para usar el código de tu correo o el acceso que guardaste con huella, rostro o PIN. También puedes pedir un enlace debajo.</p>
+  <form id="f" role="tabpanel" aria-labelledby="tab-entrar" hidden>
+    <a id="acceso-app" class="acceso-app" href="https://audutor.fly.dev/">Entrar con código o dispositivo</a>
+    <p class="acceso-nota">Abre Audutor para usar el código de tu correo o el acceso que guardaste con huella, rostro o PIN. También puedes pedir un enlace debajo.</p>
     <label for="e">Tu correo</label>
     <input id="e" type="email" inputmode="email" autocomplete="email" required
            placeholder="tu@empresa.com">
@@ -165,7 +180,7 @@ button:disabled{ background:var(--line); color:var(--muted); cursor:default; }
   </form>
 
 
-  <form id="fa" hidden>
+  <form id="fa" role="tabpanel" aria-labelledby="tab-alta" aria-describedby="alta-condiciones" hidden>
     <label for="ae">Tu correo</label>
     <input id="ae" type="email" inputmode="email" autocomplete="email" required
            placeholder="tu@empresa.com">
@@ -184,7 +199,7 @@ button:disabled{ background:var(--line); color:var(--muted); cursor:default; }
       <option value="NL">Países Bajos</option>
       <option value="XX">Otro país</option>
     </select>
-    <button type="submit" id="ab">Crear la cuenta</button>
+    <button type="submit" id="ab">Crear mi empresa</button>
     <p class="aviso" id="amsg" role="status" aria-live="polite"></p>
   </form>
 
@@ -247,18 +262,32 @@ var APP_URL = 'https://audutor.fly.dev';
   var h1 = document.querySelector('h1');
   var lead = document.querySelector('.lead');
 
-  function modo(alta){
+  function modo(alta, foco){
     f.hidden = alta; fa.hidden = !alta;
     tabEntrar.setAttribute('aria-selected', String(!alta));
     tabAlta.setAttribute('aria-selected', String(alta));
-    h1.textContent = alta ? 'Crea tu cuenta' : 'Entra en Audutor';
+    tabEntrar.tabIndex = alta ? -1 : 0; tabAlta.tabIndex = alta ? 0 : -1;
+    document.getElementById('alta-condiciones').hidden = !alta;
+    h1.textContent = alta ? 'Crea tu empresa' : 'Entra en Audutor';
     lead.textContent = alta
       ? 'Sin tarjeta y sin permanencia. Te mandamos el enlace de entrada al correo.'
       : 'Entra con tu correo o el acceso guardado en tu dispositivo.';
-    (alta ? document.getElementById('ae') : document.getElementById('e')).focus();
+    if (foco === 'campo') (alta ? document.getElementById('ae') : document.getElementById('e')).focus();
+    if (foco === 'pestana') (alta ? tabAlta : tabEntrar).focus();
   }
-  tabAlta.addEventListener('click', function(){ modo(true); });
-  tabEntrar.addEventListener('click', function(){ modo(false); });
+  tabAlta.addEventListener('click', function(){ modo(true, 'pestana'); });
+  tabEntrar.addEventListener('click', function(){ modo(false, 'pestana'); });
+  // Con flechas el foco se queda en la pestaña; Tab entra después en el panel visible.
+  // La URL de alta abre el correo directamente, sin pedir ni crear nada al cargar.
+  [tabEntrar, tabAlta].forEach(function(tab, i){
+    tab.addEventListener('keydown', function(e){
+      var n = e.key === 'ArrowRight' || e.key === 'ArrowLeft' ? 1-i
+        : e.key === 'Home' ? 0 : e.key === 'End' ? 1 : null;
+      if (n === null) return;
+      e.preventDefault(); modo(n === 1, 'pestana');
+    });
+  });
+  if (new URLSearchParams(location.search).get('modo') === 'alta') modo(true, 'campo');
 
   fa.addEventListener('submit', function(ev){
     ev.preventDefault();
@@ -288,7 +317,7 @@ var APP_URL = 'https://audutor.fly.dev';
       amsg.textContent = 'Hecho. Mira tu correo: te hemos mandado el enlace para entrar.';
       ab.textContent = 'Hecho';
     }).catch(function(e){
-      ab.disabled = false; ab.textContent = 'Crear la cuenta';
+      ab.disabled = false; ab.textContent = 'Crear mi empresa';
       amsg.className = 'aviso malo';
       amsg.textContent = 'No se ha podido: ' + e.message;
     });
