@@ -598,6 +598,7 @@
   body:not(.modo-guia) .att .chk{ min-height:32px; padding:0 4px; font-size:11.5px; letter-spacing:-3px; }
   body:not(.modo-guia) .att.ok .chk::after{ top:-5px; right:-5px; width:15px; height:15px; line-height:15px; font-size:11.5px; }
   body:not(.modo-guia) .btn-walkin{ width:auto; padding:7px 14px; font-size:13px; }
+  .btn-hora{ margin:10px 0 0 8px; padding:7px 14px; font-size:13px; font-weight:700; }
   .att:has(> .att-acciones:not([hidden])){ flex-wrap:wrap; }
   .att-mas{ flex:0 0 auto; width:30px; height:32px; padding:0; border:1.5px solid var(--line); border-radius:10px;
     background:var(--paper); color:var(--ink2); font:inherit; font-size:17px; font-weight:800; line-height:1; }
@@ -8912,6 +8913,31 @@ function abreMoverDemo(t, a, diaAhora, origen){
   pinta();
   dlg.showModal();
 }
+/* «🕒 Cambiar la hora» de una salida, como en el manifiesto de la app (5-oct-2026). Un cliente
+   no podía retrasar un tour. Las reservas se quedan dentro; las plataformas no se enteran
+   solas, y se dice. */
+function horaDemo(mov, t, dia){
+  var b=document.createElement('button'); b.type='button'; b.className='btn sec btn-hora';
+  b.textContent='🕒 Cambiar la hora'; b.setAttribute('aria-label','Cambiar la hora de la salida de las '+t.hora);
+  var f=document.createElement('div'); f.className='walkin-form hora-form'; f.style.display='none';
+  f.innerHTML='<p class="mini" style="margin:0 0 8px">'+'Las reservas, el guía y las notas se quedan en esta salida. Las plataformas no se enteran solas: cámbialo también allí y avisa a los viajeros.'+'</p>'+
+    '<label class="mini">'+'Nueva hora'+' <input type="time" class="hd-hora" value="'+t.hora+'"></label>'+
+    '<button class="btn hd-si" style="width:100%;margin-top:8px;">'+'Cambiar la hora'+'</button>';
+  b.setAttribute('aria-expanded','false');
+  b.onclick=function(){ var abre=f.style.display==='none'; f.style.display=abre?'block':'none'; b.setAttribute('aria-expanded',String(abre)); if(abre) f.querySelector('.hd-hora').focus(); };
+  f.querySelector('.hd-si').onclick=function(){
+    var v=f.querySelector('.hd-hora').value;
+    if(!/^\d\d:\d\d$/.test(v)){ toast('Escribe la hora como 10:30.'); return; }
+    if(v===t.hora){ f.style.display='none'; return; }
+    if(dia.tours.some(function(x){ return x!==t && x.tit===t.tit && x.hora===v; })){ toast('Ya hay una salida de «'+t.tit+'» a las '+v+': pasa las reservas a esa con «⋯».'); return; }
+    var de=t.hora; if(!t.horaAntes) t.horaAntes=de; t.hora=v; if(t.horaAntes===v) delete t.horaAntes;
+    (t.obs||(t.obs=[])).push({ a:'sistema', rec:true, t:'Hora cambiada: de las '+de+' a las '+v+'. Las reservas siguen en esta salida. En las plataformas sigue la hora de antes hasta cambiarla allí.' });
+    pintaManifiesto();
+    toast('🕒 La salida pasa a las '+v+'. Sus '+t.res.length+' reservas siguen dentro: cambia la hora también en las plataformas y avisa a los viajeros.');
+  };
+  mov.appendChild(b); mov.appendChild(f);
+}
+
 function pintaManifiestoReal(){
   var tt=agTotales();
   document.getElementById('ag-sem-pax').textContent=tt.semPax;
@@ -8958,7 +8984,7 @@ function pintaManifiestoReal(){
     var faltan=t.res.reduce(function(s,r){return s+(r.walkin?0:Math.max(0,r.res0-(r.ok?r.p:0)))},0);
     var descu=t.res.reduce(function(s,r){ return s+(r.res0-r.p); },0);  // reservado − real
     var h='<div class="fila" style="justify-content:space-between; margin-bottom:4px;">'+
-      '<b>🕒 '+t.hora+' · '+t.tit+'</b>'+chip+'</div>'+
+      '<b>🕒 '+t.hora+(t.horaAntes?' <span class="mini muted">antes '+t.horaAntes+'</span>':'')+' · '+t.tit+'</b>'+chip+'</div>'+
       '<div class="mini muted" style="margin-bottom:6px;">Guía: <b>'+t.guia+'</b> · '+t.res.length+' reserva'+(t.res.length===1?'':'s')+'</div>'+
       '<div class="sem">👥 <b>'+pax+' personas</b> · ✓ '+pres+' en el punto'+
         (tarde.length?' · <b>⏰ '+tarde.length+' tarde</b>':'')+
@@ -9046,6 +9072,8 @@ function pintaManifiestoReal(){
       toast('➕ '+nom+' ('+p+'p) añadido al tour de las '+t.hora+' — cuenta para recaudación y liquidación');
     };
     mov.appendChild(wbtn); mov.appendChild(wform);
+    /* Cambiar la hora de esta salida, como en el manifiesto de la app (5-oct-2026). */
+    if (!S.guiaVista && !dia.pasado && !t.live) horaDemo(mov, t, dia);
     // caja de recaudación
     var caja=document.createElement('div'); caja.className='caja-ingresos';
     var media = t.rec && pres ? ' · media '+euros(t.rec/pres)+'/persona' : '';
