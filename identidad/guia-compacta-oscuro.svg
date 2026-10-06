@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-4.5 -8 109 109" role="img" aria-label="GuIA, asistente IA de Audutor">
+  <!-- GuIA compacta (6-oct-2026), para 48 px o menos: chat y menús, sobre fondos oscuros: contorno crema. Sin brazos; el paraguas queda como
+       un casquete dorado y la cara ocupa más de la mitad del ancho para leerse a 24 px. -->
+  <path stroke="#fffefa" stroke-width="3.4" stroke-linejoin="round" paint-order="stroke" d="M50 98C41 87 13 76 13 54a37 37 0 1 1 74 0c0 22-28 33-37 44Z" fill="#14634c"/>
+  <path d="M50 17a37 37 0 0 1 37 37c0 22-28 33-37 44c8-17 25-28 25-44a37 37 0 0 0-25-37Z" fill="#0f5240"/>
+  <path d="M26 16Q28 1 50 0Q72 1 74 16Q68 12 62 16Q56 12 50 16Q44 12 38 16Q32 12 26 16Z" fill="#d9b16b" stroke="#a8823f" stroke-width="2.5" stroke-linejoin="round"/>
+  <circle cx="50" cy="-1.5" r="2.4" fill="#a8823f"/>
+  <circle cx="50" cy="56" r="27" fill="#fffefa"/>
+  <ellipse cx="40.5" cy="52" rx="4.4" ry="5.4" fill="#183b32"/>
+  <ellipse cx="59.5" cy="52" rx="4.4" ry="5.4" fill="#183b32"/>
+  <path d="M39.5 64.5q10.5 8.5 21 0" fill="none" stroke="#183b32" stroke-width="4.4" stroke-linecap="round"/>
+</svg>

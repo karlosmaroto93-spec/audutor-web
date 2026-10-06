@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="15 -19 170 214" role="img" aria-label="GuIA, asistente IA de Audutor">
+  <!-- GuIA completa (6-oct-2026), para 64 px o más, sobre fondos oscuros: contorno crema. Pin del punto de encuentro con el paraguas del guía.
+       Vectorial plano, dos tonos por color, sin brillos ni sombra: la versión 3D generada no se leía en
+       pequeño, desaparecía sobre verde oscuro y su paraguas se fundía con el melocotón de la sección.
+       Crítica: docs/evaluaciones/2026-10-06-identidad-guia/critica-claude/critica-opcion-a.md -->
+  <line x1="111" y1="17" x2="144" y2="146" stroke="#a8823f" stroke-width="5" stroke-linecap="round"/>
+  <path d="M144 146c2.5 10-3 17.5-10.5 16.5s-9-7-7.8-11.5" fill="none" stroke="#a8823f" stroke-width="5" stroke-linecap="round"/>
+  <g transform="translate(111 18) rotate(14)">
+    <path d="M-62 43Q-60-1 0-5Q60-1 62 43Q46.5 34.5 31 43Q15.5 34.5 0 43Q-15.5 34.5-31 43Q-46.5 34.5-62 43Z" fill="#d9b16b" stroke="#a8823f" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M0-5Q-13 18-15.5 40M0-5Q13 18 15.5 40" fill="none" stroke="#b8924f" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="0" cy="-7.5" r="4" fill="#a8823f"/>
+  </g>
+  <path stroke="#fffefa" stroke-width="5" stroke-linejoin="round" paint-order="stroke" d="M100 184C80 158 47 133 47 100a53 53 0 1 1 106 0c0 33-33 58-53 84Z" fill="#14634c"/>
+  <path d="M100 47a53 53 0 0 1 53 53c0 33-33 58-53 84c11-27 35-50 35-84a53 53 0 0 0-35-53Z" fill="#0f5240"/>
+  <circle stroke="#fffefa" stroke-width="5" stroke-linejoin="round" paint-order="stroke" cx="140" cy="137" r="8.5" fill="#14634c"/>
+  <circle cx="100" cy="98" r="37" fill="#fffefa"/>
+  <ellipse cx="87" cy="94" rx="5.5" ry="6.5" fill="#183b32"/>
+  <ellipse cx="113" cy="94" rx="5.5" ry="6.5" fill="#183b32"/>
+  <path d="M86 109q14 12 28 0" fill="none" stroke="#183b32" stroke-width="5" stroke-linecap="round"/>
+</svg>

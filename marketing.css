@@ -44,3 +44,14 @@
 .boton-demo{background:#d9b16b;color:var(--tinta);border-color:#b58b43;box-shadow:0 3px 0 #a77d3830}
 .boton-demo:hover{background:#e2bc76;box-shadow:0 3px 0 #a77d3830}
 @media(max-width:700px){html{scroll-padding-top:146px}.barra{display:grid;grid-template-columns:1fr auto;gap:12px;padding-top:12px;padding-bottom:12px}.menu{margin-left:0}.menu div{top:62px;right:20px}.acciones-cabecera{grid-column:1/-1;display:grid;grid-template-columns:1fr 1.5fr;gap:10px}.boton-cabecera{font-size:15px;min-height:44px;padding:10px 12px}.boton-acceso{display:inline-flex}}
+
+/* GuIA con su mascota (6-oct-2026). La figura y el nombre van en una sola pieza junto al
+   titular, en vez de tres niveles antes del título. En el ejemplo, la versión compacta: la
+   completa no se lee a 36 px. Crítica y reglas en docs/evaluaciones/2026-10-06-identidad-guia/. */
+.guia-marca{display:flex;align-items:center;gap:16px;margin-bottom:12px}
+.guia-figura{flex:0 0 auto;width:80px;height:auto}
+.guia-marca h3{margin:4px 0 0}
+.dialogo-cab{display:flex;align-items:center;gap:10px;padding-bottom:12px;margin-bottom:12px;border-bottom:1px solid #efcdb8;font-size:13px;color:var(--verde)}
+.guia-avatar{display:grid;place-items:center;flex:0 0 auto;width:36px;height:36px;border-radius:50%;background:#fffefa;border:1px solid #efcdb8}
+.guia-avatar img{width:28px;height:28px}
+@media(max-width:700px){.guia-figura{width:64px}}

@@ -1009,11 +1009,12 @@
   @media (max-width:760px){ .cab{ padding-right:0; } .cab::after{ display:none; } }
 
   /* ---------- mascota GuIA: pin sonriente con paraguas (definida una vez, reutilizada con <use>) ---------- */
-  .guia-cab{ width:46px; height:auto; align-self:center; margin-right:-2px; flex:0 0 auto; }
+  /* Cuadrada: sin proporción, la caja del SVG crecía a 150 px de alto y la mascota caía bajo el título. */
+  .guia-cab{ width:46px; height:auto; aspect-ratio:1; align-self:center; margin-right:-2px; flex:0 0 auto; }
   .guia-xs{ width:26px; height:auto; vertical-align:-7px; margin-right:4px; }
   .guia-bocadillo{ display:flex; gap:12px; align-items:center; background:var(--turq-soft);
     border:1px solid #bfe4dc; border-radius:15px; padding:10px 12px; margin-bottom:10px; max-width:520px; }
-  .guia-bocadillo .guia-m{ width:46px; height:auto; flex:0 0 auto; }
+  .guia-bocadillo .guia-m{ width:46px; height:auto; aspect-ratio:1; flex:0 0 auto; }
   .guia-boc{ position:relative; background:#fff; border:1px solid #cde8e1; border-radius:13px 13px 13px 4px;
     padding:8px 12px; font-size:13px; color:#155a51; line-height:1.45; }
   .brujula{ width:36px; height:36px; display:block; margin:0 0 8px; opacity:.85; }
@@ -1087,42 +1088,17 @@
 
 <!-- Mascota GuIA (pin de mapa sonriente con paraguas de free tour) — misma que la landing, inline y reutilizable -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <symbol id="guia" viewBox="0 0 150 158">
-    <radialGradient id="g-sombra-d" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#1f2a25" stop-opacity=".14"/>
-      <stop offset="100%" stop-color="#1f2a25" stop-opacity="0"/>
-    </radialGradient>
-    <ellipse cx="72" cy="150" rx="46" ry="7" fill="url(#g-sombra-d)"/>
-    <path d="M104 20 L104 92" stroke="#8a5a12" stroke-width="4.2" stroke-linecap="round"/>
-    <path d="M104 92 q0 10 -10 10" fill="none" stroke="#8a5a12" stroke-width="4.2" stroke-linecap="round"/>
-    <circle cx="104" cy="15" r="3.6" fill="#c98a2d"/>
-    <clipPath id="capota-d"><path d="M62 47 Q104 4 146 47 Q133 38 119 47 Q104 38 90 47 Q76 38 62 47 Z"/></clipPath>
-    <g clip-path="url(#capota-d)">
-      <rect x="58" y="2" width="92" height="48" fill="#f4653a"/>
-      <path d="M104 4 L84 50 L104 50 Z" fill="#ff8a5f"/>
-      <path d="M104 4 L124 50 L104 50 Z" fill="#e2532b"/>
-      <path d="M104 4 L96 50 L112 50 Z" fill="#ffe3c0"/>
-    </g>
-    <path d="M62 47 Q104 4 146 47" fill="none" stroke="#c43f1a" stroke-width="2.4" stroke-linecap="round"/>
-    <path d="M104 6 L90 47 M104 6 L119 47" stroke="#c43f1a" stroke-width="1.2" opacity=".5"/>
-    <linearGradient id="g-pin-d" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#17a37f"/>
-      <stop offset="100%" stop-color="#0c6b56"/>
-    </linearGradient>
-    <path d="M52 30 C31 30 15 46 15 66 C15 93 52 128 52 128 S89 93 89 66 C89 46 73 30 52 30 Z" fill="url(#g-pin-d)"/>
-    <path d="M28 46 Q24 56 26 66" fill="none" stroke="#fdf6e8" stroke-width="3" stroke-linecap="round" opacity=".35"/>
-    <circle cx="52" cy="66" r="21" fill="#fdf6e8"/>
-    <circle cx="44.5" cy="62" r="3" fill="#1f2a25"/>
-    <circle cx="59.5" cy="62" r="3" fill="#1f2a25"/>
-    <circle cx="45.6" cy="60.8" r="1" fill="#fff"/>
-    <circle cx="60.6" cy="60.8" r="1" fill="#fff"/>
-    <path d="M41 55.5 Q44.5 53.5 48 55.2" fill="none" stroke="#1f2a25" stroke-width="1.6" stroke-linecap="round" opacity=".7"/>
-    <path d="M56 55.2 Q59.5 53.5 63 55.5" fill="none" stroke="#1f2a25" stroke-width="1.6" stroke-linecap="round" opacity=".7"/>
-    <path d="M43.5 70 Q52 79 60.5 70 Q52 74.5 43.5 70 Z" fill="#1f2a25"/>
-    <circle cx="37" cy="68.5" r="3.4" fill="#ff8a5f" opacity=".6"/>
-    <circle cx="67" cy="68.5" r="3.4" fill="#ff8a5f" opacity=".6"/>
-    <path d="M86 78 Q97 73 103 82" fill="none" stroke="#0c6b56" stroke-width="7" stroke-linecap="round"/>
-    <circle cx="103" cy="83" r="4.6" fill="#0c6b56"/>
+  <symbol id="guia" viewBox="-4.5 -8 109 109">
+    <!-- GuIA compacta, plana (6-oct-2026): la misma que producto/identidad/guia-compacta.svg. La anterior,
+         con degradados, paraguas coral y sombra, no se leía a 46 px. -->
+  <path d="M50 98C41 87 13 76 13 54a37 37 0 1 1 74 0c0 22-28 33-37 44Z" fill="#14634c"/>
+  <path d="M50 17a37 37 0 0 1 37 37c0 22-28 33-37 44c8-17 25-28 25-44a37 37 0 0 0-25-37Z" fill="#0f5240"/>
+  <path d="M26 16Q28 1 50 0Q72 1 74 16Q68 12 62 16Q56 12 50 16Q44 12 38 16Q32 12 26 16Z" fill="#d9b16b" stroke="#a8823f" stroke-width="2.5" stroke-linejoin="round"/>
+  <circle cx="50" cy="-1.5" r="2.4" fill="#a8823f"/>
+  <circle cx="50" cy="56" r="27" fill="#fffefa"/>
+  <ellipse cx="40.5" cy="52" rx="4.4" ry="5.4" fill="#183b32"/>
+  <ellipse cx="59.5" cy="52" rx="4.4" ry="5.4" fill="#183b32"/>
+  <path d="M39.5 64.5q10.5 8.5 21 0" fill="none" stroke="#183b32" stroke-width="4.4" stroke-linecap="round"/>
   </symbol>
 </svg>
 
