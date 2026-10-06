@@ -19,3 +19,28 @@
 @media(max-width:700px){html{scroll-padding-top:95px}.ancho{padding-inline:20px}.barra{min-height:74px;gap:10px}.boton-cabecera.secundario,.barra>.idioma{display:none}.boton-cabecera{font-size:13px;padding:10px 12px;min-height:44px}.hero{grid-template-columns:1fr;padding-block:30px;gap:26px}.hero h1{margin-block:12px 16px}.lead{font-size:17px}.acciones-hero{margin-block:20px 12px;gap:8px}.boton-hero{font-size:15px;padding:12px 14px}.condiciones{font-size:13px}.vistazo{border-radius:22px;padding:10px}.cuaderno-panel{padding:14px}.cuaderno-cifras{gap:12px}.cuaderno-fila{gap:6px;font-size:13px}.cuaderno-fila small{font-size:11.5px}.cuaderno-ajuste{gap:3px}.cuaderno-ajuste button{width:40px}.cuaderno-ajuste output{min-width:31px}.cuaderno-tabs button{font-size:13px}.conexiones .ancho{gap:12px}.capitulo{padding-block:44px}.capitulo-cab{display:block;margin-bottom:24px}.capitulo-cab p{margin-top:16px}.funciones,.planes,.alta-pasos,.confianza-filas,.comp,.calc-opciones{grid-template-columns:1fr}.funcion:first-child{grid-column:auto}.funcion,.plan{padding:22px}.plan.destacado{padding:21px}.alta-pasos{gap:26px}.alta-paso{padding-top:18px}.alta-paso img{height:220px;object-fit:contain;object-position:top;background:#f4f7f3}.comp{gap:16px;padding:22px}.final{padding:24px;border-radius:22px}.boton-final{width:100%}.pie{margin-top:30px}.etiqueta{font-size:11.5px}.calc-res{gap:12px}.detalle-precio{padding:14px}.calc-pregunta label{font-size:15px}.tf-o{flex-wrap:wrap}.tf-p{margin-left:32px}.mini-largo{flex-wrap:wrap}}
 @media(max-width:360px){.ancho{padding-inline:14px}.barra{gap:7px}.boton-cabecera{padding-inline:9px}.marca{font-size:27px}.cuaderno-fila{flex-wrap:wrap}.cuaderno-ajuste{margin-left:auto}.cuaderno-cifras span{font-size:11.5px}.calc-res{grid-template-columns:1fr}.calc-pregunta{flex-wrap:wrap}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
+
+/* La cabecera separa el acceso al trabajo del lienzo claro. Entrar queda visible
+   también en el móvil: esconderlo dentro del menú hacía pasar por dos mandos. */
+.cabecera{background:var(--tinta);background-image:linear-gradient(110deg,var(--tinta),var(--verde));color:#fffefa;border-bottom-color:#a4894d;box-shadow:0 6px 24px #183b3225}
+.cabecera :focus-visible{outline-color:#ffcfad}
+.salto:focus-visible{outline-color:#ffcfad}
+.navegacion a{color:#fffefa}
+.navegacion a:hover{background:#ffffff14;color:#fffefa}
+.navegacion a[aria-current=location]{color:#fffefa;border-bottom-color:#d9b16b}
+.idioma{min-width:44px;justify-content:center;border:1px solid #ffffff38;border-radius:9px}
+.menu summary{border-color:#ffffff66;background:#ffffff0a}
+.menu summary:hover,.menu[open] summary{background:#ffffff1f}
+.menu div{color:var(--tinta);box-shadow:0 18px 36px #183b3238}
+.menu a{color:var(--tinta)}
+.menu a:hover{background:var(--menta)}
+.menu a:focus-visible{outline-color:var(--verde)}
+.boton-cabecera{border-color:#a1cbbb}
+.boton-acceso{background:#fffefa;color:var(--tinta);border-color:#d9b16b;box-shadow:0 3px 0 #0b302740}
+.boton-acceso:hover{background:#fff3dc;box-shadow:0 3px 0 #0b302740}
+.boton-acceso svg{width:18px;height:18px;flex-shrink:0}
+/* El oro distingue la visita de la demo de crear una cuenta. Es tinta oscura
+   sobre oro, no letras blancas que perderían contraste. */
+.boton-demo{background:#d9b16b;color:var(--tinta);border-color:#b58b43;box-shadow:0 3px 0 #a77d3830}
+.boton-demo:hover{background:#e2bc76;box-shadow:0 3px 0 #a77d3830}
+@media(max-width:700px){html{scroll-padding-top:146px}.barra{display:grid;grid-template-columns:1fr auto;gap:12px;padding-top:12px;padding-bottom:12px}.menu{margin-left:0}.menu div{top:62px;right:20px}.acciones-cabecera{grid-column:1/-1;display:grid;grid-template-columns:1fr 1.5fr;gap:10px}.boton-cabecera{font-size:15px;min-height:44px;padding:10px 12px}.boton-acceso{display:inline-flex}}

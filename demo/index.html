@@ -130,7 +130,7 @@
   details.mas .mas-p{ display:block; margin:6px 0 0; }
 
   /* ---------- marco de app ---------- */
-  .app{ display:grid; grid-template-columns:225px 1fr; min-height:100vh; }
+  .app{ display:grid; grid-template-columns:248px minmax(0,1fr); min-height:100vh; }
   /* Sidebar claro: crema cálido con texto bosque — el verde profundo queda
      para la marca y el elemento activo, no para grandes superficies. */
   /* La columna, en el verde de la marca. Era un crema #f3ecdb contra un fondo #eee7d7:
@@ -138,16 +138,14 @@
      se leía como un corte pegado. El verde resuelve las dos cosas a la vez — separa el
      mando del lienzo, que es como se ordenan las aplicaciones de trabajo, y hace rimar
      la demo con la barra superior de la app real, que ya es este mismo verde. */
-  aside{ background:linear-gradient(180deg, #14634c, #0e4a3a 60%, #0c4133);
-         color:#c9ddd4; padding:18px 14px; position:sticky; top:0;
-         height:100vh; overflow:auto; border-right:1px solid rgba(0,0,0,.18);
-         box-shadow:inset -12px 0 24px -18px rgba(0,0,0,.55); }
-  .marca{ font-family:var(--serif); font-size:20px; font-weight:700; color:#fdf9ee;
-          display:flex; gap:8px; align-items:center; padding:12px 10px 14px; }
+  aside.demo-sidebar{ background:linear-gradient(180deg, #14634c, #0e4a3a 60%, #0c4133); color:#c9ddd4; padding:20px 14px; position:sticky; top:0; height:100vh; overflow:auto; border-right:1px solid rgba(0,0,0,.18); box-shadow:inset -1px 0 0 rgba(255,255,255,.06); scrollbar-width:thin; scrollbar-color:#9e8e68 transparent; }
+  aside.demo-sidebar::-webkit-scrollbar{ width:7px; }
+  aside.demo-sidebar::-webkit-scrollbar-track{ background:transparent; }
+  aside.demo-sidebar::-webkit-scrollbar-thumb{ background:#9e8e68; border:2px solid #0e4a3a; border-radius:99px; }
+  .marca{ font-family:var(--serif); font-size:27px; font-weight:500; color:#fdf9ee; display:flex; gap:8px; align-items:center; padding:4px 10px 18px; letter-spacing:-.02em; }
   /* El wordmark es el enlace a la web (logo → inicio). No cambia de aspecto; solo cursor
      y una pista sutil al pasar por encima. */
-  .marca-link{ text-decoration:none; color:inherit; display:inline-flex; align-items:flex-end;
-    border-radius:8px; transition:opacity .15s ease; }
+  .marca-link{ text-decoration:none; color:inherit; display:inline-flex; align-items:center; min-height:44px; border-radius:8px; transition:opacity .15s ease; }
   .marca-link:hover{ opacity:.72; }
   .marca-link:focus-visible{ outline:2px solid #7ee0b8; outline-offset:3px; }
   /* Wordmark Audutor: bajo la palabra corre la ruta punteada y termina en el pin
@@ -158,8 +156,7 @@
   .marca .wm-pin{ position:absolute; left:50%; bottom:calc(100% - .26em);
                   width:.44em; height:auto; transform:translateX(-50%); }
   .marca .wm-ruta{ width:100%; height:.62em; margin-top:.1em; display:block; overflow:visible; }
-  .demo-chip{ font-size:11.5px; font-weight:800; letter-spacing:.08em; background:var(--coral-deep);
-              color:#fff; border-radius:6px; padding:2px 7px; margin-left:auto; }
+  .demo-chip{ font-size:11.5px; font-weight:700; letter-spacing:.08em; background:rgba(242,196,106,.10); border:1px solid rgba(242,196,106,.30); color:var(--tono-oro); border-radius:6px; padding:3px 7px; margin-left:auto; font-family:var(--sans); }
   /* ── DE QUIÉN ES ESTA OPERACIÓN ───────────────────────────────────────────────────
      Era una línea de 13,5 px en gris claro debajo del logotipo, y a un palmo del ojo
      desaparecía: quien abre la demo veía «Audutor» y no llegaba a leer de quién es el día
@@ -169,16 +166,11 @@
      Se convierte en una tarjeta con iniciales, sobre un fondo propio para que se despegue
      del verde de la barra. El «empresa ficticia» se queda pequeño DEBAJO, que es lo que es:
      un descargo, no un dato. */
-  .tenant{ display:flex; gap:9px; align-items:center; margin:0 8px 12px; padding:9px 10px;
-           background:rgba(255,255,255,.11); border:1px solid rgba(255,255,255,.16);
-           border-radius:11px; }
-  .tenant .ini-emp{ flex:0 0 auto; width:30px; height:30px; border-radius:9px;
-           background:var(--acc); color:#fff; font-weight:800; font-size:13px;
-           display:flex; align-items:center; justify-content:center; letter-spacing:-.02em; }
+  .tenant{ display:flex; gap:10px; align-items:center; margin:0 8px 18px; padding:11px 10px; background:rgba(0,0,0,.08); border:1px solid rgba(255,255,255,.14); border-radius:11px; }
+  .tenant .ini-emp{ flex:0 0 auto; width:32px; height:32px; border-radius:9px; background:var(--bg); color:var(--acc-deep); font-weight:700; font-size:13px; display:flex; align-items:center; justify-content:center; letter-spacing:-.02em; }
   .tenant .txt{ min-width:0; }
-  .tenant b{ color:#fff; display:block; font-size:15px; font-weight:800; line-height:1.2;
-           letter-spacing:-.01em; }
-  .tenant small{ display:block; color:#93b3a7; font-size:11.5px; margin-top:2px; }
+  .tenant b{ color:#fff; display:block; font-size:15px; font-weight:700; line-height:1.3; letter-spacing:-.01em; }
+  .tenant small{ display:block; color:#b4cbbf; font-size:11.5px; margin-top:3px; }
   /* Los iconos del menú: trazos que heredan el color, igual que en la app. */
   aside nav .ico{ flex:0 0 auto; vertical-align:-3px; }
   /* Cada icono en su baldosa de color, como en el menú de la app (mismo mapa icono → tono). */
@@ -192,48 +184,20 @@
   .t-teal{ --t:var(--tono-teal); --th:var(--tono-teal-hondo); }
   .t-lila{ --t:var(--tono-lila); --th:var(--tono-lila-hondo); }
   .t-rosa{ --t:var(--tono-rosa); --th:var(--tono-rosa-hondo); }
-  aside nav a{ display:flex; gap:8px; align-items:center; color:#cfe3da; text-decoration:none;
-    padding:9px 10px; border-radius:9px; font-size:13px; font-weight:600; margin-bottom:2px;
-    transition:background .14s, color .14s; }
+  aside nav a{ display:flex; gap:8px; align-items:center; color:#dce9e1; text-decoration:none; padding:10px 11px; min-height:44px; border-radius:9px; font-size:13px; font-weight:500; margin-bottom:3px; transition:background .14s, color .14s; }
   aside nav a:hover{ background:rgba(255,255,255,.09); color:#fff; }
   /* ===== La lupa líquida del menú lateral =====
      La misma gota de cristal que en la web, pero QUIETA: en un menú que se usa para
      trabajar, respirar y rebotar entorpecía. Aquí se desliza con una curva suave, no cambia
-     de forma ni agranda la entrada; conserva el cristal (aclara el verde de debajo) y el
-     filo cian/magenta. La activa no lleva gota —ya es de otro material— y al pulsar una
+     de forma ni agranda la entrada; conserva la posición del controlador y un tinte dorado sobrio.
+     El reflejo cian/magenta se retiró el 6-oct-2026 para no competir con la selección. La activa no lleva gota —ya es de otro material— y al pulsar una
      entrada la gota se retira. El script va al final de la página. */
   #nav-princ{ position:relative; }
   #nav-princ > *:not(.gota){ position:relative; z-index:1; }
-  #nav-princ a, #nav-princ .nav-g-cab{ transform-origin:left center;
-    transition:transform .4s cubic-bezier(.34,1.56,.64,1), background .14s, color .14s; }
+  #nav-princ a, #nav-princ .nav-g-cab{ transform-origin:left center; transition:background .14s, color .14s; }
   #nav-princ a:not(.act):hover, #nav-princ .nav-g-cab:hover{ background:transparent; }
   #nav-princ .lupa{ color:#fff; }
-  .gota{
-    position:absolute; top:0; left:0; z-index:0;
-    width:0; height:0;
-    background:rgba(255,255,255,.10);
-    -webkit-backdrop-filter:brightness(1.2) saturate(1.3) blur(2px);
-    backdrop-filter:brightness(1.2) saturate(1.3) blur(2px);
-    box-shadow:
-      inset  1px  1px 0    rgba(0,255,255,.34),     /* cian, arriba-izquierda */
-      inset -1px -1px 0    rgba(255,0,255,.30),     /* magenta, abajo-derecha */
-      inset  0    0   0 1px rgba(255,255,255,.26),  /* aro blanco fino */
-      inset  0    6px 12px rgba(255,255,255,.10),   /* brillo interior */
-       1px  0   6px         rgba(0,255,255,.16),    /* halo cian por fuera */
-      -1px  0   6px         rgba(255,0,255,.16),    /* halo magenta por fuera */
-       0    8px 18px -8px   rgba(0,0,0,.45);        /* caída corta */
-    opacity:0;
-    pointer-events:none;
-    transform:translate(0,0);
-    transition:
-      transform .28s cubic-bezier(.22,1,.36,1),
-      width     .28s cubic-bezier(.22,1,.36,1),
-      height    .28s cubic-bezier(.22,1,.36,1),
-      opacity   .22s ease;
-    animation:none;
-    border-radius:9px;
-    will-change:transform,width,height;
-  }
+  .gota{ position:absolute; top:0; left:0; z-index:0; width:0; height:0; background:rgba(242,196,106,.10); border:1px solid rgba(242,196,106,.24); box-shadow:inset 0 1px 0 rgba(255,255,255,.05), 0 3px 8px -5px rgba(0,0,0,.28); opacity:0; pointer-events:none; transform:translate(0,0); transition:transform .22s ease, width .22s ease, height .22s ease, opacity .18s ease; animation:none; border-radius:9px; will-change:transform,width,height; }
     .gota.visible{ opacity:1; }
   /* Al reaparecer tras salir del menú se coloca SIN deslizarse desde donde estaba. */
   .gota.salta{ transition:opacity .25s ease; }
@@ -261,11 +225,9 @@
      profundo del lateral quedaba una losa fría que se comía la atención. El crema es el
      mismo tono del área de contenido, así que el activo pasa a decir algo además de
      destacar: es la página en la que estás, del mismo material que lo que abre. */
-  aside nav a.act{ background:var(--bg); color:#0c4133; font-weight:700; }
+  aside nav a.act{ background:var(--bg); color:#0c4133; font-weight:700; box-shadow:inset 3px 0 0 var(--gold), 0 2px 4px rgba(0,0,0,.08); }
   /* Operaciones: la entrada destacada — es donde se vive cada mañana */
-  aside nav a.destacada{ font-size:17px; padding:14px 12px;
-    border:1.5px solid rgba(255,255,255,.28); background:rgba(255,255,255,.08);
-    margin-bottom:12px; border-radius:11px; color:#eaf4ef; }
+  aside nav a.destacada{ font-size:17px; padding:12px 11px; min-height:50px; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.035); margin-bottom:16px; border-radius:10px; color:#eaf4ef; }
   aside nav a.destacada.act{ background:var(--bg); border-color:var(--bg); color:#0c4133; }
   /* grupos desplegables del menú, por temas */
   /* ── El menú, plegable en móvil ────────────────────────────────────────────────────
@@ -307,10 +269,7 @@
     aside.menu-abierto .pie-demo{ display:block; }
 
   }
-  .nav-g-cab{ display:flex; gap:8px; align-items:center; width:100%; text-align:left; border:0;
-    background:transparent; color:#cfe3da; padding:9px 10px; border-radius:9px; font-size:13px;
-    font-weight:600; margin-bottom:2px; cursor:pointer; font-family:inherit;
-    transition:background .14s, color .14s; }
+  .nav-g-cab{ display:flex; gap:8px; align-items:center; width:100%; text-align:left; border:0; background:transparent; color:#b5cdc0; padding:10px 11px; min-height:44px; border-radius:9px; font-size:11.5px; font-weight:700; letter-spacing:.045em; text-transform:uppercase; margin-bottom:2px; cursor:pointer; font-family:inherit; transition:background .14s, color .14s; }
   .nav-g-cab:hover{ background:rgba(255,255,255,.09); color:#fff; }
   /* ── LA FLECHA DEL MENÚ ───────────────────────────────────────────────────────────
      Era el carácter «▾» a 11 px y en el gris del texto: sobre el verde de la barra casi no
@@ -332,18 +291,16 @@
      pantalla hay que mirar dos veces para saber cuál está desplegado. */
   .nav-g.abierto .nav-g-cab .flecha::before{ border-color:var(--gold); }
   .nav-g.abierto .nav-g-cab{ color:#fff; }
-  .nav-g-hijos{ display:none; padding-left:10px; border-left:1px dashed rgba(255,255,255,.22);
-    margin:0 0 4px 14px; }
+  .nav-g-hijos{ display:none; padding-left:4px; border-left:1px solid rgba(255,255,255,.16); margin:2px 0 11px 14px; }
   .nav-g.abierto .nav-g-hijos{ display:block; animation:aparece .25s ease; }
   aside nav a .n{ margin-left:auto; background:var(--rojo); color:#fff; font-size:11.5px;
     font-weight:800; border-radius:99px; padding:1px 7px; }
-  .pie-demo{ font-size:11.5px; color:#8faea2; padding:14px 10px 4px; line-height:1.5; }
-  .pie-demo button{ background:none; border:1px solid rgba(255,255,255,.24); color:#b6cfc5;
-    border-radius:7px; padding:4px 10px; font-size:11.5px; cursor:pointer; margin-top:6px; }
+  .pie-demo{ font-size:11.5px; color:#a9c6b8; padding:18px 8px 4px; line-height:1.55; border-top:1px solid rgba(255,255,255,.15); margin-top:14px; }
+  .pie-demo button{ background:none; border:1px solid rgba(255,255,255,.24); color:#dce9e1; border-radius:8px; padding:8px 10px; min-height:44px; font-size:13px; cursor:pointer; margin-top:6px; }
 
   /* ===== Modo guía: el guía abre su enlace personal y ve SOLO su día ===== */
   #guia-cab, #guia-dispo{ display:none; }
-  body.modo-guia aside{ display:none; }
+  body.modo-guia aside.demo-sidebar{ display:none; }
   body.modo-guia .app{ display:block; background:#eef1ee; }
   body.modo-guia main{ max-width:560px; margin:0 auto; padding:0 0 50px; background:none; }
   body.modo-guia #guia-cab, body.modo-guia #guia-dispo{ display:block; }
@@ -791,9 +748,7 @@
   aside nav a .n{ margin-left:auto; }
   .sup-chip{ font-size:11.5px; font-weight:800; letter-spacing:.04em; text-transform:uppercase;
     background:rgba(217,154,51,.24); color:#f0c878; padding:1px 5px; border-radius:5px; margin-left:6px; }
-  .leyenda-planes{ background:rgba(0,0,0,.20); border:1px solid rgba(255,255,255,.12);
-    border-radius:9px; padding:9px 11px; font-size:11.5px; line-height:1.5;
-    color:#a9c6ba; margin-bottom:12px; }
+  .leyenda-planes{ background:none; border:0; border-radius:0; padding:12px 0 0; font-size:11.5px; line-height:1.55; color:#c0d4c8; margin-bottom:12px; }
   .leyenda-planes b{ color:#e4efe9; }
   .lock-gate{ text-align:center; max-width:520px; margin:20px auto; padding:34px 26px;
     border:1.5px dashed var(--gold); border-radius:16px; background:var(--gold-soft); }
@@ -816,9 +771,8 @@
   .mk-sel{ background:#f3ecdb; border:1px solid #e0d3b4; border-radius:10px; padding:9px 11px;
     margin-bottom:10px; font-size:11.5px; color:#5d6b62; line-height:1.5; }
   .mk-sel b{ color:#33514a; }
-  .mk-sel button{ border:1px solid #d9cba6; background:#fffdf5; border-radius:8px; padding:4px 7px;
-    font-size:15px; cursor:pointer; line-height:1; font-family:inherit; }
-  .mk-sel button.on{ background:var(--acc); border-color:var(--acc); box-shadow:0 0 0 2px rgba(18,138,107,.2); }
+  .mk-sel button{ border:1px solid #d9cba6; background:#fffdf5; border-radius:8px; padding:8px 7px; min-width:44px; min-height:44px; font-size:15px; cursor:pointer; line-height:1; font-family:inherit; }
+  .mk-sel button.on{ background:var(--acc); border-color:var(--acc); box-shadow:none; }
   .mk-sel #mk-nota{ color:#7a6f55; font-style:italic; }
   /* ── Los complementos, pegados al selector de plan ──────────────────────────────────
      El plan dejó de ser «qué funciones tienes» y pasó a ser «cuántos viajeros llevas»: un
@@ -877,9 +831,7 @@
   .plan-sel{ display:flex; gap:4px; margin-top:8px; flex-wrap:wrap; }
   /* Tres botones en ~187 px: el nombre del plan debe caber sin desbordar la caja.
      «Esencial» a 12 px no cabía en los ~56 px útiles de cada botón. */
-  .plan-sel button{ flex:1 1 0; min-width:0; border:1px solid #d9cba6; background:#fffdf5; color:#5c6653; border-radius:8px;
-    padding:6px 1px; font-size:11.5px; font-weight:600; cursor:pointer; font-family:inherit; line-height:1.3;
-    overflow:hidden; }
+  .plan-sel button{ flex:1 1 0; min-width:0; min-height:48px; border:1px solid #d9cba6; background:#fffdf5; color:#5c6653; border-radius:8px; padding:8px 2px; font-size:11.5px; font-weight:600; cursor:pointer; font-family:inherit; line-height:1.3; overflow:hidden; }
   .plan-sel button b{ display:block; font-size:11.5px; letter-spacing:-.03em; color:#2f443b; white-space:nowrap; }
   /* En móvil el sidebar ocupa todo el ancho: hay sitio de sobra, se agranda. */
   @media (max-width:760px){
@@ -1025,7 +977,7 @@
   .vj-nota ul{ padding-left:17px; margin:0; }
   .vj-nota .mini{ color:#8fb0a6; }
   @media (max-width:980px){ .vj-nota{ display:none; } }
-  @media (max-width:760px){ .app{ grid-template-columns:1fr; } aside{ position:static; height:auto; }
+  @media (max-width:760px){ .app{ grid-template-columns:1fr; } aside.demo-sidebar{ position:static; height:auto; }
     /* min-width:0 — sin esto «main» es un elemento de rejilla que NO puede encogerse por
        debajo de su contenido: las tablas anchas (equipo, liquidación, canales) estiraban
        la columna a 694 px y el overflow-x:hidden de la página las recortaba. */
@@ -1077,7 +1029,7 @@
   .btn:active{ transform:translateY(0); box-shadow:none; }
   a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible{
     outline:2.5px solid var(--acc); outline-offset:2px; border-radius:6px; }
-  aside a:focus-visible, aside button:focus-visible{ outline-color:#7fd4bd; }
+  aside.demo-sidebar a:focus-visible, aside.demo-sidebar button:focus-visible, .demo-ajustes summary:focus-visible, .demo-contexto summary:focus-visible{ outline-color:#7fd4bd; }
   input[type=range]:focus-visible{ outline-offset:4px; }
   .card{ transition:border-color .2s ease, box-shadow .2s ease; }
   @media (max-width:760px){
@@ -1105,6 +1057,27 @@
 .dp-dialogo [role=alert] { color:#993b21; }
 .dp-dialogo .btn { white-space:normal; }
 /* DEMO_PLAN_CSS_FIN */
+
+  /* Los títulos agrupan; las funciones permanecen en frase normal. La barra no cambia
+     los tokens ni el mapa de iconos del panel, solo su jerarquía y su espacio. */
+  .demo-nav-texto{ flex:1; min-width:0; line-height:1.4; }
+  .nav-g{ padding-top:3px; }
+  .demo-ajustes{ margin:0 0 12px; }
+  .demo-ajustes > summary, .demo-contexto > summary{ display:flex; align-items:center; gap:10px;
+    min-height:44px; padding:10px 0; cursor:pointer; list-style:none; color:#e5eee7;
+    font-size:13px; font-weight:600; }
+  .demo-ajustes > summary::-webkit-details-marker, .demo-contexto > summary::-webkit-details-marker{ display:none; }
+  .demo-ajustes > summary::after, .demo-contexto > summary::after{ content:'+'; margin-left:auto; color:var(--tono-oro); font-size:20px; font-weight:500; }
+  .demo-ajustes > summary:focus-visible, .demo-contexto > summary:focus-visible{ outline:2.5px solid #7fd4bd; outline-offset:2px; border-radius:6px; }
+  .demo-ajustes[open] > summary::after, .demo-contexto[open] > summary::after{ content:'−'; }
+  .demo-contexto{ margin:0 8px 14px; border-block:1px solid rgba(255,255,255,.14); }
+  .demo-contexto > summary{ font-size:11.5px; }
+  .demo-contexto-contenido{ padding-top:8px; }
+  .comp-sel label{ min-height:44px; }
+  #mk-nota{ min-height:0; }
+  @media(max-width:760px){ aside.demo-sidebar{ padding:14px 14px 16px; }
+    .marca{ padding-bottom:10px; } .tenant{ margin-bottom:10px; }
+    .pie-demo{ margin-top:14px; } }
 </style>
 </head>
 <body>
@@ -1174,7 +1147,7 @@
   </div>
 </div>
 <div class="app">
-<aside>
+<aside class="demo-sidebar">
   <div class="marca"><a class="marca-link" href="../" title="Ir a la web de Audutor"><span class="wm"><span class="wm-palabra">Audutor</span><svg class="wm-ruta" viewBox="0 0 96 14" preserveAspectRatio="none" aria-hidden="true"><path d="M2 10 C 20 4, 36 12, 52 7 S 78 5, 84 8" fill="none" stroke="#8fb0a6" stroke-width="1.7" stroke-dasharray="0.1 5.2" stroke-linecap="round"/><path d="M90 1.4c-2.4 0-4.4 2-4.4 4.4 0 3.2 4.4 7 4.4 7s4.4-3.8 4.4-7c0-2.4-2-4.4-4.4-4.4z" fill="#12805f"/><circle cx="90" cy="5.9" r="1.7" fill="#f3ecdb"/></svg></span></a> <span class="demo-chip">DEMO</span></div>
   <div class="tenant"><span class="ini-emp" aria-hidden="true">PC</span><span class="txt"><b>Patio y Compás</b><small>Sevilla · empresa ficticia</small></span></div>
   <button class="nav-hamb" onclick="menuMovil()" aria-expanded="false" aria-controls="nav-princ"><span aria-hidden="true">☰</span><span class="hamb-txt">Menú</span></button>
@@ -1184,41 +1157,42 @@
          —que es de lo primero que hay que enseñar— quedaba detrás de un clic que nadie
          sabía que tenía que dar: para quien mira la demo, eso es que no existe. Un menú
          de nueve entradas cabe entero; plegarlo no ahorraba espacio, escondía producto. -->
-    <a href="#operaciones" data-v="operaciones" class="act destacada"><svg class="ico t-verde" aria-hidden="true" focusable="false"><use href="#i-layout-dashboard"/></svg> Operaciones <span class="n" id="n-exc">6</span></a>
+    <a href="#operaciones" data-v="operaciones" class="act destacada"><svg class="ico t-verde" aria-hidden="true" focusable="false"><use href="#i-layout-dashboard"/></svg><span class="demo-nav-texto"> Operaciones </span><span class="n" id="n-exc">6</span></a>
     <div class="nav-g" id="ng-dia">
-      <button class="nav-g-cab" onclick="this.parentElement.classList.toggle('abierto')"><svg class="ico t-coral" aria-hidden="true" focusable="false"><use href="#i-calendar-days"/></svg> El día a día <span class="flecha">▾</span></button>
-      <div class="nav-g-hijos">
-        <a href="#manifiesto" data-v="manifiesto"><svg class="ico t-oro" aria-hidden="true" focusable="false"><use href="#i-clipboard-list"/></svg> Manifiesto del guía</a>
-        <a href="#equipo" data-v="equipo"><svg class="ico t-azul" aria-hidden="true" focusable="false"><use href="#i-users"/></svg> Equipo y disponibilidad</a>
+      <button class="nav-g-cab" aria-expanded="false" aria-controls="ng-dia-funciones" onclick="this.parentElement.classList.toggle('abierto')"><svg class="ico t-coral" aria-hidden="true" focusable="false"><use href="#i-calendar-days"/></svg><span class="demo-nav-texto"> El día a día </span><span class="flecha">▾</span></button>
+      <div class="nav-g-hijos" id="ng-dia-funciones">
+        <a href="#manifiesto" data-v="manifiesto"><svg class="ico t-oro" aria-hidden="true" focusable="false"><use href="#i-clipboard-list"/></svg><span class="demo-nav-texto"> Manifiesto del guía</span></a>
+        <a href="#equipo" data-v="equipo"><svg class="ico t-azul" aria-hidden="true" focusable="false"><use href="#i-users"/></svg><span class="demo-nav-texto"> Equipo y disponibilidad</span></a>
       </div>
     </div>
     <div class="nav-g" id="ng-guia">
-      <button class="nav-g-cab" onclick="this.parentElement.classList.toggle('abierto')"><svg class="ico t-teal" aria-hidden="true" focusable="false"><use href="#i-bot"/></svg> GuIA, el asistente <span class="sup-chip">supl.</span><span class="flecha">▾</span></button>
-      <div class="nav-g-hijos">
-        <a href="#chat" data-v="chat"><svg class="ico t-teal" aria-hidden="true" focusable="false"><use href="#i-message-circle"/></svg> Probar GuIA <span class="cand">🔒</span></a>
-        <a href="#cerebro" data-v="cerebro"><svg class="ico t-rosa" aria-hidden="true" focusable="false"><use href="#i-brain"/></svg> Cerebro de GuIA <span class="cand">🔒</span><span class="n" id="n-der" style="display:none;">0</span></a>
+      <button class="nav-g-cab" aria-expanded="false" aria-controls="ng-guia-funciones" onclick="this.parentElement.classList.toggle('abierto')"><svg class="ico t-teal" aria-hidden="true" focusable="false"><use href="#i-bot"/></svg><span class="demo-nav-texto"> GuIA, el asistente </span><span class="sup-chip">supl.</span><span class="flecha">▾</span></button>
+      <div class="nav-g-hijos" id="ng-guia-funciones">
+        <a href="#chat" data-v="chat"><svg class="ico t-teal" aria-hidden="true" focusable="false"><use href="#i-message-circle"/></svg><span class="demo-nav-texto"> Probar GuIA </span><span class="cand">🔒</span></a>
+        <a href="#cerebro" data-v="cerebro"><svg class="ico t-rosa" aria-hidden="true" focusable="false"><use href="#i-brain"/></svg><span class="demo-nav-texto"> Cerebro de GuIA </span><span class="cand">🔒</span><span class="n" id="n-der" style="display:none;">0</span></a>
       </div>
     </div>
     <div class="nav-g" id="ng-ventas">
-      <button class="nav-g-cab" onclick="this.parentElement.classList.toggle('abierto')"><svg class="ico t-coral" aria-hidden="true" focusable="false"><use href="#i-megaphone"/></svg> Reservas y ventas <span class="flecha">▾</span></button>
-      <div class="nav-g-hijos">
-        <a href="#web" data-v="web"><svg class="ico t-azul" aria-hidden="true" focusable="false"><use href="#i-globe"/></svg> Tu web <span class="cand">🔒</span></a>
-        <a href="#canales" data-v="canales"><svg class="ico t-lila" aria-hidden="true" focusable="false"><use href="#i-plug"/></svg> Canales y sincronización</a>
-        <a href="#noshow" data-v="noshow"><svg class="ico t-coral" aria-hidden="true" focusable="false"><use href="#i-send"/></svg> Anti no-show</a>
-        <a href="#carrito" data-v="carrito"><svg class="ico t-oro" aria-hidden="true" focusable="false"><use href="#i-shopping-basket"/></svg> Lo que vendes además <span class="cand">🔒</span></a>
+      <button class="nav-g-cab" aria-expanded="false" aria-controls="ng-ventas-funciones" onclick="this.parentElement.classList.toggle('abierto')"><svg class="ico t-coral" aria-hidden="true" focusable="false"><use href="#i-megaphone"/></svg><span class="demo-nav-texto"> Reservas y ventas </span><span class="flecha">▾</span></button>
+      <div class="nav-g-hijos" id="ng-ventas-funciones">
+        <a href="#web" data-v="web"><svg class="ico t-azul" aria-hidden="true" focusable="false"><use href="#i-globe"/></svg><span class="demo-nav-texto"> Tu web </span><span class="cand">🔒</span></a>
+        <a href="#canales" data-v="canales"><svg class="ico t-lila" aria-hidden="true" focusable="false"><use href="#i-plug"/></svg><span class="demo-nav-texto"> Canales y sincronización</span></a>
+        <a href="#noshow" data-v="noshow"><svg class="ico t-coral" aria-hidden="true" focusable="false"><use href="#i-send"/></svg><span class="demo-nav-texto"> Anti no-show</span></a>
+        <a href="#carrito" data-v="carrito"><svg class="ico t-oro" aria-hidden="true" focusable="false"><use href="#i-shopping-basket"/></svg><span class="demo-nav-texto"> Lo que vendes además </span><span class="cand">🔒</span></a>
       </div>
     </div>
     <div class="nav-g" id="nav-eco">
-      <button class="nav-g-cab" onclick="this.parentElement.classList.toggle('abierto')"><svg class="ico t-oro" aria-hidden="true" focusable="false"><use href="#i-briefcase"/></svg> Gestión económica <span class="flecha">▾</span></button>
-      <div class="nav-g-hijos">
-        <a href="#ahorro" data-v="ahorro"><svg class="ico t-azul" aria-hidden="true" focusable="false"><use href="#i-scale"/></svg> Conciliación y ahorro</a>
-        <a href="#cuadro" data-v="cuadro"><svg class="ico t-verde" aria-hidden="true" focusable="false"><use href="#i-trending-up"/></svg> Cuadro de mando <span class="cand">🔒</span></a>
-        <a href="#liquidacion" data-v="liquidacion"><svg class="ico t-verde" aria-hidden="true" focusable="false"><use href="#i-banknote"/></svg> Liquidación a guías <span class="cand">🔒</span></a>
-        <a href="#proyeccion" data-v="proyeccion"><svg class="ico t-lila" aria-hidden="true" focusable="false"><use href="#i-chart-column"/></svg> Proyección de ingresos <span class="cand">🔒</span></a>
+      <button class="nav-g-cab" aria-expanded="false" aria-controls="nav-eco-funciones" onclick="this.parentElement.classList.toggle('abierto')"><svg class="ico t-oro" aria-hidden="true" focusable="false"><use href="#i-briefcase"/></svg><span class="demo-nav-texto"> Gestión económica </span><span class="flecha">▾</span></button>
+      <div class="nav-g-hijos" id="nav-eco-funciones">
+        <a href="#ahorro" data-v="ahorro"><svg class="ico t-azul" aria-hidden="true" focusable="false"><use href="#i-scale"/></svg><span class="demo-nav-texto"> Conciliación y ahorro</span></a>
+        <a href="#cuadro" data-v="cuadro"><svg class="ico t-verde" aria-hidden="true" focusable="false"><use href="#i-trending-up"/></svg><span class="demo-nav-texto"> Cuadro de mando </span><span class="cand">🔒</span></a>
+        <a href="#liquidacion" data-v="liquidacion"><svg class="ico t-verde" aria-hidden="true" focusable="false"><use href="#i-banknote"/></svg><span class="demo-nav-texto"> Liquidación a guías </span><span class="cand">🔒</span></a>
+        <a href="#proyeccion" data-v="proyeccion"><svg class="ico t-lila" aria-hidden="true" focusable="false"><use href="#i-chart-column"/></svg><span class="demo-nav-texto"> Proyección de ingresos </span><span class="cand">🔒</span></a>
       </div>
     </div>
   </nav>
   <div class="pie-demo">
+    <details class="demo-ajustes"><summary>Plan y mercado</summary>
     <div class="leyenda-planes">
       <b>Tu plan (demo):</b> cámbialo y mira qué se desbloquea. Esencial trae
       <b>1 tour y 2 guías</b>; desde Pro, ilimitados. El plan es un <b>bono de viajeros</b>: tu web va en todos; GuIA se suma aparte.
@@ -1245,6 +1219,7 @@
       </div>
       <div style="font-size:11.5px; margin-top:8px; opacity:.85; line-height:1.5;">💶 La propina: <b>0 %</b>. Audutor no la cobra ni se lleva nada de ella — la anota y la cuadra.</div>
     </div>
+    </details>
     Todo lo que ves es interactivo y simulado en tu navegador.
     Nada se guarda ni se envía.<br><button onclick="location.reload()">↺ Reiniciar demo</button></div>
 </aside>
@@ -11437,6 +11412,38 @@ var buzonDemo = (function(){
   return { accion:accion };
 })();
 /* BUZON_DEMO_FIN */
+</script>
+<script>
+/* El estado del menú también se comunica al teclado. Se observa solo navegación:
+   los motores y sus funciones de abrir vista, plan o mercado permanecen intactos. */
+(function(){
+  var lateral=document.querySelector('aside.demo-sidebar'),nav=document.getElementById('nav-princ');
+  if(!lateral||!nav)return;
+  var boton=lateral.querySelector('.nav-hamb');
+  function sincroniza(){
+    nav.querySelectorAll('.nav-g').forEach(function(grupo){
+      var cab=grupo.querySelector('.nav-g-cab'),hijos=grupo.querySelector('.nav-g-hijos');
+      cab.setAttribute('aria-expanded',String(grupo.classList.contains('abierto')));
+      cab.setAttribute('aria-controls',hijos.id);
+    });
+    nav.querySelectorAll('a[data-v]').forEach(function(a){
+      if(a.classList.contains('act'))a.setAttribute('aria-current','page');
+      else a.removeAttribute('aria-current');
+    });
+  }
+  new MutationObserver(function(cambios){
+    if(cambios.some(function(c){return c.target.matches('.nav-g,a[data-v]');}))sincroniza();
+  }).observe(nav,{subtree:true,attributes:true,attributeFilter:['class']});
+  nav.addEventListener('click',function(e){
+    if(innerWidth<=760&&e.target.closest('a[data-v]')&&!lateral.classList.contains('menu-abierto'))boton.focus();
+  });
+  lateral.addEventListener('keydown',function(e){
+    if(e.key==='Escape'&&!e.defaultPrevented&&lateral.classList.contains('menu-abierto')){
+      e.preventDefault();cierraMenuMovil();boton.focus();
+    }
+  });
+  sincroniza();
+})();
 </script>
 </body>
 </html>
