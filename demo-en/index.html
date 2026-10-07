@@ -7135,8 +7135,8 @@ function pintaGuiaDispo(nombre){
   h += '</table></div>'+
     '<div class="g-dispo"><h2>💷 My tips</h2>'+
     '<p class="mini muted" style="margin:0 0 8px;">Take them however you like — cash, your ' +
-    'own card reader, whatever: <b>Audutor never touches that money</b>. Enter them when you ' +
-    'close the tour and they land here attributed to that departure, split by your agreement ' +
+    'own card reader, whatever: <b>Audutor never touches that money</b>. Enter them when the ' +
+    'tour ends and they land here attributed to that departure, split by your agreement ' +
     'and squared at month end. Nothing to activate, no bank details to hand over.</p>'+
     '<button class="btn mini sec" onclick="ir(\'manifiesto\'); return false;">See today\'s manifest</button>'+
     '</div>'+
@@ -7467,7 +7467,7 @@ function pintaManifiestoReal(){
     var mov=document.createElement('div'); mov.className='movil';
     var pax=paxDe(t.res), pres=t.res.filter(function(r){return r.ok}).reduce(function(s,r){return s+r.p},0);
     var tarde=t.res.filter(function(r){return r.tarde&&!r.ok});
-    var nsAuto=t.res.filter(function(r){return r.nsAuto});   // no-shows marcados solos al cerrar el tour
+    var nsAuto=t.res.filter(function(r){return r.nsAuto});   // no-shows marcados solos al cerrarse el tour
     // cabecera
     var chip = t.live?'<span class="chip" style="background:var(--acc-soft); color:var(--acc);">out now</span>'
              : t.sinGuia?'<span class="chip rojo">no guide</span>'
@@ -7517,20 +7517,21 @@ function pintaManifiestoReal(){
       if (!S.guiaVista && !a.walkin) masDemo(d, t, a, dia);   // «⋯» con mover, solo en la oficina
       mov.appendChild(d);
     });
-    /* No-shows automáticos: al cerrar el tour, las reservas sin marcar pasan SOLAS
+    /* No-shows automáticos: el tour se cierra solo media hora después de terminar (como la app
+       desde el 7-oct-2026) y las reservas sin marcar pasan SOLAS
        a no-show — sin escribir nada al cliente (dato interno, no reproche).
        En tours cerrados se ve el ejemplo; en el tour en marcha, la regla. */
     if (dia.pasado && nsAuto.length){
       var nsb=document.createElement('div');
       nsb.style.cssText='background:var(--rojo-soft); border:1px solid #e3c0ba; border-radius:10px; padding:9px 12px; font-size:11.5px; color:var(--ink2); margin:10px 0 2px;';
-      nsb.innerHTML='🚫 <b>'+nsAuto.length+' no-shows marked automatically</b> when closing the tour at '+t.hora+
+      nsb.innerHTML='🚫 <b>'+nsAuto.length+' no-shows marked automatically</b> when the '+t.hora+' tour closed itself'+
         ' — nobody was messaged about it: <b>this is a number for you, not a telling-off</b>.'+
         ' The platform ones are already in ⚖️ Reconciliation &amp; savings, ready to report in time.';
       mov.appendChild(nsb);
     } else if (t.live){
       var nsn=document.createElement('p');
       nsn.className='mini muted'; nsn.style.margin='10px 2px 0';
-      nsn.innerHTML='🚫 When you close the tour, any booking left unmarked becomes a no-show <b>on its own</b> — with nothing sent to the customer: it is a number for you, not a telling-off.';
+      nsn.innerHTML='🚫 The tour closes <b>on its own</b> half an hour after it ends, once attendance has been confirmed: unmarked bookings become no-shows, with nothing sent to the customer. If nobody came, confirm it in the manifest. Partial attendance and later changes also need checking before reporting them to the platform.';
       mov.appendChild(nsn);
     }
     // botón walk-in + formulario

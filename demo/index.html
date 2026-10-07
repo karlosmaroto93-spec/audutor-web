@@ -7912,7 +7912,7 @@ function pintaGuiaDispo(nombre){
   h += '</table></div>'+
     '<div class="g-dispo"><h2>💶 Mis propinas</h2>'+
     '<p class="mini muted" style="margin:0 0 8px;">Cóbralas como quieras —en mano, con tu ' +
-    'datáfono o con el móvil—: <b>Audutor no toca ese dinero</b>. Apúntalas al cerrar el tour ' +
+    'datáfono o con el móvil—: <b>Audutor no toca ese dinero</b>. Apúntalas al terminar el tour ' +
     'y aquí quedan atribuidas a esa salida, repartidas según tu acuerdo y cuadradas a fin ' +
     'de mes. Sin activar nada, sin dar tu IBAN a nadie.</p>'+
     '<button class="btn mini sec" onclick="ir(\'manifiesto\'); return false;">Ver el manifiesto de hoy</button>'+
@@ -8925,7 +8925,7 @@ function pintaManifiestoReal(){
     var mov=document.createElement('div'); mov.className='movil';
     var pax=paxDe(t.res), pres=t.res.filter(function(r){return r.ok}).reduce(function(s,r){return s+r.p},0);
     var tarde=t.res.filter(function(r){return r.tarde&&!r.ok});
-    var nsAuto=t.res.filter(function(r){return r.nsAuto});   // no-shows marcados solos al cerrar el tour
+    var nsAuto=t.res.filter(function(r){return r.nsAuto});   // no-shows marcados solos al cerrarse el tour
     // cabecera
     var chip = t.live?'<span class="chip" style="background:var(--acc-soft); color:var(--acc);">en marcha</span>'
              : t.sinGuia?'<span class="chip rojo">sin guía</span>'
@@ -8988,20 +8988,21 @@ function pintaManifiestoReal(){
       if (!S.guiaVista && !a.walkin) masDemo(d, t, a, dia);   // «⋯» con mover, solo en la oficina
       mov.appendChild(d);
     });
-    /* No-shows automáticos: al cerrar el tour, las reservas sin marcar pasan SOLAS
+    /* No-shows automáticos: el tour se cierra solo media hora después de terminar (como la app
+       desde el 7-oct-2026) y las reservas sin marcar pasan SOLAS
        a no-show — sin escribir nada al cliente (dato interno, no reproche).
        En tours cerrados se ve el ejemplo; en el tour en marcha, la regla. */
     if (dia.pasado && nsAuto.length){
       var nsb=document.createElement('div');
       nsb.style.cssText='background:var(--rojo-soft); border:1px solid #e3c0ba; border-radius:10px; padding:9px 12px; font-size:11.5px; color:var(--ink2); margin:10px 0 2px;';
-      nsb.innerHTML='🚫 <b>'+nsAuto.length+' no-shows marcados solos</b> al cerrar el tour de las '+t.hora+
+      nsb.innerHTML='🚫 <b>'+nsAuto.length+' no-shows marcados solos</b> al cerrarse el tour de las '+t.hora+
         ' — nadie recibió ningún mensaje: <b>es un dato para ti, no un reproche</b>.'+
         ' Los de plataforma ya están en ⚖️ Conciliación y ahorro para reportar a tiempo.';
       mov.appendChild(nsb);
     } else if (t.live){
       var nsn=document.createElement('p');
       nsn.className='mini muted'; nsn.style.margin='10px 2px 0';
-      nsn.innerHTML='🚫 Al cerrar el tour, las reservas que queden sin marcar pasan <b>solas</b> a no-show — sin escribir nada al cliente: es un dato para ti, no un reproche.';
+      nsn.innerHTML='🚫 El tour se cierra <b>solo</b> media hora después de terminar, si se ha confirmado la asistencia: las reservas que queden sin marcar pasan a no-show — sin escribir nada al cliente. Si no vino nadie, confírmalo en el manifiesto. Las ausencias parciales y los cambios posteriores también se revisan antes de comunicarlos a la plataforma.';
       mov.appendChild(nsn);
     }
     // botón walk-in + formulario
