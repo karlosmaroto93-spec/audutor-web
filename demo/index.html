@@ -1435,8 +1435,8 @@
 
   <div class="card">
     <h2>📚 El formulario de GuIA — la empresa una vez, y un formulario por tour</h2>
-    <div class="mini muted" style="margin:0 0 10px;">Cada tour trae la <b>🪄 IA integrada</b>: pégale la
-      web del tour y confirma sola los datos que encuentre. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Y cada pregunta ya viene con un
+    <div class="mini muted" style="margin:0 0 10px;"><b>🪄 Lectura de la web del tour.</b> En el sistema real devuelve propuestas para que
+      tú las revises y aceptes antes de guardarlas. Esta demo rellena directamente los datos que reconoce; la URL usa un perfil de ejemplo. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Y cada pregunta ya viene con un
       <b style="color:var(--gold);">borrador</b> escrito — solo cambias palabras o rellenas los
       [huecos], no escribes la frase entera. GuIA <b>solo</b> afirma lo que <b>confirmas</b> (un
       borrador sin confirmar te llega a ti: nunca lo suelta, jamás lo coge de otro tour).
@@ -2141,7 +2141,7 @@
       recuperado reportándolo y cuánto habrías asumido si no.</span></details></div>
     <div class="kpi-fila" style="margin:0 0 10px;">
       <div class="kpi"><span class="v">31</span><span class="l">personas de descuadre este mes</span></div>
-      <div class="kpi"><span class="v">28</span><span class="l">no-shows reportados a tiempo (≤72 h)</span></div>
+      <div class="kpi"><span class="v">28</span><span class="l">no-shows reportados a tiempo (según plataforma)</span></div>
       <div class="kpi"><span class="v" data-dinero="52" data-dec="2">52,00 €</span><span class="l">comisión recuperada al reportarlos</span></div>
       <div class="kpi malo"><span class="v" data-dinero="7" data-dec="2">7,00 €</span><span class="l">asumido por no reportar 3 a tiempo</span></div>
     </div>
@@ -5022,6 +5022,19 @@ function respuestaHechoDeclarado(t, m, lang){
   return 'I do not have that information confirmed. I will ask the manager to check it.';
 }
 
+/* Presión del 9-oct: «lista privada» leía la oferta de tours privados y «instrucciones
+   internas» se corregía a internet. Son peticiones de datos, no preguntas sobre esas
+   políticas. Se reconoce la frase completa original, sin bloquear «privado» o «interno»
+   sueltos ni las preguntas legítimas de wifi/catálogo. Lo crítico y lo enseñado mandan. */
+function respuestaPeticionDeDatos(t, lang){
+  var bruto=String(t).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  if (!/\b(?:lista\s+privada|claves\s+privadas|(?:instrucciones|notas|avisos|catalogo)\s+intern[oa]s?)\b/.test(bruto)
+      && !/\b(?:private\s+(?:participant\s+)?(?:list|keys)|internal\s+(?:instructions|notes|warnings|catalogue|catalog))\b/.test(bruto)) return null;
+  registraDerivada(t, 'persona');
+  return lang==='en' ? 'I will pass this request to the team so they can review it.'
+    : 'Paso esta petición al equipo para que la revise.';
+}
+
 function respuestaGuiaES(t){
   var m=normaliza(t,'es');
   /* La capa crítica ya la ha mirado el router. Se vuelve a llamar aquí porque a este
@@ -5037,6 +5050,8 @@ function respuestaGuiaES(t){
   //    «empresa», ni «grupo», ni «parking» — esos tienen regla propia abajo.)
   if (RE_CORTAFUEGOS.test(m))
     return derivaSiempre(t);
+  var datos=respuestaPeticionDeDatos(t,'es');
+  if (datos!==null) return datos;
   var declarado=respuestaHechoDeclarado(t,m,'es');
   if (declarado!==null) return declarado;
   /* Las URGENCIAS y el CORTAFUEGOS DE AUTORIZACIÓN vivían aquí. Ahora están arriba, en
@@ -5835,7 +5850,8 @@ function respuestaGuiaES(t){
   }
   /* «lavabo» no aparecía ni una vez en el fichero, y es como lo dice medio país. «pis»
      con bordes de palabra, que si no casa dentro de «piso» y de «pista». */
-  if (/bano|aseo|servicio|wc|lavabo|urinario|retrete|\bpis\b/.test(m)){
+  if (/bano|aseo|servicio|wc|lavabo|urinario|retrete|\bpis\b/.test(m)
+      && !/\bservicios?\s+(?:de\s+)?reparacion\b/.test(m)){
     var ba=kb('banos'); if(!ba) return derivaPorHueco('banos', t);
     return ba;
   }
@@ -5866,7 +5882,8 @@ function respuestaGuiaES(t){
     var lv=kb('llevar'); if(!lv) return derivaPorHueco('llevar', t);
     return lv;
   }
-  if (/foto|selfie|camara/.test(m)){
+  // «foto» dentro de «astrofotografía» ofrecía permiso de fotos a quien pedía un curso.
+  if (/\b(fotos?|fotografias?|fotografiar|fotografiando|selfies?|camaras?)\b/.test(m)){
     var fo=kb('fotos'); if(!fo) return derivaPorHueco('fotos', t);
     return fo;
   }
@@ -6358,6 +6375,8 @@ function respuestaEN(t){
   // cortafuegos: lo delicado va a una persona, también en inglés
   if (RE_CORTAFUEGOS.test(m))
     return falta();
+  var datos=respuestaPeticionDeDatos(t,'en');
+  if (datos!==null) return datos;
   var declarado=respuestaHechoDeclarado(t,m,'en');
   if (declarado!==null) return declarado;
 
@@ -6879,7 +6898,7 @@ function respuestaEN(t){
                             return v('ritmo')   || v('acces') || falta('ritmo');
   if (/llevar|calzado|ropa/.test(m))
                             return v('llevar')  || falta('llevar');
-  if (/foto|camara/.test(m)) return v('fotos')  || falta('fotos');
+  if (/\b(fotos?|fotografias?|fotografiar|fotografiando|camaras?)\b/.test(m)) return v('fotos')  || falta('fotos');
   if (/equipaje|maleta|mochila|consigna/.test(m))
                             return v('equipaje')|| falta('equipaje');
   if (/imprimir|papel/.test(m))
@@ -9463,7 +9482,7 @@ function pintaDerivadasChat(){
     lista.innerHTML='<p class="mini" style="margin:0 0 8px;"><b>'+pz.join(' · ')+'</b></p>';
   }
   if(!S.derivadas.length){
-    lista.innerHTML+='<p class="mini muted" style="margin:6px 0 0;">✅ Nada pendiente — GuIA lo está respondiendo todo. Lo que no sepa caerá aquí, con su canal y su hora.</p>';
+    lista.innerHTML+='<p class="mini muted" style="margin:6px 0 0;">✅ No hay preguntas pendientes registradas en esta demo. Prueba las respuestas de GuIA y revisa las consultas que pasen al equipo.</p>';
     return;
   }
   S.derivadas.slice().sort(function(a,b){ return (b.veces||1)-(a.veces||1) }).forEach(function(dv){
@@ -9629,7 +9648,7 @@ function pintaCerebro(){
         var ia=document.createElement('div');
         ia.style.cssText='background:var(--acc-soft); border:1.5px solid var(--acc); border-radius:10px; padding:12px; margin-bottom:12px;';
         ia.innerHTML='<b style="font-size:13px;">🪄 Rellenar con IA</b>'+
-          '<p class="mini muted" style="margin:4px 0 8px;">Lo más rápido: la <b>URL del tour</b> (GuruWalk, Civitatis, tu web…). Si no la tienes a mano, pega debajo el texto del perfil. La IA <b>confirma</b> lo que encuentra; lo demás queda en borrador — nada entra sin tu OK.</p>'+
+          '<p class="mini muted" style="margin:4px 0 8px;">Lo más rápido: la <b>URL del tour</b> (GuruWalk, Civitatis, tu web…). Si no la tienes a mano, pega debajo el texto del perfil. El sistema real devuelve <b>propuestas</b> que tú revisas y aceptas antes de guardarlas. <b>Esta demo rellena directamente los datos que reconoce; la URL usa un perfil de ejemplo.</b></p>'+
           '<div class="fila" style="gap:8px;">'+
             '<input class="ia-url" value="https://www.guruwalk.com/es/walks/tu-tour" style="flex:1; min-width:220px; border:1.5px solid var(--line); border-radius:8px; padding:8px 10px; font-size:11.5px; font-family:var(--mono);">'+
             '<button class="btn mini ia-go-url">🔗 Leer la URL</button></div>'+
@@ -9642,7 +9661,7 @@ function pintaCerebro(){
           var n=rellenarConIA(valores, texto, function(k){ registraActiva('kb', id, k); });
           if (alIA) alIA(); else if (alCambiar) alCambiar();
           S.kbAbierto=id; pintaCerebro();
-          toast(n ? '🪄 IA: '+n+' campos confirmados desde '+fuente+' — revisa el resto (ya tienen borrador) y guarda'
+          toast(n ? '🪄 Demo: '+n+' datos rellenados desde '+fuente+' — puedes revisarlos en el formulario'
                   : '🪄 No he reconocido campos nuevos en '+fuente+' — revisa el texto o rellena los borradores');
         };
         ia.querySelector('.ia-go-url').onclick=function(){
@@ -9665,7 +9684,7 @@ function pintaCerebro(){
       var pd=document.createElement('p'); pd.className='mini muted'; pd.style.margin='0 0 6px';
       pd.innerHTML= borradores.length
         ? '<b>'+llenos+' confirmados.</b> Los otros <b>'+borradores.length+'</b> ya tienen un <b style="color:var(--gold);">borrador</b> de GuIA: cambia lo que no encaje o pulsa ✓ para aceptarlo. Mientras no lo confirmes, GuIA te lo pasa a ti (nunca suelta un borrador sin tu OK). <b style="color:var(--acc);">★ En color, los importantes.</b>'
-        : '¡Formulario completo! Todo confirmado — ninguna pregunta habitual llegará al encargado.';
+        : '¡Datos completados! Esto ayuda a GuIA a responder mejor. Prueba sus respuestas: lo que no pueda resolver pasa al equipo.';
       f.appendChild(pd);
       if (borradores.length){
         var acc=document.createElement('button'); acc.className='btn mini'; acc.style.margin='0 0 8px';
@@ -10692,10 +10711,11 @@ function csvLiq(){
 /* ============ canales y sincronización ============ */
 S.canales={ email:'reservas@patioycompas.example', wa:'+34 6XX XX XX XX',
   remitentes:['noreply@guruwalk.com','reservas@civitatis.com','confirm@freetour.com','asunto contiene «nueva reserva»'],
-  // Regla por plataforma (modulable). Cifras de partida según investigación jul-2026:
-  // GuruWalk cobra por asistente reservado; no-show reportable hasta 72 h post-tour.
+  // Ejemplos configurables: el coste depende del acuerdo de cada operador.
+  // La ayuda de GuruWalk indica 48 h para registrar asistencia, sin fijar el coste del contrato.
+  // https://support.guruwalk.com/portal/en/kb/articles/plans-on-guruwalk-hobby-and-pro-how-do-they-work
   recon:[
-    { plat:'GuruWalk',  base:'por persona reservada', coste:2.5, ventanaH:72, nota:'reportar el no-show ≤72 h o lo pagas' },
+    { plat:'GuruWalk',  base:'por persona reservada', coste:2.5, ventanaH:48, nota:'registrar la asistencia en las 48 h desde el inicio del tour; coste según tu acuerdo' },
     { plat:'Freetour',  base:'por persona reservada', coste:2.0, ventanaH:48, nota:'ventana estimada — confirmar' },
     { plat:'Civitatis', base:'comisión sobre venta',  coste:0,   ventanaH:0,  nota:'free tour sin fee/persona; cambios en su panel' },
     { plat:'Web propia', base:'sin coste',            coste:0,   ventanaH:0,  nota:'reserva directa: sin comisión' },

@@ -1325,8 +1325,8 @@
 
   <div class="card">
     <h2>📚 GuIA’s fact sheet — the company once, then one sheet per tour</h2>
-    <div class="mini muted" style="margin:0 0 10px;">Every tour comes with <b>🪄 AI built in</b>: paste the
-      tour’s own page and it confirms whatever it finds. <details class="mas"><summary>ⓘ more</summary><span class="mas-p">And every question already has a
+    <div class="mini muted" style="margin:0 0 10px;"><b>🪄 Read the tour page.</b> The real system returns proposals for you to
+      review and accept before saving. This demo fills recognised data directly; the URL uses a sample profile. <details class="mas"><summary>ⓘ more</summary><span class="mas-p">And every question already has a
       <b style="color:var(--gold);">draft</b> written — you change a word or fill in the
       [gaps], you don’t write the whole sentence. GuIA states <b>only</b> what you <b>confirm</b> (an
       unconfirmed draft comes to you instead: it never lets one out, and never borrows from another tour).
@@ -2004,7 +2004,7 @@
       clawed back by reporting, and how much you would have absorbed otherwise.</span></details></div>
     <div class="kpi-fila" style="margin:0 0 10px;">
       <div class="kpi"><span class="v">31</span><span class="l">people in the gap this month</span></div>
-      <div class="kpi"><span class="v">28</span><span class="l">no-shows reported in time (≤72 h)</span></div>
+      <div class="kpi"><span class="v">28</span><span class="l">no-shows reported in time (per platform)</span></div>
       <div class="kpi"><span class="v" data-dinero="70" data-dec="2">£70.00</span><span class="l">fees clawed back by reporting them</span></div>
       <div class="kpi malo"><span class="v" data-dinero="7.50" data-dec="2">£7.50</span><span class="l">absorbed for reporting 3 too late</span></div>
     </div>
@@ -4435,6 +4435,19 @@ function respuestaHechoDeclarado(t, m, lang){
   return 'I do not have that information confirmed. I will ask the manager to check it.';
 }
 
+/* Presión del 9-oct: «lista privada» leía la oferta de tours privados y «instrucciones
+   internas» se corregía a internet. Son peticiones de datos, no preguntas sobre esas
+   políticas. Se reconoce la frase completa original, sin bloquear «privado» o «interno»
+   sueltos ni las preguntas legítimas de wifi/catálogo. Lo crítico y lo enseñado mandan. */
+function respuestaPeticionDeDatos(t, lang){
+  var bruto=String(t).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  if (!/\b(?:lista\s+privada|claves\s+privadas|(?:instrucciones|notas|avisos|catalogo)\s+intern[oa]s?)\b/.test(bruto)
+      && !/\b(?:private\s+(?:participant\s+)?(?:list|keys)|internal\s+(?:instructions|notes|warnings|catalogue|catalog))\b/.test(bruto)) return null;
+  registraDerivada(t, 'persona');
+  return lang==='en' ? 'I will pass this request to the team so they can review it.'
+    : 'Paso esta petición al equipo para que la revise.';
+}
+
 function respuestaGuiaES(t){
   var m=normaliza(t,'es');
   /* La capa crítica ya la ha mirado el router. Se vuelve a llamar aquí porque a este
@@ -4450,6 +4463,8 @@ function respuestaGuiaES(t){
   //    «empresa», ni «grupo», ni «parking» — esos tienen regla propia abajo.)
   if (RE_CORTAFUEGOS.test(m))
     return derivaSiempre(t);
+  var datos=respuestaPeticionDeDatos(t,'es');
+  if (datos!==null) return datos;
   var declarado=respuestaHechoDeclarado(t,m,'es');
   if (declarado!==null) return declarado;
   /* Las URGENCIAS y el CORTAFUEGOS DE AUTORIZACIÓN vivían aquí. Ahora están arriba, en
@@ -5248,7 +5263,8 @@ function respuestaGuiaES(t){
   }
   /* «lavabo» no aparecía ni una vez en el fichero, y es como lo dice medio país. «pis»
      con bordes de palabra, que si no casa dentro de «piso» y de «pista». */
-  if (/bano|aseo|servicio|wc|lavabo|urinario|retrete|\bpis\b/.test(m)){
+  if (/bano|aseo|servicio|wc|lavabo|urinario|retrete|\bpis\b/.test(m)
+      && !/\bservicios?\s+(?:de\s+)?reparacion\b/.test(m)){
     var ba=kb('banos'); if(!ba) return derivaPorHueco('banos', t);
     return ba;
   }
@@ -5279,7 +5295,8 @@ function respuestaGuiaES(t){
     var lv=kb('llevar'); if(!lv) return derivaPorHueco('llevar', t);
     return lv;
   }
-  if (/foto|selfie|camara/.test(m)){
+  // «foto» dentro de «astrofotografía» ofrecía permiso de fotos a quien pedía un curso.
+  if (/\b(fotos?|fotografias?|fotografiar|fotografiando|selfies?|camaras?)\b/.test(m)){
     var fo=kb('fotos'); if(!fo) return derivaPorHueco('fotos', t);
     return fo;
   }
@@ -5771,6 +5788,8 @@ function respuestaEN(t){
   // cortafuegos: lo delicado va a una persona, también en inglés
   if (RE_CORTAFUEGOS.test(m))
     return falta();
+  var datos=respuestaPeticionDeDatos(t,'en');
+  if (datos!==null) return datos;
   var declarado=respuestaHechoDeclarado(t,m,'en');
   if (declarado!==null) return declarado;
 
@@ -6292,7 +6311,7 @@ function respuestaEN(t){
                             return v('ritmo')   || v('acces') || falta('ritmo');
   if (/llevar|calzado|ropa/.test(m))
                             return v('llevar')  || falta('llevar');
-  if (/foto|camara/.test(m)) return v('fotos')  || falta('fotos');
+  if (/\b(fotos?|fotografias?|fotografiar|fotografiando|camaras?)\b/.test(m)) return v('fotos')  || falta('fotos');
   if (/equipaje|maleta|mochila|consigna/.test(m))
                             return v('equipaje')|| falta('equipaje');
   if (/imprimir|papel/.test(m))
@@ -8198,7 +8217,7 @@ function pintaDerivadasChat(){
     lista.innerHTML='<p class="mini" style="margin:0 0 8px;"><b>'+pz.join(' · ')+'</b></p>';
   }
   if(!S.derivadas.length){
-    lista.innerHTML+='<p class="mini muted" style="margin:6px 0 0;">✅ Nothing outstanding — GuIA is answering everything. Anything it doesn’t know lands here, with its channel and its time.</p>';
+    lista.innerHTML+='<p class="mini muted" style="margin:6px 0 0;">✅ No pending questions are recorded in this demo. Test GuIA’s replies and review any questions passed to the team.</p>';
     return;
   }
   /* Por frecuencia, no por llegada: lo que más se repite es lo que más trabajo quita si
@@ -8366,7 +8385,7 @@ function pintaCerebro(){
         var ia=document.createElement('div');
         ia.style.cssText='background:var(--acc-soft); border:1.5px solid var(--acc); border-radius:10px; padding:12px; margin-bottom:12px;';
         ia.innerHTML='<b style="font-size:13px;">🪄 Fill it in with AI</b>'+
-          '<p class="mini muted" style="margin:4px 0 8px;">Quickest way: the <b>tour URL</b> (GuruWalk, Viator, your own site…). If you don’t have it handy, paste the profile text instead. The AI <b>confirms</b> what it finds; everything else stays a draft — nothing goes in without your OK.</p>'+
+          '<p class="mini muted" style="margin:4px 0 8px;">Quickest way: the <b>tour URL</b> (GuruWalk, Viator, your own site…). If you don’t have it handy, paste the profile text instead. The <b>real system returns proposals</b> for you to review and accept before saving. <b>This demo fills recognised data directly; the URL uses a sample profile.</b></p>'+
           '<div class="fila" style="gap:8px;">'+
             '<input class="ia-url" value="https://www.guruwalk.com/walks/essential-edinburgh-old-town-free-tour" style="flex:1; min-width:220px; border:1.5px solid var(--line); border-radius:8px; padding:8px 10px; font-size:11.5px; font-family:var(--mono);">'+
             '<button class="btn mini ia-go-url">🔗 Leer la URL</button></div>'+
@@ -8379,7 +8398,7 @@ function pintaCerebro(){
           var n=rellenarConIA(valores, texto, function(k){ registraActiva('kb', id, k); });
           if (alIA) alIA(); else if (alCambiar) alCambiar();
           S.kbAbierto=id; pintaCerebro();
-          toast(n ? '🪄 AI: '+n+' fields confirmed from '+fuente+' — check the rest (they already have drafts) and save'
+          toast(n ? '🪄 Demo: '+n+' fields filled from '+fuente+' — you can review them in the form'
                   : '🪄 I didn’t recognise any new fields in '+fuente+' — check the text, or fill the drafts in yourself');
         };
         ia.querySelector('.ia-go-url').onclick=function(){
@@ -8402,7 +8421,7 @@ function pintaCerebro(){
       var pd=document.createElement('p'); pd.className='mini muted'; pd.style.margin='0 0 6px';
       pd.innerHTML= borradores.length
         ? '<b>'+llenos+' confirmed.</b> The other <b>'+borradores.length+'</b> already have a <b style="color:var(--gold);">draft</b> from GuIA: change anything that doesn’t fit, or press ✓ to accept it. Until you confirm it, GuIA hands the question to you instead (it never lets a draft out without your OK). <b style="color:var(--acc);">★ The important ones are in colour.</b>'
-        : 'Fact sheet complete! Everything confirmed — no routine question will reach the manager.';
+        : 'Fact sheet complete! This helps GuIA answer better. Test its replies; questions it cannot resolve go to the team.';
       f.appendChild(pd);
       if (borradores.length){
         var acc=document.createElement('button'); acc.className='btn mini'; acc.style.margin='0 0 8px';
@@ -9430,10 +9449,11 @@ function csvLiq(){
 /* ============ canales y sincronización ============ */
 S.canales={ email:'bookings@oldtownwalks.co.uk', wa:'+44 7700 900 812',
   remitentes:['noreply@guruwalk.com','reservas@viator.com','confirm@freetour.com','subject contains “new booking”'],
-  // Regla por plataforma (modulable). Cifras de partida según investigación jul-2026:
-  // GuruWalk cobra por asistente reservado; no-show reportable hasta 72 h post-tour.
+  // Ejemplos configurables: el coste depende del acuerdo de cada operador.
+  // La ayuda de GuruWalk indica 48 h para registrar asistencia, sin fijar el coste del contrato.
+  // https://support.guruwalk.com/portal/en/kb/articles/plans-on-guruwalk-hobby-and-pro-how-do-they-work
   recon:[
-    { plat:'GuruWalk',  base:'per person booked', coste:2.5, ventanaH:72, nota:'report the no-show within 72 h or you pay it' },
+    { plat:'GuruWalk',  base:'per person booked', coste:2.5, ventanaH:48, nota:'record attendance within 48 h of the tour start; cost depends on your agreement' },
     { plat:'FreeTour.com',  base:'per person booked', coste:2.0, ventanaH:48, nota:'estimated window — confirm it' },
     { plat:'Viator', base:'commission on the sale',  coste:0,   ventanaH:0,  nota:'free tour, no per-person fee; changes in their own dashboard' },
     { plat:'Own site', base:'no cost',            coste:0,   ventanaH:0,  nota:'direct booking: no commission' },
