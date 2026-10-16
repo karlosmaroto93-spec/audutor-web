@@ -74,7 +74,7 @@
   .tp-l small{ display:block; color:var(--muted); font-size:11.5px; }
   .tp-l b{ font-variant-numeric:tabular-nums; white-space:nowrap; }
   .tp-tot{ border-bottom:0; margin-top:4px; padding-top:9px; border-top:1.5px solid var(--acc); }
-  .tp-tot b{ font-family:var(--serif); font-size:27px; color:var(--acc); }
+  .tp-tot b{ font-family:var(--serif); font-size:27px; color:var(--acc2); }
   .tp-nota{ margin:9px 0 0; font-size:11.5px; line-height:1.45; color:var(--ink2); }
   .tp-cero{ margin-top:9px; padding-top:8px; border-top:1px dashed rgba(18,128,95,.25);
     font-size:11.5px; color:var(--muted); }
@@ -107,7 +107,10 @@
     --tono-rosa:#f7aac6;  --tono-rosa-hondo:#ad3d67;
     --ink:#1c2b25; --ink2:#40554c; --muted:#5c6b64; --bg:#eee7d7; --paper:#fffefa;
     --acc:#12805f; --acc2:#0c6b56; --acc-deep:#0a5847; --acc-soft:#e2f1e9;
-    --gold:#d99a33; --gold-soft:#fbf3e1; --amber:#96690f;
+    --gold:#d99a33; --gold-soft:#fbf3e1; --amber:#7a5210;
+    /* --amber solo pinta letra: era #96690f y sobre --gold-soft daba 3,94:1. Ahora es el
+       --oro-texto de la app. Y la letra verde va en --acc2: --acc sobre crema daba 3,98:1
+       (revisión de accesibilidad del 16-oct-2026). */
     --coral:#f4653a; --coral-deep:#cf3d18; --coral-ink:#a63614; --coral-soft:#ffeee6;
     --turq:#2bb3a3; --turq-deep:#1d8579; --turq-soft:#def2ee;
     --line:#e5dccb; --rojo:#a83a2e; --rojo-soft:#f8e9e6;
@@ -123,7 +126,7 @@
 
   /* Dieta de texto: el párrafo largo se pliega — primera frase visible, el resto en «ⓘ más» */
   details.mas{ display:inline; }
-  details.mas summary{ display:inline-block; cursor:pointer; color:var(--acc); font-weight:700;
+  details.mas summary{ display:inline-block; cursor:pointer; color:var(--acc2); font-weight:700;
     font-size:11.5px; list-style:none; border-bottom:1px dashed rgba(18,138,107,.5); margin-left:2px; }
   details.mas summary::-webkit-details-marker{ display:none; }
   details.mas[open] summary{ opacity:.6; }
@@ -320,7 +323,7 @@
     border-radius:99px; padding:4px 11px; font-size:11.5px; font-weight:700; margin-top:10px; }
   .g-volver{ display:block; text-align:center; font-size:11.5px; color:var(--muted); text-decoration:none;
     padding:14px; margin-top:6px; }
-  .g-volver b{ color:var(--acc); }
+  .g-volver b{ color:var(--acc2); }
   .g-dispo{ background:var(--paper); border:1px solid var(--line); border-radius:14px; margin:4px 14px 0;
     padding:16px 16px 14px; }
   .g-dispo h2{ font-size:15px; margin:0 0 4px; }
@@ -482,7 +485,7 @@
   .btn{ background:var(--acc); color:#fff; border:0; border-radius:9px; padding:9px 16px;
         font-weight:700; font-size:13px; cursor:pointer; }
   .btn:hover{ background:var(--acc2); }
-  .btn.sec{ background:transparent; color:var(--acc); border:1.5px solid var(--acc); }
+  .btn.sec{ background:transparent; color:var(--acc2); border:1.5px solid var(--acc); }
   .btn.mini{ padding:5px 12px; font-size:13px; }
   .muted{ color:var(--muted); } .mini{ font-size:13px; }
   table{ border-collapse:collapse; width:100%; font-size:13px; }
@@ -509,7 +512,7 @@
         0 1px 1px rgba(74,61,32,.05), 0 4px 10px -4px rgba(74,61,32,.10),
         0 22px 44px -22px rgba(74,61,32,.28); }
   .exc .fila{ justify-content:space-between; }
-  .todo-ok{ text-align:center; padding:34px; color:var(--acc); font-weight:700; display:none; }
+  .todo-ok{ text-align:center; padding:34px; color:var(--acc2); font-weight:700; display:none; }
 
   /* manifiesto móvil */
   .movil{ max-width:400px; background:var(--paper); border:1px solid var(--line);
@@ -559,7 +562,7 @@
   .att:has(> .att-acciones:not([hidden])){ flex-wrap:wrap; }
   .att-mas{ flex:0 0 auto; width:30px; height:32px; padding:0; border:1.5px solid var(--line); border-radius:10px;
     background:var(--paper); color:var(--ink2); font:inherit; font-size:17px; font-weight:800; line-height:1; }
-  .att-mas[aria-expanded="true"]{ border-color:var(--acc); background:var(--acc-soft); color:var(--acc); }
+  .att-mas[aria-expanded="true"]{ border-color:var(--acc); background:var(--acc-soft); color:var(--acc2); }
   .att-acciones{ flex:1 0 100%; display:flex; flex-wrap:wrap; justify-content:flex-end; gap:6px; padding:4px 0 2px; }
   .att-acciones[hidden]{ display:none; }
   .att-porque{ flex:1 0 100%; text-align:right; font-size:11.5px; color:var(--muted); }
@@ -605,7 +608,7 @@
     .ag-wrap::before, .ag-wrap::after{ display:none; }
   }
   .btn-walkin{ width:100%; margin-top:10px; border:1.5px dashed var(--acc); background:var(--acc-soft);
-    color:var(--acc); font-weight:700; }
+    color:var(--acc2); font-weight:700; }
   .walkin-form{ background:var(--acc-soft); border:1.5px solid var(--acc); border-radius:11px;
     padding:12px; margin-top:8px; }
   .walkin-form input{ border:1.5px solid var(--line); border-radius:8px; padding:8px 10px;
@@ -619,7 +622,7 @@
     padding:4px 0 6px; }
   /* «Hoy» se marca solo con el color del acento: misma letra, mismo tamaño y misma
      caja que el resto de días — antes llevaba una píldora rellena que rompía la fila. */
-  .cal-h.hoy{ color:var(--acc); }
+  .cal-h.hoy{ color:var(--acc2); }
   .cal-slot{ display:flex; flex-direction:column; justify-content:center; padding:8px 12px;
     background:linear-gradient(180deg,#fbfaf7,#f6f4ef); border:1px solid var(--line); border-radius:11px; }
   .cal-slot .h{ font-family:var(--mono); font-weight:800; font-size:15px; color:var(--ink); }
@@ -657,7 +660,7 @@
         animation:aparece .25s ease; white-space:pre-line; overflow-wrap:anywhere; }
   .msg.cli{ align-self:flex-end; background:var(--acc); color:#fff; border-bottom-right-radius:4px; }
   .msg.bot{ align-self:flex-start; background:#f6efdf; border:1px solid #ece1c8; border-bottom-left-radius:4px; }
-  .msg.bot a{ color:var(--acc); font-weight:700; }
+  .msg.bot a{ color:var(--acc2); font-weight:700; }
   .chat-entrada{ display:flex; gap:8px; margin-top:10px; }
   .chat-entrada input{ flex:1; border:1.5px solid var(--line); border-radius:9px; padding:10px 12px;
     font-size:13px; font-family:inherit; }
@@ -674,8 +677,8 @@
   .pasos{ margin:12px 0 0; padding:0; list-style:none; font-size:13px; color:var(--muted); }
   .pasos li{ padding:5px 0 5px 26px; position:relative; opacity:.35; transition:opacity .3s; }
   .pasos li::before{ content:"○"; position:absolute; left:4px; color:var(--muted); }
-  .pasos li.haciendo{ opacity:1; } .pasos li.haciendo::before{ content:"◌"; color:var(--gold); }
-  .pasos li.hecho{ opacity:1; color:var(--ink2); } .pasos li.hecho::before{ content:"●"; color:var(--acc); }
+  .pasos li.haciendo{ opacity:1; } .pasos li.haciendo::before{ content:"◌"; color:var(--amber); }
+  .pasos li.hecho{ opacity:1; color:var(--ink2); } .pasos li.hecho::before{ content:"●"; color:var(--acc2); }
   .tour-nuevo{ display:none; border:1.5px solid var(--acc); }
   .tour-nuevo .campo{ display:flex; gap:8px; padding:6px 0; border-bottom:1px dashed var(--line);
     font-size:13px; }
@@ -693,11 +696,11 @@
   .cadencia{ font-family:var(--mono); font-size:11.5px; color:var(--muted); }
   .kpi-fila{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; }
   .kpi{ background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:13px 16px; }
-  .kpi .v{ font-family:var(--serif); font-size:27px; font-weight:600; color:var(--acc); display:block; }
+  .kpi .v{ font-family:var(--serif); font-size:27px; font-weight:600; color:var(--acc2); display:block; }
   .kpi .l{ font-size:11.5px; color:var(--muted); }
   .kpi.malo .v{ color:var(--rojo); }
   .neg{ color:var(--rojo) !important; font-weight:700; }
-  .pos-guia{ color:var(--acc); font-weight:700; }
+  .pos-guia{ color:var(--acc2); font-weight:700; }
   .switch-linea{ display:flex; align-items:center; gap:10px; font-size:13px; }
   /* centro de operaciones: seguimiento en vivo del tour (de Madrid Latido) */
   .estado-banner{ border-radius:12px; padding:12px 16px; margin-bottom:14px; display:flex; align-items:center;
@@ -719,7 +722,7 @@
   .seg-kpi .n{ font-size:20px; font-weight:800; display:block; }
   .seg-kpi .l{ font-size:11.5px; }
   .seg-kpi.llego{ background:#dcfce7; color:#14532d; }
-  .seg-kpi.ok{ background:var(--acc-soft); color:var(--acc); }
+  .seg-kpi.ok{ background:var(--acc-soft); color:var(--acc2); }
   .seg-kpi.pend{ background:#eef1ee; color:var(--muted); }
   .seg-kpi.tarde{ background:var(--gold-soft); color:var(--amber); }
   .seg-fila{ display:flex; align-items:center; gap:10px; padding:9px 4px; border-top:1px solid var(--line); }
@@ -731,7 +734,7 @@
   .seg-nombre{ flex:1; font-weight:600; font-size:13px; }
   .seg-chip{ font-size:11.5px; font-weight:700; padding:3px 10px; border-radius:999px; white-space:nowrap; }
   .seg-fila.llego .seg-chip{ background:#dcfce7; color:#14532d; }
-  .seg-fila.confirmado .seg-chip{ background:var(--acc-soft); color:var(--acc); }
+  .seg-fila.confirmado .seg-chip{ background:var(--acc-soft); color:var(--acc2); }
   .seg-fila.tarde .seg-chip{ background:var(--gold-soft); color:var(--amber); }
   .seg-fila.pendiente .seg-chip{ background:#eef1ee; color:var(--muted); }
   .seg-cancel{ margin-top:12px; padding-top:10px; border-top:1px dashed var(--line); font-size:13px; }
@@ -773,7 +776,7 @@
   .mk-sel b{ color:#33514a; }
   .mk-sel button{ border:1px solid #d9cba6; background:#fffdf5; border-radius:8px; padding:8px 7px; min-width:44px; min-height:44px; font-size:15px; cursor:pointer; line-height:1; font-family:inherit; }
   .mk-sel button.on{ background:var(--acc); border-color:var(--acc); box-shadow:none; }
-  .mk-sel #mk-nota{ color:#7a6f55; font-style:italic; }
+  .mk-sel #mk-nota{ color:#645a42; font-style:italic; }
   /* ── Los complementos, pegados al selector de plan ──────────────────────────────────
      El plan dejó de ser «qué funciones tienes» y pasó a ser «cuántos viajeros llevas»: un
      bono, con recargo al pasarse. Lo que antes decidía el plan —GuIA, el agente— ahora se
@@ -813,7 +816,7 @@
   .comp-sel{ background:#f3ecdb; border:1px solid #e0d3b4; border-radius:10px;
     padding:9px 11px; margin-top:8px; font-size:11.5px; color:#5c6653; }
   .comp-tit{ font-weight:800; font-size:11.5px; letter-spacing:.07em; text-transform:uppercase;
-    color:#7a6f55; margin-bottom:6px; }
+    color:#645a42; margin-bottom:6px; }
   .comp-sel label{ display:flex; align-items:center; gap:7px; padding:5px 0; cursor:pointer;
     border-bottom:1px dashed rgba(122,111,85,.22); }
   .comp-sel label span{ flex:1; }
@@ -823,7 +826,7 @@
   .comp-sel input{ width:15px; height:15px; accent-color:var(--acc); cursor:pointer; }
   .comp-total{ margin-top:8px; font-size:13px; color:#33514a; }
   .comp-total b{ font-size:15px; color:var(--acc-deep); font-variant-numeric:tabular-nums; }
-  .comp-total span{ display:block; font-size:11.5px; color:#7a6f55; font-style:italic; margin-top:2px; }
+  .comp-total span{ display:block; font-size:11.5px; color:#645a42; font-style:italic; margin-top:2px; }
   /* Lo que va EN el plan, sin casilla: la misma fila que un complemento, con ✓. */
   .comp-incl{ padding:5px 0; color:#0c6b56; border-bottom:1px dashed rgba(122,111,85,.22); }
   /* `.leyenda-planes b` pinta las negritas en claro para el fondo verde; esta caja es crema. */
@@ -839,8 +842,9 @@
     .plan-sel button b{ font-size:13px; letter-spacing:0; }
   }
   /* El precio del plan activo iba en #5c6653 sobre el verde: no se leía el «0 €» de Esencial. */
-  .plan-sel button.on{ background:var(--acc); border-color:var(--acc); color:#e4efe9; }
+  .plan-sel button.on{ background:var(--acc); border-color:var(--acc); color:#fff; }
   .plan-sel button.on b{ color:#fff; }
+  .btn .muted{ color:inherit; }  /* gris apagado sobre el botón verde daba 1,14:1 */
   #toast{ position:fixed; left:50%; bottom:26px; transform:translateX(-50%) translateY(90px);
     background:var(--ink); color:#fff; padding:10px 22px; border-radius:99px; font-weight:700;
     font-size:13px; opacity:0; transition:all .25s ease; z-index:99; pointer-events:none; }
@@ -933,7 +937,7 @@
   .vj-cuerpo{ padding:14px 16px 24px; }
   .vj-burbuja{ background:var(--acc-soft); border:1px solid #cbe3d9; border-radius:14px 14px 14px 4px;
     padding:11px 13px; font-size:13px; line-height:1.5; }
-  .vj-burbuja .vj-de{ font-size:11.5px; font-weight:800; color:var(--acc); text-transform:uppercase;
+  .vj-burbuja .vj-de{ font-size:11.5px; font-weight:800; color:var(--acc2); text-transform:uppercase;
     letter-spacing:.05em; margin-bottom:5px; }
   .vj-burbuja .vj-hora{ display:block; text-align:right; font-size:11.5px; color:var(--muted); margin-top:3px; }
   .vj-tit{ font-size:13px; font-weight:700; margin:15px 2px 8px; }
@@ -963,13 +967,13 @@
   .vj-gracias{ text-align:center; }
   .vj-gracias .vj-check{ font-size:34px; margin-top:14px; }
   .vj-gracias h3{ font-family:var(--serif); font-size:20px; margin:8px 0 2px; }
-  .vj-total{ font-size:27px; font-weight:800; color:var(--acc); margin:2px 0 4px;
+  .vj-total{ font-size:27px; font-weight:800; color:var(--acc2); margin:2px 0 4px;
     font-variant-numeric:tabular-nums; }
   .vj-resena{ border-top:1px dashed var(--line); margin-top:16px; padding-top:14px; }
   .vj-resena p{ margin:0; font-size:13px; }
   .vj-cta-g{ background:#fff; color:var(--ink); border:1.5px solid var(--line); }
   .vj-cta-g:hover{ background:#f2f7f4; }
-  .vj-volver{ background:none; border:0; color:var(--acc); font-weight:700; font-size:13px;
+  .vj-volver{ background:none; border:0; color:var(--acc2); font-weight:700; font-size:13px;
     cursor:pointer; margin-top:16px; font-family:inherit; }
   .vj-nota{ max-width:290px; color:#d5e6df; font-size:13px; line-height:1.6; }
   .vj-nota h3{ font-family:var(--serif); color:#fff; font-size:17px; margin:0 0 10px; }
@@ -1420,7 +1424,7 @@
     <div class="fila" style="justify-content:space-between; align-items:center; flex-wrap:wrap;">
       <h2 style="margin:0;">💬 Lo que GuIA ya responde</h2>
       <span class="fila" style="gap:10px; align-items:center;">
-        <b id="resp-n" style="font-family:var(--serif); font-size:27px; color:var(--acc); line-height:1;">0</b>
+        <b id="resp-n" style="font-family:var(--serif); font-size:27px; color:var(--acc2); line-height:1;">0</b>
         <span class="mini muted">respuestas<br>activas</span>
         <span class="chip gris" title="Reglas de conversación integradas de serie en GuIA">60 reglas de serie</span>
         <button class="btn mini sec" onclick="S.respAbierto=!S.respAbierto; pintaCerebro();" id="resp-toggle">▾ Ver todas</button>
@@ -1437,10 +1441,10 @@
     <h2>📚 El formulario de GuIA — la empresa una vez, y un formulario por tour</h2>
     <div class="mini muted" style="margin:0 0 10px;"><b>🪄 Lectura de la web del tour.</b> En el sistema real devuelve propuestas para que
       tú las revises y aceptes antes de guardarlas. Esta demo rellena directamente los datos que reconoce; la URL usa un perfil de ejemplo. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Y cada pregunta ya viene con un
-      <b style="color:var(--gold);">borrador</b> escrito — solo cambias palabras o rellenas los
+      <b style="color:var(--amber);">borrador</b> escrito — solo cambias palabras o rellenas los
       [huecos], no escribes la frase entera. GuIA <b>solo</b> afirma lo que <b>confirmas</b> (un
       borrador sin confirmar te llega a ti: nunca lo suelta, jamás lo coge de otro tour).
-      <b style="color:var(--acc);">★ En color, los importantes.</b> Pulsa <b>💾 Guardar</b> y el
+      <b style="color:var(--acc2);">★ En color, los importantes.</b> Pulsa <b>💾 Guardar</b> y el
       formulario se pliega a su barra de progreso. El bloque <b>🏢 La empresa</b> se responde una
       sola vez y vale para todos los tours. <b>Ojo con los [corchetes]</b>: marcan el hueco donde va
       tu dato — al escribirlo, <b>quita también los corchetes</b> (si dejas «[10:00]», GuIA diría
@@ -1686,7 +1690,7 @@
     <div style="background:var(--acc-soft); border-radius:10px; padding:10px 14px; font-size:13px; margin:0 0 12px;"
          id="combo-destinatarios"></div>
     <p class="mini muted" style="margin:0 0 10px;">✍️ El texto del mensaje se escribe en
-      <a href="#cerebro" style="color:var(--acc); font-weight:700;"
+      <a href="#cerebro" style="color:var(--acc2); font-weight:700;"
          onclick="ir('cerebro'); setTimeout(function(){ document.getElementById('card-posttour').scrollIntoView({behavior:'smooth'}); },80); return false;">🧠
         Cerebro → 📮 Mensaje post-tour</a>.</p>
     <div class="fila">
@@ -2081,7 +2085,7 @@
          web propia: el número del que se tira estaba mal. -->
     <div id="cm-canales"></div>
     <p class="mini muted" style="margin:8px 0 0;">Cada punto que sube la web propia es comisión que no
-      se va: pruébalo en la <a href="#proyeccion" style="color:var(--acc); font-weight:700;"
+      se va: pruébalo en la <a href="#proyeccion" style="color:var(--acc2); font-weight:700;"
       onclick="ir('proyeccion'); return false;">Proyección de ingresos</a>.</p>
   </div>
 
@@ -2129,7 +2133,7 @@
       <tr><th>Guía</th><th>Personas</th><th>Propina/persona</th><th>Valoración</th></tr>
     </table>
     <p class="mini muted" style="margin:10px 0 0;">Mismos números que verás en la
-      <a href="#liquidacion" style="color:var(--acc); font-weight:700;" onclick="ir('liquidacion'); return false;">Liquidación</a> —
+      <a href="#liquidacion" style="color:var(--acc2); font-weight:700;" onclick="ir('liquidacion'); return false;">Liquidación</a> —
       una sola fuente de verdad: lo que analizas es lo que pagas.</p>
   </div>
 
@@ -2152,7 +2156,7 @@
       <tr><td><b>Freetour</b></td><td>2</td><td>1</td><td class="num pos-guia" data-dinero="2" data-dec="2">2,00 €</td><td class="num neg" data-dinero="2" data-dec="2">2,00 €</td></tr>
     </table>
     <p class="mini muted" style="margin:10px 0 0;">La regla de cada plataforma se configura en
-      <a href="#canales" style="color:var(--acc); font-weight:700;" onclick="ir('canales'); return false;">🔌 Canales → Conciliación</a>.
+      <a href="#canales" style="color:var(--acc2); font-weight:700;" onclick="ir('canales'); return false;">🔌 Canales → Conciliación</a>.
       Audutor arma solo la lista de no-shows a reportar dentro del plazo — que no se te pase ninguno.</p>
   </div>
 </section>
@@ -2247,7 +2251,7 @@
   <div class="card">
     <h2>🗓 Horario y calendario de la semana</h2>
     <div class="mini muted" style="margin:0 0 6px;">Los tours salen del
-      <a href="#cerebro" style="color:var(--acc); font-weight:700;" onclick="ir('cerebro'); return false;">🧠 Cerebro</a>.
+      <a href="#cerebro" style="color:var(--acc2); font-weight:700;" onclick="ir('cerebro'); return false;">🧠 Cerebro</a>.
       Si sale más de un guía, <b>el orden de las iniciales marca la jerarquía</b> (1ª = principal); las
       <span style="color:var(--amber); font-weight:700;">ámbar</span> salen pero están sin cubrir, y las
       rayadas son días sin salida. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Dos guías con la misma inicial se muestran con dos letras
@@ -7461,7 +7465,7 @@ function pintaWeb(){
         return '<div class="fila" style="justify-content:space-between; gap:8px; padding:6px 0; border-bottom:1px dashed var(--line);">' +
           '<b>' + c.n + '</b><span class="mini" style="color:var(--amber);">le falta: ' + c.campos.join(', ') + '</span></div>';
       }).join('')
-    : '<p class="mini" style="margin:0; color:var(--verde,#2e7d5b);">✓ Nada. Las cuatro cosas imprescindibles están en todos tus tours.</p>';
+    : '<p class="mini" style="margin:0; color:var(--acc2);">✓ Nada. Las cuatro cosas imprescindibles están en todos tus tours.</p>';
 
   /* LA PÁGINA. Se pinta con los MISMOS bloques del servidor, en el mismo orden. */
   var caja = document.getElementById('web-previa');
@@ -7497,7 +7501,7 @@ function pintaWeb(){
     '<p style="color:#a3402f; font-size:13px;">Esta página saldría vacía: rellena el Cerebro primero.</p>';
   /* El pie con marca: solo lo quitan Pro y Premium, igual que `conMarca()` en el servidor. */
   var marca = (S.plan === 'pro' || S.plan === 'premium');
-  html += '<p style="margin:20px 0 0; border-top:1px solid #e6e6e6; padding-top:8px; color:#999; font-size:11.5px;">' +
+  html += '<p style="margin:20px 0 0; border-top:1px solid #e6e6e6; padding-top:8px; color:#5b6b64; font-size:11.5px;">' +
     (marca ? '' : 'Hecho con Audutor') + '</p>';
   caja.innerHTML = html;
 
@@ -7920,7 +7924,7 @@ function pintaGuiaDispo(nombre){
         if (f.dias.indexOf(d)<0) return '<td style="text-align:center; color:var(--line);">·</td>';
         var slot=f.key+'|'+d, asig=estaAsignado(gi,slot), mar=g.dispo[slot];
         var est = asig ? 'background:'+g.color+'; color:#fff;'
-                : mar===true ? 'background:var(--acc-soft); color:var(--acc); border:1.5px solid var(--acc);'
+                : mar===true ? 'background:var(--acc-soft); color:var(--acc2); border:1.5px solid var(--acc);'
                 : mar===false ? 'background:#f3eeee; color:var(--muted); border:1.5px dashed var(--muted);'
                       : 'background:#eef3f0; color:var(--muted);';
         return '<td style="text-align:center;"><button class="g-tb" style="'+est+'" '+
@@ -8946,7 +8950,7 @@ function pintaManifiestoReal(){
     var tarde=t.res.filter(function(r){return r.tarde&&!r.ok});
     var nsAuto=t.res.filter(function(r){return r.nsAuto});   // no-shows marcados solos al cerrarse el tour
     // cabecera
-    var chip = t.live?'<span class="chip" style="background:var(--acc-soft); color:var(--acc);">en marcha</span>'
+    var chip = t.live?'<span class="chip" style="background:var(--acc-soft); color:var(--acc2);">en marcha</span>'
              : t.sinGuia?'<span class="chip rojo">sin guía</span>'
              : dia.pasado?'<span class="chip gris">cerrado</span>'
              : '<span class="chip gris">programado</span>';
@@ -9126,7 +9130,7 @@ function pintaManifiestoReal(){
           toast('✓ Lectura registrada para '+t.guia); };
         d.appendChild(b);
       } else {
-        var s=document.createElement('span'); s.className='mini'; s.style.cssText='color:var(--acc); flex-shrink:0; font-weight:700;';
+        var s=document.createElement('span'); s.className='mini'; s.style.cssText='color:var(--acc2); flex-shrink:0; font-weight:700;';
         s.textContent='✓ recibido'; d.appendChild(s);
       }
       obsBox.appendChild(d);
@@ -9632,7 +9636,7 @@ function pintaCerebro(){
       '<span style="flex:1; min-width:130px; height:9px; border-radius:6px; background:var(--line); overflow:hidden;">'+
         '<i style="display:block; height:100%; width:'+pct+'%; background:'+(pct===100?'var(--acc)':'var(--gold)')+'; transition:width .4s;"></i></span>'+
       '<span class="mini muted num">'+llenos+' confirmados de '+campos.length+'</span>'+
-      (imps.length?'<span class="mini num" title="importantes" style="color:'+(impsOk===imps.length?'var(--acc)':'var(--rojo)')+'; font-weight:800;">★ '+impsOk+' de '+imps.length+'</span>':'');
+      (imps.length?'<span class="mini num" title="importantes" style="color:'+(impsOk===imps.length?'var(--acc2)':'var(--rojo)')+'; font-weight:800;">★ '+impsOk+' de '+imps.length+'</span>':'');
     var btn=document.createElement('button'); btn.className='btn mini'+(abierto?' sec':'');
     btn.textContent= abierto ? '▲ Plegar' : (llenos<campos.length ? '✏️ Revisar' : '✏️ Editar');
     var alterna=function(ev){ ev.stopPropagation();
@@ -9683,7 +9687,7 @@ function pintaCerebro(){
       }
       var pd=document.createElement('p'); pd.className='mini muted'; pd.style.margin='0 0 6px';
       pd.innerHTML= borradores.length
-        ? '<b>'+llenos+' confirmados.</b> Los otros <b>'+borradores.length+'</b> ya tienen un <b style="color:var(--gold);">borrador</b> de GuIA: cambia lo que no encaje o pulsa ✓ para aceptarlo. Mientras no lo confirmes, GuIA te lo pasa a ti (nunca suelta un borrador sin tu OK). <b style="color:var(--acc);">★ En color, los importantes.</b>'
+        ? '<b>'+llenos+' confirmados.</b> Los otros <b>'+borradores.length+'</b> ya tienen un <b style="color:var(--amber);">borrador</b> de GuIA: cambia lo que no encaje o pulsa ✓ para aceptarlo. Mientras no lo confirmes, GuIA te lo pasa a ti (nunca suelta un borrador sin tu OK). <b style="color:var(--acc2);">★ En color, los importantes.</b>'
         : '¡Datos completados! Esto ayuda a GuIA a responder mejor. Prueba sus respuestas: lo que no pueda resolver pasa al equipo.';
       f.appendChild(pd);
       if (borradores.length){
@@ -9704,7 +9708,7 @@ function pintaCerebro(){
         var esConf=!!conf(c);
         var d=document.createElement('div');
         d.className='cb-fila';
-        d.innerHTML='<span class="mini'+(c.imp?'':' muted')+'"'+(c.imp?' style="color:var(--acc); font-weight:800;"':'')+'>'+
+        d.innerHTML='<span class="mini'+(c.imp?'':' muted')+'"'+(c.imp?' style="color:var(--acc2); font-weight:800;"':'')+'>'+
           (c.imp?'★ ':'')+c.l+
           (c.t?'<br><span style="font-size:11.5px; font-weight:400; color:var(--muted);">responde a: '+c.t+'</span>':'')+'</span>';
         var inp=document.createElement('input');
@@ -9730,7 +9734,7 @@ function pintaCerebro(){
           vb.onclick=function(){
             S.verFrase = (S.verFrase && S.verFrase.id===id && S.verFrase.k===c.k) ? null : {id:id, k:c.k};
             pintaCerebro(); };
-          acs.innerHTML='<span class="mini" style="color:var(--acc); margin-right:6px;" title="confirmado">✓</span>';
+          acs.innerHTML='<span class="mini" style="color:var(--acc2); margin-right:6px;" title="confirmado">✓</span>';
           acs.appendChild(vb);
         } else {
           var ab=document.createElement('button'); ab.className='btn mini sec'; ab.textContent='✓';
@@ -10411,7 +10415,7 @@ function abreFichaGuia(nombre){
         (t.salidas===1?'salida en el último año':'salidas en el último año')+'</span></div>'+
       '<div class="fg-kpi"><span class="v">'+t.ax+'</span><span class="l">personas atendidas</span></div>'+
       '<div class="fg-kpi"><span class="v">'+eur(t.rec)+'</span><span class="l">recaudado en propina</span></div>'+
-      '<div class="fg-kpi"><span class="v" style="color:var(--acc)">'+eur(t.guia)+'</span><span class="l">se llevó él</span></div>'+
+      '<div class="fg-kpi"><span class="v" style="color:var(--acc2)">'+eur(t.guia)+'</span><span class="l">se llevó él</span></div>'+
     '</div>'+
     /* Las medias solo con muestra, y el motivo con palabras: un «—» a secas se lee como
        que la pantalla está rota. */
@@ -10957,7 +10961,7 @@ function pintaCalPicker(){
     ? cob.map(function(gi,ix){ var g=S.equipo.guias[gi];
         return '<span class="fila" style="gap:5px; align-items:center;">'+
           '<span class="ini grande" style="background:'+g.color+'">'+iniGuia(g)+'</span>'+
-          '<b>'+(ix+1)+'º</b> '+g.n+marcaVisto(gi, slot)+(ix===0?' <span class="chip" style="background:var(--acc-soft); color:var(--acc);">principal</span>':
+          '<b>'+(ix+1)+'º</b> '+g.n+marcaVisto(gi, slot)+(ix===0?' <span class="chip" style="background:var(--acc-soft); color:var(--acc2);">principal</span>':
             ' <button class="btn mini sec" style="padding:3px 8px;" onclick="calSubir(\''+slot+'\','+gi+')" title="subir en la jerarquía">▲</button>')+
           ' <button class="btn mini sec" style="padding:3px 8px;" onclick="calToggleGuia(\''+slot+'\','+gi+')" title="quitar">✕</button></span>'; }).join('')
     : '<i class="mini muted">Nadie asignado — toca un guía para ponerlo al frente de la salida.</i>';
@@ -11054,7 +11058,7 @@ function pintaEquipo(){
       '<td><label class="mini" style="cursor:pointer;"><input type="checkbox" '+(x.checkin?'checked':'')+
       (x.activo?'':' disabled')+' onchange="toggleCheckin('+gi+')"> puede marcar llegadas</label></td>'+
 
-      '<td>'+(x.activo?'<span class="chip" style="background:var(--acc-soft); color:var(--acc);">en activo</span>'
+      '<td>'+(x.activo?'<span class="chip" style="background:var(--acc-soft); color:var(--acc2);">en activo</span>'
                       :'<span class="chip gris">de baja temporal</span>')+'</td>';
     tb.appendChild(tr);
   });
@@ -11085,7 +11089,7 @@ function pintaEquipo(){
       var mar = gs.dispo[slot], sel = mar===true;
       if(sel || asig){ seSel++; totSel++; }
       var estilo = asig ? 'background:'+gs.color+'; color:#fff;'
-        : sel ? 'background:var(--acc-soft); color:var(--acc); border:1.5px solid var(--acc);'
+        : sel ? 'background:var(--acc-soft); color:var(--acc2); border:1.5px solid var(--acc);'
         : mar===false ? 'background:#f3eeee; color:var(--muted); border:1.5px dashed var(--muted);'
         : 'background:#eef3f0; color:var(--muted);';
       var etq = asig ? '🔒' : (sel?'✓':(mar===false?'✗':'+'));
@@ -11177,7 +11181,7 @@ function estaVisto(gi, slot){
 function marcaVisto(gi, slot){
   var v = estaVisto(gi, slot);
   if (v === null) return '';
-  return v ? ' <span style="color:var(--acc); font-weight:700;">✓ visto</span>'
+  return v ? ' <span style="color:var(--acc2); font-weight:700;">✓ visto</span>'
            : ' <span class="muted">sin ver</span>';
 }
 function pintaAvisosGuia(gi){
@@ -11264,7 +11268,7 @@ function calcProy(){
   var empMes = brutoMes - bote - comMes - ovh;
   var margen = paxMes ? empMes/paxMes : 0;
   document.getElementById('py-kpis').innerHTML=
-    '<div class="kpi'+(guiaMes<0?' malo':'')+'"><span class="v"'+(guiaMes<0?'':' style="color:var(--acc);"')+'>'+eur0(guiaMes)+'</span><span class="l">cada guía / mes <b>('+dias+' días de operación)</b></span></div>'+
+    '<div class="kpi'+(guiaMes<0?' malo':'')+'"><span class="v"'+(guiaMes<0?'':' style="color:var(--acc2);"')+'>'+eur0(guiaMes)+'</span><span class="l">cada guía / mes <b>('+dias+' días de operación)</b></span></div>'+
     '<div class="kpi'+(empMes<0?' malo':'')+'"><span class="v">'+eur0(empMes)+'</span><span class="l">empresa neto / mes (tras '+eur0(ovh)+' de gastos fijos)</span></div>'+
     '<div class="kpi"><span class="v">'+paxDia+'</span><span class="l">personas / día</span></div>'+
     '<div class="kpi"><span class="v">'+eur0(brutoMes)+'</span><span class="l">propina bruta / mes</span></div>'+
