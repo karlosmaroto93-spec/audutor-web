@@ -4307,6 +4307,12 @@ var RE_MENOR_SOLO = new RegExp(
    está relleno y contesta bien — meterlas aquí era pasarse, y se notó en el banco. */
 var RE_MEDICO = /embaraz|encinta|premama|pregnan|expecting a baby|oper(ar|ad|aci)|cirugia|postoperator|surgery|corazon|cardiac|heart condition|diabet|epilep|\basma\b|\basthma\b|marcapasos|pacemaker|quimio|chemo|oxigeno|convalec|fractur|lesion|injur/;
 var RE_PERRO_GUIA = /perro (guia|de asistencia|de servicio|lazarillo)|lazarillo|guide dog|assistance dog|service dog/;
+/* «El servicio» a secas es el aseo; con «de» o «para» detrás es otro servicio. «¿Tenéis
+   servicio de guardarropa para maletas?» recibía el hecho de baños, porque bastaba la palabra
+   (vigilancia de Codex, 25-oct-2026). Lo usan la regla de baños y la guarda del punto de
+   encuentro, que sin él se llevaba «¿dónde están los servicios?» («donde es» casa dentro de
+   «donde estan»). */
+var RE_SERVICIO_ASEO = /\bservicios?\b(?!\s+(?:de|para)\b)/;
 
 /* Devuelve el texto ya redactado, o null si no aplica. `lang` solo elige el idioma de la
    respuesta: la DECISIÓN de derivar no depende del idioma, que es justo el fallo que se
@@ -5134,7 +5140,8 @@ function respuestaGuiaES(t){
      en «no la entendí» — que le pide al encargado ENSEÑAR una respuesta que ya tiene
      escrita en su Cerebro. Salió al conectar GuIA al producto, no en el banco. */
   if (/donde (quedamos|es|empieza|salis|nos vemos|nos encontramos)|punto de (encuentro|salida|partida)|de donde sale|meeting point|donde os (veo|encuentro)/.test(m)
-      && !/sombra|wifi|internet|bano|aseo|lavabo|aparca|parking|taquilla|consigna|sentar|banco|taxi|cuanto cuesta|accesib|silla de ruedas|carrito|rampa|escalon|segur|carterista|nadie|ninguno|no veo/.test(m)){
+      && !/sombra|wifi|internet|bano|aseo|lavabo|aparca|parking|taquilla|consigna|sentar|banco|taxi|cuanto cuesta|accesib|silla de ruedas|carrito|rampa|escalon|segur|carterista|nadie|ninguno|no veo/.test(m)
+      && !RE_SERVICIO_ASEO.test(m)){
     var pu=kb('punto'); if(!pu) return derivaPorHueco('punto', t);
     return 'Quedamos '+conEn(pu)+' 📍'+(kb('horas')?' Salimos '+enMedio(sinPuntoFinal(kb('horas')))+'.':'')+
       (kb('antelacion')?' '+sinPuntoFinal(kb('antelacion'))+'.':'')+
@@ -5267,8 +5274,7 @@ function respuestaGuiaES(t){
   }
   /* «lavabo» no aparecía ni una vez en el fichero, y es como lo dice medio país. «pis»
      con bordes de palabra, que si no casa dentro de «piso» y de «pista». */
-  if (/bano|aseo|servicio|wc|lavabo|urinario|retrete|\bpis\b/.test(m)
-      && !/\bservicios?\s+(?:de\s+)?reparacion\b/.test(m)){
+  if (/bano|aseo|wc|lavabo|urinario|retrete|\bpis\b/.test(m) || RE_SERVICIO_ASEO.test(m)){
     var ba=kb('banos'); if(!ba) return derivaPorHueco('banos', t);
     return ba;
   }
@@ -5892,7 +5898,11 @@ function respuestaEN(t){
   // FAQ con hechos del Cerebro
   /* «We are at the meeting point and cannot see anybody» recibía la dirección del punto
      donde YA ESTÁ. Quien dice que no ve a nadie no pregunta la dirección. */
-  if (/punto|donde|quedamos/.test(m) && !/termina|nadie|ninguno|no one|cannot ver|cant ver/.test(m))
+  /* «Where are the toilets?», «Where can I leave my suitcase?» y «Where can we eat?» llevan
+     «where» y recibían el punto de encuentro: quien nombra otro tema pregunta por ese tema
+     (26-oct-2026). */
+  if (/punto|donde|quedamos/.test(m) && !/termina|nadie|ninguno|no one|cannot ver|cant ver/.test(m)
+      && !/bano|equipaje|maleta|mochila|consigna|comida|beber|agua/.test(m))
     return v('punto') ? 'We meet '+conAt(v('punto'))+' 📍'+(v('horas')?' We start '+sinPuntoFinal(v('horas'))+'.':'')+
       (v('antelacion')?' '+sinPuntoFinal(v('antelacion'))+'.':'')+
       (v('senal')?' Look for '+conThe(v('senal'))+'.':'') : falta('punto');
