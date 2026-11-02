@@ -4659,7 +4659,13 @@ var MARCADORES_IDIOMA = {
       ' puede ',' pueden ',' podemos ',' venir ',' tiene ',' tienen ',' hace ',' hacen ',
       ' hacer ',' llevar ',' llevais ',' vais ',' sois ',' estamos ',' cual ',' quien ',
       ' porque ',' cuantos ',' cuantas ',' algun ',' alguna ',' nada ',' mas ',' muy ',
-      ' tambien ',' desde ',' hasta ',' sobre ',' entre ',' sin ',' anos ',' donde ',' esto '],
+      ' tambien ',' desde ',' hasta ',' sobre ',' entre ',' sin ',' anos ',' donde ',' esto ',
+      /* «¿se empieza dentro de la estación o fuera?» y «¿es bilingüe o solo castellano?»
+         salían en portugués: el « o » solo estaba en esa lista y valía un punto entero. Y
+         «¿da tiempo a comprar un bocata?» en italiano, por el « da ». Las dos son tan
+         españolas como suyas; y «tiempo», «fuera» y «empieza» solo son nuestras
+         (banco de Berlín, 2-nov-2026). */
+      ' o ',' da ',' tiempo ',' fuera ',' empieza '],
   de:[' der ',' die ',' das ',' und ',' ist ',' sind ',' wir ',' ich ',' wie ',' wo ',' wann ',' kann ',
       ' danke ',' hallo ',' mit ',' fur ',' nicht ',' ein ',' eine ',' treffen ',' uns ',' lange ',
       /* OJO: ' sie ' NO va aquí. El «się» polaco es de las palabras más frecuentes de ese
@@ -5133,7 +5139,7 @@ function respuestaGuiaES(t){
   /* El código perdido tiene respuesta de producto: está en el email de confirmación. */
   if (/perd(i|ido)[^.?!]{0,25}(codigo|reserva|email|correo|confirmacion)|no (tengo|encuentro) (el |mi )?codigo/.test(m))
     return 'Tu código está en el email de confirmación de tu reserva'+(PG.cod ? ' (busca «'+PG.cod+'-» en tu correo, también en spam)' : ' — míralo también en spam')+'. Si no aparece, '+(canalConIdentidad() ? 'dime tu nombre y el encargado te lo busca 🙂' : 'escribe PERSONA y te paso con el equipo 🙂');
-  if (/perdido|\bno( os| te| le| lo| la| les| los)? (encuentro|encontramos)\b|donde esta el grupo|donde estais\b|where are you|no veo a nadie|no hay nadie|no ha venido nadie/.test(m)
+  if (/perdido|\bno( os| te| le| lo| la| les| los)? (encuentro|encontramos)\b|donde esta el grupo|donde estais\b|where are you|no veo a nadie|no veo (al|a la) (guia|grupo)|no hay nadie|no ha venido nadie/.test(m)
       && !/movil|telefono|cartera|monedero|mochila|gafas|chaqueta|abrigo|paraguas|llaves|camara|bolso|maleta|sombrero|gorra|botella|vuelo|avion|\btren\b|autobus|\bbus\b|metro|barco|crucero|conexion|traslado|transfer|reserva|codigo|email|correo|confirmacion|booking|voucher|bono|pasaporte|dni|documentacion/.test(m)){
     if (/que pasa|y si/.test(m))
       return 'Tranquilo: el grupo va parando por el recorrido. Si te pierdes de verdad, dímelo por aquí con tu código y te paso un mapa con dónde están 🙂';
@@ -5158,7 +5164,11 @@ function respuestaGuiaES(t){
       return '¡Los encontramos! El grupo está aquí ahora mismo:\n📍 <b>'+(S.ubiMapa||'el mapa que te paso en cuanto lo comparta')+'</b>\n(ubicación compartida por la guía '+(S.ubiHace<1?'ahora mismo':'hace '+S.ubiHace+' min')+').'+(guiaU?' Pregunta por '+guiaU+' al llegar.':'')+' Si no los ves, dímelo.\n\n<i>— Fíjate: sin dar el teléfono de la guía, y sin que nadie llame a nadie.</i>';
     }
     registraDerivada(t, 'persona');
-    return 'No tengo la ubicación actual del grupo. Se lo paso al encargado para que te ayude a encontrarlo 📍';
+    /* Quien espera en el inicio y no ve a nadie («estoy aquí y no veo al guía») puede estar
+       en otro sitio: mientras llega la persona, el punto y la señal escritos (2-nov-2026). */
+    var puR = /aqui|no veo|no hay nadie|no ha venido/.test(m) && kb('punto');
+    return 'No tengo la ubicación actual del grupo. Se lo paso al encargado para que te ayude a encontrarlo 📍'+
+      (puR ? '\n\nMientras, comprueba que estás '+sinPuntoFinal(conEn(puR))+'.'+(kb('senal') ? ' Busca '+conArt(kb('senal'))+'.' : '') : '');
   }
   /* ---- TERCERA PASADA · ideas de Madrid Latido y la competencia ---- */
   // No-show empático (ya pasó): reenganche sin reproche. Va ANTES de la regla
@@ -5306,8 +5316,13 @@ function respuestaGuiaES(t){
     return '¡Nos hace el día! ⭐ Déjala aquí: '+rs+'. Mencionar al guía por su nombre ayuda un montón.';
   }
   // Entradas / gastos extra — va ANTES de la regla de pago, que casa «pagar».
+  /* «¿para reservar se paga algo?» y «¿cuánto hay que pagar?» preguntan por el modelo
+     del tour, no por entradas a monumentos, y derivaban por el hueco de `entradas` con
+     el modelo escrito (banco de Berlín, 2-nov-2026). Sin entrada, museo ni «aparte»,
+     reservar, apuntarse y «cuánto» van a la regla de precio. */
   if (/entrada|gastos? extras?|hay que pagar|se paga (algo|aparte)|cuesta entrar/.test(m)
-      && !/adelant|deposito|senal|anticipo/.test(m)){
+      && !/adelant|deposito|senal|anticipo/.test(m)
+      && (!/reserv|apunt|\bcuanto\b/.test(m) || /entrada|museo|monumento|aparte|extra/.test(m))){
     /* La guarda de arriba no es adorno: «¿hay que pagar adelanto?» casaba «hay que pagar»
        y recibía «lo demás, lo que tú consideres al final» — la negación de un adelanto
        que la empresa a lo mejor SÍ pide a los grupos. Con la guarda, la pregunta sigue
@@ -5343,7 +5358,11 @@ function respuestaGuiaES(t){
   }
   // Distancia — va ANTES de «ritmo», que casa «se camina».
   if (/cuanto se camina|cuantos (km|kilometros)|que distancia|cuanta distancia|cuanto hay que andar|cuanto se anda|se camin\w* mucho/.test(m)){
-    var dis=kb('distancia'); if(!dis) return derivaPorHueco('distancia', t);
+    var dis=kb('distancia');
+    /* Si la distancia está vacía pero el ritmo ya dice los kilómetros («3 km a ritmo
+       suave»), eso contesta. Sin cifra no: «ritmo tranquilo» no dice cuánto se anda. */
+    if(!dis && /\d\s*(km|kilometr)/i.test(sinTildes(kb('ritmo')||''))) return kb('ritmo');
+    if(!dis) return derivaPorHueco('distancia', t);
     var duC=kb('dur');
     // Sin «con paradas frecuentes»: el ritmo es el campo `ritmo`, y puede decir lo contrario.
     return duC ? 'El tour dura '+sinPuntoFinal(enMedio(duC.replace(/^(el tour |la ruta )?dura /i,'')))+' y se recorren '+sinPuntoFinal(conAprox(dis))+'.'
@@ -5437,7 +5456,8 @@ function respuestaGuiaES(t){
      política a quien no la escribió. */
   if (/edad minima|edad requerida|limite de edad|solo (para )?(mayores|adultos)|mayores de \d+|a partir de (que|cuantos) anos/.test(m) && kb('edadmin'))
     return kb('edadmin')+' 🙂';
-  if (/edad|adolescente|anos (tiene|puede)/.test(m))
+  // «\bedad»: «¿dónde es la quedada?» —qu-EDAD-a— recibía lo de los niños (2-nov-2026).
+  if (/\bedad|adolescente|anos (tiene|puede)/.test(m))
     return kb('ninos') ? kb('ninos')+' Si me dices la edad concreta, te lo confirmo.' : derivaPorHueco('ninos', t);
 
   /* «somos 2 y queremos cancelar PYC-8842» caía aquí y recibía la política de grupos —
@@ -5530,7 +5550,14 @@ function respuestaGuiaES(t){
     var cno=kbE('cancelamos'); if(!cno) return derivaPorHuecoEmp('cancelamos', t);
     return cno;
   }
-  if (/cancel|anul|no puedo ir|no podre|no vamos a poder/.test(m)){
+  /* «¿con nieve lo canceláis?» es la política del tiempo, no una cancelación: sin código
+     escrito, el tiempo va a su regla (banco de Berlín, 2-nov-2026). Y «no podemos ir» es
+     el mismo aviso que «no puedo ir», salvo que pida otro día: eso es un cambio. */
+  // «¿me puedo dar de baja?» es cancelar (2-nov-2026).
+  if ((/cancel|anul|dar(me|nos|se)? de baja/.test(m) ||
+       (/no puedo ir|no podre|no vamos a poder|no podemos (ir|venir)|no (podremos|podriamos) (ir|venir)/.test(m)
+        && !/cambi|otro dia|otra (fecha|hora)|pasar|mover|aplazar/.test(m)))
+      && (codEscrito(t) || !/lluev|lluvia|mal tiempo|niev|tormenta|temporal/.test(m))){
     /* CON CÓDIGO ESCRITO se cancela: han nombrado su reserva y eso acompaña a la orden.
        Con solo el código CONOCIDO (identificado por teléfono), únicamente si el mensaje
        es una ORDEN en primera persona — «quiero cancelar», «no puedo ir»— y nunca por
@@ -5576,8 +5603,12 @@ function respuestaGuiaES(t){
        quien cancela lleva casi siempre un «no puedo». Se exige que el modal vaya seguido
        de «cancelar»/«anular» —con un par de palabras de holgura para «puedo cancelar YA
        mi reserva»— y así «no puedo ir» vuelve a ser lo que es, un motivo. */
+    /* «¿cómo se cancela?», «¿dónde está el botón de cancelar?» y «si no podemos ir, ¿qué
+       hacemos?» preguntan el CÓMO: en la web recibían «no puedo modificar una reserva»
+       en vez de la política (banco de Berlín, 2-nov-2026). */
     var preguntaC = (/\b(puedo|podemos|podria|podriamos|se puede|es posible)\b(\s+\S+){0,2}\s+(cancelar|anular)\b/.test(m) ||
-                     /\b(hasta cuando|que pasa si|politica de cancelacion)\b/.test(m)) &&
+                     /\b(hasta cuando|que pasa si|politica de cancelacion)\b/.test(m) ||
+                     /\b(como|donde)\b(\s+\S+){0,3}\s+(cancelar|cancelo|cancela|anular|anulo|anula)\b|\bboton\b|\b(puedo|podemos|se puede)\b.{0,10}\bdar(me|nos|se)? de baja|que (hay que|tengo que|tenemos que|debo|debemos) hacer|que (hago|hacemos)\b/.test(m)) &&
       !/\b(puedes|podrias|me la|nos la|me lo|cancelamela)\b/.test(m);
     /* SIN CANAL IDENTIFICADO NO SE EJECUTA, y por tanto tampoco se anuncia. El chat
        público de la web no trae remitente: ahí un localizador es una PISTA, no una llave
@@ -5615,7 +5646,10 @@ function respuestaGuiaES(t){
     return pc+'\n\nDos formas, la que te venga mejor: (1)'+(hayWeb() ? ' si reservaste en <b>nuestra web</b> (' + webEnlace() + '), abre tu <b>enlace de gestión</b> (el del email de confirmación) y la cancelas en un clic, o' : '')+' dime tu código'+ejCod()+' y te la cancelo yo aquí; (2) si fue por una <b>plataforma</b>, cancélala allí y yo actualizo la lista sola.';
   }
   /* «cambiar el pañal» y «cambiar dinero» llevan «cambiar» y no son un cambio de reserva. */
-  if (/cambiar|reprogramar|posponer|aplazar|cambio de (dia|fecha|hora)|otra fecha|otro dia|personas? mas|personas? menos|somos (una|dos|uno) menos|menos personas|anadir (una|otra) persona|(ahora|al final) somos \d+|seremos \d+|vamos a ser \d+|pasar? ?(la|me|rla)? ?(mi |la |nuestra )?reserva|pasala|pasarla|mover (mi|la|nuestra) reserva|muevela/.test(m)
+  /* «¿cómo cambio la fecha?», «¿se puede modificar la reserva?», «¿se editan en
+     GuruWalk?» y «¿qué pasos hay para añadir un acompañante?» derivaban con la política
+     de cambios escrita (banco de Berlín, 2-nov-2026). */
+  if (/cambiar|reprogramar|posponer|aplazar|cambio de (dia|fecha|hora)|cambi\w* (la|el) (fecha|dia|hora|numero)|modificar? (la |mi |una |nuestra )?reserva|\bse (editan?|modifica)\b|editar (la |mi )?reserva|mover (una|mi|la|nuestra) reserva|anadir (un|una|otra|otro) (persona|acompanante|amigo|amiga)|otra fecha|otro dia|personas? mas|personas? menos|somos (una|dos|uno|tres) (menos|mas)|menos personas|anadir (una|otra) persona|(ahora|al final) somos \d+|seremos \d+|vamos a ser \d+|pasar? ?(la|me|rla)? ?(mi |la |nuestra )?reserva|pasala|pasarla|mover (mi|la|nuestra) reserva|muevela/.test(m)
       && !/panal|cambiador|cambiar dinero|cambio de moneda/.test(m)){
     /* El cambio de PERSONAS se hace de verdad — decisión del dueño (9-ago): «es
        fundamental que se pueda automatizar mediante GuIA y que quede anotado en el
@@ -5629,7 +5663,8 @@ function respuestaGuiaES(t){
        el código conocido y salía ejecutado — la reserva crecía por preguntar. Una
        pregunta de posibilidad recibe la respuesta y el cómo; el cambio se hace cuando
        lo dicen en indicativo («somos 5», «una persona más») o nombran su código. */
-    var preguntaB = /\bpuedo\b|\bpodria\b|\bpodriamos\b|se puede|es posible/.test(m) ||
+    // «¿cómo…?», «¿dónde se cambia…?» y «¿qué pasos hay…?» piden el cómo, no el cambio.
+    var preguntaB = /\bpuedo\b|\bpodria\b|\bpodriamos\b|se puede|es posible|^\W*(como|donde)\b|\bdonde se\b|que pasos|como (lo )?(hago|se hace|anado|anadimos)|\bse (editan?|modifica|cambiar?)\b/.test(m) ||
       /\bcan (i|we)\b|\bcould (i|we)\b|is it possible/.test(t.toLowerCase());
     /* El mismo peligro que la cancelación, en el cambio: con un código escrito MUERTO y el
        teléfono conocido, el cambio se aplicaba a «la que creemos que es suya» — corregir
@@ -5708,7 +5743,8 @@ function respuestaGuiaES(t){
      haber llegado tarde ni haber preguntado nada de eso. Y «al atardecer» no es un caso
      rebuscado: es como se llama medio catálogo de tours de pago en español.
      Mismo fallo que «bebe» dentro de «beber», que ya costó una regla. */
-  if (RE_RETRASO.test(m) || /cuanto espera|espera el guia|espera al grupo|me esperais|nos esperais|me esperan|nos esperan/.test(m) ||
+  // «¿hay minutos de cortesía?», «¿esperáis cinco minutos?», «¿espera a que estén todos?» (2-nov-2026).
+  if (RE_RETRASO.test(m) || /cuanto espera|espera el guia|espera al grupo|me esperais|nos esperais|me esperan|nos esperan|\besperais\b|espera a que|minutos de cortesia|\bcortesia\b/.test(m) ||
       (/\btarde\b/.test(m) && !RE_FRANJA_TARDE.test(m))){
     var es=kb('espera'); if(!es) return derivaPorHueco('espera', t);
     var codT=codDe(t);
@@ -5730,7 +5766,13 @@ function respuestaGuiaES(t){
      en «no la entendí» — que le pide al encargado ENSEÑAR una respuesta que ya tiene
      escrita en su Cerebro. Salió al conectar GuIA al producto, no en el banco. */
   // «¿dónde arranca el paseo?» derivaba con el punto escrito (1-nov-2026).
-  if (/donde (quedamos|es|empieza|empezamos|comienza|arranca|arrancamos|salis|nos vemos|nos encontramos)|punto de (encuentro|salida|partida)|de donde sale|meeting point|donde os (veo|encuentro)/.test(m)
+  /* Y como se pregunta de verdad: «me pasas la ubicación», «cuál es la dirección exacta»,
+     «en qué parte de la plaza os ponéis», «a dónde tengo que ir», «por qué puerta entro
+     para encontraros», «se empieza dentro o fuera». Derivaban con el punto escrito; la
+     dirección de CORREO o de la web no es el punto (banco de Berlín, 2-nov-2026). */
+  if ((/donde (quedamos|es|empieza|empezamos|comienza|arranca|arrancamos|salis|nos vemos|nos encontramos|nos juntamos)|punto de (encuentro|salida|partida)|de donde sale|meeting point|donde os (veo|encuentro)/.test(m) ||
+       (/ubicacion|direccion|os poneis|(donde|parte|lado|zona|esquina)\b.{0,30}\bestais\b|(a )?(donde|que sitio|que lugar) (hay que|tengo que|tenemos que) ir|(sale|salis|empieza|empezamos|comienza) desde (la|el)\b|que puerta|para (encontraros|veros)|quedada|(sitio|lugar) de (inicio|salida|encuentro)|\b(dentro|fuera)\b.{0,30}\bo (dentro|fuera)\b/.test(m)
+        && !/correo|email|e-mail|mail|web|pagina|hotel|museo|aeropuerto|restaurante|como (llego|llegamos|llegar|se llega)/.test(m)))
       && !/sombra|wifi|internet|bano|\baseo|lavabo|aparca|parking|taquilla|consigna|sentar|banco|taxi|cuanto cuesta|accesib|silla de ruedas|carrito|rampa|escalon|segur|carterista|nadie|ninguno|no veo/.test(m)
       && !RE_SERVICIO_ASEO.test(m)){
     var pu=kb('punto'); if(!pu) return derivaPorHueco('punto', t);
@@ -5759,7 +5801,8 @@ function respuestaGuiaES(t){
      pregunta, son el complemento de lugar de otra: «¿hay baños EN EL RECORRIDO?», «¿hay
      cuestas EN LA RUTA?». Ahora el itinerario solo dispara si la pregunta va DE la ruta,
      y la lista negra se queda como segunda línea para las formas enmarcadas. */
-  if (/que (se )?visit|que vemos|que veremos|que vamos a ver|que se ve|que sitios|que monumentos?|que recorrido|como es el recorrido|que ruta|cual es la ruta|el recorrido incluye|(?:la visita|el tour|el recorrido|la ruta) pasa por/.test(m)
+  // «¿cuál es el itinerario?», «¿este recorrido incluye el muro?», «¿pasamos por…?» (2-nov-2026).
+  if (/que (se )?visit|que vemos|que veremos|que vamos a ver|que se ve|que sitios|que monumentos?|que recorrido|como es el recorrido|que ruta|cual es la ruta|el recorrido incluye|(?:la visita|el tour|el recorrido|la ruta) pasa por|itinerario|(recorrido|tour|ruta|visita|paseo) incluye|\b(pasamos|pasaremos|se pasa|vamos a pasar) por (el|la|los|las)\b|^\W*(vemos|veremos|visitamos|se ve) (el|la|los|las)\b/.test(m)
       && !/bano|\baseo|lavabo|urinario|retrete|wc|comer|comida|beber|agua|fumar|foto|nino|bebe|perro|wifi|internet|descanso|parada|embaraz|silla de ruedas|carrito|escaleras|cuestas|desnivel|ritmo|es segur|carterista|robo/.test(m)){
     var vi=kb('visita'); if(!vi) return derivaPorHueco('visita', t);
     /* Solo el hecho. Llevaba pegado «— sin prisas y con las mejores historias», y el ritmo
@@ -5776,7 +5819,9 @@ function respuestaGuiaES(t){
      que nadie ha confirmado—: se dan los dos datos, o se deriva nombrando el que falta. */
   /* Y «¿hasta qué hora dura?», que no lleva ninguno de esos verbos y volvía a la regla de
      horario (29-sep-2026). */
-  if (/(a que hora|que hora|cuando|hasta que hora)[^.?!]{0,25}(acaba|termina|terminamos|acabamos|finaliza|volvemos|regresamos|estamos de vuelta|estaremos de vuelta)|hasta que hora (dura|es|va|sera|estamos|estaremos)|hasta cuando dura/.test(m)){
+  if (/(a que hora|que hora|cuando|hasta que hora)[^.?!]{0,25}(acaba|termina|terminamos|acabamos|finaliza|volvemos|regresamos|estamos de vuelta|estaremos de vuelta)|hasta que hora (dura|es|va|sera|estamos|estaremos)|hasta cuando dura/.test(m) ||
+      // «¿acabamos antes de comer?» pregunta la hora de fin; recibía la parada del café (2-nov-2026).
+      /\b(acaba|acabamos|termina|terminamos)\b.{0,12}\bantes de (comer|la comida|cenar|la cena|las \d+)/.test(m)){
     var duF=kb('dur'), hoF=kb('horas');
     if(!duF) return derivaPorHueco('dur', t);
     var ddF=horarioDelDia(m, t);
@@ -5790,8 +5835,16 @@ function respuestaGuiaES(t){
     return sinPuntoFinal(ante)+' 🙂';
   }
   // La hora de FIN es de la regla de arriba, no de esta: aquí se contestaba la de salida.
-  if (/a que hora|que hora|horario|cuando sal|que dias|(dime|dices|dame|decirme|saber|sabes|pasame) (la |el )?(hora|horario)|(hay|teneis|haceis|salis|sale)[^.?!]{0,14}(por la |de )?(manana|tarde|noche)|(hay|teneis|haceis|hacen) tour (el |los |en )?(lunes|martes|miercoles|jueves|viernes|sabado|domingo|festivos?)|(el |los )(lunes|martes|miercoles|jueves|viernes|sabado|domingo) hay tour/.test(m)
-      && !/acaba|termina|terminamos|acabamos|finaliza|volvemos|regresamos|de vuelta|hasta que hora|hasta cuando/.test(m)){
+  /* «¿tenéis salida los domingos?», «¿sale también el lunes?», «¿a las diez o a las once?»
+     y «¿cuándo empieza la visita del sábado?» derivaban con el horario escrito. Lo que
+     ABRE o CIERRA es otro sitio: «¿a qué hora cierra el museo?» recibía nuestra salida
+     (banco de Berlín, 2-nov-2026). «¿Hacéis alguno por la noche?» no pregunta la hora de
+     ESTE tour: busca otro, y es del catálogo. «Nocturno» solo no basta: hay tours que se
+     llaman así, y «¿a qué hora empieza el Nocturno?» es su horario. */
+  if (/(salis|sale|salen|hay salida|teneis salida|haceis|hay tour|teneis tour|hay visita)\b[^.?!]{0,20}\b(lunes|martes|miercoles|jueves|viernes|sabado|domingo|festivo|fin(es)? de semana)|\b(lunes|martes|miercoles|jueves|viernes|sabados?|domingos?|festivos?)\b[^.?!]{0,20}\b(salis|sale|salen|hay salida|hay tour|haceis)\b|a las \w+ o a las \w+|\b(empieza|empezamos|comienza|sale|salis|salimos|es) a las \w+\W*$|cuando (empieza|comienza|arranca|empezamos|comenzamos|salimos)\b/.test(m)
+      && !/\b(cierra|cierran|abre|abren)\b|\b(alguno|alguna|algun (otro )?tour|otro tour)\b[^.?!]{0,12}\b(noche|nocturn)|acaba|termina|terminamos|acabamos|finaliza|volvemos|regresamos|de vuelta|hasta que hora|hasta cuando/.test(m)
+      || /a que hora|que hora|horario|cuando sal|que dias|(dime|dices|dame|decirme|saber|sabes|pasame) (la |el )?(hora|horario)|(hay|teneis|haceis|salis|sale)[^.?!]{0,14}(por la |de )?(manana|tarde|noche)|(hay|teneis|haceis|hacen) tour (el |los |en )?(lunes|martes|miercoles|jueves|viernes|sabado|domingo|festivos?)|(el |los )(lunes|martes|miercoles|jueves|viernes|sabado|domingo) hay tour/.test(m)
+      && !/\b(cierra|cierran|abre|abren)\b|\b(alguno|alguna|algun (otro )?tour|otro tour)\b[^.?!]{0,12}\b(noche|nocturn)|acaba|termina|terminamos|acabamos|finaliza|volvemos|regresamos|de vuelta|hasta que hora|hasta cuando/.test(m)){
     /* Un día concreto se contesta con el calendario, no con la frase general: el día de
        cierre no hay salida aunque la ficha diga «todos los días» (29-sep-2026). */
     var ddH=horarioDelDia(m, t);
@@ -5821,7 +5874,9 @@ function respuestaGuiaES(t){
      peor que derivar: el viajero se queda creyendo que le han respondido. */
   /* «¿cuánto tiempo reservo para la visita?» acababa en el modelo de propina. «cuánto
      tiempo ANTES» es el plazo para reservar o llegar, y no entra (1-nov-2026). */
-  if (/cuanto (tiempo )?(dura|tarda|tardan|se tarda|estaremos|estamos|lleva)|cuantas horas (dura|es|son)|duracion|how long|cuanto tiempo (reserv|dej|necesit|calcul)\w*/.test(m)){
+  if (/cuanto (tiempo )?(dura|tarda|tardan|se tarda|estaremos|estamos|lleva)|cuantas horas (dura|es|son)|\bdura (mas|menos) de\b|duracion|how long|cuanto tiempo (reserv|dej|necesit|calcul)\w*/.test(m) ||
+      // «¿cuántas horas andando son?», «¿cuánto rato es?», «¿son muchas horas?» (2-nov-2026).
+      (/cuantas horas|cuanto rato|(son|es) muchas horas|cuanto tiempo (es|son)\b|es (muy |un poco )?largo/.test(m) && !/antes|cancel|llegar|espera/.test(m))){
     var du=kb('dur'); if(!du) return derivaPorHueco('dur', t);
     /* Sin «a ritmo tranquilo y con paradas»: eso es el campo `ritmo`, y afirmarlo aquí era
        un dato que el operador no había confirmado (y, a quien preguntaba tras una operación,
@@ -5856,7 +5911,8 @@ function respuestaGuiaES(t){
     var lvS=kb('llevar'); if(!lvS) return derivaPorHueco('llevar', t);
     return lvS;
   }
-  if (/reconozc|reconoc|como os veo|como te encuentro|como es el guia|paraguas|bandera|chaleco|farol/.test(m)){
+  // «¿cómo sé quién es el guía?», «¿cómo identifico al guía?» (2-nov-2026).
+  if (/reconozc|reconoc|como os veo|como te encuentro|como es el guia|como (se|sabre|sabemos)\b.{0,15}\bquien es|como (identifico|identificamos|identificar)\b|que lleva (el|la) guia\b|paraguas|bandera|chaleco|farol/.test(m)){
     var se=kb('senal'); if(!se) return derivaPorHueco('senal', t);
     /* El punto de encuentro solo se encadena si los dos hechos son cortos y de una sola
        oración. Si no, sale confuso o directamente mal: Sevilla tiene DOS puntos según
@@ -5880,30 +5936,38 @@ function respuestaGuiaES(t){
     var ba=kb('banos'); if(!ba) return derivaPorHueco('banos', t);
     return ba;
   }
-  if (/comer|comemos|comeremos|comida|desayun|almuerz|picar|merienda|parada|pausa|descanso/.test(m)){
+  // «¿paramos a tomar algo?» y «¿da tiempo a comprar un bocata?» (2-nov-2026).
+  if (/comer|comemos|comeremos|comida|desayun|almuerz|picar|merienda|parada|pausa|descanso|\bparamos\b|tomar algo|bocata|bocadillo/.test(m)){
     var cmd=kb('comida'); if(!cmd) return derivaPorHueco('comida', t);
     return cmd;
   }
   /* «escalera» entra aquí, no en el itinerario: quien pregunta por escaleras pregunta por
      el terreno. Y «cuestas» sin «cuesta»: la regla va antes que la de precio y «¿cuánto
      cuesta?» se la llevaría entera. */
-  if (/se anda|se camina|caminar|ritmo|cuestas|escalera|desnivel|en forma|andar mucho|[6-9]\d anos|personas? mayores|gente mayor|tercera edad|anciano|abuel|despacio|lent[oa]s?\b|le cuesta andar|mal de las? (piernas|rodillas)/.test(m)){
+  // «¿se va muy deprisa?», «¿es muy cansado?» (2-nov-2026).
+  if (/se va (muy |un poco |demasiado )?(deprisa|rapido)|(es|recorrido|tour|ruta|paseo)\b.{0,20}\b(cansado|cansada|agotador|agotadora|exigente|duro)\b|cansa mucho/.test(m) ||
+      /se anda|se camina|caminar|ritmo|cuestas|escalera|desnivel|en forma|andar mucho|[6-9]\d anos|personas? mayores|gente mayor|tercera edad|anciano|abuel|despacio|lent[oa]s?\b|le cuesta andar|mal de las? (piernas|rodillas)/.test(m)){
     var ri=kb('ritmo'); if(!ri) return derivaPorHueco('ritmo', t);
     return ri;
   }
-  if (/silla de ruedas|accesib|movilidad|carrito|cochecito|muleta|baston|escayola|cojea|cojeo/.test(m)){
+  // «mi madre va con andador» derivaba con la accesibilidad escrita (2-nov-2026).
+  if (/silla de ruedas|accesib|movilidad|carrito|cochecito|muleta|baston|escayola|cojea|cojeo|andador/.test(m)){
     var ac=kb('acces'); if(!ac) return derivaPorHueco('acces', t);
     return ac;
   }
-  if (/\bnino|\bbebes?\b|hijos|familia con|pueden venir/.test(m)){
+  // «mi hijo de 5 años»: «hijos» no casaba en singular (2-nov-2026).
+  if (/\bnino|\bbebes?\b|\bhij[oa]s?\b|familia con|pueden venir/.test(m)){
     var ni=kb('ninos'); if(!ni) return derivaPorHueco('ninos', t);
     return ni;
   }
-  if (/perro|mascota|gato|dog/.test(m)){
+  // «perrita», «cachorro» y «animales» no casaban con «perro» (2-nov-2026).
+  if (/perr[oai]|cachorr|animal|mascota|gato|dog/.test(m)){
     var ma=kb('mascotas'); if(!ma) return derivaPorHueco('mascotas', t);
     return ma;
   }
-  if (/que (llevo|llevar|traigo)|hace falta llevar|calzado|agua|me pongo|que ropa|como (voy|vamos) vestid/.test(m)){
+  // «mañana dan agua, ¿vais a salir?» es el pronóstico, no qué llevar: va a la lluvia (2-nov-2026).
+  if (/que (llevo|llevar|traigo)|hace falta llevar|calzado|agua|me pongo|que ropa|como (voy|vamos) vestid/.test(m)
+      && !/dan (agua|lluvia)/.test(m)){
     var lv=kb('llevar'); if(!lv) return derivaPorHueco('llevar', t);
     return lv;
   }
@@ -5953,7 +6017,8 @@ function respuestaGuiaES(t){
     var sa=kb('antes'); if(!sa) return derivaPorHueco('antes', t);
     return sa;
   }
-  if (/lluev|llov|lluvia|rain|mal tiempo|haga malo|niev/.test(m)){
+  // «si hay tormenta qué pasa» derivaba con la política de lluvia escrita (2-nov-2026).
+  if (/lluev|llov|lluvia|rain|mal tiempo|haga malo|niev|tormenta|temporal|granizo|dan (agua|lluvia)/.test(m)){
     var lu=kb('lluvia'); if(!lu) return derivaPorHueco('lluvia', t);
     // Sin «te avisamos por aquí con antelación»: el chat de la web no puede avisar a nadie.
     return sinPuntoFinal(lu)+' ☔';
@@ -5987,7 +6052,10 @@ function respuestaGuiaES(t){
     return kbE('pagoweb');
   /* Apple Pay, PayPal o transferencia también son formas de pago: «¿puedo dar la propina con
      apple pay?» recibía «es totalmente libre», que habla del importe (1-nov-2026). */
-  if (/como se paga|propina.*(tarjeta|efectivo|bizum)|tarjeta|efectivo|bizum|apple pay|google pay|paypal|transferencia|contactless|datafono|pagar/.test(m)){
+  /* «pagar» a secas no pregunta CÓMO: «¿hay que pagar algo para reservar?» y «¿cuánto hay
+     que pagar?» recibían «solo efectivo» en vez del modelo (2-nov-2026). */
+  if (/como se paga|propina.*(tarjeta|efectivo|bizum)|tarjeta|efectivo|bizum|apple pay|google pay|paypal|transferencia|contactless|datafono/.test(m) ||
+      (/pagar/.test(m) && !/reserv|apunt|\bcuanto\b|pagar algo/.test(m))){
     var pg=kb('pago'); if(!pg) return derivaPorHueco('pago', t);
     return pg;
   }
@@ -6000,13 +6068,16 @@ function respuestaGuiaES(t){
      La guarda de idioma es necesaria: «¿en qué idioma es el tour?» y «¿el guía habla
      español?» llevan «guia» y preguntan por el hecho de TOUR «Idiomas», no por la
      titulación de la empresa. */
+  // «¿sois de Berlín o de fuera?», «¿sois una empresa local?», «¿quién organiza?» (2-nov-2026).
   if ((/quienes sois|sois una agencia|sois agencia|es un timo|estafa|fiable|de fiar/.test(m) ||
+       /\bsois de (aqui|fuera|la zona|la ciudad)\b|\bsois de \w+ o de fuera\b|\bsois locales\b|empresa local|quien (organiza|esta detras)|quienes (organizan|organizais|estan detras|estais detras)/.test(m) ||
        (/oficial|titulad|licencia|acreditad|homologad|profesional|voluntario|certificad/.test(m)
         && !/idioma|habla|ingles|espanol|frances|aleman|italiano|entrada|museo|palacio|web|pagina/.test(m)))){
     var qs=kbE('quienes'); if(!qs) return derivaPorHuecoEmp('quienes', t);
     return qs;
   }
-  if (/privado/.test(m)){
+  // «¿cuánto costaría un tour solo para nosotros?» llevaba al modelo de propina (2-nov-2026).
+  if (/privado|solo para nosotros|para nosotros solos/.test(m)){
     var pri=kbE('privados'); if(!pri) return derivaPorHuecoEmp('privados', t);
     return pri;
   }
@@ -6022,6 +6093,8 @@ function respuestaGuiaES(t){
      Va ANTES que la regla de precio a propósito: quien pregunta qué MÁS vendes no está
      preguntando cuánto cuesta lo que ya está mirando. */
   if (/que otros tours|otros tours|que mas teneis|que mas ofreceis|que mas haceis|catalogo|que tours teneis/.test(m) ||
+      // «¿también hacéis algún tour por el río?», «¿qué más se puede reservar?» (2-nov-2026).
+      /(teneis|haceis|ofreceis|hay) (mas|otros?|algun|algun otro) (tours?|recorridos?|rutas?|visitas?)\b|otros? recorridos?|mas tours|que mas se puede (reservar|hacer)|\b(alguno|alguna|algun (otro )?tour|otro tour)\b[^.?!]{0,12}\b(noche|nocturn)/.test(m) ||
       /(algo|alguno|algun|nada) mas (aparte|ademas|que hacer|que ofrec)|(aparte|ademas) del (free ?)?tour|tours? de pago|que otras (visitas|rutas|experiencias)|otras (visitas|rutas|experiencias)/.test(m)){
     var ct=kbE('catalogo'); if(!ct) return derivaPorHuecoEmp('catalogo', t);
     return ct;
@@ -6030,7 +6103,12 @@ function respuestaGuiaES(t){
     var sg=kbE('seguridad'); if(!sg) return derivaPorHuecoEmp('seguridad', t);
     return sg;
   }
-  if (/\bcuanto\b|precio|cuesta|gratis|gratuito|\bcosto\b|cobran|free/.test(m)){
+  /* «¿cobráis gastos de reserva?», «voy justo de dinero, ¿puedo ir?» y «¿para reservar se
+     paga algo?» preguntan por el modelo. «¿cuánto rato es?» no: es la duración, y recibía
+     el modelo de propina (banco de Berlín, 2-nov-2026). */
+  if ((/\bcuanto\b|precio|cuesta|gratis|gratuito|\bcosto\b|cobran|free/.test(m) ||
+       /gastos de (reserva|gestion)|comision|justo de dinero|poco dinero|sin dinero|no tengo (mucho )?dinero|se paga algo|hay que pagar|pagar algo|pagar para (apuntar|reservar|ir)|\bcobrais\b/.test(m))
+      && !/cuanto (rato|tiempo)|cuantas? (horas|minutos|personas|km|kilometros)/.test(m)){
     var mo=kb('modelo'); if(!mo) return derivaPorHueco('modelo', t);
     /* «Funciona así: Es un free tour: no se paga entrada. Al final cada uno aporta lo que
        crea justo.. Al final aportas lo que tú consideres» — el operador ya lo explicó
