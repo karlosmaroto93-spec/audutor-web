@@ -2957,7 +2957,10 @@ var YA_ES=('hola holas buenas buenos dias tardes noches adios gracias vale bien 
      «confirmar» y dejaba inalcanzable la rama de «confirmo que voy». Y las dos no
      son lo mismo — «confirmo» afirma, «confirmar» solo nombra la acción, así que
      «no puedo confirmar todavía» no puede acabar en «¡Perfecto! Queda anotado». */
-  'confirmo').split(' ');
+  'confirmo '+
+  /* «paseo» caía a «aseo»: «¿dónde arranca el paseo?» y «¿admitís mascotas en el paseo?»
+     recibían dónde están los baños (banco de Berlín, 1-nov-2026). */
+  'paseo paseos').split(' ');
 
 var YA_EN=('hi hello hey good morning afternoon evening night bye goodbye cheers '+
   'thanks thank you please sorry excuse ok okay great perfect lovely brilliant nice fine '+
@@ -4761,7 +4764,7 @@ function respuestaGuiaES(t){
   }
   // Propina orientativa — campo OPCIONAL: vacío NO deriva, responde la versión
   // libre. Si pregunta por tarjeta/efectivo, manda la regla de pago (abajo).
-  if (/propina|aportacion|contribucion|donativo|donacion|cuanto se (suele )?(dar|aportar|dejar)|cuanta plata|\bplata\b|cuanto se deja|bote|cuanto es lo normal/.test(m) && !/tarjeta|efectivo|bizum/.test(m)){
+  if (/propina|aportacion|contribucion|donativo|donacion|cuanto se (suele )?(dar|aportar|dejar)|cuanta plata|\bplata\b|cuanto se deja|bote|cuanto es lo normal/.test(m) && !/tarjeta|efectivo|bizum|apple pay|google pay|paypal|transferencia|contactless|datafono/.test(m)){
     var pro=kb('propina');
     /* Budapest publica su orientación como frase entera —«La mayoría deja entre 10 y 20 €
        por persona»— y salía «la mayoría suele dar La mayoría deja entre 10 y 20 €». En la
@@ -5139,8 +5142,9 @@ function respuestaGuiaES(t){
   /* «donde nos vemos» es de las formas más comunes de preguntarlo en español y caía
      en «no la entendí» — que le pide al encargado ENSEÑAR una respuesta que ya tiene
      escrita en su Cerebro. Salió al conectar GuIA al producto, no en el banco. */
-  if (/donde (quedamos|es|empieza|salis|nos vemos|nos encontramos)|punto de (encuentro|salida|partida)|de donde sale|meeting point|donde os (veo|encuentro)/.test(m)
-      && !/sombra|wifi|internet|bano|aseo|lavabo|aparca|parking|taquilla|consigna|sentar|banco|taxi|cuanto cuesta|accesib|silla de ruedas|carrito|rampa|escalon|segur|carterista|nadie|ninguno|no veo/.test(m)
+  // «¿dónde arranca el paseo?» derivaba con el punto escrito (1-nov-2026).
+  if (/donde (quedamos|es|empieza|empezamos|comienza|arranca|arrancamos|salis|nos vemos|nos encontramos)|punto de (encuentro|salida|partida)|de donde sale|meeting point|donde os (veo|encuentro)/.test(m)
+      && !/sombra|wifi|internet|bano|\baseo|lavabo|aparca|parking|taquilla|consigna|sentar|banco|taxi|cuanto cuesta|accesib|silla de ruedas|carrito|rampa|escalon|segur|carterista|nadie|ninguno|no veo/.test(m)
       && !RE_SERVICIO_ASEO.test(m)){
     var pu=kb('punto'); if(!pu) return derivaPorHueco('punto', t);
     return 'Quedamos '+conEn(pu)+' 📍'+(kb('horas')?' Salimos '+enMedio(sinPuntoFinal(kb('horas')))+'.':'')+
@@ -5169,7 +5173,7 @@ function respuestaGuiaES(t){
      cuestas EN LA RUTA?». Ahora el itinerario solo dispara si la pregunta va DE la ruta,
      y la lista negra se queda como segunda línea para las formas enmarcadas. */
   if (/que (se )?visit|que vemos|que veremos|que vamos a ver|que se ve|que sitios|que monumentos?|que recorrido|como es el recorrido|que ruta|cual es la ruta|el recorrido incluye|(?:la visita|el tour|el recorrido|la ruta) pasa por/.test(m)
-      && !/bano|aseo|lavabo|urinario|retrete|wc|comer|comida|beber|agua|fumar|foto|nino|bebe|perro|wifi|internet|descanso|parada|embaraz|silla de ruedas|carrito|escaleras|cuestas|desnivel|ritmo|es segur|carterista|robo/.test(m)){
+      && !/bano|\baseo|lavabo|urinario|retrete|wc|comer|comida|beber|agua|fumar|foto|nino|bebe|perro|wifi|internet|descanso|parada|embaraz|silla de ruedas|carrito|escaleras|cuestas|desnivel|ritmo|es segur|carterista|robo/.test(m)){
     var vi=kb('visita'); if(!vi) return derivaPorHueco('visita', t);
     /* Solo el hecho. Llevaba pegado «— sin prisas y con las mejores historias», y el ritmo
        tiene su propio campo: un tour a paso ligero lo contradecía sin que nadie lo hubiera
@@ -5228,7 +5232,9 @@ function respuestaGuiaES(t){
      mundo— no casaba, caía en la regla de precio (que sí casa «cuanto») y contestaba el
      modelo de propina. Contestar con seguridad a una pregunta que no te han hecho es
      peor que derivar: el viajero se queda creyendo que le han respondido. */
-  if (/cuanto (tiempo )?(dura|tarda|tardan|se tarda|estaremos|estamos|lleva)|cuantas horas (dura|es|son)|duracion|how long/.test(m)){
+  /* «¿cuánto tiempo reservo para la visita?» acababa en el modelo de propina. «cuánto
+     tiempo ANTES» es el plazo para reservar o llegar, y no entra (1-nov-2026). */
+  if (/cuanto (tiempo )?(dura|tarda|tardan|se tarda|estaremos|estamos|lleva)|cuantas horas (dura|es|son)|duracion|how long|cuanto tiempo (reserv|dej|necesit|calcul)\w*/.test(m)){
     var du=kb('dur'); if(!du) return derivaPorHueco('dur', t);
     /* Sin «a ritmo tranquilo y con paradas»: eso es el campo `ritmo`, y afirmarlo aquí era
        un dato que el operador no había confirmado (y, a quien preguntaba tras una operación,
@@ -5255,6 +5261,14 @@ function respuestaGuiaES(t){
       'y te contesto en cuanto sepa algo 🙂\n\n<i>— Los objetos olvidados van SIEMPRE a una persona: '+
       'GuIA no puede saber si aparecieron, y decir que sí o que no sin mirarlo sería inventarlo.</i>';
   }
+  /* «¿llevo agua y paraguas?» pregunta qué llevar, y recibía «busca el paraguas violeta»:
+     el paraguas del guía como respuesta (1-nov-2026). Solo el paraguas: el agua y el
+     calzado ya los coge la regla de qué llevar de abajo, y repetirlos aquí subía las
+     colisiones del lint. */
+  if (/\b(llevo|llevamos|llevar|traigo|traer|hace falta|necesito)\b/.test(m) && /\bparaguas\b/.test(m)){
+    var lvS=kb('llevar'); if(!lvS) return derivaPorHueco('llevar', t);
+    return lvS;
+  }
   if (/reconozc|reconoc|como os veo|como te encuentro|como es el guia|paraguas|bandera|chaleco|farol/.test(m)){
     var se=kb('senal'); if(!se) return derivaPorHueco('senal', t);
     /* El punto de encuentro solo se encadena si los dos hechos son cortos y de una sola
@@ -5274,7 +5288,8 @@ function respuestaGuiaES(t){
   }
   /* «lavabo» no aparecía ni una vez en el fichero, y es como lo dice medio país. «pis»
      con bordes de palabra, que si no casa dentro de «piso» y de «pista». */
-  if (/bano|aseo|wc|lavabo|urinario|retrete|\bpis\b/.test(m) || RE_SERVICIO_ASEO.test(m)){
+  // «\baseo» y no «aseo»: la subcadena casaba dentro de «paseo» (1-nov-2026).
+  if (/bano|\baseo|wc|lavabo|urinario|retrete|\bpis\b/.test(m) || RE_SERVICIO_ASEO.test(m)){
     var ba=kb('banos'); if(!ba) return derivaPorHueco('banos', t);
     return ba;
   }
@@ -5383,7 +5398,9 @@ function respuestaGuiaES(t){
   if ((/(pagar?|pago|abonar?|se paga).{0,26}(online|(en|por|desde) la web|pasarela)|(online|(en|por) la web).{0,20}(pagar?|pago)|tours? de pago|pagar al reservar/.test(m)
        && !/propina|aportacion|donativo|donacion|bote/.test(m)) && kbE('pagoweb'))
     return kbE('pagoweb');
-  if (/como se paga|propina.*(tarjeta|efectivo|bizum)|tarjeta|efectivo|bizum|pagar/.test(m)){
+  /* Apple Pay, PayPal o transferencia también son formas de pago: «¿puedo dar la propina con
+     apple pay?» recibía «es totalmente libre», que habla del importe (1-nov-2026). */
+  if (/como se paga|propina.*(tarjeta|efectivo|bizum)|tarjeta|efectivo|bizum|apple pay|google pay|paypal|transferencia|contactless|datafono|pagar/.test(m)){
     var pg=kb('pago'); if(!pg) return derivaPorHueco('pago', t);
     return pg;
   }
@@ -5755,7 +5772,10 @@ function respuestaEN(t){
      solo si TODAS las palabras son de cortesía. */
   /* «Hi, we booked for today» sin pregunta no es una duda: es un aviso. Un OK generico
      y a su disposición — derivarlo metía ruido en la bandeja. */
-  if (/\b(we|i)( have)? (booked|reserved)\b/.test(t.toLowerCase()) && t.indexOf('?')===-1)
+  /* Si además PIDE algo no es un aviso: «i booked for 2 but now we're 4, update it pls» se
+     quedaba en este OK y el cambio no llegaba a nadie (banco de Berlín, 1-nov-2026). */
+  if (/\b(we|i)( have)? (booked|reserved)\b/.test(t.toLowerCase()) && t.indexOf('?')===-1 &&
+      !/\b(but|update|change|cancel|move|add|now we|can you|could you|please|pls|need|want)\b/.test(t.toLowerCase()))
     // Sin «you're all set»: nadie ha mirado la reserva.
     return 'Great 🙂 Anything you need before or during the walk, ask me here.';
   var toksC=t.toLowerCase().replace(/[^a-z\s]/g,' ').split(/\s+/).filter(Boolean);
@@ -5796,7 +5816,9 @@ function respuestaEN(t){
   if (!codEscrito(t) && /^\+?[0-9][0-9 .\-()]{5,}[0-9]$/.test(t.trim()))
     return 'For privacy I don\'t look bookings up by phone number: give me your code'+ejCod()+', it\'s in your confirmation email 🙂';
   // cortafuegos: lo delicado va a una persona, también en inglés
-  if (RE_CORTAFUEGOS.test(m))
+  /* «money back» no pasa por el puente como «refund»: «the guide never showed up, i want my
+     money back» acababa en la regla del guía y recibía dónde está el paraguas. */
+  if (RE_CORTAFUEGOS.test(m) || /\b(money back|my money)\b/.test(t.toLowerCase()))
     return falta();
   var datos=respuestaPeticionDeDatos(t,'en');
   if (datos!==null) return datos;
@@ -5815,8 +5837,10 @@ function respuestaEN(t){
      Si NO lo sabemos, se deriva por hueco y ya está. El «We do run private walks. » que
      había aquí era la misma promesa inventada que su gemela española: paridad en el
      fallo, así que paridad también en el arreglo. */
+  /* `faltaEmp` y no `derivaPorHuecoEmp`: esa es la del perfil, que en el servidor está en
+     español, y el viajero inglés recibía «Esa no te la puedo asegurar yo» (1-nov-2026). */
   function conPrivado(cola){
-    if (!priv) return derivaPorHuecoEmp('privados', t);
+    if (!priv) return faltaEmp('privados');
     registraDerivada(t, 'persona');
     return priv+' '+cola;
   }
@@ -5829,11 +5853,20 @@ function respuestaEN(t){
     return conPrivado('School and university groups we quote separately, because the ratios and the '+
       'paperwork are different. Tell me the year group and how many, and the manager will come back to you.');
   // recogida en hotel: no es un servicio del walking tour, y decir que sí sería inventar
-  if (/recogida|hotel/.test(m))
+  /* «hotel» a secas no pide recogida: «can you book a taxi for my hotel» o «is it near my
+     hotel?» recibían la venta del privado. Hace falta la recogida o el verbo de recoger. */
+  var tlP = t.toLowerCase();
+  if (/recogida/.test(m) || (/hotel/.test(m) && /\b(pick|picks|picking|collect|collects|collecting|pickup)\b/.test(tlP)))
     return conPrivado('We do not collect from hotels on the scheduled walks — they start at the meeting '+
       'point. On a private walk we can start wherever suits you, so ask the manager.');
-  // privados en general, con las variantes que de verdad pregunta la gente
-  if (/privado|itinerario|despedida|celebracion|equipo|empresa/.test(m)){
+  /* Privados en general. «itinerary», «company» y «team» SOLOS no son un encargo: «is this a
+     legit company?» contestaba «we do a fair few of these for companies», y «what's on the
+     itinerary» la ruta del privado en vez de lo que se visita (banco de Berlín, 1-nov-2026).
+     Esas palabras cuentan solo con la señal de encargo al lado. */
+  var encargo = /privado|despedida|celebracion/.test(m) ||
+    (/itinerario/.test(m) && /\b(custom|private|bespoke|tailor\w*|our own|for us)\b/.test(tlP)) ||
+    (/equipo|empresa/.test(m) && /\b(team ?building|corporate|offsite|off-site|staff|colleagues|employees|work (event|outing|trip|party)|company (event|outing|trip|party|day)|we are a (company|team|business)|for (our|my) (company|team|business))\b/.test(tlP));
+  if (encargo){
     if (/presupuesto|cuanto|precio|cuesta/.test(m))
       return conPrivado('The exact figure depends on how many of you there are, the date and how long '+
         'you want, so the manager will send you a quote — usually the same day.');
@@ -5901,8 +5934,10 @@ function respuestaEN(t){
   /* «Where are the toilets?», «Where can I leave my suitcase?» y «Where can we eat?» llevan
      «where» y recibían el punto de encuentro: quien nombra otro tema pregunta por ese tema
      (26-oct-2026). */
+  /* Lo mismo con gestionar la reserva: «where is the cancel button» y «where do i change the
+     number of guests» recibían el punto de encuentro (1-nov-2026). */
   if (/punto|donde|quedamos/.test(m) && !/termina|nadie|ninguno|no one|cannot ver|cant ver/.test(m)
-      && !/bano|equipaje|maleta|mochila|consigna|comida|beber|agua/.test(m))
+      && !/bano|equipaje|maleta|mochila|consigna|comida|beber|agua|cancelar|cambiar/.test(m))
     return v('punto') ? 'We meet '+conAt(v('punto'))+' 📍'+(v('horas')?' We start '+sinPuntoFinal(v('horas'))+'.':'')+
       (v('antelacion')?' '+sinPuntoFinal(v('antelacion'))+'.':'')+
       (v('senal')?' Look for '+conThe(v('senal'))+'.':'') : falta('punto');
@@ -5918,7 +5953,18 @@ function respuestaEN(t){
     if (!v('horas')) return falta('horas');
     return 'We run '+sinPuntoFinal(v('horas'))+' and the tour lasts '+sinPuntoFinal(v('dur').replace(/^(the (tour|walk) )?lasts? /i,''))+' 🙂';
   }
-  if (/hora|empieza|cuando/.test(m) && !/hasta cuando|hasta que hora/.test(m)){
+  /* CUÁNTO DURA dicho con horas: «how many hours is the walk», «how much time should I
+     allow» o «is this a 2 hour tour or longer» llevan «hora» y la regla de abajo contestaba
+     a qué hora se sale (banco de Berlín, 1-nov-2026). «cuántas horas ANTES» es el plazo de
+     cancelar o reservar, y sigue su camino. */
+  if ((/cuant[oa]s? horas?|cuanto tiempo/.test(m) || /\bhow much time\b|\b\d+(\.\d+)?\s*-?\s*hours?\b.{0,20}\b(or longer|or more|or less|long)\b/.test(t.toLowerCase()))
+      && !/antes|cancelar|cambiar|reservar|corte|espera/.test(m))
+    return v('dur') ? 'The tour lasts '+sinPuntoFinal(v('dur').replace(/^(the (tour|walk) )?lasts? /i,''))+'.' : falta('dur');
+  /* Y la hora que va con otro tema no es el horario: «is there a luggage locker at the
+     start», «do you cancel when it's snowing», «is there a grace period after the start». */
+  // «can i see the departure times» llevaba «ver» y recibía el itinerario.
+  if ((/hora|empieza|cuando/.test(m) || /\bdeparture times?\b/.test(t.toLowerCase())) && !/hasta cuando|hasta que hora/.test(m)
+      && !/equipaje|consigna|maleta|mochila|lluvia|nieva|tormenta|grace period|cancelar/.test(m)){
     // Un día concreto, del calendario (ver la regla española).
     var ddE=horarioDelDia(m, t);
     if (ddE && ddE.fuera){
@@ -5940,6 +5986,13 @@ function respuestaEN(t){
   if ((/pagar|pago/.test(m) && /online|web|pasarela|gateway/.test(m+' '+t.toLowerCase())) || /paid tours?/i.test(t)){
     var pwE=EMP('pagoweb'); if (pwE) return pwE;
   }
+  /* CÓMO se paga no es CUÁNTO: «can I pay by card?», «do I need cash for the tip» o «can
+     we use apple pay» caían en la regla de precio y recibían «the tip is voluntary», que no
+     contesta. El hecho `pago` existe y ninguna regla inglesa lo leía (banco de Berlín,
+     1-nov-2026). «card» no pasa por el puente: se mira el texto original. */
+  if (/tarjeta|efectivo|bizum|transferencia/.test(m) ||
+      /\b(card|cards|cash|contactless|apple ?pay|google ?pay|paypal|bank transfer|revolut|venmo)\b/.test(t.toLowerCase()))
+    return v('pago') || falta('pago');
   /* `senal` se aparta: «do we need to pay a deposit?» lleva «pagar» por el puente y caía
      aquí, recibiendo el modelo del tour — que no contesta a quién pregunta por la señal
      de un grupo. La regla de grupos, más abajo, es la que sabe de adelantos.
@@ -5953,8 +6006,11 @@ function respuestaEN(t){
      ya tenía delante. Es literal el chat que la pantalla de extras enseña como ejemplo.
      La condición es la misma que usa la regla del catálogo, para que no puedan discrepar:
      si esto es una pregunta de catálogo, el precio la deja pasar. */
+  /* Ni «step free» —accesibilidad, con «free» dentro— ni «much walking», que el puente
+     deja en «cuanto camina» (1-nov-2026). */
   if (/precio|cuesta|gratis|propina|pagar|cuanto/.test(m) && !/cuantos/.test(m) &&
       !/\bsenal\b/.test(m) && !/cancelar|anular/.test(m) &&
+      !/camina|distancia/.test(m) && !/\bstep[- ]?free\b/.test(t.toLowerCase()) &&
       !(/catalogo|otros|mas\b/.test(m) && /tour/.test(m))){
     /* Dos marcos que NO se pueden mezclar: en un free tour el precio es la propina; en
        un walk con ticket la propina no viene al caso, y el 💛 de «aporta lo que quieras»
@@ -5994,10 +6050,20 @@ function respuestaEN(t){
     if (esFrase(v('fin'),'en')) return sinPuntoFinal(v('fin'))+' 🙂';
     return 'The tour ends '+conAt(v('fin'))+' 🙂';
   }
+  /* El PRONÓSTICO no es la política de lluvia: «what is the weather forecast for berlin
+     tomorrow» recibía «we run in rain» como si fuera el parte. Se dice que no lo tenemos y
+     se da lo que sí: qué pasa si llueve. */
+  if (/forecast|pronostico/.test(m+' '+t.toLowerCase()))
+    return v('lluvia') ? 'I can\'t check the forecast from here, but this is what happens with bad weather: '+v('lluvia')+' ☔' : falta('lluvia');
   if (/lluvia/.test(m) || (/tiempo/.test(m) && !/calor|frio|viento|nieva|tormenta/.test(m)))
     return v('lluvia') ? v('lluvia')+' ☔' : falta();
-  if (/calor|frio|viento|nieva|tormenta/.test(m))
+  if (/calor|frio|viento|nieva|tormenta/.test(m)){
+    /* «do you cancel when it's snowing» pregunta si se SALE, y eso lo dice la política de
+       lluvia; «is it cold in November?» sí es el clima. */
+    if (v('lluvia') && (/cancelar|suspend/.test(m) || /\b(still (run|go|on)|go ahead|do you (run|go))\b/.test(t.toLowerCase())))
+      return v('lluvia')+' ☔';
     return v('clima') || falta('clima');
+  }
   /* Si cancelamos NOSOTROS: «what happens if the tour is cancelled?» recibía la política
      de cancelación DEL VIAJERO — la dirección contraria. Sujeto-empresa y sin código. */
   if (!codDe(t) && !/lluvia|tiempo|nieva|tormenta/.test(m) && !/\b(can|could|do|how|may) i\b/i.test(t) &&
@@ -6044,8 +6110,10 @@ function respuestaEN(t){
        sin signo cancelaba, y con signo no. La señal es la persona, no la puntuación. */
     /* Mismo criterio que en la rama española: el modal gobierna al verbo. Sin esto,
        «cancel my booking, I can't make it» se leería como pregunta por el «can». */
+    /* «where is the cancel button» y «how do I cancel» preguntan CÓMO: son consulta. */
     var preguntaE = (/\b(can i|could i|can we|could we|am i able|is it possible)\b(\s+\S+){0,2}\s+cancel\b/.test(crudoE) ||
-                     /\b(until when|what if i cancel|cancellation policy|do i have to)\b/.test(crudoE)) &&
+                     /\b(until when|what if i cancel|cancellation policy|do i have to)\b/.test(crudoE) ||
+                     /\b(where|how) (do|can|is|are) (i|we|the)\b/.test(crudoE)) &&
       !/\b(can you|could you|please cancel|cancel it)\b/.test(crudoE);
     /* Misma guarda que en español: sin canal identificado no se ejecuta ni se anuncia. */
     if (S.canalIdentificado === false && !preguntaE) return gestionSinIdentificar(t,'en');
@@ -6057,7 +6125,17 @@ function respuestaEN(t){
     }
     if (/guruwalk|viator|getyourguide|tripadvisor|plataforma/.test(m))
       return 'You made that booking on the platform, so cancel it from their confirmation email — that way <b>their</b> refund policy applies to you 🙂 As soon as you do, your place frees itself on our list, and it won\'t count against you as a no-show.';
-    return v('cancelar') ? v('cancelar')+' 🙂 Just send me your booking code'+ejCod()+' and I\'ll cancel it right now.' : falta();
+    if (!v('cancelar')) return falta();
+    /* «Send me your code and I'll cancel it» solo donde se puede hacer. En la web no se
+       sabe quién escribe y el código no cancelaría nada (`codC` es null arriba): el gemelo
+       español ya lo callaba con `puedeActuar` y aquí se ofrecía igual (banco de Berlín,
+       1-nov-2026). */
+    if (!canalConIdentidad())
+      return v('cancelar')+'\n\n'+(hayWeb()
+        ? 'If you booked on <b>our website</b> ('+webEnlace()+'), open your <b>manage-booking link</b> — the one in your confirmation email — and cancel it in one click. '
+        : 'To cancel, reply to your confirmation email or write to us and we\'ll do it. ')+
+        'I can\'t touch bookings from this chat: here I don\'t know who you are, and I don\'t want to cancel someone else\'s tour 🙏 If you booked through a <b>platform</b>, cancel it there.';
+    return v('cancelar')+' 🙂 Just send me your booking code'+ejCod()+' and I\'ll cancel it right now.';
   }
   if (/cambiar/.test(m) || /\b(more|fewer|less) (people|persons?|of us)\b/i.test(t) || /\bmove (us|it|our|my|the)\b/i.test(t)){
     /* El mismo contrato que el español (decisión del dueño, 9-ago): el cambio de
@@ -6066,7 +6144,7 @@ function respuestaEN(t){
        hueco: un operador hispano sin el hecho traducido sigue pudiendo recibir el
        cambio de un viajero inglés. */
     /* La misma mordaza que el gemelo español: pedir permiso no es ordenar. */
-    var preguntaB2 = /\bcan (i|we)\b|\bcould (i|we)\b|is it possible|\bmay (i|we)\b/.test(t.toLowerCase()) ||
+    var preguntaB2 = /\bcan (i|we)\b|\bcould (i|we)\b|is it possible|\bmay (i|we)\b|\b(where|how) (do|can) (i|we)\b/.test(t.toLowerCase()) ||
       /\bpuedo\b|\bpodria\b|se puede/.test(t.toLowerCase());
     /* Paridad con el gemelo español: un código escrito muerto no redirige el cambio. */
     var muertoB2 = codMuerto(t);
@@ -6126,7 +6204,7 @@ function respuestaEN(t){
      el mismo límite de palabra, que aquí hace más falta todavía: un mercado inglés escribe
      el nombre del tour en español —«the Alcázar al atardecer tour»— y la subcadena lo
      mandaba a la política de retrasos. */
-  if (/retraso|espera/.test(m) || (/\btarde\b/.test(m) && !RE_FRANJA_TARDE.test(m))){
+  if (/retraso|espera|grace period/.test(m) || (/\btarde\b/.test(m) && !RE_FRANJA_TARDE.test(m))){
     /* La NOTA va antes que el hueco de `espera` — el mismo orden que el español: aunque
        no sepamos cuánto espera el guía, que este grupo llega tarde es urgente y se
        apunta igual (y enciende el ⏰ del manifiesto). */
@@ -6137,9 +6215,19 @@ function respuestaEN(t){
       (codL ? '\n\n<i>— Logged: written into today\'s tour notes, and they show on the manifest as “⏰ running late”.</i>'
             : canalConIdentidad() ? ' If you\'re running later, send me your code'+ejCod()+' and I\'ll let the guide know.' : '');
   }
-  if (/idioma|ingles/.test(m))
+  /* Con el NOMBRE del idioma: «will the guide speak german» llevaba «guia» y recibía dónde
+     está el paraguas (1-nov-2026). */
+  if (/idioma|ingles/.test(m) || /\b(german|french|italian|spanish|portuguese|dutch|polish|languages?)\b/.test(t.toLowerCase()))
     return v('idiomas') ? 'The tour runs in '+sinPuntoFinal(v('idiomas'))+'.' : falta('idiomas');
-  if (/guia|paraguas|bandera|chaleco|reconoc/.test(m) && !/llevar|calzado|ropa/.test(m)){
+  /* «im at the wrong place can you tell the guide to call me» es un rescate, no la seña. */
+  if (/\bwrong (place|spot|meeting point|location|address)\b/.test(t.toLowerCase())) return rescateEN();
+  /* QUÉ LLEVAR, antes de la seña: «do I need water and an umbrella» casaba con «paraguas» y
+     recibía «look for a purple umbrella» — el paraguas del guía como respuesta (1-nov-2026). */
+  if (/\b(bring|need|take|pack|wear)\b/.test(t.toLowerCase()) &&
+      /\b(umbrella|water|shoes|trainers|boots|raincoat|jacket|coat|sunscreen|hat)\b/.test(t.toLowerCase()))
+    return v('llevar') || falta('llevar');
+  // «can i leave a backpack with the guide» es equipaje, no la seña.
+  if (/guia|paraguas|bandera|chaleco|reconoc/.test(m) && !/llevar|calzado|ropa|equipaje|maleta|mochila|consigna/.test(m)){
     if (!v('senal')) return falta('senal');
     return 'Easy: look for '+conThe(v('senal'))+
       (esSimple(v('senal'),80)&&esSimple(v('punto'),85) ? ' '+conAt(v('punto')) : '')+
@@ -6149,11 +6237,12 @@ function respuestaEN(t){
      respuesta útil es la de accesibilidad, y el hecho de niños está vacío a propósito. */
   if (/carrito/.test(m))
     return v('acces') || v('ninos') || falta('acces');
-  if (/nino|bebe|familia/.test(m))
+  // «my kid will need the toilet» pregunta por el baño, no por la política de niños.
+  if (/nino|bebe|familia/.test(m) && !/bano/.test(m))
     return v('ninos') || falta('ninos');
   if (/perro|mascota/.test(m))
     return v('mascotas') || falta('mascotas');
-  if (/silla|accesib|escaleras/.test(m))
+  if (/silla|accesib|escaleras/.test(m) || /\b(step[- ]?free|steps|stairs|ramps?)\b/.test(t.toLowerCase()))
     return v('acces') || falta('acces');
   /* ORDEN IMPORTANTE: “I have lost the group” lleva las dos palabras. Si /grupo/ se
      comprobara antes, GuIA contestaría la política de grupos a alguien que se ha perdido
@@ -6251,7 +6340,10 @@ function respuestaEN(t){
       'that\'s a minimum, never less.'+
       (precioLibre() ? ' It comes off whatever you decide to give at the end, so you\'re not paying extra.' : '');
   }
-  if (/aforo|plazas|disponib|sitio|lleno/.test(m) || /cuantos\s+personas/.test(m)){
+  /* «places» llega como «plazas», pero «which places do you take us to» pregunta LUGARES y
+     recibía «there's room on the 10:00 departure» (1-nov-2026). */
+  var lugares = /\b(which|what) places\b|\bplaces (do|will|are) (you|we)\b|\btake us\b/.test(t.toLowerCase());
+  if ((/aforo|plazas|disponib|sitio|lleno/.test(m) || /cuantos\s+personas/.test(m)) && !lugares){
     var afN=parseInt(v('aforo'),10);
     if (!afN) return falta('aforo');
     /* Este motor lee la agenda igual que el español, así que lleva las MISMAS guardas:
@@ -6305,11 +6397,16 @@ function respuestaEN(t){
   /* «I can't see anybody» no es una pregunta por el itinerario. La regla específica —aquí
      + nadie— vive más abajo, así que aquí basta con apartarse: quien dice que no ve a nadie
      está perdido, no preguntando qué se visita. */
-  if (/visita|\bver\b|veremos|\b(?:tour|route)\b.*\b(?:visit|pass by|pass through)\b/.test(m) && !/nadie|ninguno|no encuentro/.test(m))
+  if ((/visita|\bver\b|veremos|itinerario|\b(?:tour|route)\b.*\b(?:visit|pass by|pass through)\b/.test(m) || lugares) && !/nadie|ninguno|no encuentro/.test(m))
     return v('visita') ? 'We\'ll see '+v('visita')+' 🙂' : falta('visita');
   if (/camina|distancia/.test(m))
     // Solo la distancia: «at an easy pace, with plenty of stops» contradecía un ritmo exigente confirmado.
-    return v('distancia') ? 'We cover '+(/^(about|around|some|roughly|approx)/i.test(v('distancia'))?'':'about ')+sinPuntoFinal(v('distancia'))+'.' : falta('distancia');
+    /* Sin `distancia`, el `ritmo`, pero SOLO si preguntan cuánto se anda: la lista corta lo
+       rotula «Ritmo y distancia» y ahí es donde el operador lo escribe. «walk» sale en
+       cualquier frase —«can we get coffee during the walk»— y no la convierte en esta
+       pregunta. Se da la frase entera, sin sacarle una cifra. */
+    return v('distancia') ? 'We cover '+(/^(about|around|some|roughly|approx)/i.test(v('distancia'))?'':'about ')+sinPuntoFinal(v('distancia'))+'.'
+      : ((/cuanto camina|distancia/.test(m) || /\b(how far|much walking|lot of walking|km|kilomet\w*|miles)\b/.test(t.toLowerCase())) && v('ritmo')) || falta('distancia');
   if (/entrada|museo|dentro/.test(m))
     return v('entradas') || falta('entradas');
 
@@ -6355,7 +6452,9 @@ function respuestaEN(t){
   if (/olvide/.test(m))    return falta();   /* objetos perdidos: siempre a una persona */
 
   /* ===== Hechos de EMPRESA — se responden una vez y valen para todos los tours ===== */
-  if (/fiable|timo|agencia|titulado/.test(m))
+  /* «who are you?» y «is the company local to berlin» derivaban con `quienes` escrito. */
+  if (/fiable|timo|agencia|titulado/.test(m) ||
+      /\bwho are (you|u)\b|\bwho runs\b|\b(local|real|legit|legitimate) (company|business|operator)\b|\b(company|business|operator)\b.{0,20}\blocal\b/.test(t.toLowerCase()))
                             return EMP('quienes')  || falta();
   if (/carterista|robo|peligro/.test(m))
                             return EMP('seguridad') || falta();
