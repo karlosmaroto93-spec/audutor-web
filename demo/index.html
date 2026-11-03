@@ -5858,7 +5858,10 @@ function respuestaGuiaES(t){
     /* Solo el hecho. Llevaba pegado «— sin prisas y con las mejores historias», y el ritmo
        tiene su propio campo: un tour a paso ligero lo contradecía sin que nadie lo hubiera
        escrito (revisión del 28-sep-2026). */
-    return 'Veremos '+vi+' 🙂';
+    /* Y el hecho tal como lo escribe el operador en el panel, «La catedral, la judería y
+       el río.», salía «Veremos La catedral… río. 🙂» (3-nov-2026). Lo mismo que el final. */
+    if (esFrase(vi)) return sinPuntoFinal(vi)+' 🙂';
+    return 'Veremos '+sinPuntoFinal(enMedio(vi))+' 🙂';
   }
   /* La otra mitad del corte de «tarde»: si ya no es un retraso, es una franja del día, y
      esa pregunta la contestan los horarios. Sin esto, separar los dos sentidos dejaba
@@ -5962,7 +5965,10 @@ function respuestaGuiaES(t){
     return lvS;
   }
   // «¿cómo sé quién es el guía?», «¿cómo identifico al guía?» (2-nov-2026).
-  if (/reconozc|reconoc|como os veo|como te encuentro|como es el guia|como (se|sabre|sabemos)\b.{0,15}\bquien es|como (identifico|identificamos|identificar)\b|que lleva (el|la) guia\b|paraguas|bandera|chaleco|farol/.test(m)){
+  /* «¿Cómo os encuentro?» es la pregunta que el panel pone de ejemplo para este campo y
+     derivaba sin regla aunque la señal estuviera escrita (3-nov-2026). «No os encuentro»
+     no llega aquí: es un rezagado y su regla va antes. */
+  if (/reconozc|reconoc|como os veo|como (te|os) (encuentro|encontrare|encontramos|encontraremos)\b|como (encuentro|encontrare|encontramos|encontraremos|localizo) al guia\b|como es el guia|como (se|sabre|sabemos)\b.{0,15}\bquien es|como (identifico|identificamos|identificar)\b|que lleva (el|la) guia\b|paraguas|bandera|chaleco|farol/.test(m)){
     var se=kb('senal'); if(!se) return derivaPorHueco('senal', t);
     /* El punto de encuentro solo se encadena si los dos hechos son cortos y de una sola
        oración. Si no, sale confuso o directamente mal: Sevilla tiene DOS puntos según
