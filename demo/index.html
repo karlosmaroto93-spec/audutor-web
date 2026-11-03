@@ -3752,13 +3752,17 @@ function intentoSinIdentificar(cod){
     'IDENTIFICARSE. No se ha cambiado nada: desde ahí no se ejecuta. Si era el viajero, '+
     'que use el enlace de gestión de su correo — o míralo tú a mano.');
 }
-function gestionSinIdentificar(t, lang){
+/* `hecho` es la política que el operador escribió (cancelar o cambios). La orden no se
+   ejecuta, pero «necesito cancelar la de mañana» se quedaba sin saber hasta cuándo podía
+   hacerlo, con la respuesta escrita en el Cerebro (3-nov-2026). */
+function gestionSinIdentificar(t, lang, hecho){
   intentoSinIdentificar(codEscrito(t));
   registraDerivada(t, 'autorizacion');
-  if (lang==='en') return 'I cannot change a booking from this public chat. '+
+  var pre = hecho ? String(hecho).trim()+'\n\n' : '';
+  if (lang==='en') return pre+'I cannot change a booking from this public chat. '+
     (hayWeb() ? 'If you booked on our website ('+webEnlace()+'), use the management link in your confirmation email. ' : '')+
     'If you booked through a platform, manage it from their confirmation email. Otherwise, contact the operator. Nothing has been changed.';
-  return 'No puedo modificar una reserva desde este chat público. '+
+  return pre+'No puedo modificar una reserva desde este chat público. '+
     (hayWeb() ? 'Si reservaste en nuestra web ('+webEnlace()+'), usa el enlace de gestión de tu email de confirmación. ' : '')+
     'Si reservaste en una plataforma, gestiónala desde su email de confirmación. En otro caso, contacta con el operador. No se ha cambiado nada.';
 }
@@ -5054,6 +5058,50 @@ function respuestaPeticionDeDatos(t, lang){
     : 'Paso esta petición al equipo para que la revise.';
 }
 
+/* DOS PREGUNTAS EN UN MENSAJE. «¿Qué tiempo suele hacer, qué ropa llevo?» recibía solo
+   «qué llevar»: la primera regla que casa gana y la otra mitad se perdía, con su hecho
+   escrito en el Cerebro (banco a ciegas, 3-nov-2026). Se contesta cada mitad por
+   separado SOLO si las dos salen de un hecho sin derivar y la respuesta al mensaje entero
+   era una de ellas, o derivaba. Si no, manda la respuesta de siempre, que puede ser ya
+   una combinada («Salimos a las 10 y el tour dura 2 horas»).
+   Nada que actúe pasa por aquí (cancelar, cambiar, reservar, llegar tarde, un código):
+   contestar dos veces no puede anotar dos veces. Lo que las mitades derivan se deshace. */
+var INTERROG_ES='(?:qu[eé]|cu[aá]nt[oa]s?|cu[aá]ndo|d[oó]nde|c[oó]mo|hay|se puede|puedo|podemos|a qu[eé])(?=[\\s?,.!]|$)';
+var RE_CORTE_ES=new RegExp('\\?\\s*(?=\\S)|[,;]\\s+(?=¿?\\s*'+INTERROG_ES+')|\\s+y\\s+(?=¿?\\s*'+INTERROG_ES+')','i');
+var RE_EMPIEZA_ES=new RegExp('^¿?\\s*'+INTERROG_ES,'i');
+function dosTemasES(t, m){
+  if (S._enParte || codEscrito(t)) return null;
+  if (/cancel|anul|cambi|reserv|retras|tarde|confirm|baja|somos|personas? (mas|menos)|apunt/.test(m)) return null;
+  var partes=String(t).split(RE_CORTE_ES).map(function(x){ return x.trim(); })
+    .filter(function(x){ return x.replace(/[¿?¡!.,;:\s]/g,'').length; });
+  if (partes.length!==2) return null;
+  for (var i=0;i<2;i++) if (!RE_EMPIEZA_ES.test(partes[i]) || partes[i].split(/\s+/).length<2) return null;
+  var foto=function(){ return { g:S.guiaDer||0, d:JSON.stringify(S.derivadas||[]) }; };
+  var vuelve=function(f){ S.guiaDer=f.g; S.derivadas.splice(0, S.derivadas.length); JSON.parse(f.d).forEach(function(d){ S.derivadas.push(d); }); };
+  var f0=foto(), f1, r0, r1, r2;
+  S._enParte=true;
+  try {
+    r0=respuestaGuiaES(t); f1=foto();
+    r1=respuestaGuiaES(partes[0]+'?'); r2=respuestaGuiaES(partes[1]+'?');
+  } finally { S._enParte=false; }
+  var derivo0=f1.g!==f0.g, derivoParte=(S.guiaDer||0)!==f1.g;
+  if (derivoParte || !r1 || !r2 || r1===r2 || !(derivo0 || r0===r1 || r0===r2)){
+    vuelve(f1);           // lo que derivaron las mitades no cuenta: el entero ya dejó su rastro
+    return r0;
+  }
+  /* La nota en cursiva («Dato del cerebro de…») va una vez, al final, y no entre las dos. */
+  var cuerpo=function(r){ var k=r.indexOf('<i>'); return (k<0?r:r.slice(0,k)).trim(); };
+  var nota=function(r){ var k=r.indexOf('<i>'); return k<0?'':r.slice(k); };
+  /* Si una mitad ya dice lo de la otra, sobra: el punto de encuentro trae la señal, y
+     «¿dónde quedamos y cómo os reconozco?» repetía el paraguas dos veces. */
+  var pals=function(r){ return (sinTildes(cuerpo(r)).toLowerCase().match(/[a-z]{4,}/g)||[]); };
+  var cubre=function(a,b){ var pb=pals(b), sa=' '+pals(a).join(' ')+' ';
+    return pb.length && pb.filter(function(w){ return sa.indexOf(' '+w+' ')>=0; }).length/pb.length>=0.6; };
+  if (cubre(r1,r2) || cubre(r2,r1)){ vuelve(f1); return r0; }
+  vuelve(f0);             // contestadas las dos: el entero tampoco deriva
+  var n=nota(r1)||nota(r2);
+  return cuerpo(r1)+'\n\n'+cuerpo(r2)+(n?'\n\n'+n:'');
+}
 function respuestaGuiaES(t){
   var m=normaliza(t,'es');
   /* La capa crítica ya la ha mirado el router. Se vuelve a llamar aquí porque a este
@@ -5073,6 +5121,8 @@ function respuestaGuiaES(t){
   if (datos!==null) return datos;
   var declarado=respuestaHechoDeclarado(t,m,'es');
   if (declarado!==null) return declarado;
+  var dosT=dosTemasES(t,m);
+  if (dosT!==null) return dosT;
   /* Las URGENCIAS y el CORTAFUEGOS DE AUTORIZACIÓN vivían aquí. Ahora están arriba, en
      capaCritica(), que corre en el router ANTES de elegir idioma — porque la decisión de
      mandar algo a una persona no puede depender de en qué idioma preguntó el viajero. */
@@ -5617,7 +5667,7 @@ function respuestaGuiaES(t){
        creyendo cancelada una reserva que seguía viva. Ahora cae al camino de abajo, que
        le da la política y su enlace de gestión — el token de 32 caracteres que sí es suyo. */
     var puedeActuar = S.canalIdentificado !== false;
-    if (!puedeActuar && !preguntaC) return gestionSinIdentificar(t,'es');
+    if (!puedeActuar && !preguntaC) return gestionSinIdentificar(t,'es',kb('cancelar'));
     var cod = (preguntaC || !puedeActuar) ? null : (codEscrito(t) || (ordenC ? S.codConocido : null));
     if (cod){
       anotaGuia('Reserva «'+cod+'» cancelada por el chat — plaza liberada');
@@ -5681,7 +5731,7 @@ function respuestaGuiaES(t){
        tampoco se anuncia. Aquí cuelgan el cambio de PERSONAS y la mudanza de FECHA —las
        dos irreversibles para la plaza de otro— y las dos decían «¡Hecho!» desde el chat
        público mientras el servidor las rechazaba. */
-    if (S.canalIdentificado === false && !preguntaB) return gestionSinIdentificar(t,'es');
+    if (S.canalIdentificado === false && !preguntaB) return gestionSinIdentificar(t,'es',kb('cambios'));
     var codB = (S.canalIdentificado === false || preguntaB) ? null
       : (codEscrito(t) || S.codConocido);
     if (codB){
@@ -6023,7 +6073,10 @@ function respuestaGuiaES(t){
     // Sin «te avisamos por aquí con antelación»: el chat de la web no puede avisar a nadie.
     return sinPuntoFinal(lu)+' ☔';
   }
-  if (/calor|frio|nieve|nieva|clima|temperatura|sombra|\bsol\b|\bsoleado\b/.test(m)){
+  /* «¿qué tiempo suele hacer?» derivaba con el clima escrito (3-nov-2026). «¿Qué tiempo
+     hará mañana?» no: es un pronóstico, y el clima del mes no lo contesta. */
+  if (/calor|frio|nieve|nieva|clima|temperatura|sombra|\bsol\b|\bsoleado\b/.test(m) ||
+      (/que tiempo (hace|suele hacer|hara|va a hacer|tendremos)/.test(m) && !/manana|\bhoy\b|pasado|esta semana|fin de semana|\b(lunes|martes|miercoles|jueves|viernes|sabado|domingo)\b/.test(m))){
     var cli=kb('clima'); if(!cli) return derivaPorHueco('clima', t);
     return cli;
   }
@@ -6781,7 +6834,7 @@ function respuestaEN(t){
                      /\b(where|how) (do|can|is|are) (i|we|the)\b/.test(crudoE)) &&
       !/\b(can you|could you|please cancel|cancel it)\b/.test(crudoE);
     /* Misma guarda que en español: sin canal identificado no se ejecuta ni se anuncia. */
-    if (S.canalIdentificado === false && !preguntaE) return gestionSinIdentificar(t,'en');
+    if (S.canalIdentificado === false && !preguntaE) return gestionSinIdentificar(t,'en',v('cancelar'));
     var codC = (preguntaE || S.canalIdentificado === false)
       ? null : (codEscrito(t) || (ordenCE ? S.codConocido : null));
     if (codC){
@@ -6819,7 +6872,7 @@ function respuestaEN(t){
         'anything — I\'d hate to touch someone else\'s reservation 🙏 Double-check it in your '+
         'confirmation email and send it again.\n\n<i>— Your booking is unchanged.</i>';
     }
-    if (S.canalIdentificado === false && !preguntaB2) return gestionSinIdentificar(t,'en');
+    if (S.canalIdentificado === false && !preguntaB2) return gestionSinIdentificar(t,'en',v('cambios'));
     var codB2 = (S.canalIdentificado === false || preguntaB2) ? null : (codEscrito(t) || S.codConocido);
     if (codB2){
       var cp2=paxCambioDe(m, t);
