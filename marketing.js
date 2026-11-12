@@ -1,4 +1,38 @@
 'use strict';
+/* El bucle del titular. El HTML no lleva `autoplay`: lo arranca este código, para que sin
+   JavaScript o con «reducir movimiento» se quede quieto en su portada. Todo lo que se mueve
+   más de cinco segundos tiene que poder pararse (WCAG 2.2.2), de ahí el botón; y fuera de la
+   pantalla se para solo, para no gastar batería mientras se lee el resto de la página. */
+(function(){
+  var video=document.querySelector('[data-bucle]'), boton=document.querySelector('[data-bucle-pausa]');
+  if(!video||!boton) return;
+  var quieto=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
+  var parado=quieto, visible=true;
+  function pinta(){ boton.textContent=video.paused?boton.getAttribute('data-sigue'):boton.getAttribute('data-pausa'); }
+  function sigue(){
+    if(parado||!visible){ video.pause(); return; }
+    /* Safari con ahorro de energía rechaza el play() sin sonido: queda en pausa y el botón
+       ofrece reproducir, en vez de un error en la consola. Un AbortError (una pausa que llega
+       antes de que arranque, al salir de la pantalla) no es una negativa: no lo para del todo. */
+    var p=video.play(); if(p&&p.catch) p.catch(function(e){ if(e&&e.name==='NotAllowedError') parado=true; pinta(); });
+  }
+  video.addEventListener('play',pinta); video.addEventListener('pause',pinta);
+  boton.addEventListener('click',function(){ parado=!video.paused; sigue(); pinta(); });
+  if('IntersectionObserver' in window) new IntersectionObserver(function(e){ visible=e[0].isIntersecting; sigue(); }).observe(video);
+  boton.hidden=false; pinta(); sigue();
+  /* El vídeo lleva música y efectos, pero arranca mudo: un navegador no deja sonar nada sin
+     un toque. Al activar el sonido vuelve al principio, porque la música cuenta el día entero
+     y empezarla a mitad no tiene sentido. */
+  var sonido=document.querySelector('[data-bucle-sonido]');
+  if(!sonido) return;
+  function pintaSonido(){ sonido.textContent=video.muted?sonido.getAttribute('data-con'):sonido.getAttribute('data-sin'); }
+  sonido.addEventListener('click',function(){
+    video.muted=!video.muted;
+    if(!video.muted){ video.currentTime=0; parado=false; sigue(); }
+    pintaSonido();
+  });
+  sonido.hidden=false; pintaSonido();
+})();
 /* La muestra del cuaderno solo cambia el DOM local. No realiza peticiones ni guarda datos. */
 (function(){
   var libro=document.querySelector('[data-cuaderno]');
