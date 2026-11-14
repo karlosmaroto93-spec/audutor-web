@@ -1450,7 +1450,7 @@
 
 <!-- ================= ANTI NO-SHOW ================= -->
 <section class="vista" id="v-noshow">
-  <div class="cab"><h1>Anti no-show inteligente</h1><span class="sub">mañana 10:00 · la cadencia se adapta al riesgo de cada reserva</span></div>
+  <div class="cab"><h1>Anti no-show</h1><span class="sub">mañana 10:00 · la confirmación va a quien todavía no ha confirmado</span></div>
   <div class="card">
     <h2>⚖️ A quién se le puede escribir</h2>
     <p class="mini muted" style="margin:0;">La pregunta no es «¿marcó la casilla?» sino <b>con
@@ -1467,66 +1467,46 @@
       reserva: si vuelve a reservar en marzo, sigue fuera.</span></details></p>
   </div>
 
-  <div class="gate-inline" id="gate-noshow" style="display:none;">
-    <div class="cerr">🔒</div>
-    <h2 style="margin:6px 0 2px;">Cadencia anti-no-show inteligente</h2>
-    <p style="margin:6px 0;"><span class="chip" style="background:rgba(201,138,45,.25); color:var(--amber);">Incluido en el plan Pro · 45 €/mes</span></p>
-    <p style="color:var(--ink2); max-width:52ch; margin:8px auto 0;">Tu plan incluye el <b>recordatorio de
-      confirmación básico</b> (1 toque: el WhatsApp de confirmación del día antes). La cadencia inteligente
-      se adapta al riesgo de cada reserva. En este ejemplo simulado se estiman <b>+34 personas ≈ 410 €</b> en propinas;
-      no es una medición de resultados de clientes.
-      Por <b>45 €/mes</b> la mantienes.</p>
-    <div class="fila" style="gap:8px; justify-content:center; flex-wrap:wrap; margin-top:14px;">
-      <button class="btn" onclick="cambiarPlan('pro')">Cambiar a Pro</button>
-      <button class="btn sec" onclick="desbloquear('noshowSmart')">🔓 Solo probarlo (demo)</button>
-    </div>
-  </div>
-
-  <div class="card" id="ns-basico-activo" style="display:none; box-shadow:inset 4px 0 0 var(--acc);">
-    ✓ <b>Activo en tu plan:</b> recordatorio de confirmación básico (1 toque por WhatsApp, el día antes del tour)
-  </div>
-
   <div class="card" id="ns-franja" style="box-shadow:inset 4px 0 0 var(--acc);">
     🌙 <b>Los recordatorios se preparan de 8:00 a 21:00.</b>
     Lo que caería fuera de esa franja se propone para las 8:00.
     Audutor prepara el texto: <b>tú lo envías desde tu propio móvil</b>, por WhatsApp o SMS.
-    No se envía automáticamente ni se comprueba aquí su entrega.
+    No se envía automáticamente ni se comprueba aquí su entrega. Va en todos los planes.
   </div>
 
-  <div class="card" id="ns-smart">
-    <div class="switch-linea"><b>Modo inteligente</b>
-      <label><input type="checkbox" id="sw-int" onchange="pintaNoshow()" checked> cadencia según riesgo
-      (canal, antelación, tamaño, historial)</label></div>
-  </div>
-
-  <div class="card" id="ns-params">
-    <h2>⚙️ Los parámetros del riesgo — cada empresa, los suyos</h2>
-    <div class="mini muted" style="margin:0 0 12px;">Nada de caja negra: el riesgo parte de <b>10</b> y
-      suma o resta estos factores. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Los pesos de fábrica vienen del caso real de un free tour urbano —
-      muévelos a tu caso (un tour de pago con señal falla la mitad, p. ej.) y la tabla de abajo
-      <b>se recalcula al momento</b>.</span></details></div>
-    <div id="ns-cfg" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); gap:8px 26px;"></div>
-    <div class="fila" style="margin-top:12px; gap:18px;">
-      <label class="mini">riesgo <b style="color:var(--rojo);">alto</b> desde
-        <input type="range" id="ns-alto" min="40" max="90" step="5" value="60" oninput="pintaNoshow()">
-        <b><span id="ns-alto-v">60</span></b></label>
-      <label class="mini">riesgo <b style="color:var(--amber);">medio</b> desde
-        <input type="range" id="ns-medio" min="10" max="55" step="5" value="35" oninput="pintaNoshow()">
-        <b><span id="ns-medio-v">35</span></b></label>
-    </div>
-  </div>
-  <div class="kpi-fila" style="margin:14px 0;">
-    <div class="kpi malo"><span class="v">38 %</span><span class="l">no-show histórico SIN sistema</span></div>
-    <div class="kpi"><span class="v" id="kpi-prev">17 %</span><span class="l">no-show previsto con esta cadencia</span></div>
-    <div class="kpi"><span class="v" id="kpi-rec">+34</span><span class="l">personas/mes recuperadas (≈ propina +<span data-dinero="410" data-dec="0">410 €</span>)</span></div>
-  </div>
   <div class="card" style="overflow-x:auto;" id="ns-tabla-card">
     <table id="tabla-noshow">
-      <tr><th>Reserva</th><th>Canal</th><th>Riesgo de no-show</th><th>Cadencia de recordatorios</th></tr>
+      <tr><th>Reserva</th><th>Canal</th><th>Qué recibe</th></tr>
     </table>
-    <div class="mini muted" style="margin:10px 0 0;">Cada respuesta («sí voy», «llegamos tarde», silencio)
-      re-puntúa el riesgo y ajusta el siguiente toque. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">El guía lo ve como semáforo en su manifiesto.<br>
+    <div class="mini muted" style="margin:10px 0 0;">La confirmación de la víspera va a quien todavía no
+      ha confirmado; cuando te contesta que viene y lo marcas, le llega el recordatorio. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Las respuestas te llegan a tu WhatsApp: Audutor no las lee.<br>
       ⏰→8:00 = la preparación de ese recordatorio se propone para las 8:00; tú decides cuándo enviarlo.</span></details></div>
+  </div>
+
+  <!-- PLEGADO (14-nov-2026). Aquí había un «Modo inteligente» encendido que decidía la cadencia
+       por riesgo, con avisos a 72 h y a 45 min que el producto no tiene. El panel escribe por
+       defecto a quien no ha confirmado; el riesgo solo cuenta si se elige un público por riesgo,
+       y sus pesos no se han medido todavía contra quién aparece. -->
+  <div class="card" id="ns-params">
+    <details>
+      <summary style="cursor:pointer; font-weight:700;">Más detalles · quién es «riesgo alto»</summary>
+      <div class="mini muted" style="margin:10px 0 12px;">Solo cuenta si prefieres escribir solo a las
+        reservas de más riesgo. El riesgo parte de <b>30</b> y suma o resta estos factores. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Los pesos de fábrica son los del panel, un punto de partida para un free tour urbano —
+        muévelos a tu caso (un tour de pago con señal falla menos, p. ej.) y la lista de abajo
+        <b>se recalcula al momento</b>.</span></details></div>
+      <div id="ns-cfg" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); gap:8px 26px;"></div>
+      <div class="fila" style="margin-top:12px; gap:18px;">
+        <label class="mini">riesgo <b style="color:var(--rojo);">alto</b> desde
+          <input type="range" id="ns-alto" min="40" max="90" step="5" value="55" oninput="pintaNoshow()">
+          <b><span id="ns-alto-v">55</span></b></label>
+        <label class="mini">riesgo <b style="color:var(--amber);">medio</b> desde
+          <input type="range" id="ns-medio" min="10" max="55" step="5" value="30" oninput="pintaNoshow()">
+          <b><span id="ns-medio-v">30</span></b></label>
+      </div>
+      <div style="overflow-x:auto; margin-top:12px;">
+        <table id="tabla-riesgo"><tr><th>Reserva</th><th>Riesgo de no-show</th></tr></table>
+      </div>
+    </details>
   </div>
 </section>
 
@@ -1708,7 +1688,8 @@
     <div class="kpi"><span class="v" id="cm-pax">—</span><span class="l" id="cm-pax-l">personas</span></div>
     <div class="kpi"><span class="v" id="cm-ocu">—</span><span class="l">ocupación media</span></div>
     <div class="kpi"><span class="v" id="cm-prop">—</span><span class="l">propina media por persona</span></div>
-    <div class="kpi"><span class="v">17 %</span><span class="l">no-show real (38 % antes del sistema)</span></div>
+    <!-- Aquí había «17 % no-show real (38 % antes del sistema)»: cifras inventadas, sin
+         medición detrás (informe 2026-11-14-no-shows-en-la-demo). -->
     <div class="kpi"><span class="v">4,9 ⭐</span><span class="l">nota media · 32 reseñas nuevas</span></div>
   </div>
 
@@ -7026,7 +7007,7 @@ function tdArranca(){
 /* Módulos: la BASE va en todo plan; los SUPLEMENTOS se desbloquean por plan.
    Base = operaciones, manifiesto, equipo, canales y el recordatorio anti no-show
    básico (1 toque: la confirmación del día antes) — el núcleo de control de
-   pérdidas, el MVP. La cadencia inteligente completa es Pro. Suplementos = lo
+   pérdidas, el MVP. La cadencia según riesgo también va en todos (14-nov-2026). Suplementos = lo
    que añade valor pero no es la base. */
 var SUPLEMENTOS={
   chat:      { n:'GuIA · Probar GuIA', plan:'Pro', d:'El asistente que atiende a tus clientes en el chat de tu web: consulta los hechos de cada tour y pasa al equipo lo que no puede resolver. Prueba sus respuestas antes de abrirlo a viajeros.' },
@@ -7036,7 +7017,6 @@ var SUPLEMENTOS={
   liquidacion:{ n:'Liquidación a guías', plan:'todos', d:'La cuenta de cada tour siempre cuadrada: reparto por % o tarifa fija, coste de canal, CSV e imprimir. El guía nunca paga.' },
   /* Claves de gating INLINE (sin vista propia ni enlace de nav): las usa pintaGatesInline()
      para difuminar bloques dentro de vistas accesibles en todos los planes. */
-  noshowSmart:{ n:'Cadencia anti-no-show inteligente', plan:'Pro', d:'La cadencia de recordatorios se adapta al riesgo de cada reserva: más toques donde más peligro de no-show hay, sin saturar al que ya confirmó.' },
   conciliacion:{ n:'Conciliación con plataformas', plan:'todos', d:'La lista de no-shows a reportar dentro del plazo de cada plataforma, montada sola con los ajustes del guía, para recuperar las comisiones.' },
 };
 /* Planes de la demo (precios congruentes con la landing) y qué desbloquea cada uno. */
@@ -7378,31 +7358,11 @@ function publicaWeb(){
 /* ---- gating inline: vistas accesibles en todo plan con bloques Pro difuminados ----
    (el DOM no se elimina, solo se difumina: pintaNoshow()/pintaCanales() siguen igual) */
 function pintaGatesInline(){
-  var bNs=bloqueado('noshowSmart');
-  var g1=document.getElementById('gate-noshow'); if (g1) g1.style.display=bNs?'':'none';
-  var ba=document.getElementById('ns-basico-activo'); if (ba) ba.style.display=bNs?'':'none';
-  ['ns-smart','ns-params','ns-tabla-card'].forEach(function(id){
-    var e=document.getElementById(id); if (e) e.classList.toggle('bloq-inline', bNs); });
+  /* La cadencia según riesgo ya no se bloquea (14-nov-2026): en el servidor los mensajes
+     no miran el plan, así que la demo tampoco. docs/evaluaciones/2026-11-14-no-shows-en-la-demo. */
   var bRe=bloqueado('conciliacion');
   var g2=document.getElementById('gate-recon'); if (g2) g2.style.display=bRe?'':'none';
   var rb=document.getElementById('recon-body'); if (rb) rb.classList.toggle('bloq-inline', bRe);
-}
-/* Tope de WhatsApp del plan Esencial (100 mensajes/mes); en Pro/Premium no hay tope. */
-var WA_USADOS=87, WA_TOPE=100;
-function pintaWaTope(){
-  var e=document.getElementById('wa-tope'); if (!e) return;
-  if (S.plan==='esencial'){
-    var pct=Math.round(WA_USADOS/WA_TOPE*100);
-    e.innerHTML='<div style="border-top:1px dashed var(--line); padding-top:10px; margin-top:10px;">'+
-      '<div class="fila mini" style="justify-content:space-between; gap:8px;"><b>'+WA_USADOS+' / '+WA_TOPE+' mensajes este mes</b><span class="chip gris">tope Esencial</span></div>'+
-      '<div class="wa-barra"><i style="width:'+pct+'%; background:'+(pct>80?'var(--gold)':'var(--acc)')+';"></i></div>'+
-      (pct>80 ? '<p class="mini" style="color:var(--amber); margin:2px 0 8px;">Te quedan '+(WA_TOPE-WA_USADOS)+' — con <b>Pro</b> no hay tope de mensajes.</p>'+
-        '<button class="btn mini" onclick="cambiarPlan(\'pro\')">Cambiar a Pro</button>' : '')+
-      '</div>';
-  } else {
-    e.innerHTML='<div style="border-top:1px dashed var(--line); padding-top:10px; margin-top:10px;" class="mini muted">'+
-      '<b style="color:var(--ink2);">'+WA_USADOS+' mensajes este mes</b> · sin tope en tu plan</div>';
-  }
 }
 /* El bloque de «propina digital» del guía —activar cuenta, identidad + IBAN, cobrar con
    tarjeta— se retiró el 13-ago-2026 con la cancelación definitiva del cobro digital de
@@ -7439,7 +7399,7 @@ function desbloquear(v){ S.desbloqueado[v]=true; pintaCandados();
   ir(document.getElementById('v-'+v) ? v : ((location.hash.slice(1))||'operaciones'));   // las claves inline no tienen vista propia: repinta la actual
   toast('🔓 «'+SUPLEMENTOS[v].n+'» desbloqueado para probarlo en la demo'); }
 /* Solo se ofrecen los planes que existen en la aplicación. */
-function cambiarPlan(p){ S.plan=p; pintaPlanSel(); pintaComplementos(); pintaCandados(); pintaWaTope();
+function cambiarPlan(p){ S.plan=p; pintaPlanSel(); pintaComplementos(); pintaCandados();
   ir((location.hash.slice(1))||'operaciones');   // re-evalúa el bloqueo de la vista actual
   toast('Plan '+PLANES[p].n+' activo — se desbloquean los módulos incluidos'); }
 var TXT_MENU = 'Menú', TXT_CERRAR = 'Cerrar';
@@ -9591,13 +9551,18 @@ function rellenarConIA(valores, texto, alReg){
 }
 
 /* ============ anti no-show (parámetros configurables por empresa) ============ */
+/* Los mismos factores y pesos de fábrica que el panel (`app/servidor/mensajes.js`,
+   RIESGO_DEFECTO): base 30, plataforma +20, web propia −15, grupo de 5 o más +10,
+   reservar con más de 14 días +15, confirmada −40; alto desde 55, medio desde 30.
+   Hasta el 14-nov-2026 la demo tenía otro modelo, con dos factores que el producto no
+   tiene ni puede tener: «silencio a los recordatorios» (Audutor no ve las respuestas:
+   llegan al WhatsApp del operador) y «ya falló otra vez» (no hay historial por viajero). */
 var FACTORES_NS=[
-  { k:'plataforma', l:'Canal de plataforma (vs web propia)', corto:'canal externo',        max:40, def:25 },
-  { k:'grande',     l:'Grupo grande (5 o más)',              corto:'grupo grande',         max:30, def:15 },
-  { k:'antelacion', l:'Reservó con más de 7 días',           corto:'reservó hace >7 días', max:30, def:15 },
-  { k:'silencio',   l:'Silencio a los recordatorios',        corto:'no responde',          max:30, def:20 },
-  { k:'historial',  l:'Ya falló otra vez',                   corto:'ya falló una vez',     max:40, def:25 },
-  { k:'confirmo',   l:'Confirmó «sí voy» (resta riesgo)',    corto:'ya confirmó ✓',        max:40, def:30, resta:true },
+  { k:'plataforma', l:'Reserva de plataforma',                corto:'canal externo',         max:40, def:20 },
+  { k:'web',        l:'Reserva en tu web (resta riesgo)',     corto:'web propia',            max:30, def:15, resta:true },
+  { k:'grande',     l:'Grupo grande (5 o más)',               corto:'grupo grande',          max:30, def:10 },
+  { k:'antelacion', l:'Reservó con más de 14 días',           corto:'reservó hace >14 días', max:30, def:15 },
+  { k:'confirmo',   l:'Marcada como confirmada (resta riesgo)', corto:'confirmada ✓',        max:60, def:40, resta:true },
 ];
 /* LAS RESERVAS DE MAÑANA, del ciclo. Aquí había una lista de cinco nombres escrita a mano
    —`RESERVAS_NS`— que era copia del manifiesto de HOY, y no de un hoy cualquiera: del tour
@@ -9617,15 +9582,6 @@ function salidaDeManana(){
   var d = ag[i+1];
   return d && (d.tours||[])[0] ? { dia:d, t:d.tours[0] } : null;
 }
-/* Quién ha faltado ya, por nombre y en la parte PASADA de la ventana. El flag `hist` de la
-   ficha se une con lo que el propio ciclo ha registrado: si un nombre repite y la primera
-   vez se cerró como no-show, el riesgo lo sabe sin que nadie lo escriba. */
-function faltoAntes(nombre){
-  return (S.agenda||[]).some(function(d){
-    return d.pasado && (d.tours||[]).some(function(t){
-      return (t.res||[]).some(function(r){ return r.nsAuto && r.n===nombre; }); });
-  });
-}
 function reservasNoshow(){
   var s = salidaDeManana(); if(!s) return [];
   return (s.t.res||[]).map(function(r){
@@ -9634,17 +9590,14 @@ function reservasNoshow(){
       canal: r.canal,
       f: {
         plataforma: (r.canal!=='Web propia' && !r.walkin) ? 1 : 0,
+        web:        (r.canal==='Web propia' && !r.walkin) ? 1 : 0,
         grande:     r.p>=5 ? 1 : 0,
         antelacion: r.ant ? 1 : 0,
-        /* Silencio es la AUSENCIA de respuesta, así que se deriva de lo mismo que
-           `confirmo` y no de un flag aparte: si estuvieran separados podrían ser ciertos
-           los dos a la vez y la fila sumaría y restaría por el mismo hecho.
-           Y NO mira `ok`. `ok` es la asistencia con la que se cierra el tour, y en una
-           salida que todavía no ha salido no significa nada — el guion del viernes la trae
-           puesta porque se escribió como día pasado, y leerla aquí hacía que un jueves la
-           pantalla diera por tranquilas a personas que no habían contestado nada. */
-        silencio:   r.conf ? 0 : 1,
-        historial:  (r.hist || faltoAntes(r.n)) ? 1 : 0,
+        /* Confirmada sale de `conf` y NO de `ok`. `ok` es la asistencia con la que se
+           cierra el tour, y en una salida que todavía no ha salido no significa nada — el
+           guion del viernes la trae puesta porque se escribió como día pasado, y leerla
+           aquí hacía que un jueves la pantalla diera por tranquilas a personas que no
+           habían contestado nada. */
         confirmo:   r.conf ? 1 : 0,
       }
     };
@@ -9658,66 +9611,63 @@ function pintaNoshowCfg(){
   }).join('');
 }
 function riesgoDe(r){
-  var v=10;
+  var v=30;
   FACTORES_NS.forEach(function(x){
     if (r.f[x.k]) v += (+document.getElementById('ns-'+x.k).value) * (x.resta?-1:1);
   });
-  return Math.max(2, Math.min(95, v));
+  return Math.max(0, Math.min(100, v));
 }
 function razonesDe(r){
   return FACTORES_NS.filter(function(x){ return r.f[x.k] })
     .map(function(x){ return x.corto }).join(' + ') || 'sin señales';
 }
-function cadencia(r, inteligente){
-  if (!inteligente) return 'T-24h wa';
-  var alto=+document.getElementById('ns-alto').value, medio=+document.getElementById('ns-medio').value;
-  if (r>=alto)  return 'T-72h wa · T-24h wa · T-3h wa ⏰→8:00 · T-45min mapa 📍';
-  if (r>=medio) return 'T-24h wa · T-3h wa ⏰→8:00';
-  return 'T-24h wa (y gracias)';
+/* La cadencia de fábrica del panel (mensajes.js): la confirmación, 20 h antes, a quien no ha
+   confirmado; el recordatorio, 3 h antes, a quien sí. Si las 3 h antes caen antes de las 8:00,
+   se proponen para las 8:00 (horas de silencio). Hasta el 14-nov-2026 dependía de un «Modo
+   inteligente» por riesgo, con avisos a 72 h y a 45 min que el producto no tiene. */
+function cadencia(r, hora){
+  var temprano = (parseInt(hora,10)||10) - 3 < 8 ? ' ⏰→8:00' : '';
+  if (r.f.confirmo) return 'T-3h wa recordatorio'+temprano;
+  return 'T-20h wa confirmación · T-3h wa recordatorio si confirma'+temprano;
 }
 function pintaNoshow(){
-  var inteligente=document.getElementById('sw-int').checked;
   var alto=+document.getElementById('ns-alto').value, medio=+document.getElementById('ns-medio').value;
   FACTORES_NS.forEach(function(x){
     document.getElementById('ns-'+x.k+'-v').textContent=document.getElementById('ns-'+x.k).value; });
   document.getElementById('ns-alto-v').textContent=alto;
   document.getElementById('ns-medio-v').textContent=medio;
-  var tb=document.getElementById('tabla-noshow'); var suma=0;
-  tb.querySelectorAll('tr:not(:first-child)').forEach(function(r){r.remove()});
-  var LISTA = reservasNoshow();
+  var tb=document.getElementById('tabla-noshow'), tr2=document.getElementById('tabla-riesgo');
+  [tb,tr2].forEach(function(t){ t.querySelectorAll('tr:not(:first-child)').forEach(function(r){r.remove()}); });
+  var LISTA = reservasNoshow(), s = salidaDeManana();
   /* Sin salida mañana no se inventa una tabla: se dice. Le pasa a cualquier empresa que
      libre un día, y una pantalla que enseñe cinco reservas fantasma ese día es peor que
      una vacía. */
   if (!LISTA.length){
     var vacio=document.createElement('tr');
-    vacio.innerHTML='<td colspan="4" class="mini muted">Mañana no hay ninguna salida programada — '+
+    vacio.innerHTML='<td colspan="3" class="mini muted">Mañana no hay ninguna salida programada — '+
       'nada que recordar. La cadencia se reanuda con la siguiente.</td>';
     tb.appendChild(vacio);
-    document.getElementById('kpi-prev').textContent='—';
-    document.getElementById('kpi-rec').textContent='—';
     return;
   }
   LISTA.forEach(function(r){
-    var riesgo=riesgoDe(r); suma+=riesgo;
-    var nivel=riesgo>=alto?'alto':(riesgo>=medio?'medio':'');
     var tr=document.createElement('tr');
-    tr.innerHTML='<td><b>'+r.n+'</b><br><span class="mini muted">'+razonesDe(r)+'</span></td>'+
+    tr.innerHTML='<td><b>'+r.n+'</b><br><span class="mini muted">'+(r.f.confirmo?'confirmada ✓':'sin confirmar')+'</span></td>'+
       '<td>'+r.canal+'</td>'+
-      '<td><span class="riesgo '+nivel+'"><span class="barra"><i style="width:'+riesgo+'%"></i></span>'+
-      '<span class="num">'+riesgo+'%</span></span></td>'+
-      '<td class="cadencia">'+cadencia(riesgo,inteligente)+'</td>';
+      '<td class="cadencia">'+cadencia(r, s.t.hora)+'</td>';
     tb.appendChild(tr);
+    var riesgo=riesgoDe(r), nivel=riesgo>=alto?'alto':(riesgo>=medio?'medio':'');
+    var fr=document.createElement('tr');
+    fr.innerHTML='<td><b>'+r.n+'</b><br><span class="mini muted">'+razonesDe(r)+'</span></td>'+
+      '<td><span class="riesgo '+nivel+'"><span class="barra"><i style="width:'+riesgo+'%"></i></span>'+
+      '<span class="num">'+riesgo+'%</span></span></td>';
+    tr2.appendChild(fr);
   });
-  var media=suma/LISTA.length;
-  var prev= inteligente ? Math.max(8, Math.min(30, Math.round(media*0.38))) : 26;
-  document.getElementById('kpi-prev').textContent = prev+' %';
-  document.getElementById('kpi-rec').textContent  = '+'+Math.round((38-prev)*1.6);
   /* La cabecera nombra la MISMA salida que la tabla. Decía «mañana 10:00» escrito a mano y
      acertaba de casualidad —todos los días del ciclo abren a las 10:00—; el día que un
      guion empiece a otra hora, mentiría. */
-  var s = salidaDeManana(), sub = document.querySelector('#v-noshow .sub');
-  if (s && sub) sub.textContent = 'mañana ' + s.t.hora + ' · ' + s.t.tit +
-    ' · la cadencia se adapta al riesgo de cada reserva';
+  var sub = document.querySelector('#v-noshow .sub');
+  if (sub) sub.textContent = 'mañana ' + s.t.hora + ' · ' + s.t.tit +
+    ' · la confirmación va a quien todavía no ha confirmado';
 }
 
 
@@ -10649,7 +10599,7 @@ S.tours.forEach(function(t){ CAMPOS_KB.forEach(function(c){ if ((t.kb[c.k]||'').
   S.recientes.push({ tipo:'kb', tourId:t.id, k:c.k, seed:true }); }); });
 seedDispo(); seedCobertura();
 pintaManifiesto(); pintaNoshowCfg(); pintaNoshow(); pintaLiq(); pintaCerebro(); pintaPost(); pintaCuadroCanales(); pintaCuadroFranjas(); pintaEquipo(); pintaCanales(); pintaOperaciones();
-pintaGatesInline(); pintaWaTope(); pintaCanalChat();
+pintaGatesInline(); pintaCanalChat();
 msg('bot','¡Hola! 👋 Soy GuIA, el asistente automático que atiende este chat. Ahora respondo sobre «'+tourChat().nombre+'» — prueba los ejemplos, o crea otro tour en el 🧠 Cerebro y verás que cada uno tiene su cerebro, sin mezclas.');
 
 /* Y lo último: si la dirección trae los datos de quien la comparte, se aplican encima de

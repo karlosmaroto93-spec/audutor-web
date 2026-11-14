@@ -1346,7 +1346,7 @@
 
 <!-- ================= ANTI NO-SHOW ================= -->
 <section class="vista" id="v-noshow">
-  <div class="cab"><h1>Smart anti-no-show</h1><span class="sub">tomorrow 10:00 AM · the sequence adapts to how risky each booking looks</span></div>
+  <div class="cab"><h1>Anti-no-show</h1><span class="sub">tomorrow 10:00 AM · the confirmation goes to everyone who has not confirmed yet</span></div>
   <div class="card">
     <h2>⚖️ Who you are allowed to message</h2>
     <p class="mini muted" style="margin:0;">The question is not "did they tick the box?" but
@@ -1363,66 +1363,46 @@
       again in March, they stay out.</span></details></p>
   </div>
 
-  <div class="gate-inline" id="gate-noshow" style="display:none;">
-    <div class="cerr">🔒</div>
-    <h2 style="margin:6px 0 2px;">The smart anti-no-show sequence</h2>
-    <p style="margin:6px 0;"><span class="chip" style="background:rgba(201,138,45,.25); color:var(--amber);">Included in the Pro plan · €45/month</span></p>
-    <p style="color:var(--ink2); max-width:52ch; margin:8px auto 0;">Your plan includes the <b>basic
-      confirmation reminder</b> (one nudge: the text the day before). The smart sequence
-      adapts to how risky each booking looks. This simulated example estimates <b>+34 people ≈ £410</b> in tips;
-      these are not measured customer results.
-      <b>€45/month</b> keeps it.</p>
-    <div class="fila" style="gap:8px; justify-content:center; flex-wrap:wrap; margin-top:14px;">
-      <button class="btn" onclick="cambiarPlan('pro')">Upgrade to Pro</button>
-      <button class="btn sec" onclick="desbloquear('noshowSmart')">🔓 Just try it (demo)</button>
-    </div>
-  </div>
-
-  <div class="card" id="ns-basico-activo" style="display:none; box-shadow:inset 4px 0 0 var(--acc);">
-    ✓ <b>Live on your plan:</b> the basic confirmation reminder (one nudge by text, the day before the tour)
-  </div>
-
   <div class="card" id="ns-franja" style="box-shadow:inset 4px 0 0 var(--acc);">
     🌙 <b>Reminders are prepared between 8:00 AM and 9:00 PM.</b>
     Anything outside that window is proposed for 8:00 AM.
     Audutor prepares the text: <b>you send it from your own phone</b>, via WhatsApp or SMS.
-    It is not sent automatically, and delivery is not verified here.
+    It is not sent automatically, and delivery is not verified here. Included in every plan.
   </div>
 
-  <div class="card" id="ns-smart">
-    <div class="switch-linea"><b>Smart mode</b>
-      <label><input type="checkbox" id="sw-int" onchange="pintaNoshow()" checked> sequence by risk
-      (channel, how far ahead, group size, history)</label></div>
-  </div>
-
-  <div class="card" id="ns-params">
-    <h2>⚙️ The risk settings — each company sets its own</h2>
-    <div class="mini muted" style="margin:0 0 12px;">No black box: risk starts at <b>10</b> and
-      these factors add to it or take away. <details class="mas"><summary>ⓘ more</summary><span class="mas-p">The out-of-the-box weights come from a real city free tour —
-      move them to fit your case (a ticketed tour with a deposit fails about half as often) and the table below
-      <b>recalculates instantly</b>.</span></details></div>
-    <div id="ns-cfg" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); gap:8px 26px;"></div>
-    <div class="fila" style="margin-top:12px; gap:18px;">
-      <label class="mini"><b style="color:var(--rojo);">high</b> risk from
-        <input type="range" id="ns-alto" min="40" max="90" step="5" value="60" oninput="pintaNoshow()">
-        <b><span id="ns-alto-v">60</span></b></label>
-      <label class="mini"><b style="color:var(--amber);">medium</b> risk from
-        <input type="range" id="ns-medio" min="10" max="55" step="5" value="35" oninput="pintaNoshow()">
-        <b><span id="ns-medio-v">35</span></b></label>
-    </div>
-  </div>
-  <div class="kpi-fila" style="margin:14px 0;">
-    <div class="kpi malo"><span class="v">38 %</span><span class="l">historic no-show rate with NO system</span></div>
-    <div class="kpi"><span class="v" id="kpi-prev">17 %</span><span class="l">expected no-show rate with this sequence</span></div>
-    <div class="kpi"><span class="v" id="kpi-rec">+34</span><span class="l">people/month brought back (≈ +<span data-dinero="410" data-dec="0">£410</span> in tips)</span></div>
-  </div>
   <div class="card" style="overflow-x:auto;" id="ns-tabla-card">
     <table id="tabla-noshow">
-      <tr><th>Booking</th><th>Channel</th><th>No-show risk</th><th>Reminder sequence</th></tr>
+      <tr><th>Booking</th><th>Channel</th><th>What they get</th></tr>
     </table>
-    <div class="mini muted" style="margin:10px 0 0;">Every reply (“coming”, “running late”, silence)
-      re-scores the risk and adjusts the next nudge. <details class="mas"><summary>ⓘ more</summary><span class="mas-p">The guide sees it as a traffic light on their manifest.<br>
+    <div class="mini muted" style="margin:10px 0 0;">The day-before confirmation goes to everyone who has
+      not confirmed yet; when someone replies that they are coming and you mark it, they get the reminder. <details class="mas"><summary>ⓘ more</summary><span class="mas-p">Replies reach your own WhatsApp: Audutor does not read them.<br>
       ⏰→8:00 = preparation of that reminder is proposed for 8:00 AM; you decide when to send it.</span></details></div>
+  </div>
+
+  <!-- PLEGADO (14-nov-2026). Aquí había un «Smart mode» encendido que decidía la cadencia por
+       riesgo, con avisos a 72 h y a 45 min que el producto no tiene. El panel escribe por
+       defecto a quien no ha confirmado; el riesgo solo cuenta si se elige un público por riesgo,
+       y sus pesos no se han medido todavía contra quién aparece. -->
+  <div class="card" id="ns-params">
+    <details>
+      <summary style="cursor:pointer; font-weight:700;">More details · who counts as “high risk”</summary>
+      <div class="mini muted" style="margin:10px 0 12px;">Only matters if you prefer to message just the
+        riskiest bookings. Risk starts at <b>30</b> and these factors add to it or take away. <details class="mas"><summary>ⓘ more</summary><span class="mas-p">The out-of-the-box weights are the panel's own, a starting point for a city free tour —
+        move them to fit your case (a ticketed tour with a deposit fails less often, for example) and the list below
+        <b>recalculates instantly</b>.</span></details></div>
+      <div id="ns-cfg" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); gap:8px 26px;"></div>
+      <div class="fila" style="margin-top:12px; gap:18px;">
+        <label class="mini"><b style="color:var(--rojo);">high</b> risk from
+          <input type="range" id="ns-alto" min="40" max="90" step="5" value="55" oninput="pintaNoshow()">
+          <b><span id="ns-alto-v">55</span></b></label>
+        <label class="mini"><b style="color:var(--amber);">medium</b> risk from
+          <input type="range" id="ns-medio" min="10" max="55" step="5" value="30" oninput="pintaNoshow()">
+          <b><span id="ns-medio-v">30</span></b></label>
+      </div>
+      <div style="overflow-x:auto; margin-top:12px;">
+        <table id="tabla-riesgo"><tr><th>Booking</th><th>No-show risk</th></tr></table>
+      </div>
+    </details>
   </div>
 </section>
 
@@ -1601,7 +1581,8 @@
     <div class="kpi"><span class="v">114</span><span class="l">people this month (7 departures)</span></div>
     <div class="kpi"><span class="v">65 %</span><span class="l">average occupancy (on 25 places)</span></div>
     <div class="kpi"><span class="v" data-dinero="11.60" data-dec="2">£11.60</span><span class="l">average tip per person</span></div>
-    <div class="kpi"><span class="v">17 %</span><span class="l">actual no-show rate (38 % before the system)</span></div>
+    <!-- Aquí había «17 % actual no-show rate (38 % before the system)»: cifras inventadas,
+         sin medición detrás (informe 2026-11-14-no-shows-en-la-demo). -->
     <div class="kpi"><span class="v">4.9 ⭐</span><span class="l">average rating · 32 new reviews</span></div>
   </div>
 
@@ -6340,7 +6321,6 @@ cerebro:   { n:'GuIA’s brain', plan:'Pro', d:'The per-tour fact sheet that fee
   liquidacion:{ n:'Guide payouts', plan:'todos', d:'Every tour’s books balanced: split by percentage or flat fee, channel cost, CSV and print. The guide never pays.' },
   /* Claves de gating INLINE (sin vista propia ni enlace de nav): las usa pintaGatesInline()
      para difuminar bloques dentro de vistas accesibles en todos los planes. */
-  noshowSmart:{ n:'Smart no-show reminders', plan:'Pro', d:'The reminder sequence adapts to how risky each booking looks: more nudges where the no-show risk is highest, without pestering anyone who already confirmed.' },
   conciliacion:{ n:'Platform reconciliation', plan:'todos', d:'The list of no-shows to report inside each platform’s deadline, built for you from the guide’s own head count, so you claw the fees back.' },
 };
 /* Planes de la demo (precios congruentes con la landing) y qué desbloquea cada uno. */
@@ -6657,31 +6637,11 @@ function publicaWeb(){
 /* ---- gating inline: vistas accesibles en todo plan con bloques Pro difuminados ----
    (el DOM no se elimina, solo se difumina: pintaNoshow()/pintaCanales() siguen igual) */
 function pintaGatesInline(){
-  var bNs=bloqueado('noshowSmart');
-  var g1=document.getElementById('gate-noshow'); if (g1) g1.style.display=bNs?'':'none';
-  var ba=document.getElementById('ns-basico-activo'); if (ba) ba.style.display=bNs?'':'none';
-  ['ns-smart','ns-params','ns-tabla-card'].forEach(function(id){
-    var e=document.getElementById(id); if (e) e.classList.toggle('bloq-inline', bNs); });
+  /* La cadencia según riesgo ya no se bloquea (14-nov-2026): en el servidor los mensajes
+     no miran el plan, así que la demo tampoco. docs/evaluaciones/2026-11-14-no-shows-en-la-demo. */
   var bRe=bloqueado('conciliacion');
   var g2=document.getElementById('gate-recon'); if (g2) g2.style.display=bRe?'':'none';
   var rb=document.getElementById('recon-body'); if (rb) rb.classList.toggle('bloq-inline', bRe);
-}
-/* Tope de WhatsApp del plan Esencial (100 mensajes/mes); en Pro/Premium no hay tope. */
-var WA_USADOS=87, WA_TOPE=100;
-function pintaWaTope(){
-  var e=document.getElementById('wa-tope'); if (!e) return;
-  if (S.plan==='esencial'){
-    var pct=Math.round(WA_USADOS/WA_TOPE*100);
-    e.innerHTML='<div style="border-top:1px dashed var(--line); padding-top:10px; margin-top:10px;">'+
-      '<div class="fila mini" style="justify-content:space-between; gap:8px;"><b>'+WA_USADOS+' / '+WA_TOPE+' messages this month</b><span class="chip gris">Essential cap</span></div>'+
-      '<div class="wa-barra"><i style="width:'+pct+'%; background:'+(pct>80?'var(--gold)':'var(--acc)')+';"></i></div>'+
-      (pct>80 ? '<p class="mini" style="color:var(--amber); margin:2px 0 8px;">Only '+(WA_TOPE-WA_USADOS)+' left this month — on <b>Pro</b> there is no cap.</p>'+
-        '<button class="btn mini" onclick="cambiarPlan(\'pro\')">Upgrade to Pro</button>' : '')+
-      '</div>';
-  } else {
-    e.innerHTML='<div style="border-top:1px dashed var(--line); padding-top:10px; margin-top:10px;" class="mini muted">'+
-      '<b style="color:var(--ink2);">'+WA_USADOS+' messages this month</b> · no cap on your plan</div>';
-  }
 }
 /* El bloque de «propina digital» del guía —activar cuenta, identidad + IBAN, cobrar con
    tarjeta— se retiró el 13-ago-2026 con la cancelación definitiva del cobro digital de
@@ -6718,7 +6678,7 @@ function desbloquear(v){ S.desbloqueado[v]=true; pintaCandados();
   ir(document.getElementById('v-'+v) ? v : ((location.hash.slice(1))||'operaciones'));   // las claves inline no tienen vista propia: repinta la actual
   toast('🔓 “'+SUPLEMENTOS[v].n+'” unlocked so you can try it in the demo'); }
 /* Solo se ofrecen los planes que existen en la aplicación. */
-function cambiarPlan(p){ S.plan=p; pintaPlanSel(); pintaComplementos(); pintaCandados(); pintaWaTope();
+function cambiarPlan(p){ S.plan=p; pintaPlanSel(); pintaComplementos(); pintaCandados();
   ir((location.hash.slice(1))||'operaciones');   // re-evalúa el bloqueo de la vista actual
   toast('Plan '+PLANES[p].n+' active — the modules it includes are unlocked'); }
 var TXT_MENU = 'Menu', TXT_CERRAR = 'Close';
@@ -8708,20 +8668,25 @@ function rellenarConIA(valores, texto, alReg){
 }
 
 /* ============ anti no-show (parámetros configurables por empresa) ============ */
+/* Same factors and factory weights as the panel (`app/servidor/mensajes.js`,
+   RIESGO_DEFECTO): base 30, platform +20, own site −15, group of 5 or more +10, booked
+   more than 14 days ahead +15, confirmed −40; high from 55, medium from 30.
+   Until 14-nov-2026 the demo had another model, with two factors the product does not
+   and cannot have: «no reply to the reminders» (Audutor does not see replies: they reach
+   the operator's own WhatsApp) and «no-showed before» (there is no per-traveller history). */
 var FACTORES_NS=[
-  { k:'plataforma', l:'Platform channel (vs your own site)',  corto:'external channel',     max:40, def:25 },
-  { k:'grande',     l:'Large group (5 or more)',              corto:'large group',          max:30, def:15 },
-  { k:'antelacion', l:'Booked more than 7 days ahead',           corto:'booked more than 7 days ago', max:30, def:15 },
-  { k:'silencio',   l:'No reply to the reminders',            corto:'no reply',             max:30, def:20 },
-  { k:'historial',  l:'No-showed before, more than once',                   corto:'no-showed once before',     max:40, def:25 },
-  { k:'confirmo',   l:'Replied “coming” (lowers the risk)',    corto:'already confirmed ✓',        max:40, def:30, resta:true },
+  { k:'plataforma', l:'Platform booking',                      corto:'external channel',     max:40, def:20 },
+  { k:'web',        l:'Booked on your site (lowers the risk)', corto:'own site',             max:30, def:15, resta:true },
+  { k:'grande',     l:'Large group (5 or more)',               corto:'large group',          max:30, def:10 },
+  { k:'antelacion', l:'Booked more than 14 days ahead',        corto:'booked more than 14 days ago', max:30, def:15 },
+  { k:'confirmo',   l:'Marked as confirmed (lowers the risk)', corto:'confirmed ✓',          max:60, def:40, resta:true },
 ];
 var RESERVAS_NS = [
   { n:"Sophie Maclean · 6p", canal:"GuruWalk",   f:{plataforma:1, grande:1, antelacion:1} },
-  { n:"Mark Maclean · 5p", canal:"GuruWalk",   f:{plataforma:1, grande:1, silencio:1} },
-  { n:"Julia Keller · 2p", canal:"Own site", f:{confirmo:1} },
+  { n:"Mark Maclean · 5p", canal:"GuruWalk",   f:{plataforma:1, grande:1} },
+  { n:"Julia Keller · 2p", canal:"Own site", f:{web:1, confirmo:1} },
   { n:"Dubois family · 4p", canal:"Viator", f:{plataforma:1} },
-  { n:"Iker Ortiz · 2p",   canal:"Own site", f:{silencio:1, historial:1} },
+  { n:"Iker Ortiz · 2p",   canal:"Own site", f:{web:1} },
 ];
 function pintaNoshowCfg(){
   var c=document.getElementById('ns-cfg');
@@ -8731,48 +8696,46 @@ function pintaNoshowCfg(){
   }).join('');
 }
 function riesgoDe(r){
-  var v=10;
+  var v=30;
   FACTORES_NS.forEach(function(x){
     if (r.f[x.k]) v += (+document.getElementById('ns-'+x.k).value) * (x.resta?-1:1);
   });
-  return Math.max(2, Math.min(95, v));
+  return Math.max(0, Math.min(100, v));
 }
 function razonesDe(r){
   return FACTORES_NS.filter(function(x){ return r.f[x.k] })
     .map(function(x){ return x.corto }).join(' + ') || 'no signals';
 }
-function cadencia(r, inteligente){
-  if (!inteligente) return 'T-24h wa';
-  var alto=+document.getElementById('ns-alto').value, medio=+document.getElementById('ns-medio').value;
+/* La cadencia de fábrica del panel (mensajes.js): la confirmación, 20 h antes, a quien no ha
+   confirmado; el recordatorio, 3 h antes, a quien sí. A las 10:00, 3 h antes son las 7:00,
+   dentro de las horas de silencio: se propone para las 8:00. Hasta el 14-nov-2026 dependía de
+   un «Smart mode» por riesgo, con avisos a 72 h y a 45 min que el producto no tiene. */
+function cadencia(r){
   var ca=canalAviso();
-  if (r>=alto)  return 'T-72h '+ca+' · T-24h '+ca+' · T-3h '+ca+' ⏰→8:00 AM · T-45min map 📍';
-  if (r>=medio) return 'T-24h '+ca+' · T-3h '+ca+' ⏰→8:00 AM';
-  return 'T-24h '+ca+' (and a thank-you)';
+  if (r.f.confirmo) return 'T-3h '+ca+' reminder ⏰→8:00 AM';
+  return 'T-20h '+ca+' confirmation · T-3h '+ca+' reminder if they confirm ⏰→8:00 AM';
 }
 function pintaNoshow(){
-  var inteligente=document.getElementById('sw-int').checked;
   var alto=+document.getElementById('ns-alto').value, medio=+document.getElementById('ns-medio').value;
   FACTORES_NS.forEach(function(x){
     document.getElementById('ns-'+x.k+'-v').textContent=document.getElementById('ns-'+x.k).value; });
   document.getElementById('ns-alto-v').textContent=alto;
   document.getElementById('ns-medio-v').textContent=medio;
-  var tb=document.getElementById('tabla-noshow'); var suma=0;
-  tb.querySelectorAll('tr:not(:first-child)').forEach(function(r){r.remove()});
+  var tb=document.getElementById('tabla-noshow'), tr2=document.getElementById('tabla-riesgo');
+  [tb,tr2].forEach(function(t){ t.querySelectorAll('tr:not(:first-child)').forEach(function(r){r.remove()}); });
   RESERVAS_NS.forEach(function(r){
-    var riesgo=riesgoDe(r); suma+=riesgo;
-    var nivel=riesgo>=alto?'alto':(riesgo>=medio?'medio':'');
     var tr=document.createElement('tr');
-    tr.innerHTML='<td><b>'+r.n+'</b><br><span class="mini muted">'+razonesDe(r)+'</span></td>'+
+    tr.innerHTML='<td><b>'+r.n+'</b><br><span class="mini muted">'+(r.f.confirmo?'confirmed ✓':'not confirmed')+'</span></td>'+
       '<td>'+r.canal+'</td>'+
-      '<td><span class="riesgo '+nivel+'"><span class="barra"><i style="width:'+riesgo+'%"></i></span>'+
-      '<span class="num">'+riesgo+'%</span></span></td>'+
-      '<td class="cadencia">'+cadencia(riesgo,inteligente)+'</td>';
+      '<td class="cadencia">'+cadencia(r)+'</td>';
     tb.appendChild(tr);
+    var riesgo=riesgoDe(r), nivel=riesgo>=alto?'alto':(riesgo>=medio?'medio':'');
+    var fr=document.createElement('tr');
+    fr.innerHTML='<td><b>'+r.n+'</b><br><span class="mini muted">'+razonesDe(r)+'</span></td>'+
+      '<td><span class="riesgo '+nivel+'"><span class="barra"><i style="width:'+riesgo+'%"></i></span>'+
+      '<span class="num">'+riesgo+'%</span></span></td>';
+    tr2.appendChild(fr);
   });
-  var media=suma/RESERVAS_NS.length;
-  var prev= inteligente ? Math.max(8, Math.min(30, Math.round(media*0.38))) : 26;
-  document.getElementById('kpi-prev').textContent = prev+' %';
-  document.getElementById('kpi-rec').textContent  = '+'+Math.round((38-prev)*1.6);
 }
 
 
@@ -9690,7 +9653,7 @@ seedDispo(); seedCobertura();
 pintaManifiesto(); pintaNoshowCfg(); pintaNoshow(); pintaLiq(); pintaCerebro(); pintaPost(); pintaEquipo(); pintaCanales(); pintaOperaciones();
 /* El cobro de propina se retiró en agosto. Su función ya no existe: llamarla aquí
    detenía el arranque inglés antes del coste y del primer mensaje de GuIA. */
-pintaGatesInline(); pintaWaTope(); pintaCanalChat(); pintaCoste();
+pintaGatesInline(); pintaCanalChat(); pintaCoste();
 msg('bot','Hi! 👋 I’m GuIA, the automated assistant answering this chat. Right now I answer about “'+tourChat().nombre+'” — try the examples, or create another tour under 🧠 Brain and you’ll see each one has its own brain, with nothing mixed in.');
 </script>
 <script>
