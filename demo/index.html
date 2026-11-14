@@ -8,7 +8,7 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='112' fill='%2314634c'/><path d='M92 322 C 168 268, 236 372, 306 300' fill='none' stroke='%23c98a2d' stroke-width='15' stroke-linecap='round' stroke-dasharray='1 34'/><g transform='translate(330 150)'><path d='M60 0C26.9 0 0 26.9 0 60c0 45 60 112 60 112s60-67 60-112C120 26.9 93.1 0 60 0z' fill='%23f4653a'/><circle cx='60' cy='58' r='23' fill='%23fffdf7'/></g><text x='92' y='252' font-family='Georgia,serif' font-size='118' font-weight='700' fill='%23fdf9ee'>Au</text></svg>">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Audutor · Demo interactiva</title>
-<meta name="description" content="Demo navegable de Audutor con datos ficticios: operaciones, manifiesto del guía, GuIA, importador con IA, anti no-show, catálogo de extras y combos, liquidación.">
+<meta name="description" content="Demo navegable de Audutor con datos ficticios: operaciones, manifiesto del guía, GuIA, importador con IA, anti no-show, liquidación.">
 <style>
   /* Las dos letras de Audutor, servidas desde aquí (24-sep-2026): con las del sistema la
      marca cambiaba de cara en Android y Windows. Solo el subconjunto latino (92 KB las dos),
@@ -31,54 +31,6 @@
      revisar lo que no puede leer — que es justo el gesto que esta pantalla existe para
      pedirle. Por debajo de 640 px la etiqueta pasa a su propia línea y el campo ocupa el
      ancho entero menos los botones. */
-  /* El configurador del tour de pago. Dos columnas en escritorio —eliges a la izquierda,
-     ves el número a la derecha— y apilado en el móvil. */
-  .tp-wrap{ display:grid; grid-template-columns:1fr 258px; gap:16px; align-items:start; }
-  .tp-g{ margin-bottom:14px; }
-  .tp-lab{ display:block; font-size:11.5px; font-weight:800; letter-spacing:.05em;
-    text-transform:uppercase; color:var(--muted); margin-bottom:7px; }
-  .tp-nums{ display:flex; gap:8px; flex-wrap:wrap; }
-  /* LAS TRES CASILLAS, A LA MISMA ALTURA. «Adultos» no llevaba la línea de la edad que sí
-     llevan «Jóvenes» y «Peques», así que su etiqueta medía una línea menos y su casilla
-     subía: tres cajas descuadradas en fila. Se arregla por los dos lados —abajo se le pone
-     su rango, y aquí la casilla se empuja al fondo de la columna— para que el día que una
-     etiqueta ocupe dos líneas siga cuadrando sin tocar nada. */
-  .tp-nums label{ flex:1; min-width:76px; font-size:11.5px; color:var(--ink2);
-    display:flex; flex-direction:column; }
-  .tp-nums small{ display:block; color:var(--muted); font-size:11.5px; }
-  .tp-nums input{ width:100%; margin-top:auto; padding:7px 8px; border:1.5px solid var(--line);
-    border-radius:9px; font:inherit; font-size:15px; font-weight:700; text-align:center;
-    background:var(--paper); color:var(--ink); box-sizing:border-box; }
-  .tp-nums label > *:not(input){ margin-bottom:3px; }
-  .tp-hint{ margin:7px 0 0; font-size:11.5px; line-height:1.45; color:var(--muted); }
-  .tp-pills{ display:flex; gap:8px; flex-wrap:wrap; }
-  .tp-pill{ flex:1; min-width:128px; cursor:pointer; position:relative; }
-  .tp-pill input{ position:absolute; opacity:0; pointer-events:none; }
-  .tp-pill > span{ display:block; padding:9px 11px; border:1.5px solid var(--line);
-    border-radius:11px; font-size:13px; background:var(--paper); }
-  .tp-pill > span small{ display:block; color:var(--muted); font-size:11.5px; font-weight:400; }
-  .tp-pill input:checked + span{ border-color:var(--acc); background:var(--acc-soft); }
-  .tp-check{ display:flex; gap:9px; align-items:flex-start; padding:8px 0; cursor:pointer;
-    font-size:13px; border-top:1px solid var(--line); }
-  .tp-check small{ display:block; color:var(--muted); font-size:11.5px; }
-  /* COLOR PROPIO Y NO HEREDADO. La caja heredaba un verde pálido de un ancestro y los
-     rótulos salían a 1,22:1 sobre su fondo — invisibles, medido. Una estimación de precio
-     que no se lee es peor que no ponerla: el cliente ve la cifra y no sabe de qué es. */
-  .tp-est{ background:var(--acc-soft); border:1.5px solid var(--acc); border-radius:13px;
-    padding:13px 14px; position:sticky; top:12px; color:var(--ink); }
-  .tp-l > span{ color:var(--ink2); }
-  .tp-est-t{ font-size:11.5px; font-weight:800; letter-spacing:.05em; text-transform:uppercase;
-    color:var(--acc2); margin-bottom:8px; }
-  .tp-l{ display:flex; justify-content:space-between; gap:10px; align-items:baseline;
-    font-size:13px; padding:5px 0; border-bottom:1px dashed rgba(18,128,95,.25); }
-  .tp-l small{ display:block; color:var(--muted); font-size:11.5px; }
-  .tp-l b{ font-variant-numeric:tabular-nums; white-space:nowrap; }
-  .tp-tot{ border-bottom:0; margin-top:4px; padding-top:9px; border-top:1.5px solid var(--acc); }
-  .tp-tot b{ font-family:var(--serif); font-size:27px; color:var(--acc2); }
-  .tp-nota{ margin:9px 0 0; font-size:11.5px; line-height:1.45; color:var(--ink2); }
-  .tp-cero{ margin-top:9px; padding-top:8px; border-top:1px dashed rgba(18,128,95,.25);
-    font-size:11.5px; color:var(--muted); }
-  @media (max-width:760px){ .tp-wrap{ grid-template-columns:1fr; } .tp-est{ position:static; } }
   .cb-fila{ display:grid; grid-template-columns:190px 1fr auto; gap:10px; padding:6px 0;
     border-bottom:1px dashed var(--line); align-items:center; }
   @media (max-width:640px){
@@ -739,7 +691,7 @@
   .seg-fila.pendiente .seg-chip{ background:#eef1ee; color:var(--muted); }
   .seg-cancel{ margin-top:12px; padding-top:10px; border-top:1px dashed var(--line); font-size:13px; }
 
-  /* carrito / combos */
+  /* vista previa de mensajes y controles de formulario */
   .mensaje-prev{ background:#f2f7f4; border:1px dashed var(--acc); border-radius:11px;
     padding:12px 15px; font-size:13px; white-space:pre-line; display:none; margin-top:10px; }
   select{ border:1.5px solid var(--line); border-radius:8px; padding:8px 10px; font-size:13px;
@@ -865,6 +817,9 @@
   .canal-sw button{ border:0; background:transparent; border-radius:99px; padding:6px 14px;
     font-size:13px; font-weight:700; cursor:pointer; color:var(--muted); font-family:inherit; }
   .canal-sw button.on{ background:var(--acc); color:#fff; }
+  /* La barra de las vistas que junta una entrada del menú (`VISTAS_JUNTAS`). */
+  .vista-opciones{ display:flex; flex-wrap:wrap; gap:8px; margin:0 0 14px; }
+  .vista-opciones > button[aria-current="page"]{ background:var(--acc); color:#fff; border-color:var(--acc); }
 
   /* chat: bandeja de preguntas derivadas a ti, arriba del todo */
   .der-chat{ background:var(--gold-soft); border:1px solid var(--gold); border-radius:14px;
@@ -1088,7 +1043,7 @@
 <body>
 <!-- Iconos de Lucide (https://lucide.dev), licencia ISC, © Lucide Icons and Contributors: los mismos
      trazos que el menú de la app (24-sep-2026), en vez de emoji que cambian con cada sistema. -->
-<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><symbol id="i-guia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c-2.2-2.8-7-5.2-7-10.6a7 7 0 0 1 14 0c0 5.4-4.8 7.8-7 10.6Z"/><path d="M9.4 10.6v.4"/><path d="M14.6 10.6v.4"/><path d="M9.3 13.8q2.7 2.1 5.4 0"/></symbol><symbol id="i-banknote" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></symbol><symbol id="i-bot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></symbol><symbol id="i-brain" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 18V5"/><path d="M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4"/><path d="M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5"/><path d="M17.997 5.125a4 4 0 0 1 2.526 5.77"/><path d="M18 18a4 4 0 0 0 2-7.464"/><path d="M19.967 17.483A4 4 0 1 1 12 18a4 4 0 1 1-7.967-.517"/><path d="M6 18a4 4 0 0 1-2-7.464"/><path d="M6.003 5.125a4 4 0 0 0-2.526 5.77"/></symbol><symbol id="i-briefcase" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/></symbol><symbol id="i-calendar-days" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v3"/><path d="M16 2v3"/><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M8 13h.01"/><path d="M12 13h.01"/><path d="M16 13h.01"/><path d="M8 17h.01"/><path d="M12 17h.01"/><path d="M16 17h.01"/></symbol><symbol id="i-chart-column" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></symbol><symbol id="i-clipboard-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></symbol><symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></symbol><symbol id="i-layout-dashboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></symbol><symbol id="i-megaphone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 6a13 13 0 0 0 8.4-2.8A1 1 0 0 1 21 4v12a1 1 0 0 1-1.6.8A13 13 0 0 0 11 14H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/><path d="M6 14a12 12 0 0 0 2.4 7.2 2 2 0 0 0 3.2-2.4A8 8 0 0 1 10 14"/><path d="M8 6v8"/></symbol><symbol id="i-message-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"/></symbol><symbol id="i-plug" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-5"/><path d="M15 8V2"/><path d="M17 8a1 1 0 0 1 1 1v4a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1z"/><path d="M9 8V2"/></symbol><symbol id="i-scale" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="m19 8 3 8a5 5 0 0 1-6 0zV7"/><path d="M3 7h1a17 17 0 0 0 8-2 17 17 0 0 0 8 2h1"/><path d="m5 8 3 8a5 5 0 0 1-6 0zV7"/><path d="M7 21h10"/></symbol><symbol id="i-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></symbol><symbol id="i-shopping-basket" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 11-1 9"/><path d="m19 11-4-7"/><path d="M2 11h20"/><path d="m3.5 11 1.6 7.4a2 2 0 0 0 2 1.6h9.8a2 2 0 0 0 2-1.6l1.7-7.4"/><path d="M4.5 15.5h15"/><path d="m5 11 4-7"/><path d="m9 11 1 9"/></symbol><symbol id="i-trending-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/></symbol><symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="9" cy="7" r="4"/></symbol></defs></svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><symbol id="i-guia" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c-2.2-2.8-7-5.2-7-10.6a7 7 0 0 1 14 0c0 5.4-4.8 7.8-7 10.6Z"/><path d="M9.4 10.6v.4"/><path d="M14.6 10.6v.4"/><path d="M9.3 13.8q2.7 2.1 5.4 0"/></symbol><symbol id="i-briefcase" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/></symbol><symbol id="i-calendar-days" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v3"/><path d="M16 2v3"/><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M8 13h.01"/><path d="M12 13h.01"/><path d="M16 13h.01"/><path d="M8 17h.01"/><path d="M12 17h.01"/><path d="M16 17h.01"/></symbol><symbol id="i-clipboard-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></symbol><symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></symbol><symbol id="i-layout-dashboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></symbol><symbol id="i-megaphone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 6a13 13 0 0 0 8.4-2.8A1 1 0 0 1 21 4v12a1 1 0 0 1-1.6.8A13 13 0 0 0 11 14H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/><path d="M6 14a12 12 0 0 0 2.4 7.2 2 2 0 0 0 3.2-2.4A8 8 0 0 1 10 14"/><path d="M8 6v8"/></symbol><symbol id="i-plug" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-5"/><path d="M15 8V2"/><path d="M17 8a1 1 0 0 1 1 1v4a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1z"/><path d="M9 8V2"/></symbol><symbol id="i-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></symbol><symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="9" cy="7" r="4"/></symbol></defs></svg>
 
 <!-- Mascota GuIA (pin de mapa sonriente con paraguas de free tour) — misma que la landing, inline y reutilizable -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -1145,31 +1100,16 @@
         <a href="#equipo" data-v="equipo"><svg class="ico t-azul" aria-hidden="true" focusable="false"><use href="#i-users"/></svg><span class="demo-nav-texto"> Equipo y disponibilidad</span></a>
       </div>
     </div>
-    <div class="nav-g" id="ng-guia">
-      <button class="nav-g-cab" aria-expanded="false" aria-controls="ng-guia-funciones" onclick="this.parentElement.classList.toggle('abierto')"><svg class="ico t-teal" aria-hidden="true" focusable="false"><use href="#i-guia"/></svg><span class="demo-nav-texto"> GuIA, el asistente </span><span class="sup-chip">supl.</span><span class="flecha">▾</span></button>
-      <div class="nav-g-hijos" id="ng-guia-funciones">
-        <a href="#chat" data-v="chat"><svg class="ico t-teal" aria-hidden="true" focusable="false"><use href="#i-message-circle"/></svg><span class="demo-nav-texto"> Probar GuIA </span><span class="cand">🔒</span></a>
-        <a href="#cerebro" data-v="cerebro"><svg class="ico t-rosa" aria-hidden="true" focusable="false"><use href="#i-brain"/></svg><span class="demo-nav-texto"> Cerebro de GuIA </span><span class="cand">🔒</span><span class="n" id="n-der" style="display:none;">0</span></a>
-      </div>
-    </div>
+    <a href="#cerebro" data-v="cerebro" data-vistas="cerebro chat"><svg class="ico t-teal" aria-hidden="true" focusable="false"><use href="#i-guia"/></svg><span class="demo-nav-texto"> GuIA, el asistente </span><span class="sup-chip">supl.</span><span class="cand">🔒</span><span class="n" id="n-der" style="display:none;">0</span></a>
     <div class="nav-g" id="ng-ventas">
       <button class="nav-g-cab" aria-expanded="false" aria-controls="ng-ventas-funciones" onclick="this.parentElement.classList.toggle('abierto')"><svg class="ico t-coral" aria-hidden="true" focusable="false"><use href="#i-megaphone"/></svg><span class="demo-nav-texto"> Reservas y ventas </span><span class="flecha">▾</span></button>
       <div class="nav-g-hijos" id="ng-ventas-funciones">
         <a href="#web" data-v="web"><svg class="ico t-azul" aria-hidden="true" focusable="false"><use href="#i-globe"/></svg><span class="demo-nav-texto"> Tu web </span><span class="cand">🔒</span></a>
         <a href="#canales" data-v="canales"><svg class="ico t-lila" aria-hidden="true" focusable="false"><use href="#i-plug"/></svg><span class="demo-nav-texto"> Canales y sincronización</span></a>
         <a href="#noshow" data-v="noshow"><svg class="ico t-coral" aria-hidden="true" focusable="false"><use href="#i-send"/></svg><span class="demo-nav-texto"> Anti no-show</span></a>
-        <a href="#carrito" data-v="carrito"><svg class="ico t-oro" aria-hidden="true" focusable="false"><use href="#i-shopping-basket"/></svg><span class="demo-nav-texto"> Lo que vendes además </span><span class="cand">🔒</span></a>
       </div>
     </div>
-    <div class="nav-g" id="nav-eco">
-      <button class="nav-g-cab" aria-expanded="false" aria-controls="nav-eco-funciones" onclick="this.parentElement.classList.toggle('abierto')"><svg class="ico t-oro" aria-hidden="true" focusable="false"><use href="#i-briefcase"/></svg><span class="demo-nav-texto"> Gestión económica </span><span class="flecha">▾</span></button>
-      <div class="nav-g-hijos" id="nav-eco-funciones">
-        <a href="#ahorro" data-v="ahorro"><svg class="ico t-azul" aria-hidden="true" focusable="false"><use href="#i-scale"/></svg><span class="demo-nav-texto"> Conciliación y ahorro</span></a>
-        <a href="#cuadro" data-v="cuadro"><svg class="ico t-verde" aria-hidden="true" focusable="false"><use href="#i-trending-up"/></svg><span class="demo-nav-texto"> Cuadro de mando </span><span class="cand">🔒</span></a>
-        <a href="#liquidacion" data-v="liquidacion"><svg class="ico t-verde" aria-hidden="true" focusable="false"><use href="#i-banknote"/></svg><span class="demo-nav-texto"> Liquidación a guías </span><span class="cand">🔒</span></a>
-        <a href="#proyeccion" data-v="proyeccion"><svg class="ico t-lila" aria-hidden="true" focusable="false"><use href="#i-chart-column"/></svg><span class="demo-nav-texto"> Proyección de ingresos </span><span class="cand">🔒</span></a>
-      </div>
-    </div>
+    <a href="#liquidacion" data-v="liquidacion" data-vistas="liquidacion ahorro cuadro"><svg class="ico t-oro" aria-hidden="true" focusable="false"><use href="#i-briefcase"/></svg><span class="demo-nav-texto"> Cuentas </span><span class="cand">🔒</span></a>
   </nav>
   <div class="pie-demo">
     <details class="demo-ajustes"><summary>Plan y mercado</summary>
@@ -1590,126 +1530,6 @@
   </div>
 </section>
 
-<!-- ================= CARRITO Y COMBOS ================= -->
-<section class="vista" id="v-carrito">
-  <div class="cab"><h1>Lo que vendes además del tour</h1><span class="sub">tu catálogo, en tu web y en la boca de GuIA</span></div>
-
-  <!-- AQUÍ HABÍA UN CARRITO ABANDONADO, con su tabla de gente que «dejó a medias» una
-       reserva y su botón de «recuperar ahora». Retirado el 11-ago-2026, y no por estar sin
-       construir: es IMPOSIBLE. Audutor no cobra reservas —decisión del 4-ago—, así que no
-       hay ninguna cesta que abandonar ni que recuperar. La reserva se hace en la web del
-       operador o en la plataforma, y ahí no llegamos.
-       Lo que sí existe es esto: el catálogo de extras, que sale en su web y que GuIA
-       cuenta cuando preguntan; y el mensaje de después del tour, que sí tiene despachador. -->
-  <div class="card">
-    <h2>🧺 Tu catálogo de extras</h2>
-    <p class="mini muted" style="margin:0 0 10px;">Tours de pago, privados, degustaciones.
-      Lo escribes una vez en el Cerebro y ya <b>sale en tu web</b> y <b>lo cuenta GuIA</b>.</p>
-    <!-- ESTE CHAT NO ES UNA MAQUETA: lo escribe GuIA. Aquí había una conversación
-         inventada donde ofrecía el «Tour de la Catedral al atardecer» (24 €) y un
-         «gastronómico por Triana» (35 €) — dos tours que esta empresa no hace. La pantalla
-         que vende «GuIA lo cuenta cuando alguien pregunta» lo demostraba con tours falsos,
-         y la GuIA de la demo, tres pantallas más allá, derivaba la pregunta a una persona.
-         Ahora la pregunta se le hace al motor de verdad y se enseña lo que contesta: si el
-         Cerebro cambia, este cuadro cambia, y si GuIA dejara de saber contestarla se vería
-         aquí en vez de en una demo delante de un cliente. -->
-    <div class="mensaje-prev" id="extras-chat" style="display:block;"></div>
-  </div>
-
-  <!-- ══ EL TOUR DE PAGO, MODULABLE ═══════════════════════════════════════════════════
-       Portado del configurador de privados de Madrid Latido, que lleva meses en su web.
-       Lo que se trae no es el formulario: es que un tour de pago NO tiene un precio, tiene
-       una BASE y unas opciones —duración, extras, entradas— y el viajero quiere ver cómo
-       se mueve el número mientras elige.
-       Dos decisiones suyas que también se portan, y no son de gusto:
-        · Las plazas incluidas se llenan con los que MÁS pagarían (adultos primero), así
-          quien se sale del cupo y paga suplemento es el más barato. Al revés, el mismo
-          grupo salía más caro por el mismo servicio.
-        · El cálculo va en CÉNTIMOS. Con euros en coma flotante, 13,50 € × 3 se desvía un
-          céntimo: le enseñarías un número al cliente y guardarías otro.
-       Y la regla de la casa: la estimación es orientativa y quien cierra el precio es una
-       PERSONA. Audutor no cobra este tour — lleva a donde el operador ya cobra. -->
-  <div class="card">
-    <!-- DICE QUÉ TOUR CONFIGURA, que antes no. Un rótulo genérico se leía como el
-         Alcázar al atardecer, que se vende por persona a 24 € con la entrada dentro; esto
-         es el PRIVADO a medida, que se cobra por grupo. Dos modelos de precio distintos
-         bajo el mismo rótulo hacían que el número de aquí pareciera desmentir al de allí. -->
-    <h2>🎟️ Tu tour privado, modulable</h2>
-    <p class="mini muted" style="margin:0 0 12px;"><b>Este configurador solo se simula en la demo.</b>
-      La web entregada muestra el catálogo y los datos de tours privados confirmados en el Cerebro;
-      no incluye este selector interactivo de presupuesto.</p>
-
-    <div class="tp-wrap">
-      <div class="tp-form">
-        <div class="tp-g"><span class="tp-lab">Cuántos sois</span>
-          <div class="tp-nums">
-            <label>Adultos<small>18+</small><input type="number" id="tp-ad" min="0" max="30" value="4"></label>
-            <label>Jóvenes<small>12-17</small><input type="number" id="tp-jo" min="0" max="30" value="1"></label>
-            <label>Peques<small>-12</small><input type="number" id="tp-pe" min="0" max="30" value="1"></label>
-          </div>
-          <p class="tp-hint">Hasta <b>6</b> personas el guía cuesta lo mismo. <span id="tp-h-pax">A partir de ahí:
-            +12 € por adulto, +8 € por joven; los peques no suman.</span></p>
-        </div>
-
-        <div class="tp-g"><span class="tp-lab">Duración</span>
-          <div class="tp-pills">
-            <label class="tp-pill"><input type="radio" name="tpdur" value="ese" checked>
-              <span><b>Esencial</b><small>2 h · incluido</small></span></label>
-            <label class="tp-pill"><input type="radio" name="tpdur" value="pro">
-              <span><b>Ampliado ✦</b><small id="tp-h-pro">3 h · +40 €</small></span></label>
-          </div>
-        </div>
-
-        <div class="tp-g"><span class="tp-lab">Extras</span>
-          <label class="tp-check"><input type="checkbox" id="tp-radio">
-            <span>Radioguía <small id="tp-h-radio">+3 € por persona (adultos y jóvenes)</small></span></label>
-          <label class="tp-check"><input type="checkbox" class="tp-ent" id="tp-e1" data-ad="13.5" data-jo="6" data-pe="0">
-            <span>Entrada al Alcázar <small id="tp-h-e1">13,50 € adulto · 6 € joven · peques gratis</small></span></label>
-          <label class="tp-check"><input type="checkbox" class="tp-ent" id="tp-e2" data-ad="9" data-jo="9" data-pe="0">
-            <span>Cata de vinos al final <small id="tp-h-e2">9 € por persona (solo mayores de 12)</small></span></label>
-        </div>
-      </div>
-
-      <aside class="tp-est">
-        <div class="tp-est-t">Estimación</div>
-        <div class="tp-l"><span>Guía <small id="tp-d-guia"></small></span><b id="tp-guia">—</b></div>
-        <div class="tp-l" id="tp-l-radio" hidden><span>Radioguía <small id="tp-d-radio"></small></span><b id="tp-radio-e">0 €</b></div>
-        <div class="tp-l" id="tp-l-ent" hidden><span>Entradas <small id="tp-d-ent"></small></span><b id="tp-ent">0 €</b></div>
-        <div class="tp-l" id="tp-l-ges" hidden><span>Gestión <small>5 % de las entradas</small></span><b id="tp-ges">0 €</b></div>
-        <div class="tp-l tp-tot"><span>Total</span><b id="tp-total">—</b></div>
-        <p class="tp-nota">Orientativa: <b>el precio lo cierra una persona</b> al responder.</p>
-        <div class="tp-cero">Audutor no cobra este tour: lleva a donde tú ya cobras.</div>
-      </aside>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>🔗 Combos: la segunda venta en la misma estancia</h2>
-    <p class="mini muted" style="margin:0 0 10px;">Quien hace el free tour hoy es tu mejor cliente para
-      el tour de pago de esta semana — sin coste de adquisición.</p>
-    <div style="background:var(--acc-soft); border-radius:10px; padding:10px 14px; font-size:13px; margin:0 0 12px;"
-         id="combo-destinatarios"></div>
-    <p class="mini muted" style="margin:0 0 10px;">✍️ El texto del mensaje se escribe en
-      <a href="#cerebro" style="color:var(--acc2); font-weight:700;"
-         onclick="ir('cerebro'); setTimeout(function(){ document.getElementById('card-posttour').scrollIntoView({behavior:'smooth'}); },80); return false;">🧠
-        Cerebro → 📮 Mensaje post-tour</a>.</p>
-    <div class="fila">
-      <!-- LOS DOS DESPLEGABLES SALEN DEL CATÁLOGO. Estaban escritos a mano y ofrecían de
-           origen «Tour del Alcázar» —que es el tour de PAGO, o sea el destino— y de
-           destino dos tours inexistentes. Ahora: origen, los de propina (el free tour de
-           hoy es quien se lleva la segunda venta); destino, los que se cobran. -->
-      <select id="combo-a" aria-label="Primer tour del combinado"></select>
-      <span>→ ofrece →</span>
-      <select id="combo-b" aria-label="Segundo tour del combinado"></select>
-      <label class="mini">descuento <input type="range" id="combo-dto" min="0" max="30" step="5" value="15"> <b><span id="combo-dto-v">15</span> %</b></label>
-      <button class="btn mini" onclick="verMsj('msj-combo')">Vista previa</button>
-    </div>
-    <!-- El mensaje nombraba un tour que no existe y su cuenta («15 % → 20,40 € en vez de
-         24») estaba escrita a mano: mover el deslizador cambiaba el porcentaje de arriba y
-         dejaba el importe de abajo quieto. Se pinta con el tour y el descuento elegidos. -->
-    <div class="mensaje-prev" id="msj-combo"></div>
-  </div>
-</section>
 
 <!-- ================= CANALES Y SINCRONIZACIÓN ================= -->
 <section class="vista" id="v-canales">
@@ -1753,134 +1573,6 @@
   </div>
 </section>
 
-<!-- EL AGENTE, EN SU PROPIA VISTA.
-     Estaba dentro de «Canales y sincronización», la cuarta tarjeta de cinco, y con todo
-     su cuerpo plegado detrás de un interruptor apagado: había que saber que existía para
-     encontrarlo. Y es la pieza de la que más hay que enterarse — un programa que entra en
-     el panel de tus plataformas con tu sesión no puede estar escondido, ni para
-     encenderlo ni, sobre todo, para darte cuenta de que está encendido.
-     En la app tiene panel propio desde el 3-ago; aquí es el mismo sitio. -->
-<section class="vista" id="v-agente"><p class="mini">Vista previa con datos simulados. El agente de plataformas está en preparación: no se puede contratar ni se suma al precio.</p>
-  <div class="cab"><span class="rotulo-vista">🤖 El agente de plataformas · complemento</span><h1>El agente que entra en tus paneles</h1><span class="sub">mira tus fichas, cuenta la gente que les consta y cierra lo lleno — y nada de lo que dice cuenta como hecho hasta que lo miras tú</span></div>
-  <!-- EL AGENTE EXTERNO. Va aquí, con los canales, porque es de lo que habla: entrar en
-       el panel de cada plataforma. Apagado por defecto y con su estado en la cabecera —
-       un interruptor que deja entrar a un proceso en el panel de tus plataformas no
-       puede estar escondido, ni para encenderlo ni para darte cuenta de que está
-       encendido. -->
-  <div class="card" id="card-agente">
-    <div class="fila" style="justify-content:space-between; align-items:flex-start;">
-      <h2 style="margin:0;">🤖 El agente que entra en tus paneles <span class="chip gris" id="ag-estado">apagado</span></h2>
-      <label class="interruptor" style="margin-left:auto;"><input type="checkbox" id="ag-sw" onchange="agToggle()"><span></span></label>
-    </div>
-    <p class="mini muted" style="margin:8px 0 0; max-width:70ch;">
-      Puedes tener un agente que entre en los paneles de tus plataformas. <b>Corre en tu
-      ordenador y con tu sesión</b>: Audutor no guarda ninguna contraseña de ninguna
-      plataforma. Cierra salidas llenas, sí — pero lo que más vale es que <b>MIRA</b>:
-      cuenta cuánta gente le consta a cada plataforma, y así te enteras de las reservas
-      que nunca llegaron a tu correo. Y aunque diga que ha cerrado, aquí sigue saliendo
-      como <b>no cerrada</b> hasta que lo compruebes tú.</p>
-    <!-- LOS CINCO VERBOS, VISIBLES CON EL AGENTE APAGADO. El modelo mental por defecto de
-         «agente» es «robot que hace cosas por mí», y el real es «ojos, y unas manos de las
-         que no te fías del todo». Si eso no se lee ANTES de encenderlo, el resto de la
-         pantalla —«dice que», «sin comprobar»— se lee como desconfianza rara en vez de
-         como el diseño. Y estaba todo detrás del interruptor. -->
-    <div id="ag-verbos" style="margin-top:12px; border-top:1px dashed var(--line); padding-top:12px;">
-      <div class="mini" style="font-weight:800; margin-bottom:6px;">Las cinco cosas que hace, y no valen lo mismo</div>
-      <p class="mini muted" style="margin:0 0 5px;"><b style="color:var(--ink);">Mirar la gente.</b>
-        Abre la ficha de tu salida en cada plataforma y dice cuánta gente les consta. No toca
-        nada, y es lo más útil: así te enteras de las reservas que no llegaron a tu correo.</p>
-      <p class="mini muted" style="margin:0 0 5px;"><b style="color:var(--ink);">Leer tu ficha.</b>
-        Se lee lo que tienes publicado y te lo trae, para proponértelo en el Cerebro. Ni
-        siquiera necesita entrar en tu cuenta.</p>
-      <p class="mini muted" style="margin:0 0 5px;"><b style="color:var(--ink);">Contar reseñas.</b>
-        Cuántas hay sin contestar. Contestarlas es cosa tuya: escribir en tu nombre no lo
-        hace un programa.</p>
-      <p class="mini muted" style="margin:0 0 5px;"><b style="color:var(--ink);">Cerrar.</b>
-        Lo intenta en los paneles que le marques, uno a uno. Y aunque diga que ha cerrado,
-        aquí sigue saliendo como no cerrada hasta que lo mires tú. Nunca pinta un ✓ verde.</p>
-      <p class="mini muted" style="margin:0 0 8px;"><b style="color:var(--ink);">Volver a abrir.</b>
-        Solo lo que cerró él, y solo cuando se lo pides tú. Él entra en el panel; el momento
-        lo eliges tú.</p>
-      <div style="border-left:2px dashed var(--line); padding-left:11px; margin-top:10px;">
-        <div class="mini" style="font-weight:800; letter-spacing:.06em;">QUÉ NO PUEDE HACER</div>
-        <p class="mini muted" style="margin:5px 0 0;">✕ Abrir plazas por su cuenta, ni añadir aforo.</p>
-        <p class="mini muted" style="margin:3px 0 0;">✕ Tener ninguna contraseña tuya: no te la pedimos y no la guardamos.</p>
-        <p class="mini muted" style="margin:3px 0 0;">✕ Saber quién viene. En cada encargo le decimos la plataforma, el panel y la hora. Ni nombres, ni localizadores.</p>
-        <p class="mini muted" style="margin:3px 0 0;">✕ Contestar una reseña ni escribir nada en tu nombre.</p>
-        <p class="mini muted" style="margin:3px 0 0;">✕ Entrar en un panel que no le hayas marcado, ni más veces al día de las que le digas.</p>
-      </div>
-    </div>
-    <div id="ag-cuerpo" style="display:none; margin-top:12px;">
-      <div style="border-top:1px dashed var(--line); padding-top:12px;">
-        <div class="mini" style="font-weight:800; margin-bottom:6px;">¿En qué paneles puede entrar?</div>
-        <div id="ag-plataformas" class="fila" style="gap:14px; flex-wrap:wrap;"></div>
-        <p class="mini muted" style="margin:8px 0 0;">Encenderlo no le da permiso sobre
-          todos: se elige panel a panel. Con ninguno elegido, no hace nada.</p>
-      </div>
-      <!-- LO QUE MÁS VALE, y lo único del agente que llega a la boca de GuIA.
-           Cuando a la plataforma le constan más personas que a nosotros sabemos dos cosas:
-           que nuestro recuento está corto y que no sabemos por cuánto. Justo en ese momento
-           GuIA estaba contestando «quedan plazas 🙂» con toda la seguridad del mundo.
-           Se enseña como se vive: se toca el botón y la respuesta del chat cambia. -->
-      <div style="border-top:1px dashed var(--line); margin-top:12px; padding-top:12px;">
-        <div class="mini" style="font-weight:800; margin-bottom:6px;">Lo que MIRA por ti</div>
-        <div id="ag-censo"></div>
-        <div class="fila" style="gap:8px; margin-top:9px; flex-wrap:wrap;">
-          <button class="btn mini sec" onclick="agCuenta(28)">Que cuente ahora (le constan 28)</button>
-          <button class="btn mini sec" onclick="agCuenta(0)">Quitar el descuadre</button>
-          <button class="btn mini sec" onclick="agLeeFicha()">Que lea tu ficha publicada</button>
-        </div>
-        <p class="mini muted" style="margin:8px 0 0;">
-          Mirar no toca nada, y es lo único que puede enterarse de las reservas que no
-          llegaron a tu buzón. Pruébalo y pregúntale a GuIA «¿quedan plazas?» en el chat:
-          <b>deja de dar la cifra</b>. Solo puede hacer que diga menos, nunca más.</p>
-      </div>
-      <!-- LO QUE ENCUENTRA MIRANDO. Cuatro cosas que solo se ven mirando varias veces, y
-           que ninguna se resuelve sola: las tres primeras son avisos y la cuarta es una
-           decisión comercial que NO puede tomar un programa. Volver a poner a la venta una
-           salida cerrada no es reversible —quien vio «completo» no vuelve—, así que el
-           agente propone y la persona decide. -->
-      <div style="border-top:1px dashed var(--line); margin-top:12px; padding-top:12px;">
-        <div class="mini" style="font-weight:800; margin-bottom:6px;">Lo que encuentra mirando</div>
-        <div id="ag-halla"></div>
-        <div class="fila" style="gap:8px; margin-top:9px; flex-wrap:wrap;">
-          <button class="btn mini sec" onclick="agPasada()">Que dé otra pasada</button>
-          <button class="btn mini sec" onclick="agReset()">Empezar de cero</button>
-        </div>
-      </div>
-      <div style="border-top:1px dashed var(--line); margin-top:12px; padding-top:12px;">
-        <div class="mini" style="font-weight:800; margin-bottom:6px;">Lo que ha hecho hoy</div>
-        <div id="ag-ordenes"></div>
-        <p class="mini muted" style="margin:8px 0 0;">
-          El agente <b>nunca</b> deja una salida en verde: como mucho llega a «dice que la
-          cerró». El ✓ lo pones tú al comprobarlo — y si después nos siguen llegando
-          reservas de esa plataforma, sale en rojo.</p>
-      </div>
-      <!-- EN QUÉ ORDEN, Y DÓNDE NO MANDAMOS NOSOTROS.
-           Cerrar no cuesta lo mismo en todas partes y no es opinión: GuruWalk escribe que
-           bloquear «no afecta negativamente a tu perfil ni a tus métricas», y Civitatis
-           elige proveedor principal con un scoring que incluye la DISPONIBILIDAD. De ahí el
-           orden de fábrica —gratis primero, caro después— que el operador puede rehacer
-           entero, porque el que sabe cuánto le trae cada canal es él.
-           La última columna es el hallazgo del 10-ago mirando a la competencia: Civitatis
-           está conectada a dieciséis sistemas de reservas, pero POR PULL. Si el canal ya lo
-           gobierna Bókun, cerrar en el panel dura hasta el siguiente pull — y entonces
-           nuestra propia verificación acusaría al agente de no haber cerrado, cada día. -->
-      <div style="border-top:1px dashed var(--line); margin-top:12px; padding-top:12px;">
-        <div class="mini" style="font-weight:800; margin-bottom:2px;">En qué orden cierra, y a partir de qué lleno</div>
-        <p class="mini muted" style="margin:0 0 9px;">Cerrar no cuesta lo mismo en cada sitio,
-          así que no da igual el orden. Viene puesto y lo puedes rehacer entero.</p>
-        <div id="ag-orden"></div>
-        <p class="mini muted" style="margin:9px 0 0;">
-          <b>La última columna es la importante.</b> Si un canal ya lo gobierna otro sistema
-          —Bókun, TuriTop, FareHarbor—, ahí no entramos a cerrar: cerraríamos en el panel y
-          su siguiente sincronización lo reabriría. <b>Ahí solo contamos</b>, que es
-          justamente lo que ese sistema no hace por ti.</p>
-      </div>
-    </div>
-  </div>
-
-</section>
 
 <section class="vista" id="v-ahorro">
   <div class="cab"><h1>Conciliación y ahorro</h1><span class="sub">los euros que recuperas de las plataformas — y los que dejas de pagarles</span></div>
@@ -1919,8 +1611,8 @@
   <div class="card" style="background:linear-gradient(115deg, var(--acc-soft), #f4f8f2); border-color:var(--acc);">
     <h2>💚 Tu canal directo — el ahorro que paga Audutor</h2>
     <p class="mini muted" style="margin:0 0 10px;">Cada persona que reserva en <b>tu web</b> en vez de en
-      una plataforma te ahorra su comisión (~<span data-dinero="2.5" data-dec="2">2,50 €</span>/persona en GuruWalk, dinámica por ciudad). Lo que
-      vendes además, los combos, las reseñas y el QR del guía empujan hacia aquí. Mueve el deslizador:</p>
+      una plataforma te ahorra su comisión (~<span data-dinero="2.5" data-dec="2">2,50 €</span>/persona en GuruWalk, dinámica por ciudad). Las
+      reseñas y el QR del guía empujan hacia aquí. Mueve el deslizador:</p>
     <div class="fila" style="gap:12px; align-items:center; flex-wrap:wrap;">
       <label class="mini" style="flex:1; min-width:260px;">Si desplazas un
         <b><span id="cd-pct-v">20</span> %</b> de tus reservas de plataforma al canal directo…<br>
@@ -2004,60 +1696,6 @@
   </div>
 </section>
 
-<!-- ================= PROYECCIÓN DE INGRESOS ================= -->
-<section class="vista" id="v-proyeccion">
-  <div class="cab"><h1>Proyección de ingresos</h1><span class="sub">tu plan de negocio en vivo — mueve un deslizador y mira</span></div>
-
-  <div class="card">
-    <div class="mini muted" style="margin:0 0 14px;">Cuánto gana <b>cada guía</b> y la <b>empresa</b>
-      al mes, con tus números. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Empieza con los datos de Patio y Compás — en una reunión se ponen los del
-      prospecto y su plan de negocio se hace solo, delante de él. Mismos modos de reparto y de coste
-      que la Liquidación: lo que proyectas aquí es lo que liquidas después.</span></details></div>
-    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(230px,1fr)); gap:10px 26px;">
-      <label class="mini">Personas por grupo <b><span id="py-grupo-v">20</span></b><br>
-        <input type="range" id="py-grupo" min="5" max="40" step="1" value="20" oninput="calcProy()" style="width:100%;"></label>
-      <label class="mini">Tours al día <b><span id="py-tours-v">3</span></b><br>
-        <input type="range" id="py-tours" min="1" max="20" step="1" value="3" oninput="calcProy()" style="width:100%;"></label>
-      <label class="mini">Propina media por persona <b><span id="py-prop-v">11,50</span> <span data-moneda>€</span></b><br>
-        <input type="range" id="py-prop" min="4" max="16" step="0.01" value="11.5" oninput="calcProy()" style="width:100%;"></label>
-      <label class="mini">Nº de guías <b><span id="py-ng-v">3</span></b><br>
-        <input type="range" id="py-ng" min="1" max="40" step="1" value="3" oninput="calcProy()" style="width:100%;"></label>
-      <label class="mini">Reservas de tu web (sin comisión) <b><span id="py-dir-v">40</span> %</b><br>
-        <!-- paso 1 y no 5: con paso 5 el deslizador no podía valer el 36 % que el reparto
-             por canal del Cuadro calcula, y arrancaba en 35 — un punto de diferencia entre
-             dos pantallas sobre el mismo dato, que es el descuadre de siempre en pequeño. -->
-        <input type="range" id="py-dir" min="0" max="100" step="1" value="40" oninput="calcProy()" style="width:100%;"></label>
-      <label class="mini">Comisión por reserva de plataforma <b><span id="py-com-v">2,50</span> <span data-moneda>€</span></b><br>
-        <input type="range" id="py-com" min="0" max="5" step="0.25" value="2.5" oninput="calcProy()" style="width:100%;"></label>
-      <label class="mini">Gastos fijos de la empresa al mes <b><span id="py-ovh-v">250</span> <span data-moneda>€</span></b><br>
-        <input type="range" id="py-ovh" min="0" max="8000" step="100" value="250" oninput="calcProy()" style="width:100%;"></label>
-      <label class="mini">Días de operación al mes <b><span id="py-dias-v">26</span></b><br>
-        <input type="range" id="py-dias" min="12" max="31" step="1" value="26" oninput="calcProy()" style="width:100%;"></label>
-    </div>
-    <div class="fila" style="margin-top:14px; gap:8px;">
-      <b class="mini">Modo de reparto:</b>
-      <button class="btn mini sec" id="py-tab-pct" onclick="proyModo('pct')">% de la propina para el guía</button>
-      <button class="btn mini" id="py-tab-fijo" onclick="proyModo('fijo')"><span data-moneda>€</span> fijos por persona para la empresa</button>
-      <label class="mini" id="py-ctl-pct" style="display:none;">el guía se queda
-        <input type="range" id="py-rep" min="50" max="80" step="1" value="67" oninput="calcProy()">
-        <b><span id="py-rep-v">67</span> %</b></label>
-      <label class="mini" id="py-ctl-fijo">la empresa se queda
-        <input type="range" id="py-fijo" min="1" max="10" step="0.5" value="4" oninput="calcProy()">
-        <b><span id="py-fijo-v">4,00</span> <span data-moneda>€</span></b> × persona</label>
-    </div>
-    <div class="fila" style="margin-top:10px; gap:8px;">
-      <b class="mini">Comisión de plataforma:</b>
-      <button class="btn mini" id="py-tab-cemp" onclick="proyCoste('empresa')">La asume la empresa</button>
-      <button class="btn mini sec" id="py-tab-cing" onclick="proyCoste('ingreso')">Se descuenta del total antes del reparto</button>
-    </div>
-  </div>
-
-  <div class="kpi-fila" id="py-kpis" style="margin:14px 0;"></div>
-
-  <div class="card">
-    <p class="mini muted" id="py-nota" style="margin:0;"></p>
-  </div>
-</section>
 
 <!-- ================= CUADRO DE MANDO (analítica) ================= -->
 <section class="vista" id="v-cuadro">
@@ -2081,12 +1719,9 @@
          el resto del arreglo del 17-ago, que cambió la fila de KPI y se dejó esta tarjeta.
          Y no era solo que las cifras fueran viejas: se dejaba fuera DOS CANALES ENTEROS
          —Freetour y los walk-in—, así que los porcentajes eran de una operación que no
-         existe. Justo en la tarjeta que invita a abrir la Proyección para mover el % de
-         web propia: el número del que se tira estaba mal. -->
+         existe. -->
     <div id="cm-canales"></div>
-    <p class="mini muted" style="margin:8px 0 0;">Cada punto que sube la web propia es comisión que no
-      se va: pruébalo en la <a href="#proyeccion" style="color:var(--acc2); font-weight:700;"
-      onclick="ir('proyeccion'); return false;">Proyección de ingresos</a>.</p>
+    <p class="mini muted" style="margin:8px 0 0;">Cada punto que sube la web propia es comisión que no se va.</p>
   </div>
 
   <div class="card">
@@ -2215,18 +1850,6 @@
     <p class="mini muted" style="margin:10px 0 0;">«Check-in por el guía»: permiso por persona — si lo
       activas, ese guía puede marcar llegadas desde su manifiesto; si no, solo el encargado. Los guías
       <b>nunca ven teléfonos de clientes</b>: GuIA hace de intermediario.</p>
-    <p class="mini muted" style="margin:8px 0 0;"><b>¿Ya tienes tu web?</b> No hace falta
-      cambiarla: Audutor <b>puede sincronizarse mediante su API</b>. La conexión se adapta a tu web y se comprueba antes de darla por operativa. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Va en las <b>dos direcciones</b>, y las dos
-      hacen falta. <b>Hacia aquí</b>: tu web pregunta qué salidas hay y cuántas plazas quedan
-      de verdad, y mete la reserva — si reintenta por un doble clic no se duplica, porque
-      casa por tu propia referencia. <b>Hacia allí</b>: tu web pregunta cada pocos minutos qué
-      ha cambiado, y se entera de que cancelaste el martes por lluvia, de que un walk-in se
-      llevó las últimas plazas o de que cancelaste una reserva desde aquí.<br><br>Sin la
-      vuelta, tu web vendería plazas que ya no existen y callaría cancelaciones que sí — peor
-      que no sincronizar nada, porque una web que dice la verdad a medias se usa igual y
-      falla en la plaza, delante del guía.<br><br>Se pregunta en vez de avisar a propósito:
-      no tienes que abrir ninguna puerta en tu servidor ni firmar nada, y si una vuelta falla
-      la siguiente la recoge.</span></details></p>
     <p class="mini muted" style="margin:8px 0 0;"><b>Si alguien pierde su correo</b>, le cambias
       el suyo desde su ficha y vuelve a entrar. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Todo el
       acceso cuelga del correo —el enlace de entrada, el código y la vuelta a la huella si se
@@ -2245,7 +1868,9 @@
       momento de oro es el final del tour: la gente acaba de pasarlo bien y pregunta «¿qué más hacéis?».
       El guía enseña su QR y esa recomendación aterriza en tu web, no en la plataforma. El QR lleva el
       código de ese guía, así la analítica te dice cuántas reservas trae cada uno.</span></details></div>
-    <div id="gp-lista" class="fila" style="gap:14px; align-items:stretch; flex-wrap:wrap;"></div>
+    <details class="mas" style="display:block;"><summary>Ver el QR de cada guía</summary>
+      <div id="gp-lista" class="fila" style="gap:14px; align-items:stretch; flex-wrap:wrap; margin-top:10px;"></div>
+    </details>
   </div>
 
   <div class="card">
@@ -2259,37 +1884,39 @@
     <section id="dp-equipo"></section>
     <div style="overflow-x:auto;"><div class="cal" id="eq-cal"></div></div>
     <div class="cal-leyenda" id="eq-cal-leyenda"></div>
-    <p class="mini muted" style="margin:8px 0 0;"><b>Y si no hay semana anterior que repetir</b>
-      —un guía nuevo, la temporada que arranca, un tour que estrenas— el panel te propone a
-      quién, y te dice por qué. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Propone por
-      <b>carga</b>: gana quien menos salidas lleve esa semana, que es el reparto que haces de
-      cabeza y el que más discute tu equipo. Lo dice con el número delante —«esta semana lleva
-      2, y ya lo llevó otra vez»— porque una sugerencia sin porqué es una orden con otro
-      nombre: no puedes estar en desacuerdo con algo que no sabes cómo se decidió. Te enseña
-      la lista entera antes de tocar nada, salta a quien dijo que no puede o se quedaría en
-      dos sitios a la vez, y nunca pisa lo que hayas puesto tú. <b>Aceptar es tuyo</b>: el
-      sistema propone, no reparte.</span></details></p>
-    <p class="mini muted" style="margin:8px 0 0;"><b>Esto se hace UNA vez.</b> El cuadrante
-      es un patrón semanal, no una lista de fechas: lo repartes y sigue igual la semana que
-      viene. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Y cuando cambie algo —una baja, una
-      temporada alta, un guía nuevo— tocas solo lo que cambia. En el panel de verdad hay
-      además un «↺ Repetir la semana pasada» que copia quién llevó cada tour el mismo día y
-      a la misma hora: te dice cuántas va a tocar antes de tocarlas, no pisa lo que hayas
-      puesto tú a mano, y se salta a quien dijo que no puede o se quedaría en dos sitios a
-      la vez.</span></details></p>
-    <p class="mini muted" style="margin:8px 0 0;"><b>En el panel real revisas todas las propuestas antes de guardar.</b>
-      Cada salida muestra el guía, el motivo, la duración y el idioma pendiente de comprobar, si falta ese dato.
-      Si cambia la propuesta mientras la revisas, se pide revisarla de nuevo. El margen entre salidas se configura
-      en Equipo y disponibilidad; el reparto respeta ese margen cuando conoce el final de la salida anterior.
-      Esta demo muestra un patrón semanal de ejemplo; no realiza el reparto real del panel.</p>
-    <p class="mini muted" style="margin:8px 0 0;"><b>Disponibilidad por horas en la app del guía.</b>
-      Puede indicar hasta seis franjas por día, no disponible o sin indicar. El panel comprueba si la salida completa
-      cabe en sus horas; si falta la duración, lo deja sin comprobar. Cambiar esas horas no retira salidas asignadas.
-      El encargado puede bloquear la disponibilidad hasta una fecha para toda la empresa. Un guía que no pueda cubrir
-      una salida asignada sigue pudiendo rechazarla con motivo; el encargado revisa el relevo. El reparto conserva el guía
-      histórico de las salidas cerradas. Puedes probar las franjas y la revisión en el patrón de abajo. El bloqueo por fecha se prueba en la app real.</p>
-    <p class="mini muted">Si un guía no puede cubrir una salida, explica el motivo en el formulario de la app. Se comprueban sus cambios pendientes antes de dejarla sin asignar. El encargado revisa el sustituto y este confirma que puede cubrirla. El motivo permanece en el formulario si falla el envío. Esta demo todavía no reproduce ese formulario.</p>
-    <details class="mas"><summary>Acceso del guía sin conexión</summary><span class="mas-p">En la app, el guía puede consultar el manifiesto del día descargado previamente y guardar acciones pendientes sin red. Si el servidor rechaza su sesión, la app retira esa copia y pide entrar de nuevo con conexión. Las acciones pendientes conservan su guía. Una retirada de acceso no llega a un móvil mientras siga completamente desconectado. Esta demo no simula sesiones ni almacenamiento sin conexión.</span></details>
+    <details class="mas" style="display:block; margin-top:10px;"><summary>ⓘ Cómo se reparte la semana</summary>
+      <p class="mini muted" style="margin:8px 0 0;"><b>Y si no hay semana anterior que repetir</b>
+        —un guía nuevo, la temporada que arranca, un tour que estrenas— el panel te propone a
+        quién, y te dice por qué. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Propone por
+        <b>carga</b>: gana quien menos salidas lleve esa semana, que es el reparto que haces de
+        cabeza y el que más discute tu equipo. Lo dice con el número delante —«esta semana lleva
+        2, y ya lo llevó otra vez»— porque una sugerencia sin porqué es una orden con otro
+        nombre: no puedes estar en desacuerdo con algo que no sabes cómo se decidió. Te enseña
+        la lista entera antes de tocar nada, salta a quien dijo que no puede o se quedaría en
+        dos sitios a la vez, y nunca pisa lo que hayas puesto tú. <b>Aceptar es tuyo</b>: el
+        sistema propone, no reparte.</span></details></p>
+      <p class="mini muted" style="margin:8px 0 0;"><b>Esto se hace UNA vez.</b> El cuadrante
+        es un patrón semanal, no una lista de fechas: lo repartes y sigue igual la semana que
+        viene. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">Y cuando cambie algo —una baja, una
+        temporada alta, un guía nuevo— tocas solo lo que cambia. En el panel de verdad hay
+        además un «↺ Repetir la semana pasada» que copia quién llevó cada tour el mismo día y
+        a la misma hora: te dice cuántas va a tocar antes de tocarlas, no pisa lo que hayas
+        puesto tú a mano, y se salta a quien dijo que no puede o se quedaría en dos sitios a
+        la vez.</span></details></p>
+      <p class="mini muted" style="margin:8px 0 0;"><b>En el panel real revisas todas las propuestas antes de guardar.</b>
+        Cada salida muestra el guía, el motivo, la duración y el idioma pendiente de comprobar, si falta ese dato.
+        Si cambia la propuesta mientras la revisas, se pide revisarla de nuevo. El margen entre salidas se configura
+        en Equipo y disponibilidad; el reparto respeta ese margen cuando conoce el final de la salida anterior.
+        Esta demo muestra un patrón semanal de ejemplo; no realiza el reparto real del panel.</p>
+      <p class="mini muted" style="margin:8px 0 0;"><b>Disponibilidad por horas en la app del guía.</b>
+        Puede indicar hasta seis franjas por día, no disponible o sin indicar. El panel comprueba si la salida completa
+        cabe en sus horas; si falta la duración, lo deja sin comprobar. Cambiar esas horas no retira salidas asignadas.
+        El encargado puede bloquear la disponibilidad hasta una fecha para toda la empresa. Un guía que no pueda cubrir
+        una salida asignada sigue pudiendo rechazarla con motivo; el encargado revisa el relevo. El reparto conserva el guía
+        histórico de las salidas cerradas. Puedes probar las franjas y la revisión en el patrón de abajo. El bloqueo por fecha se prueba en la app real.</p>
+      <p class="mini muted">Si un guía no puede cubrir una salida, explica el motivo en el formulario de la app. Se comprueban sus cambios pendientes antes de dejarla sin asignar. El encargado revisa el sustituto y este confirma que puede cubrirla. El motivo permanece en el formulario si falla el envío. Esta demo todavía no reproduce ese formulario.</p>
+      <details class="mas"><summary>Acceso del guía sin conexión</summary><span class="mas-p">En la app, el guía puede consultar el manifiesto del día descargado previamente y guardar acciones pendientes sin red. Si el servidor rechaza su sesión, la app retira esa copia y pide entrar de nuevo con conexión. Las acciones pendientes conservan su guía. Una retirada de acceso no llega a un móvil mientras siga completamente desconectado. Esta demo no simula sesiones ni almacenamiento sin conexión.</span></details>
+    </details>
     <div id="eq-cal-picker" style="display:none; margin-top:14px;"></div>
     <div class="fila" style="margin-top:14px; gap:8px;">
       <input id="eq-nf-tour" placeholder="Tour especial" style="border:1.5px solid var(--line); border-radius:8px; padding:7px 10px; font-size:13px; font-family:inherit;">
@@ -2341,22 +1968,10 @@
     <div class="notch"></div>
     <div class="pantalla" id="viajero-pantalla"></div>
   </div>
-  <!-- Contenido por defecto. `abrirGuidePage` lo sustituye al abrir, así que esto solo se
-       ve si alguien abre el velo por otra vía — razón de más para que diga la verdad. -->
-  <div class="vj-nota" id="vj-nota">
-    <h3>Así lo vive el viajero 📱</h3>
-    <ul>
-      <li>🎯 <b>El momento de oro es el final del tour.</b> El guía enseña su QR y la
-        recomendación aterriza en <b>tu web</b>, no en la plataforma.</li>
-      <li>🗓 <b>Los horarios y las plazas son los de verdad</b>: salen de tu cuadrante y de
-        lo que le consta a cada canal, no de una tabla escrita a mano.</li>
-      <li>💶 <b>La propina no pasa por aquí.</b> El guía la cobra como quiera y la apunta en
-        el manifiesto: Audutor no toca ese dinero, solo lo cuadra y lo reparte.</li>
-    </ul>
-    <p class="mini">La reserva se hace <b>en tu web</b> —el free tour a 0 €, con código y
-      enlace de autogestión; el de pago guarda la plaza y <b>el dinero va a tu pasarela</b>:
-      Audutor no cobra ni un euro. La página real viviría en tu dominio.</p>
-  </div>
+  <!-- Vacía a propósito: `abrirGuidePage` la rellena al abrir, y es el único que abre este
+       velo. Tenía un texto por defecto («Así lo vive el viajero») que nadie llegaba a ver;
+       salió el 14-nov-2026. -->
+  <div class="vj-nota" id="vj-nota"></div>
 </div>
 
 <!-- ============ la ficha de un guía ============
@@ -2605,8 +2220,7 @@ function sincronizaTickets(){
     t.kb.modelo   = TICKET_MODELO();
     t.kb.entradas = TICKET_ENTRADAS();
   });
-  /* El «desde» del privado TAMBIÉN sigue a la moneda: el configurador parte de este
-     número y GuIA se lo dice al viajero. */
+  /* El «desde» del privado TAMBIÉN sigue a la moneda: GuIA se lo dice al viajero. */
   S.kbEmpresa.privados = '¡Sí! Hacemos tours privados a medida, desde ' +
     precioTxt(precioPrivado()) +
     ' por grupo. Dímelo y el encargado te prepara una propuesta sin compromiso.';
@@ -7417,12 +7031,9 @@ function tdArranca(){
 var SUPLEMENTOS={
   chat:      { n:'GuIA · Probar GuIA', plan:'Pro', d:'El asistente que atiende a tus clientes en el chat de tu web: consulta los hechos de cada tour y pasa al equipo lo que no puede resolver. Prueba sus respuestas antes de abrirlo a viajeros.' },
   cerebro:   { n:'GuIA · Cerebro', plan:'Pro', d:'El formulario de hechos por tour que alimenta al asistente, con IA que lo rellena desde la web del tour y borradores editables.' },
-  carrito:   { n:'Lo que vendes además del tour', plan:'todos', d:'Tu catálogo de extras —tours de pago, privados, degustaciones— sale en tu web y GuIA lo cuenta cuando preguntan qué más hacéis. Se contrata POR SEPARADO, sin depender de ningún otro complemento: vale igual en la página que te monta Audutor y en la que tú ya tengas. Audutor no cobra ninguno y no toca el dinero: lleva a donde tú ya cobras.' },
   web:       { n:'Tu web', plan:'todos', d:'Tu página pública, sacada de lo que ya escribiste en el Cerebro: un bloque por tipo de pregunta y un campo vacío no sale. EL TOUR SE RESERVA AQUÍ, contra el aforo de verdad; los que llevan precio necesitan tu dirección de cobro. También abre la página de cada guía con su QR. Va en todos los planes: en Esencial con la marca «con Audutor», en Pro y Premium con la tuya.' },
-  agente:    { n:'El agente de plataformas', plan:'Premium', d:'Entra en los paneles de tus plataformas con TU sesión —Audutor no guarda ninguna contraseña—, cuenta cuánta gente le consta a cada una y cierra las salidas llenas. Y aunque diga que cerró, aquí sigue sin ✓ hasta que lo compruebes tú.' },
   cuadro:    { n:'Cuadro de mando', plan:'todos', d:'La analítica del negocio: ocupación, canales, propina por guía y por franja, no-shows. Para decidir con datos, no a ojo.' },
   liquidacion:{ n:'Liquidación a guías', plan:'todos', d:'La cuenta de cada tour siempre cuadrada: reparto por % o tarifa fija, coste de canal, CSV e imprimir. El guía nunca paga.' },
-  proyeccion:{ n:'Proyección de ingresos', plan:'todos', d:'El simulador de plan de negocio: mueve los deslizadores y ve cuánto gana cada guía y la empresa al mes.' },
   /* Claves de gating INLINE (sin vista propia ni enlace de nav): las usa pintaGatesInline()
      para difuminar bloques dentro de vistas accesibles en todos los planes. */
   noshowSmart:{ n:'Cadencia anti-no-show inteligente', plan:'Pro', d:'La cadencia de recordatorios se adapta al riesgo de cada reserva: más toques donde más peligro de no-show hay, sin saturar al que ya confirmó.' },
@@ -7584,9 +7195,9 @@ function cambiaMercado(k){
   MK = MERCADOS[k];
   pintaTenant();
   pintaMkSel(); pintaDineroEstatico();
-  /* Los hechos del Cerebro que nombran un precio y los rótulos del configurador se
+  /* Los hechos del Cerebro que nombran un precio se
      regeneran ANTES de repintar: son la fuente de lo que las pantallas enseñan. */
-  try{ sincronizaTickets(); pintaCerebro(); tpRotulos(); pintaExtras(); }catch(e){}
+  try{ sincronizaTickets(); pintaCerebro(); }catch(e){}
   /* CADA PINTADA CON SU PROPIO try, y por su nombre de verdad.
      Aquí había un objeto `{liquidacion: pintaLiquidacion, cuadro: pintaCuadro, …}` con dos
      nombres QUE NO EXISTEN —la función se llama `pintaLiq`, y el Cuadro se pinta en cinco
@@ -7599,7 +7210,6 @@ function cambiaMercado(k){
   [pintaOperaciones, pintaManifiesto, pintaEquipo, pintaCanales, pintaLiq,
    pintaCuadroCanales, pintaCuadroGuias, pintaCuadroFranjas, pintaCuadroKpis, pintaCuadroDia]
     .forEach(function(f){ try{ if (typeof f === 'function') f(); }catch(e){} });
-  try{ calcProy(); }catch(e){}
   toast(MK.bandera+' '+MK.nombre+' — '+(MK.modelo==='pago'?'tour de pago: hay cobro por adelantado y el no-show cuesta la plaza'
         : MK.modelo==='mixto'?'catálogo mixto: free tour para captar, tour de pago para monetizar'
         : 'free tour: reserva a '+dinero(0,0)+' y propina al final')+'. Avisos por '+canalAviso()+'.');
@@ -7856,11 +7466,17 @@ function ir(v){
   /* El agente de plataformas dejó de ofrecerse el 3-oct-2026 (decisión de Carlos): sin menú
      ni casilla. Un enlace viejo a #agente lleva a «Canales», que es de lo que hablaba. */
   if (v === 'agente') v = 'canales';
+  /* El carrito y la proyección salieron el 14-nov-2026 (docs/evaluaciones/2026-11-14-sistema-y-
+     demo-mas-limpios). Un enlace viejo lleva a lo más cercano: la web y el cuadro. */
+  if (v === 'carrito') v = 'web';
+  if (v === 'proyeccion') v = 'cuadro';
   document.querySelectorAll('.vista').forEach(function(s){ s.classList.remove('act'); s.classList.remove('borroso'); });
   var sec=document.getElementById('v-'+v); sec.classList.add('act');
   sec.querySelectorAll('.card').forEach(function(c, i){ c.style.setProperty('--i', String(Math.min(i, 10))); });
+  /* Una entrada del menú puede juntar varias vistas (`data-vistas`): GuIA y Cuentas, desde
+     el 14-nov-2026, igual que en el panel. Se queda marcada en todas las que junta. */
   document.querySelectorAll('aside nav a').forEach(function(a){
-    a.classList.toggle('act', a.dataset.v===v); });
+    a.classList.toggle('act', a.dataset.v===v || (' '+(a.dataset.vistas||'')+' ').indexOf(' '+v+' ') >= 0); });
   history.replaceState(null,'','#'+v);
   cierraMenuMovil();
   var enlace=document.querySelector('aside nav a[data-v="'+v+'"]');
@@ -7872,10 +7488,27 @@ function ir(v){
   if (v==='operaciones') pintaOperaciones();   // refresca el seguimiento con lo marcado en el manifiesto
   if (v==='web') pintaWeb();
   if (v==='equipo') pintaEquipo();             // refresca estados (p. ej. propina activada desde el móvil del guía)
-  if (v==='agente') pintaAgente();             // el censo y las órdenes cambian con lo que se toque en otras vistas
 }
 document.querySelectorAll('aside nav a').forEach(function(a){
   a.addEventListener('click', function(ev){ ev.preventDefault(); ir(a.dataset.v); });
+});
+/* LAS VISTAS QUE JUNTA UNA ENTRADA, con su barra arriba (14-nov-2026). El menú bajó a una
+   entrada para GuIA y otra para las cuentas, como en el panel (`SECCIONES` de mando.js), y
+   sin esta barra el Probar GuIA, la Conciliación y el Cuadro quedaban sin camino. Cada vista
+   sigue siendo la suya: los enlaces de toda la demo a #chat o #cuadro llevan a donde iban. */
+var VISTAS_JUNTAS = [ [['cerebro','Cerebro'],['chat','Probar GuIA']], [['liquidacion','Liquidación a guías'],['ahorro','Conciliación y ahorro'],['cuadro','Resultados']] ];
+VISTAS_JUNTAS.forEach(function(grupo){
+  grupo.forEach(function(op){
+    var sec = document.getElementById('v-'+op[0]); if (!sec) return;
+    var barra = document.createElement('div');
+    barra.className = 'vista-opciones';
+    barra.setAttribute('role', 'group');
+    barra.innerHTML = grupo.map(function(o){
+      return '<button type="button" class="btn mini sec"'+(o[0]===op[0] ? ' aria-current="page"' : '')
+        +' onclick="ir(\''+o[0]+'\')">'+o[1].replace(/&/g,'&amp;')+'</button>';
+    }).join('');
+    sec.insertBefore(barra, sec.firstElementChild);
+  });
 });
 pintaCandados(); pintaPlanSel(); pintaComplementos(); pintaMkSel(); pintaDineroEstatico();
 /* La Liquidación arrancaba con el rango escrito a mano «1 a 18 de julio de 2026» — el
@@ -7895,24 +7528,16 @@ setTimeout(function(){
     k.setAttribute('data-dinero', String(Math.round(t.semRec)));
   }
   pintaCuadroKpis();
-  /* El catálogo de extras va AQUÍ DENTRO por lo mismo que la Liquidación: pregunta al
+  /* Los hechos con precio van AQUÍ DENTRO por lo mismo que la Liquidación: pregunta al
      motor y lee `S.tours`, y en el punto de arriba del fichero ninguna de las dos cosas
      está asignada todavía. Llamarlo fuera revienta la demo entera al arrancar. */
   if (typeof sincronizaTickets === 'function') sincronizaTickets();   // hechos con precio, en su moneda
-  if (typeof tpRotulos === 'function') tpRotulos();                   // rótulos del configurador
-  if (typeof pintaExtras === 'function') pintaExtras();
-  ['combo-a','combo-b','combo-dto'].forEach(function(id){
-    var e = document.getElementById(id); if (!e) return;
-    e.addEventListener('input', function(){
-      document.getElementById('combo-dto-v').textContent = document.getElementById('combo-dto').value;
-      pintaMsjCombo();
-    });
-  });
 }, 0);
 
-/* LA OPERACIÓN QUE LA DEMO ENSEÑA, en un solo sitio. La usan el reparto por canal del
-   Cuadro y los deslizadores de la Proyección, y antes cada uno tenía su propia versión
-   escrita a mano — que es por lo que decían cosas distintas de la misma empresa. */
+/* LA OPERACIÓN QUE LA DEMO ENSEÑA, en un solo sitio. La usaban el reparto por canal del
+   Cuadro y los deslizadores de la Proyección (retirada el 14-nov-2026), y antes cada uno
+   tenía su propia versión escrita a mano — que es por lo que decían cosas distintas de la
+   misma empresa. */
 function operacionDelCiclo(){
   var o = { salidas:0, pax:0, rec:0, presentes:0, canal:{}, dias:(S.agenda||[]).length||1 };
   (S.agenda||[]).forEach(function(d){ (d.tours||[]).forEach(function(t){
@@ -8040,36 +7665,6 @@ function pintaCuadroFranjas(){
     'con grupos pequeños y propina alta puede ganarle a una llena.</span></details>';
 }
 
-/* LOS DESLIZADORES DE LA PROYECCIÓN ARRANCAN CON ESTA EMPRESA. Estaban escritos en el HTML
-   —grupos de 20, 26 días al mes, 40 % de web propia— y la operación que la demo acababa de
-   enseñar iba de 13 por grupo, siete días a la semana y 36 % de web. La Proyección es la
-   pantalla que se abre DELANTE del prospecto para sustituir esos números por los suyos; que
-   arranque con otra empresa distinta de la de las cinco pantallas anteriores es lo que hace
-   que quien compara deje de creerse las dos.
-   Cada valor se redondea AL PASO DE SU DESLIZADOR: uno de paso 0,5 no puede valer 11,34, y
-   asignárselo lo deja en un estado que el control no puede reproducir al moverlo. */
-function sembrarProy(){
-  if (!document.getElementById('py-grupo')) return;
-  var o = operacionDelCiclo();
-  /* EL PASO SALE DEL PROPIO CONTROL. Estaba escrito aquí otra vez, y las dos copias se
-     separaron: a `py-dir` se le sembraba redondeando a 1 cuando su paso es 5, así que el
-     navegador ajustaba el 33 a 35 y el deslizador arrancaba diciendo un número que la
-     operación no da. Un hecho, un sitio. */
-  var pon = function(id, v){
-    var e = document.getElementById(id); if(!e) return;
-    var paso = +e.step || 1, min = +e.min, max = +e.max;
-    e.value = Math.min(max, Math.max(min, Math.round(v/paso)*paso));
-  };
-  pon('py-grupo', o.grupo);
-  pon('py-tours', o.salDia);
-  pon('py-prop',  o.propPax);   // su paso es de céntimo: la media medida cabe entera
-  pon('py-ng',    o.guias);
-  pon('py-dir',   o.pctWeb);
-  /* Días de operación: los que el ciclo saca salidas. Decía 26 y este catálogo sale los
-     siete días de la semana — un mes entero de trabajo contado como si libraran cinco. */
-  pon('py-dias', (S.agenda||[]).filter(function(d){ return (d.tours||[]).length; }).length / o.dias * 30);
-  calcProy();
-}
 
 /* Los KPI del Cuadro de mando, del ciclo. La ventana es la SEMANA que la demo enseña —no
    «el mes»—, porque es la única de la que hay datos de verdad: decir «este mes» sobre
@@ -8103,11 +7698,6 @@ function pintaCuadroKpis(){
      media falsa y a la baja. */
   pon('cm-prop', pres ? dinero(rec/pres, 2) : '—');
 }
-(function(){
-  var w = document.querySelector('.tp-wrap'); if (!w) return;
-  w.addEventListener('input', tpCalc); w.addEventListener('change', tpCalc);
-  tpCalc();
-})();
 pintaMesActual();
 
 /* ===== Modo guía: el enlace personal del guía — SOLO su manifiesto y su
@@ -8211,7 +7801,7 @@ function resolver(id, msj){
   toast(msj || 'Marcado como revisado');
 }
 function pintaEstadoBanner(){
-  pintaCuadroDia(); pintaAgente(); pintaSoporte();
+  pintaCuadroDia(); pintaSoporte();
   var b=document.getElementById('estado-banner'), t=document.getElementById('estado-txt');
   if(!b||!t) return;
   if(S.excs>0){ b.className='estado-banner revisar'; b.querySelector('.big').textContent='⚠️';
@@ -8289,273 +7879,11 @@ function pintaCuadroDia(){
   }
 }
 
-/* ══ EL AGENTE EXTERNO ═════════════════════════════════════════════════════════
-   Audutor NO ejecuta: emite órdenes y un agente de FUERA las intenta, en el ordenador
-   del operador y con su sesión. Aquí no hay ninguna contraseña de plataforma.
-   Y la regla que gobierna la pantalla: que el agente diga que cerró NO es que esté
-   cerrado — por eso el estado se llama «dice que la cerró» y el ✓ lo pone una persona. */
-var AG = { activo:false, plataformas:{ guruwalk:true, civitatis:false, freetour:false },
-  ordenes:[
-    { plataforma:'GuruWalk', hora:'08:12', estado:'dice', txt:'Cupo puesto a 0 · Sesión cerrada' },
-    { plataforma:'Civitatis', hora:'08:14', estado:'fallo', txt:'el botón de cupo ya no está donde estaba' },
-  ] };
-var AG_NOMBRES = { guruwalk:'GuruWalk', civitatis:'Civitatis', freetour:'Freetour.com' };
-/* Lo que el agente ENCUENTRA mirando. Va aparte de `ordenes` a propósito: una orden es
-   algo que el agente hizo y que hay que comprobar; esto es algo que vio y que decide una
-   persona. Mezclarlos en una lista sería pedirle al encargado que distinga por el texto
-   qué le están contando y qué le están pidiendo. */
-var AG_HALLA = { pasadas:0, repite:[], liberadas:[], reabrir:[], resenas:0 };
 
 
-function agToggle(){ AG.activo = document.getElementById('ag-sw').checked; pintaAgente(); }
-function agPlat(k, el){ AG.plataformas[k] = el.checked; pintaAgente(); }
-/* Cada pasada es una vuelta del agente por los paneles. Los hallazgos se ACUMULAN porque
-   así es como aparecen de verdad: nadie descubre que una plataforma descuadra siempre
-   mirando una vez. Por eso el diagnóstico solo sale a partir de la segunda. */
-function agPasada(){
-  AG_HALLA.pasadas++;
-  var act = Object.keys(AG.plataformas).filter(function(k){ return AG.plataformas[k] });
-  if (!act.length){ toast('Ninguna plataforma marcada: el agente no puede entrar a mirar'); return; }
-  var n = AG_NOMBRES[act[0]];
-  if (AG_HALLA.pasadas >= 2)
-    AG_HALLA.repite = [{ nombre:n, conDescuadre:AG_HALLA.pasadas - 1, mirados:AG_HALLA.pasadas, personas:(AG_HALLA.pasadas-1)*3 }];
-  if (AG_HALLA.pasadas === 2) AG_HALLA.liberadas = [{ nombre:n, plazas:2 }];
-  if (AG_HALLA.pasadas >= 3) AG_HALLA.reabrir = [{ nombre:n, tour:'Free tour del centro histórico', hora:'10:00' }];
-  AG_HALLA.resenas = AG_HALLA.pasadas >= 2 ? 4 : 0;
-  pintaAgente();
-  toast('Pasada ' + AG_HALLA.pasadas + ' · el agente ha vuelto a mirar');
-}
-function agReset(){ AG_HALLA = { pasadas:0, repite:[], liberadas:[], reabrir:[], resenas:0 }; pintaAgente(); }
 
-/* EL ORDEN DE CIERRE. De fábrica: gratis primero, caro después. `porque` es la cita que
-   sostiene cada puesto — un orden que no se explica se lee como un capricho, y este tiene
-   detrás una frase escrita por cada plataforma. `gob` es el sistema que ya gobierna ese
-   canal: donde manda otro, no entramos a cerrar. */
-var AG_ORDEN = [
-  { k:'guruwalk',  n:'GuruWalk',     pct:'', gob:'',
-    porque:'Cerrar aquí no te penaliza, así que va primero.' },
-  { k:'freetour',  n:'Freetour.com', pct:'', gob:'',
-    porque:'No sabemos si cerrar aquí te penaliza, así que va en medio.' },
-  { k:'civitatis', n:'Civitatis',    pct:'', gob:'Bókun',
-    porque:'Va última: aquí la disponibilidad puntúa para el ranking.' }
-];
-function agMueve(i, d){
-  var j = i + d; if (j < 0 || j >= AG_ORDEN.length) return;
-  var t = AG_ORDEN[i]; AG_ORDEN[i] = AG_ORDEN[j]; AG_ORDEN[j] = t;
-  pintaOrden(); toast('Guardado. El agente entra en ese orden.');
-}
-function agGob(i, v){
-  AG_ORDEN[i].gob = (v || '').trim().slice(0, 40); pintaOrden();
-  toast(AG_ORDEN[i].gob
-    ? AG_ORDEN[i].n + ': ahí manda ' + AG_ORDEN[i].gob + '. Solo contamos.'
-    : AG_ORDEN[i].n + ': volvemos a cerrar ahí.');
-}
-function agPct(i, v){ AG_ORDEN[i].pct = (v || '').trim(); pintaOrden(); }
-function pintaOrden(){
-  var c = document.getElementById('ag-orden'); if (!c) return;
-  c.innerHTML = AG_ORDEN.map(function(p, i){
-    var g = !!p.gob;
-    return '<div class="fila" style="gap:8px; align-items:center; padding:7px 0;' +
-      (i ? ' border-top:1px solid var(--line);' : '') + (g ? ' opacity:.92;' : '') + '">' +
-      '<span class="chip gris" style="flex:0 0 22px; height:22px; display:flex;' +
-        'align-items:center; justify-content:center; padding:0;' + (g ? 'opacity:.4;' : '') +
-        '">' + (i + 1) + '</span>' +
-      '<span style="flex:1; min-width:0;"><b class="mini">' + p.n + '</b><br>' +
-        '<span class="mini muted">' + (g
-          ? 'Aquí manda <b>' + p.gob + '</b>: se cierra sola desde allí. Nosotros solo contamos.'
-          : p.porque) + '</span></span>' +
-      '<button class="btn mini sec" style="padding:3px 8px;"' + (i === 0 ? ' disabled' : '') +
-        ' onclick="agMueve(' + i + ',-1)">↑</button>' +
-      '<button class="btn mini sec" style="padding:3px 8px;"' +
-        (i === AG_ORDEN.length - 1 ? ' disabled' : '') +
-        ' onclick="agMueve(' + i + ',1)">↓</button>' +
-      '<input class="mini" style="width:52px; text-align:center; padding:4px 5px;" ' +
-        'type="number" min="50" max="200" placeholder="100" value="' + p.pct + '"' +
-        (g ? ' disabled' : '') + ' title="A partir de qué % de lleno se cierra aquí" ' +
-        'onchange="agPct(' + i + ', this.value)"><span class="mini muted">%</span>' +
-      '<input class="mini" style="width:82px; text-align:center; padding:4px 5px;' +
-        (g ? 'border-color:var(--acc); font-weight:800;' : '') + '" type="text" ' +
-        'placeholder="—" value="' + p.gob + '" maxlength="40" ' +
-        'title="Si este canal ya lo gobierna otro sistema (Bókun, TuriTop, FareHarbor…), ' +
-        'escribe cuál: ahí no entramos a cerrar, solo a contar." ' +
-        'onchange="agGob(' + i + ', this.value)"></div>';
-  }).join('');
-}
-function agPideReabrir(i){
-  var r = AG_HALLA.reabrir[i]; if (!r) return;
-  AG.ordenes.unshift({ plataforma:r.nombre, hora:'ahora', estado:'dice',
-    txt:'Reapertura pedida por ti · ' + r.tour + ' ' + r.hora });
-  AG_HALLA.reabrir.splice(i,1); pintaAgente();
-  toast('Encargada la reapertura. Sigue sin ✓ hasta que lo compruebes en su panel.');
-}
-function pintaHallazgos(){
-  var c = document.getElementById('ag-halla'); if (!c) return;
-  var H = '', sec = function(t, cuerpo){
-    return '<div style="margin-bottom:10px;"><div class="mini" style="font-weight:800; letter-spacing:.04em; color:var(--acc2);">'+t+'</div>'+cuerpo+'</div>'; };
-  if (AG_HALLA.repite.length) H += sec('LO QUE SE REPITE', AG_HALLA.repite.map(function(d){
-    return '<p class="mini" style="margin:3px 0;"><b>'+d.nombre+':</b> en <b>'+d.conDescuadre+' de los '+d.mirados+
-      '</b> conteos le constaba más gente que a ti — '+d.personas+' personas en total.</p>'; }).join('') +
-    '<p class="mini muted" style="margin:3px 0 0;">Si hay reservas de esa plataforma que no llegaron a tu correo, aparecen aquí.</p>');
-  if (AG_HALLA.liberadas.length) H += sec('SE HAN LIBERADO PLAZAS', AG_HALLA.liberadas.map(function(l){
-    /* «Le constan» y no «puedes vender»: el número es de SU contabilidad. Nuestro aforo es
-       el del tour, y decir «puedes vender 2 más» sobre el libro de otro es sobrevender. */
-    return '<p class="mini" style="margin:3px 0;">A <b>'+l.nombre+'</b> le constan <b>'+l.plazas+
-      '</b> plazas libres más que en el conteo anterior. Alguien ha cancelado ahí.</p>'; }).join(''));
-  if (AG_HALLA.reabrir.length) H += sec('CERRADAS Y YA NO LLENAS', AG_HALLA.reabrir.map(function(r,i){
-    return '<p class="mini" style="margin:3px 0;">'+r.nombre+' · '+r.tour+' '+r.hora+
-      ' — se cerró por llena y ya no lo está. <button class="btn mini sec" style="padding:2px 9px;" onclick="agPideReabrir('+i+')">Volver a abrirla</button></p>'; }).join('') +
-    '<p class="mini muted" style="margin:3px 0 0;">Lo decides tú: reabrir no es reversible, quien vio «completo» no vuelve.</p>');
-  if (AG_HALLA.resenas) H += sec('RESEÑAS SIN CONTESTAR',
-    '<p class="mini" style="margin:3px 0;"><b>'+AG_HALLA.resenas+'</b> sin responder en los paneles. El agente las cuenta; contestarlas es tuyo.</p>');
-  c.innerHTML = H || '<p class="mini muted" style="margin:0;">Nada todavía. Dale una pasada — y otra: lo que se repite solo se ve mirando varias veces.</p>';
-}
-function pintaAgente(){
-  var sw = document.getElementById('ag-sw'); if(!sw) return;
-  sw.checked = AG.activo;
-  var est = document.getElementById('ag-estado');
-  est.textContent = AG.activo ? 'activo' : 'apagado';
-  est.className = 'chip' + (AG.activo ? '' : ' gris');
-  document.getElementById('ag-cuerpo').style.display = AG.activo ? '' : 'none';
-  pintaHallazgos();
-  pintaOrden();
-  /* El contrato se lee ANTES de encenderlo; con el agente en marcha, lo que importa es lo
-     que ha traído. Dejarlo siempre sería empujar tres pantallas hacia abajo lo único que
-     hay que mirar cada día. */
-  var vb = document.getElementById('ag-verbos');
-  if (vb) vb.style.display = AG.activo ? 'none' : '';
 
-  document.getElementById('ag-plataformas').innerHTML =
-    Object.keys(AG_NOMBRES).map(function(k){
-      return '<label class="mini" style="display:flex;align-items:center;gap:6px;">'+
-        '<input type="checkbox" '+(AG.plataformas[k]?'checked':'')+
-        ' onchange="agPlat(\''+k+'\', this)"> Puede entrar en '+AG_NOMBRES[k]+'</label>';
-    }).join('');
 
-  /* El censo: los dos números, uno al lado del otro. La resta es el dato — enseñar solo
-     «28» no dice nada; «28 y a ti 21» dice que faltan siete personas en tu lista. */
-  /* El censo de la salida que se ha contado: los dos números uno al lado del otro, y la
-     resta. Enseñar solo «28» no dice nada; «28, y a ti 6» dice que faltan veintidós
-     personas en la lista con la que sale el guía. */
-  var sC = ((S.agenda[S.agDia] || {}).tours || [])[0];
-  var faltanC = sC ? (+sC.faltan || 0) : 0;
-  var nuestroC = sC ? (sC.res || []).reduce(function(a, r){ return a + (r.ok ? r.p : 0) }, 0) : 0;
-  var cajaC = document.getElementById('ag-censo');
-  if (cajaC) cajaC.innerHTML = faltanC
-    ? '<div class="fila" style="gap:8px;align-items:baseline;flex-wrap:wrap;">'+
-      '<span class="chip" style="background:var(--coral-soft);color:var(--coral-deep);">no cuadra</span>'+
-      '<b style="font-size:13px;">GuruWalk · la de las '+sC.hora+'</b>'+
-      '<span class="mini">le constan <b>'+(nuestroC+faltanC)+'</b> y a ti <b>'+nuestroC+'</b> — '+
-      '<b style="color:var(--coral-deep);">'+faltanC+' personas que no tienes en la lista</b></span></div>'+
-      '<p class="mini" style="margin:6px 0 0;color:var(--coral-deep);"><b>Mientras no cuadre, GuIA no dice '+
-      'cuántas plazas quedan.</b> Da la hora y el corte, y pasa la pregunta a una persona.</p>'
-    : '<p class="mini muted" style="margin:0;">Todavía no ha contado, o le cuadra con tu lista.</p>';
-
-  var elegidas = Object.keys(AG.plataformas).filter(function(k){ return AG.plataformas[k]; });
-  var caja = document.getElementById('ag-ordenes');
-  if (!elegidas.length){
-    caja.innerHTML = '<p class="mini" style="color:var(--amber);margin:0;">Está activo pero no le has '+
-      'dicho dónde puede entrar, así que no está haciendo nada.</p>';
-    return;
-  }
-  caja.innerHTML = AG.ordenes.filter(function(o){
-    return elegidas.indexOf(o.plataforma.toLowerCase().replace('.com','')) >= 0; }).map(function(o){
-    var dice = o.estado === 'dice';
-    return '<div class="fila" style="gap:8px;padding:7px 0;border-bottom:1px solid var(--line);">'+
-      '<span class="chip '+(dice?'ambar':'')+'" style="'+(dice?'':'background:var(--coral-soft);color:var(--coral-deep);')+'">'+
-      (dice ? 'dice que la cerró' : 'no pudo') + '</span>'+
-      '<b style="font-size:13px;">'+o.plataforma+'</b>'+
-      '<span class="mini muted">'+o.hora+' · «'+o.txt+'»</span>'+
-      (dice ? '<button class="btn mini sec" style="margin-left:auto;" onclick="agComprueba(this)">La he comprobado yo</button>'
-            : '<span class="mini" style="margin-left:auto;color:var(--coral-deep);font-weight:800;">te toca a ti</span>')+
-      '</div>';
-  }).join('') || '<p class="mini muted" style="margin:0;">Nada que hacer en esos paneles hoy.</p>';
-}
-/**
- * El agente cuenta, y GuIA se calla.
- *
- * `faltan` es el campo que el motor mira en la regla de plazas: cuando es mayor que cero,
- * no da ninguna cifra. Se pone sobre TODAS las salidas de hoy porque en esta demo hay una
- * sola plataforma con reservas; en el producto sale de restar, salida a salida, lo que le
- * consta a cada plataforma menos lo que nos ha llegado a nosotros.
- */
-function agCuenta(pax){
-  var ss = (S.agenda[S.agDia] || {}).tours || [];
-  /* Sobre UNA salida, la primera. Un censo es de una ficha concreta: aplicarlo a todas
-     las salidas del día y luego sumar los descuadres daba «le constan 84 y a ti 6», que
-     no es ningún número — es el mismo conteo repetido tantas veces como salidas haya.
-     Las demás se limpian para que la demo no arrastre estado entre pruebas. */
-  ss.forEach(function(t, i){
-    delete t.faltan;
-    if (i !== 0) return;
-    var nuestro = (t.res || []).reduce(function(a, r){ return a + (r.ok ? r.p : 0) }, 0);
-    if (pax > nuestro) t.faltan = pax - nuestro;
-  });
-  pintaAgente();
-  toast(pax ? 'El agente ha contado ' + pax + ' en GuruWalk. Pregúntale ahora a GuIA si quedan plazas.'
-            : 'Descuadre quitado: GuIA vuelve a dar la cifra.');
-}
-
-/**
- * El agente lee la ficha PÚBLICA y propone tres hechos al Cerebro.
- *
- * TRES y no seis, aunque los traiga todos:
- *  · el AFORO publicado suele ser el cupo de ESA plataforma —10 plazas de un tour de 25—,
- *    y meterlo como aforo del tour hace que GuIA diga «máximo 10» y que la regla de plazas
- *    reste contra 10: las dos son mentira y la segunda vende plazas que no existen;
- *  · la HORA publicada es una hora suelta sin días, y el hecho es «Días y horarios»: un
- *    horario con excepciones no se resume en una línea sin mentir;
- *  · el TÍTULO ya se lo puso el operador al crear el tour.
- */
-var FICHA_PUB = {
-  llegar: { l:'Cómo llegar (metro, bus)', v:'Metro Puerta de Jerez (línea 1) o tranvía T1 hasta Plaza Nueva; autobuses C5 y 21' },
-  punto:  { l:'Punto de encuentro', v:'la Plaza Nueva, junto a la estatua del Rey San Fernando (lado sur)' },
-  idiomas:{ l:'Idiomas', v:'Español e inglés' },
-  dur:    { l:'Duración', v:'2 h 30 min' }
-};
-function agLeeFicha(){
-  var caja = document.getElementById('ficha-lista');
-  var t = S.tours[S.tourSel] || S.tours[0];
-  var libres = Object.keys(FICHA_PUB).filter(function(k){
-    /* Lo que YA está escrito no se propone: revisar una propuesta que dice lo que ya
-       tienes es trabajo a cambio de nada, y enseña a aceptar la lista sin leerla. */
-    return !((t.kb || {})[k] || '').trim();
-  });
-  document.getElementById('ficha-prop').style.display = '';
-  if (!libres.length){
-    caja.innerHTML = '<p class="mini muted" style="margin:0;">Nada nuevo: ya tienes escrito '+
-      'todo lo que hay publicado en tus fichas.</p>';
-    toast('Ya tenías escrito todo lo que hay en la ficha.');
-    return;
-  }
-  caja.innerHTML = libres.map(function(k){
-    var p = FICHA_PUB[k];
-    return '<div style="padding:8px 0;border-top:1px solid var(--line);">'+
-      '<div class="mini" style="font-weight:800;color:var(--ink2);">'+p.l+'</div>'+
-      '<div style="font-size:13px;margin:2px 0 3px;">'+p.v+'</div>'+
-      '<div class="mini muted" style="font-style:italic;">lo que tienes publicado en '+
-      'GuruWalk para «'+t.nombre+'»</div>'+
-      '<div class="fila" style="gap:8px;margin-top:6px;">'+
-      '<button class="btn mini" onclick="fichaAcepta(\''+k+'\', this)">Aceptar</button>'+
-      '<button class="btn mini sec" onclick="this.closest(\'div[style*=padding]\').remove()">No</button>'+
-      '</div></div>';
-  }).join('');
-  toast('El agente ha leído tu ficha de GuruWalk. Míralo y acepta lo que esté bien.');
-}
-function fichaAcepta(k, b){
-  var t = S.tours[S.tourSel] || S.tours[0];
-  t.kb = t.kb || {};
-  t.kb[k] = FICHA_PUB[k].v;
-  b.textContent = '✓ Guardado'; b.disabled = true;
-  b.nextElementSibling && b.nextElementSibling.remove();
-  pintaCerebro();
-  toast('Guardado en el Cerebro. Pregúntaselo a GuIA en el chat.');
-}
-
-function agComprueba(b){
-  b.parentElement.querySelector('.chip').outerHTML =
-    '<span class="chip" style="background:var(--acc-soft);color:var(--acc2);">✓ comprobada por ti</span>';
-  b.remove();
-}
 
 /* ══ EL CHAT DE SOPORTE ════════════════════════════════════════════════════════
    Una persona hablando con otra: aquí NO contesta GuIA. Lo que hace que merezca la
@@ -8719,19 +8047,10 @@ function pintaCupo(){
     c.appendChild(b);
   });
 }
-/* ══ EL CONFIGURADOR DEL TOUR DE PAGO ═══════════════════════════════════════════════
-   Mismas reglas que el de Madrid Latido, y las dos que importan están comentadas donde
-   se aplican. Todo en CÉNTIMOS hasta el último momento: en coma flotante, 13,50 × 3 se
-   desvía y el cliente vería un total distinto del que se guardaría. */
+/* ══ EL «DESDE» DEL TOUR PRIVADO ════════════════════════════════════════════════════
+   Lo que queda del configurador del tour de pago, que vivía en «Lo que vendes además» y
+   salió con él el 14-nov-2026: el precio que GuIA da del privado. */
 
-function tpEur(c){                       // céntimos → «140 €» / «4,70 €» (o £/$ según mercado)
-  /* Por `dinero()` y no con el símbolo escrito: es dinero de OPERACIÓN —lo que cobra el
-     operador—, no nuestra cuota, así que sigue a la moneda del mercado activo. */
-  var n = c / 100;
-  return dinero(n, n % 1 === 0 ? 0 : 2);
-}
-function tpNum(id){ var e=document.getElementById(id); return Math.max(0, parseInt(e&&e.value,10)||0); }
-function tpPon(id, txt){ var e=document.getElementById(id); if(e) e.textContent=txt; }
 /* LA TARIFA ENTERA SE ESCALA A LA MONEDA DEL MERCADO, con la MISMA razón que el ticket
    (`precioTicket()` contra los 24 € del mercado español, que es la referencia): un solo
    criterio de conversión en toda la pantalla. En España la razón es 1 y todo queda
@@ -8741,87 +8060,7 @@ function tpRedondea(v, paso){ return Math.round(v * razonMercado() / paso) * pas
 /* El «desde» del privado, en la moneda del mercado. Estaba escrito «180 €» en la semilla
    y no lo regeneraba nadie: GuIA seguía diciendo euros en Edimburgo. */
 function precioPrivado(){ return tpRedondea(180, 5); }
-function tarifaPrivado(){
-  return { base: precioPrivado(), incl:6, gestionPct:5,
-           supAd: tpRedondea(12,1), supJo: tpRedondea(8,1), pro: tpRedondea(40,5),
-           radio: tpRedondea(3,1),
-           entAd: tpRedondea(13.5,0.5), entJo: tpRedondea(6,0.5),
-           cata: tpRedondea(9,1) };
-}
-/* Los rótulos del configurador llevaban los importes escritos en el HTML: «+40 €»,
-   «13,50 € adulto» — catorce importes que se quedaban en euros al cambiar de mercado.
-   Ahora se escriben desde la tarifa, y los `data-ad/jo/pe` de las entradas también, para
-   que el rótulo y el cálculo no puedan separarse. */
-function tpRotulos(){
-  if (!document.getElementById('tp-h-pro')) return;
-  var T = tarifaPrivado();
-  tpPon('tp-h-pax', 'A partir de ahí: +' + precioTxt(T.supAd) + ' por adulto, +' +
-    precioTxt(T.supJo) + ' por joven; los peques no suman.');
-  tpPon('tp-h-pro', '3 h · +' + precioTxt(T.pro));
-  tpPon('tp-h-radio', '+' + precioTxt(T.radio) + ' por persona (adultos y jóvenes)');
-  var e1 = document.getElementById('tp-e1'), e2 = document.getElementById('tp-e2');
-  if (e1){ e1.dataset.ad = T.entAd; e1.dataset.jo = T.entJo; e1.dataset.pe = 0; }
-  if (e2){ e2.dataset.ad = T.cata; e2.dataset.jo = T.cata; e2.dataset.pe = 0; }
-  tpPon('tp-h-e1', precioTxt(T.entAd) + ' adulto · ' + precioTxt(T.entJo) + ' joven · peques gratis');
-  tpPon('tp-h-e2', precioTxt(T.cata) + ' por persona (solo mayores de 12)');
-  tpCalc();
-}
 
-function tpCalc(){
-  var caja = document.getElementById('tp-total'); if (!caja) return;
-  /* La tarifa vive DENTRO y no en un `var` de arriba: el arranque llama a esta función
-     antes de esa línea —la declaración de función se eleva, la asignación de `var` no— y
-     el configurador salía roto en la primera pintada. */
-  /* EL SUELO SALE DEL CEREBRO. Estaba escrito 120 € aquí mientras el hecho de empresa
-     «Tours privados» —que es el que GuIA le dice al viajero— decía «desde 180 € por
-     grupo». O sea: el viajero preguntaba por WhatsApp y le contestaban 180, abría el
-     configurador de la misma web y le salía 120. Es el mismo tour y son dos precios, y el
-     que se lleva el disgusto es el guía en el punto de encuentro.
-     Este configurador ES el de privados (de ahí vino, del de Madrid Latido), así que su
-     base es el «desde» que la empresa publica y se lee de ahí. */
-  var TP = tarifaPrivado();
-  var ad = tpNum('tp-ad'), jo = tpNum('tp-jo'), pe = tpNum('tp-pe'), pax = ad + jo + pe;
-
-  /* LAS PLAZAS INCLUIDAS SE LLENAN CON LOS QUE MÁS PAGARÍAN. Se meten dentro del cupo
-     primero los adultos, luego los jóvenes y al final los peques, así quien se sale y
-     paga suplemento es siempre el más barato. Al revés —llenando con los peques— el
-     mismo grupo, con el mismo servicio, salía más caro. */
-  var guia = TP.base * 100, fuera = Math.max(0, pax - TP.incl);
-  [[pe, 0], [jo, TP.supJo], [ad, TP.supAd]].forEach(function(t){
-    var cobra = Math.min(fuera, t[0]); guia += cobra * t[1] * 100; fuera -= cobra;
-  });
-  var pro = (document.querySelector('input[name=tpdur]:checked') || {}).value === 'pro';
-  if (pro) guia += TP.pro * 100;
-  document.getElementById('tp-guia').textContent = tpEur(guia);
-  document.getElementById('tp-d-guia').textContent = pax
-    ? '(' + pax + (pax === 1 ? ' persona' : ' personas') + (pro ? ' · 3 h' : ' · 2 h') + ')' : '';
-
-  /* La radioguía la usan adultos y jóvenes; los peques no llevan. */
-  var usan = ad + jo;
-  var radio = document.getElementById('tp-radio').checked ? usan * TP.radio * 100 : 0;
-  document.getElementById('tp-l-radio').hidden = radio <= 0;
-  document.getElementById('tp-radio-e').textContent = tpEur(radio);
-  document.getElementById('tp-d-radio').textContent = radio > 0
-    ? '(' + usan + (usan === 1 ? ' persona' : ' personas') + ')' : '';
-
-  var ent = 0, n = 0;
-  document.querySelectorAll('.tp-ent').forEach(function(c){
-    if (!c.checked) return;
-    n++;
-    ent += Math.round((+c.dataset.ad || 0) * 100) * ad
-         + Math.round((+c.dataset.jo || 0) * 100) * jo
-         + Math.round((+c.dataset.pe || 0) * 100) * pe;
-  });
-  var gestion = Math.round(ent * TP.gestionPct / 100);
-  document.getElementById('tp-l-ent').hidden = ent <= 0;
-  document.getElementById('tp-l-ges').hidden = ent <= 0;
-  document.getElementById('tp-ent').textContent = tpEur(ent);
-  document.getElementById('tp-ges').textContent = tpEur(gestion);
-  document.getElementById('tp-d-ent').textContent = n
-    ? '(' + n + (n === 1 ? ' opción' : ' opciones') + ')' : '';
-
-  caja.textContent = tpEur(guia + radio + ent + gestion);
-}
 
 /* ══ LAS EXCEPCIONES, DERIVADAS DEL DÍA ═════════════════════════════════════════════
    Eran HTML fijo con los datos del sábado y se pintaban los siete días: el grupo de los
@@ -10481,85 +9720,8 @@ function pintaNoshow(){
     ' · la cadencia se adapta al riesgo de cada reserva';
 }
 
-/* ============ carrito / combos ============ */
-function verMsj(id){ var e=document.getElementById(id);
-  e.style.display = e.style.display==='block' ? 'none' : 'block'; }
-function pintaCombosDestinatarios(){
-  // La petición de reseña (y el combo) SOLO va a reservas de la WEB PROPIA:
-  // GuruWalk/Civitatis ya mandan su propia petición de reseña por email, y
-  // duplicarla quema al cliente (y la reseña se la lleva la plataforma).
-  var web=S.att.filter(function(a){ return a.canal==='Web propia' });
-  var plat=S.att.filter(function(a){ return a.canal!=='Web propia' });
-  document.getElementById('combo-destinatarios').innerHTML=
-    '🎯 <b>Destinatarios de hoy: '+web.length+' de '+S.att.length+' reservas</b> — solo las de tu web ('+
-    web.map(function(a){return a.n}).join(', ')+'). Las '+plat.length+' de plataforma ('+
-    plat.map(function(a){return a.canal}).filter(function(v,i,arr){return arr.indexOf(v)===i}).join(', ')+
-    ') ya reciben la petición de reseña de su propia plataforma — no se duplica el mensaje.';
-}
 
-/* ============ el catálogo de extras, derivado del Cerebro ============
-   Las tres piezas de la pantalla de tours de pago —el chat de muestra, los dos
-   desplegables del combo y el mensaje— estaban escritas a mano y nombraban tours que esta
-   empresa no hace: un «Tour de la Catedral al atardecer» y un «gastronómico por Triana»
-   que no salen ni un día en el ciclo. La pantalla que vende «se escribe una vez en el
-   Cerebro y GuIA lo cuenta» se demostraba con un catálogo inventado.
-   El precio sale del hecho `modelo` de cada ficha —el mismo texto que GuIA le dice al
-   viajero—, no de un número aparte: dos sitios donde escribir el precio es un sitio donde
-   se van a contradecir. */
-function precioDeFicha(t){
-  /* Con la marca `ticket` ya no hay que adivinar el precio del texto — y el texto ya no
-     está en euros siempre: en Reino Unido dice «£24» y la regex de «€» devolvía 0, con lo
-     que el tour de pago desaparecía del combo. */
-  if (t.ticket) return precioTicket();
-  var m = (t.kb.modelo||'').match(/(\d+(?:[.,]\d+)?)\s*€/);
-  return m ? parseFloat(m[1].replace(',','.')) : 0;
-}
-function toursDePago(){ return S.tours.filter(function(t){ return precioDeFicha(t) > 0; }); }
-function toursDePropina(){ return S.tours.filter(function(t){ return !precioDeFicha(t); }); }
 
-function pintaExtras(){
-  var chat = document.getElementById('extras-chat'); if (!chat) return;
-  /* La pregunta se le hace AL MOTOR, con el mismo enrutador que el chat de verdad. Si el
-     catálogo se vaciara, aquí saldría la derivada — que es exactamente lo que hay que ver
-     antes de enseñarle la pantalla a un cliente. */
-  var q = '¿hacéis algo más aparte del free tour?';
-  var r = (typeof respuestaGuia === 'function') ? String(respuestaGuia(q)) : '';
-  chat.innerHTML = '💬 <b>Chat — un viajero pregunta</b>\n\n— ' + q + '\n— ' +
-    r.replace(/\n\n<i>[\s\S]*$/, '').trim();
-
-  var a = document.getElementById('combo-a'), b = document.getElementById('combo-b');
-  var hoy = (S.agenda && S.agenda[S.agDia] && S.agenda[S.agDia].tours) || [];
-  a.innerHTML = toursDePropina().map(function(t){
-    /* «(hoy)» solo si de verdad sale hoy: el rótulo estaba fijo y el domingo ofrecía el
-       Triana «de hoy» sin que el Triana saliera. */
-    var sale = hoy.some(function(s){ return normaliza(t.nombre).indexOf(normaliza(s.tit))!==-1; });
-    return '<option>'+t.nombre+(sale?' (hoy)':'')+'</option>';
-  }).join('');
-  b.innerHTML = toursDePago().map(function(t){
-    return '<option data-p="'+precioDeFicha(t)+'">'+t.nombre+' · '+precioTxt(precioDeFicha(t))+'</option>';
-  }).join('') || '<option data-p="0">— no tienes ningún tour de pago en el Cerebro —</option>';
-  pintaMsjCombo();
-}
-function pintaMsjCombo(){
-  var caja = document.getElementById('msj-combo'); if (!caja) return;
-  var b = document.getElementById('combo-b');
-  var op = b.options[b.selectedIndex] || {};
-  var pct = +document.getElementById('combo-dto').value;
-  var base = +((op.dataset||{}).p || 0);
-  /* En CÉNTIMOS, como el configurador de al lado y por lo mismo: 24 € × 0,85 en coma
-     flotante se desvía, y le enseñarías un número al cliente y guardarías otro. */
-  var con = Math.round(base*100*(100-pct)/100)/100;
-  var eur = function(v){ return dinero(v, 2); };
-  var web = (S.kbEmpresa.web||'patioycompas.example').replace(/^https?:\/\//,'');
-  caja.innerHTML =
-    '📲 <b>Se envía 30 min después del tour, a todos.</b> El <b>enlace de reseña</b> solo se añade a las reservas de tu web y con su permiso: las de plataforma ya reciben la petición de reseña de la suya, y pedirla dos veces el mismo día compite con ella\n\n'+
-    '¡Gracias por venir esta mañana! 🙌 Si os quedasteis con ganas de más, esta semana tenéis el\n'+
-    '<b>'+(op.textContent||'').split(' · ')[0]+'</b>'+
-    (pct ? ' con un '+pct+' % para los que ya nos conocéis: '+eur(con)+' (en vez de '+eur(base)+')'
-         : ': '+eur(base))+'.\n'+
-    'Plazas de vuestro grupo guardadas 48 h 👉 '+web+'/combo/x3f9\n'+
-    '<button class="btn mini" style="margin-top:8px;" onclick="toast(\'Combo activado (simulado): se ofrece tras cada free tour\')">Activar combo</button>';
-}
 
 /* ============ la ficha de un guía ============
    Todo sale de TOURS_LIQ y de S.equipo — las mismas dos fuentes que alimentan la
@@ -11479,71 +10641,6 @@ function asignarGuia(si, gi){
   if(salida) DemoPlan.asigna(salida.tourNombre+'|'+salida.hora+'|'+salida.dia,gi);
 }
 
-/* ============ proyección de ingresos (plan de negocio en vivo) ============ */
-var proyModoV='fijo', proyCosteV='empresa';
-function proyModo(m){ proyModoV=m;
-  document.getElementById('py-tab-pct').className='btn mini'+(m==='pct'?'':' sec');
-  document.getElementById('py-tab-fijo').className='btn mini'+(m==='fijo'?'':' sec');
-  document.getElementById('py-ctl-pct').style.display = m==='pct'?'':'none';
-  document.getElementById('py-ctl-fijo').style.display = m==='fijo'?'':'none';
-  calcProy(); }
-function proyCoste(m){ proyCosteV=m;
-  document.getElementById('py-tab-cemp').className='btn mini'+(m==='empresa'?'':' sec');
-  document.getElementById('py-tab-cing').className='btn mini'+(m==='ingreso'?'':' sec');
-  calcProy(); }
-function eur0(v){ return dinero(Math.round(v), 0); }
-function calcProy(){
-  function V(id){ return +document.getElementById(id).value; }
-  var grupo=V('py-grupo'), tours=V('py-tours'), prop=V('py-prop'), ng=V('py-ng'),
-      dir=V('py-dir')/100, com=V('py-com'), ovh=V('py-ovh'), dias=V('py-dias'),
-      rep=V('py-rep')/100, fijo=V('py-fijo');
-  var d2={minimumFractionDigits:2, maximumFractionDigits:2};
-  document.getElementById('py-grupo-v').textContent=grupo;
-  document.getElementById('py-tours-v').textContent=tours;
-  document.getElementById('py-prop-v').textContent=prop.toLocaleString('es-ES',d2);
-  document.getElementById('py-ng-v').textContent=ng;
-  document.getElementById('py-dir-v').textContent=Math.round(dir*100);
-  document.getElementById('py-com-v').textContent=com.toLocaleString('es-ES',d2);
-  document.getElementById('py-ovh-v').textContent=ovh.toLocaleString('es-ES');
-  document.getElementById('py-dias-v').textContent=dias;
-  document.getElementById('py-rep-v').textContent=Math.round(rep*100);
-  document.getElementById('py-fijo-v').textContent=fijo.toLocaleString(MK.moneda.loc,d2);
-  var paxDia=grupo*tours, paxMes=paxDia*dias, brutoMes=paxDia*prop*dias;
-  var comMes=com*paxMes*(1-dir);
-  var base = brutoMes - (proyCosteV==='ingreso' ? comMes : 0);
-  var bote = proyModoV==='pct' ? base*rep : base - fijo*paxMes;
-  var guiaMes = ng ? bote/ng : 0;
-  var tpg = ng ? tours/ng : 0;          // tours por guía y día — realismo de plantilla
-  var empMes = brutoMes - bote - comMes - ovh;
-  var margen = paxMes ? empMes/paxMes : 0;
-  document.getElementById('py-kpis').innerHTML=
-    '<div class="kpi'+(guiaMes<0?' malo':'')+'"><span class="v"'+(guiaMes<0?'':' style="color:var(--acc2);"')+'>'+eur0(guiaMes)+'</span><span class="l">cada guía / mes <b>('+dias+' días de operación)</b></span></div>'+
-    '<div class="kpi'+(empMes<0?' malo':'')+'"><span class="v">'+eur0(empMes)+'</span><span class="l">empresa neto / mes (tras '+eur0(ovh)+' de gastos fijos)</span></div>'+
-    '<div class="kpi"><span class="v">'+paxDia+'</span><span class="l">personas / día</span></div>'+
-    '<div class="kpi"><span class="v">'+eur0(brutoMes)+'</span><span class="l">propina bruta / mes</span></div>'+
-    '<div class="kpi"><span class="v">'+eur0(comMes)+'</span><span class="l">comisiones de plataforma / mes</span></div>'+
-    '<div class="kpi"><span class="v">'+dinero(margen, 2)+'</span><span class="l">margen de la empresa por persona</span></div>';
-  document.getElementById('py-nota').innerHTML=
-    (proyModoV==='pct'
-      ? 'El guía se queda el <b>'+Math.round(rep*100)+' %</b> de lo que se reparte; la empresa, el resto. '
-      /* Con `dinero()` y no a mano: aquí había `toLocaleString('es-ES')` y un € clavado
-         —y en la inglesa, 'en-GB' y una £—. Estaba en la rama del FIJO, que hasta hoy no
-         se veía nunca porque el modo por defecto era el porcentaje: la guarda de moneda
-         no podía cazarlo porque el control estaba oculto. Cambiar el defecto lo destapó. */
-      : 'La empresa se queda <b>'+dinero(fijo,2)+' por persona</b> ('+eur0(fijo*paxMes)+'/mes); el guía, el resto. ')+
-    (proyCosteV==='empresa'
-      ? 'Las comisiones de plataforma ('+eur0(comMes)+'/mes) <b>las asume la empresa</b> de su parte — el reparto es sobre la propina bruta. '
-      : 'Las comisiones ('+eur0(comMes)+'/mes) se descuentan del total <b>antes</b> del reparto — las comparten guía y empresa. ')+
-    'Sube «Reservas de tu web» y mira caer la comisión: cada reserva que el sistema trae a tu web es margen que no se va a la plataforma.'+
-    (guiaMes<0 ? ' <b style="color:var(--rojo);">⚠️ Con este fijo el guía saldría en pérdidas: baja el fijo o sube la propina media.</b>' : '')+
-    /* Realismo de plantilla: al crecer, el cuello de botella deja de ser la demanda
-       y pasa a ser el equipo. Un guía sostiene ~2-3 salidas al día como mucho. */
-    (tpg>3 ? ' <b style="color:var(--rojo);">⚠️ '+tpg.toLocaleString('es-ES',{maximumFractionDigits:1})+
-             ' tours por guía y día: no cuadra. Con '+tours+' salidas necesitas al menos '+
-             Math.ceil(tours/3)+' guías (y con margen de descansos y libranzas, más).</b>'
-           : (tpg>2 ? ' <span class="mini" style="color:var(--amber);">Plantilla al límite: '+
-               tpg.toLocaleString('es-ES',{maximumFractionDigits:1})+' tours por guía y día.</span>' : ''));
-}
 
 // registro inicial del panel de respuestas: lo confirmado de fábrica (sin chip «nuevo»)
 CAMPOS_EMPRESA.forEach(function(c){ if ((S.kbEmpresa[c.k]||'').trim())
@@ -11551,11 +10648,7 @@ CAMPOS_EMPRESA.forEach(function(c){ if ((S.kbEmpresa[c.k]||'').trim())
 S.tours.forEach(function(t){ CAMPOS_KB.forEach(function(c){ if ((t.kb[c.k]||'').trim())
   S.recientes.push({ tipo:'kb', tourId:t.id, k:c.k, seed:true }); }); });
 seedDispo(); seedCobertura();
-/* `sembrarProy` sustituye al `calcProy` suelto que había aquí: siembra los deslizadores con
-   la operación del ciclo y pinta. Y va en ESTA tanda y no en el `setTimeout` del arranque
-   —donde están los KPI del Cuadro— porque aquí abajo ya está todo declarado y la pantalla
-   sale bien a la primera, sin un parpadeo con los números viejos. */
-pintaManifiesto(); pintaNoshowCfg(); pintaNoshow(); pintaLiq(); pintaCerebro(); pintaCombosDestinatarios(); pintaPost(); sembrarProy(); pintaCuadroCanales(); pintaCuadroFranjas(); pintaEquipo(); pintaCanales(); pintaOperaciones();
+pintaManifiesto(); pintaNoshowCfg(); pintaNoshow(); pintaLiq(); pintaCerebro(); pintaPost(); pintaCuadroCanales(); pintaCuadroFranjas(); pintaEquipo(); pintaCanales(); pintaOperaciones();
 pintaGatesInline(); pintaWaTope(); pintaCanalChat();
 msg('bot','¡Hola! 👋 Soy GuIA, el asistente automático que atiende este chat. Ahora respondo sobre «'+tourChat().nombre+'» — prueba los ejemplos, o crea otro tour en el 🧠 Cerebro y verás que cada uno tiene su cerebro, sin mezclas.');
 
@@ -11654,7 +10747,7 @@ var buzonDemo = (function(){
     if(a==='aplicar' && fase===2 && revisando){
       S.att.push({n:en?'Ana Rossi':'Ana Gil', p:3, canal:'GuruWalk', ok:false});
       fase=3; revisando=false;
-      pintaManifiesto(); pintaCombosDestinatarios();
+      pintaManifiesto();
     }
     pinta();
   }
