@@ -1105,7 +1105,7 @@
     <div class="nav-g" id="ng-ventas">
       <button class="nav-g-cab" aria-expanded="false" aria-controls="ng-ventas-funciones" onclick="this.parentElement.classList.toggle('abierto')"><svg class="ico t-coral" aria-hidden="true" focusable="false"><use href="#i-megaphone"/></svg><span class="demo-nav-texto"> Reservas y ventas </span><span class="flecha">▾</span></button>
       <div class="nav-g-hijos" id="ng-ventas-funciones">
-        <a href="#web" data-v="web"><svg class="ico t-azul" aria-hidden="true" focusable="false"><use href="#i-globe"/></svg><span class="demo-nav-texto"> Tu web </span><span class="cand">🔒</span></a>
+        <a href="#web" data-v="web"><svg class="ico t-azul" aria-hidden="true" focusable="false"><use href="#i-globe"/></svg><span class="demo-nav-texto"> Tu página de reservas </span><span class="cand">🔒</span></a>
         <a href="#canales" data-v="canales"><svg class="ico t-lila" aria-hidden="true" focusable="false"><use href="#i-plug"/></svg><span class="demo-nav-texto"> Canales y sincronización</span></a>
         <a href="#noshow" data-v="noshow"><svg class="ico t-coral" aria-hidden="true" focusable="false"><use href="#i-send"/></svg><span class="demo-nav-texto"> Anti no-show</span></a>
       </div>
@@ -1135,7 +1135,7 @@
         <div class="comp-gratis">🎁 El primer mes de cada complemento no se cobra.</div>
         <div class="comp-tit">Complementos</div>
         <label><input type="checkbox" id="c-guia" onchange="compTog('guia',this)"><span>GuIA, el asistente</span><b>+39 €</b></label>
-        <div class="comp-incl">✓ <b>Tu web de reservas</b>, incluida en todos los planes</div>
+        <div class="comp-incl">✓ <b>Tu página de reservas</b>, incluida en todos los planes</div>
         <div class="comp-total">Tu tarifa: <b id="comp-tot">39 €</b><span id="comp-desglose"></span></div>
       </div>
       <div style="font-size:11.5px; margin-top:8px; opacity:.85; line-height:1.5;">💶 La propina: <b>0 %</b>. Audutor no la cobra ni se lleva nada de ella — la anota y la cuadra.</div>
@@ -1548,7 +1548,7 @@
   </div>
   <div class="card"><h2>Qué conecta cada vía</h2>
     <p><b>Correo:</b> crea, modifica o cancela reservas con formatos reconocidos. Los mensajes ambiguos quedan para revisar. No cambia disponibilidad en las plataformas.</p>
-    <p><b>Tu web:</b> la página publicada por Audutor consulta su aforo. La sincronización de una web externa requiere implementar y comprobar su conexión a la API. En el panel ves por separado cuándo consulta disponibilidad y cuándo recoge cambios, los intentos fallidos y si supera el plazo que esperabas. Recibir una respuesta no demuestra que tu web la haya aplicado.</p>
+    <p><b>Tu página de reservas:</b> la página publicada por Audutor consulta su aforo. La sincronización de una web externa requiere implementar y comprobar su conexión a la API. En el panel ves por separado cuándo consulta disponibilidad y cuándo recoge cambios, los intentos fallidos y si supera el plazo que esperabas. Recibir una respuesta no demuestra que tu web la haya aplicado.</p>
     <p><b>WhatsApp / SMS:</b> preparas recordatorios para enviarlos desde tu móvil. El transporte automático de GuIA y los avisos por WhatsApp/SMS aún requieren integración.</p>
     <p class="mini muted">Una muestra simulada no acredita la salud de un proveedor real. OAuth sigue pendiente.</p>
   </div>
@@ -1784,7 +1784,11 @@
      reproduce lo que `app/servidor/web.js` genera de verdad, con los mismos bloques, el
      mismo orden y las mismas tres reglas. -->
 <section class="vista" id="v-web">
-  <div class="cab"><h1>Tu web</h1><span class="sub">sale de lo que ya escribiste en el Cerebro — por eso no se puede quedar desactualizada</span></div>
+  <div class="cab"><h1>Tu página de reservas</h1><span class="sub">sale de lo que ya escribiste en el Cerebro — por eso no se puede quedar desactualizada</span></div>
+
+  <!-- Se llamaba «Tu web» y quien no tenía web creía que ya la tenía (Carlos, 15-nov): es la
+       página de reservas, y la web de verdad es la oferta de la portada. Igual que en el panel. -->
+  <div class="card"><p style="margin:0"><b>¿Quieres una web completa?</b> Te la hacemos con tu marca, tus fotos y tu dominio, con aviso legal, y las reservas siguen entrando aquí. <a href="../#tu-web" target="_blank" rel="noopener">Ver qué incluye y pedirla</a></p></div>
 
   <div class="card">
     <h2>🕳️ Lo que le falta para no salir coja</h2>
@@ -1845,7 +1849,7 @@
 
   <div class="card">
     <h2>🔗 El QR de cada guía — que un buen tour se convierta en la próxima reserva</h2>
-    <div class="mini muted" style="margin:0 0 10px;">Cada guía tiene su QR: abre <b>tu web de reservas</b>, con
+    <div class="mini muted" style="margin:0 0 10px;">Cada guía tiene su QR: abre <b>tu página de reservas</b>, con
       los tours y las plazas que quedan de verdad, y deja anotado qué guía la recomendó. <details class="mas"><summary>ⓘ más</summary><span class="mas-p">El
       momento de oro es el final del tour: la gente acaba de pasarlo bien y pregunta «¿qué más hacéis?».
       El guía enseña su QR y esa recomendación aterriza en tu web, no en la plataforma. El QR lleva el
@@ -7013,7 +7017,7 @@ function tdArranca(){
 var SUPLEMENTOS={
   chat:      { n:'GuIA · Probar GuIA', plan:'Pro', d:'El asistente que atiende a tus clientes en el chat de tu web: consulta los hechos de cada tour y pasa al equipo lo que no puede resolver. Prueba sus respuestas antes de abrirlo a viajeros.' },
   cerebro:   { n:'GuIA · Cerebro', plan:'Pro', d:'El formulario de hechos por tour que alimenta al asistente, con IA que lo rellena desde la web del tour y borradores editables.' },
-  web:       { n:'Tu web', plan:'todos', d:'Tu página pública, sacada de lo que ya escribiste en el Cerebro: un bloque por tipo de pregunta y un campo vacío no sale. EL TOUR SE RESERVA AQUÍ, contra el aforo de verdad; los que llevan precio necesitan tu dirección de cobro. También abre la página de cada guía con su QR. Va en todos los planes: en Esencial con la marca «con Audutor», en Pro y Premium con la tuya.' },
+  web:       { n:'Tu página de reservas', plan:'todos', d:'Tu página pública, sacada de lo que ya escribiste en el Cerebro: un bloque por tipo de pregunta y un campo vacío no sale. EL TOUR SE RESERVA AQUÍ, contra el aforo de verdad; los que llevan precio necesitan tu dirección de cobro. También abre la página de cada guía con su QR. Va en todos los planes: en Esencial con la marca «con Audutor», en Pro y Premium con la tuya.' },
   cuadro:    { n:'Cuadro de mando', plan:'todos', d:'La analítica del negocio: ocupación, canales, propina por guía y por franja, no-shows. Para decidir con datos, no a ojo.' },
   liquidacion:{ n:'Liquidación a guías', plan:'todos', d:'La cuenta de cada tour siempre cuadrada: reparto por % o tarifa fija, coste de canal, CSV e imprimir. El guía nunca paga.' },
   /* Claves de gating INLINE (sin vista propia ni enlace de nav): las usa pintaGatesInline()
@@ -9421,7 +9425,7 @@ function abrirGuidePage(nombre){
     '<li>🗓 <b>Los horarios y las plazas son los de verdad</b> — salen de tu cuadrante y de lo que le consta a cada canal, no de una tabla escrita a mano.</li>'+
     '<li>📈 El QR lleva el <b>código del guía</b>: lo que se reserve desde ahí queda a su nombre, y la analítica te dice cuántas reservas trae cada uno.</li>'+
     '</ul>'+
-    '<p class="mini">Es <b>tu web de reservas</b>, la misma para todos los guías: el QR solo añade quién la recomendó. El free tour se reserva a 0 €; el de pago guarda la plaza y <b>el dinero va a tu pasarela</b>: Audutor no cobra ni un euro.</p>';
+    '<p class="mini">Es <b>tu página de reservas</b>, la misma para todos los guías: el QR solo añade quién la recomendó. El free tour se reserva a 0 €; el de pago guarda la plaza y <b>el dinero va a tu pasarela</b>: Audutor no cobra ni un euro.</p>';
   document.getElementById('viajero-overlay').classList.add('ver');
   document.body.style.overflow='hidden';
   pintaGuidePage(nombre);

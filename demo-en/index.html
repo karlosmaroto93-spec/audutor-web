@@ -968,7 +968,7 @@
     <div class="nav-g" id="ng-ventas">
       <button class="nav-g-cab" aria-expanded="false" aria-controls="ng-ventas-funciones" onclick="this.parentElement.classList.toggle('abierto')"><svg class="ico t-coral" aria-hidden="true" focusable="false"><use href="#i-megaphone"/></svg><span class="demo-nav-texto"> Bookings &amp; sales </span><span class="flecha">▾</span></button>
       <div class="nav-g-hijos" id="ng-ventas-funciones">
-        <a href="#web" data-v="web"><svg class="ico t-azul" aria-hidden="true" focusable="false"><use href="#i-globe"/></svg><span class="demo-nav-texto"> Your website </span><span class="cand">🔒</span></a>
+        <a href="#web" data-v="web"><svg class="ico t-azul" aria-hidden="true" focusable="false"><use href="#i-globe"/></svg><span class="demo-nav-texto"> Your booking page </span><span class="cand">🔒</span></a>
         <a href="#canales" data-v="canales"><svg class="ico t-lila" aria-hidden="true" focusable="false"><use href="#i-plug"/></svg><span class="demo-nav-texto"> Channels &amp; sync</span></a>
         <a href="#noshow" data-v="noshow"><svg class="ico t-coral" aria-hidden="true" focusable="false"><use href="#i-send"/></svg><span class="demo-nav-texto"> Anti no-show</span></a>
       </div>
@@ -994,7 +994,7 @@
         <div class="comp-gratis">🎁 The first month of every add-on is free.</div>
         <div class="comp-tit">Add-ons</div>
         <label><input type="checkbox" id="c-guia" onchange="compTog('guia',this)"><span>GuIA, the assistant</span><b>+€39</b></label>
-        <div class="comp-incl">✓ <b>Your booking website</b>, included in every plan</div>
+        <div class="comp-incl">✓ <b>Your booking page</b>, included in every plan</div>
         <div class="comp-total">Your plan: <b id="comp-tot">€39</b><span id="comp-desglose"></span></div>
       </div>
       <div style="font-size:11.5px; margin-top:8px; opacity:.85; line-height:1.5;">💶 Tips: <b>0 %</b>. Audutor does not take the tip nor a penny of it — it records it and squares it.</div>
@@ -1444,7 +1444,7 @@
   </div>
   <div class="card"><h2>What each route connects</h2>
     <p><b>Email:</b> creates, changes or cancels bookings from recognised formats. Uncertain messages need review. It does not change availability on platforms.</p>
-    <p><b>Your website:</b> the page published by Audutor reads its capacity. Synchronisation with an external website requires implementing and checking its API connection. The panel separately shows availability requests, change retrieval, failed attempts and overdue checks against your expected interval. Receiving a response does not prove your website applied it.</p>
+    <p><b>Your booking page:</b> the page published by Audutor reads its capacity. Synchronisation with an external website requires implementing and checking its API connection. The panel separately shows availability requests, change retrieval, failed attempts and overdue checks against your expected interval. Receiving a response does not prove your website applied it.</p>
     <p><b>WhatsApp / SMS:</b> prepare reminders to send from your phone. Automatic GuIA transport and WhatsApp/SMS alerts still require integration.</p>
     <p class="mini muted">A simulated sample is not proof of a real provider’s health. OAuth remains pending.</p>
   </div>
@@ -1680,7 +1680,11 @@
      reproduce lo que `app/servidor/web.js` genera de verdad, con los mismos bloques, el
      mismo orden y las mismas tres reglas. -->
 <section class="vista" id="v-web">
-  <div class="cab"><h1>Your website</h1><span class="sub">it comes from what you already wrote in the Brain — which is why it cannot go stale</span></div>
+  <div class="cab"><h1>Your booking page</h1><span class="sub">it comes from what you already wrote in the Brain — which is why it cannot go stale</span></div>
+
+  <!-- It used to be called “Your website”, and operators without one thought they already had it
+       (Carlos, 15-Nov): it is the booking page; the real website is the offer on the home page. -->
+  <div class="card"><p style="margin:0"><b>Want a full website?</b> We build it with your brand, your photos and your domain, with the legal notice, and bookings keep coming in here. <a href="../en/#tu-web" target="_blank" rel="noopener">See what is included and order it</a></p></div>
 
   <div class="card">
     <h2>🕳️ What it still needs</h2>
@@ -1741,7 +1745,7 @@
 
   <div class="card">
     <h2>🔗 Each guide’s QR — turning a good tour into the next booking</h2>
-    <div class="mini muted" style="margin:0 0 10px;">Every guide has their own QR: it opens <b>your booking website</b>,
+    <div class="mini muted" style="margin:0 0 10px;">Every guide has their own QR: it opens <b>your booking page</b>,
       with the walks and the places really left, and records which guide recommended it. <details class="mas"><summary>ⓘ more</summary><span class="mas-p">The
       moment that counts is the end of the tour: people have just had a good time and ask “what else do you run?”.
       The guide shows their QR and that recommendation lands on your site, not the platform’s. The QR carries
@@ -6317,7 +6321,7 @@ function recargaManifiesto(){
 var SUPLEMENTOS={
   chat:      { n:'GuIA · Test GuIA', plan:'Pro', d:'The assistant that handles your customers in the chat on your site: it answers with the facts of each tour and hands over anything it does not know. Test its answers before using it with travellers.' },
 cerebro:   { n:'GuIA’s brain', plan:'Pro', d:'The per-tour fact sheet that feeds the assistant, with AI filling it in from the tour’s own page and drafts you can edit.' },   // y L1991: n:'Smart anti-no-show sequence'
-  web:       { n:'Your website', plan:'todos', d:'Your public page, built from what you already wrote in the Brain: one block per kind of question, and an empty field does not appear. THE TOUR IS BOOKED HERE, against the real capacity; the ones with a price need your payment address. It also opens each guide\'s own page with their QR. It comes with every plan: with a small “with Audutor” badge on Essential, with your brand on Pro and Premium.' },
+  web:       { n:'Your booking page', plan:'todos', d:'Your public page, built from what you already wrote in the Brain: one block per kind of question, and an empty field does not appear. THE TOUR IS BOOKED HERE, against the real capacity; the ones with a price need your payment address. It also opens each guide\'s own page with their QR. It comes with every plan: with a small “with Audutor” badge on Essential, with your brand on Pro and Premium.' },
   cuadro:    { n:'Analytics', plan:'todos', d:'The numbers behind the business: occupancy, channels, tips by guide and time slot, no-shows. So you decide on data, not on a hunch.' },
   liquidacion:{ n:'Guide payouts', plan:'todos', d:'Every tour’s books balanced: split by percentage or flat fee, channel cost, CSV and print. The guide never pays.' },
   /* Claves de gating INLINE (sin vista propia ni enlace de nav): las usa pintaGatesInline()
@@ -8358,7 +8362,7 @@ function abrirGuidePage(nombre){
     '<li>👥 <b>The group size is already filled in</b> with the booking they just walked on. Five of you this morning, five for the ghost walk tonight — one tap instead of a form.</li>'+
     '<li>🗓 <b>The days, times and places left are the real ones</b> — straight from your schedule and from what each channel has, not a table typed by hand.</li>'+
     '<li>📈 The QR carries the <b>guide’s code</b>: whatever is booked from it is credited to them, and the analytics tell you how many bookings each one brings.</li></ul>'+
-    '<p class="mini">It is <b>your booking website</b>, the same for every guide: the QR only adds who recommended it.</p>';
+    '<p class="mini">It is <b>your booking page</b>, the same for every guide: the QR only adds who recommended it.</p>';
   document.getElementById('viajero-overlay').classList.add('ver');
   document.body.style.overflow='hidden';
   GP.paso='tours'; GP.tour=null; GP.hora=null; GP.diaIdx=0;

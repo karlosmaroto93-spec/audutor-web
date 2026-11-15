@@ -80,7 +80,7 @@
   }
   function pide(){if(!pendiente){pendiente=true;requestAnimationFrame(actualiza);}}
   window.addEventListener('scroll',pide,{passive:true});window.addEventListener('hashchange',pide);
-  window.addEventListener('resize',function(){if(innerWidth>1000)menu.open=false;pide();});
+  window.addEventListener('resize',function(){if(innerWidth>1100)menu.open=false;pide();});
   menu.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){menu.open=false;});});
   document.addEventListener('pointerdown',function(e){if(menu.open&&!menu.contains(e.target))menu.open=false;});
   document.addEventListener('keydown',function(e){if(e.key==='Escape'&&menu.open){menu.open=false;menu.querySelector('summary').focus();}});
