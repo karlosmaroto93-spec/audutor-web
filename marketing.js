@@ -25,10 +25,11 @@
      así que esta capa no dibuja nada: dice adónde saltar y el vídeo enseña el punto allí.
      La geometría y los tiempos salen del vídeo (video/src/formato.ts y calendario() de
      guion.ts, formato 4:5): la línea va de x 64 a 1016 de 1080, y el punto recorre de 2,8 s
-     (entra la primera escena) a 47,5 s (empieza el cierre). Si cambia el guion, cambian aquí. */
+     (entra la primera escena) a 46,25 s (empieza el cierre; 47,5 con «sin cobertura» y 40
+     sin ella, hasta que entró «Te hacemos la web», 15-nov). Si cambia el guion, cambian aquí. */
   var barra=document.querySelector('[data-bucle-barra]');
   if(barra){
-    var X0=64/1080, X1=1016/1080, DESDE=2.8, FIN=47.5;
+    var X0=64/1080, X1=1016/1080, DESDE=2.8, FIN=46.25;
     var arrastrando=false, seguia=false, destino=null;
     var tiempoEn=function(x){ var r=video.getBoundingClientRect(); var p=((x-r.left)/r.width-X0)/(X1-X0); return DESDE+Math.min(1,Math.max(0,p))*(FIN-DESDE); };
     /* Un salto por cuadro: al arrastrar llegan más movimientos que cuadros y cada salto hace
