@@ -47,3 +47,29 @@
 .guia-figura{flex:0 0 auto;width:80px;height:auto}
 .guia-marca h3{margin:4px 0 0}
 @media(max-width:700px){.guia-figura{width:64px}}
+
+/* «Te hacemos la web» (15-nov-2026). Muchos autónomos venden solo en plataformas y no
+   tienen web propia: la sección enseña una de verdad (Madrid Latido, marca de demostración
+   y dicho así) y el precio cerrado, para que no haya que escribir para saber cuánto cuesta.
+   El fondo blanco la separa del verde de «Cómo empiezas», que va justo encima. */
+.hero-tu-web{display:inline-flex;align-items:center;gap:6px;min-height:44px;margin-top:6px;font-size:15px;font-weight:700;color:var(--verde)}
+.tu-web{background:var(--blanco);border-bottom:1px solid var(--linea)}
+.tu-web-cuerpo{display:grid;grid-template-columns:1.35fr 1fr;gap:32px;align-items:start}
+.tu-web-ejemplo{margin:0}
+.tu-web-ejemplo>a{display:block;position:relative;padding:0 44px 28px 0}
+.tu-web-escritorio{display:block;width:100%;height:auto;border-radius:14px;border:1px solid var(--linea);box-shadow:0 18px 40px #183b321f}
+.tu-web-movil{position:absolute;right:0;bottom:0;width:24%;height:auto;border-radius:16px;border:4px solid var(--tinta);box-shadow:0 12px 28px #183b3233}
+.tu-web-ejemplo figcaption{margin-top:16px;font-size:13px;color:var(--gris)}
+.tu-web-ejemplo figcaption a{color:var(--verde);font-weight:700}
+.tu-web-oferta{background:var(--papel);border:1px solid var(--linea);border-radius:var(--radio);padding:28px}
+.tu-web-oferta h3{margin-bottom:14px}
+.tu-web-lista{margin:0 0 22px;padding:0;list-style:none;font-size:15px}
+.tu-web-lista li{position:relative;padding-left:28px;margin:10px 0}
+.tu-web-lista li::before{content:'✓';position:absolute;left:0;color:var(--verde);font-weight:700}
+.tu-web-precio{display:flex;align-items:baseline;gap:10px;border-top:1px solid var(--linea);padding-top:18px}
+.tu-web-precio b{font-family:Newsreader,Georgia,serif;font-size:34px;font-weight:500;color:var(--tinta)}
+.tu-web-precio span{font-size:15px;color:var(--gris)}
+.tu-web-cuota{font-size:15px;margin:8px 0 10px}
+.acciones-tu-web{margin-top:20px}
+@media(max-width:1000px){.tu-web-cuerpo{grid-template-columns:1fr}}
+@media(max-width:700px){.tu-web-oferta{padding:22px}.tu-web-ejemplo>a{padding:0 28px 20px 0}}
