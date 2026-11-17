@@ -787,7 +787,9 @@
   .plan-sel{ display:flex; gap:4px; margin-top:8px; flex-wrap:wrap; }
   /* Tres botones en ~187 px: el nombre del plan debe caber sin desbordar la caja.
      «Esencial» a 12 px no cabía en los ~56 px útiles de cada botón. */
-  .plan-sel button{ flex:1 1 0; min-width:0; min-height:48px; border:1px solid #d9cba6; background:#fffdf5; color:#5c6653; border-radius:8px; padding:8px 2px; font-size:11.5px; font-weight:600; cursor:pointer; font-family:inherit; line-height:1.3; overflow:hidden; }
+  /* Dos por fila desde el plan de 89 € (17-nov-2026): con cuatro en una fila cada botón
+     se quedaba en 48 px y «Premium» se cortaba. */
+  .plan-sel button{ flex:1 1 calc(50% - 2px); min-width:0; min-height:48px; border:1px solid #d9cba6; background:#fffdf5; color:#5c6653; border-radius:8px; padding:8px 2px; font-size:11.5px; font-weight:600; cursor:pointer; font-family:inherit; line-height:1.3; overflow:hidden; }
   .plan-sel button b{ display:block; font-size:11.5px; letter-spacing:-.03em; color:#2f443b; white-space:nowrap; }
   /* En móvil el sidebar ocupa todo el ancho: hay sitio de sobra, se agranda. */
   @media (max-width:760px){
@@ -1125,6 +1127,7 @@
       <div class="plan-sel" id="plan-sel">
         <button data-plan="esencial" onclick="cambiarPlan('esencial')"><b>Esencial</b>0 €</button>
         <button data-plan="pro" onclick="cambiarPlan('pro')"><b>Pro</b>45 €</button>
+        <button data-plan="plus" onclick="cambiarPlan('plus')"><b>Plus</b>89 €</button>
         <button data-plan="premium" onclick="cambiarPlan('premium')"><b>Premium</b>149 €</button>
       </div>
       <!-- LOS COMPLEMENTOS. El plan es un BONO de viajeros; esto es lo que le sumas encima.
@@ -1189,10 +1192,12 @@
          delata que los datos no son de verdad. -->
     <div id="seg-cab"></div>
     <div id="seg-cuerpo">
+      <!-- Aquí decía «Recordatorio del día antes y confirmación de la mañana ya enviados» y había
+           un botón «Avisar a los que faltan». La app no manda ninguna de las dos cosas (los
+           recordatorios automáticos son la pendiente 8), y era lo primero que veía un operador
+           en una llamada (análisis del 10-nov, anexo 2). Se quitan hasta que existan. -->
       <p class="mini muted" style="margin:4px 0 0;">El guía está en el punto de encuentro: esto se actualiza
-        solo según va marcando llegadas en su manifiesto. Recordatorio del día antes y confirmación de la
-        mañana ya enviados.</p>
-      <button class="btn mini sec" style="margin-top:10px;" onclick="toast('Aviso enviado a las reservas sin responder de este tour (simulado)')">📢 Avisar a los que faltan</button>
+        solo según va marcando llegadas en su manifiesto.</p>
       <div class="seg-kpis" id="seg-kpis"></div>
       <div id="seg-lista"></div>
       <div class="seg-cancel" id="seg-cancel"></div>
@@ -7122,7 +7127,7 @@ function tdArranca(){
 var SUPLEMENTOS={
   chat:      { n:'GuIA · Probar GuIA', plan:'Pro', d:'El asistente que atiende a tus clientes en el chat de tu web: consulta los hechos de cada tour y pasa al equipo lo que no puede resolver. Prueba sus respuestas antes de abrirlo a viajeros.' },
   cerebro:   { n:'GuIA · Cerebro', plan:'Pro', d:'El formulario de hechos por tour que alimenta al asistente, con IA que lo rellena desde la web del tour y borradores editables.' },
-  web:       { n:'Tu página de reservas', plan:'todos', d:'Tu página pública, sacada de lo que ya escribiste en el Cerebro: un bloque por tipo de pregunta y un campo vacío no sale. EL TOUR SE RESERVA AQUÍ, contra el aforo de verdad; los que llevan precio necesitan tu dirección de cobro. También abre la página de cada guía con su QR. Va en todos los planes: en Esencial con la marca «con Audutor», en Pro y Premium con la tuya.' },
+  web:       { n:'Tu página de reservas', plan:'todos', d:'Tu página pública, sacada de lo que ya escribiste en el Cerebro: un bloque por tipo de pregunta y un campo vacío no sale. EL TOUR SE RESERVA AQUÍ, contra el aforo de verdad; los que llevan precio necesitan tu dirección de cobro. También abre la página de cada guía con su QR. Va en todos los planes: en Esencial con la marca «con Audutor», en los planes de pago con la tuya.' },
   cuadro:    { n:'Cuadro de mando', plan:'todos', d:'La analítica del negocio: ocupación, canales, propina por guía y por franja, no-shows. Para decidir con datos, no a ojo.' },
   liquidacion:{ n:'Liquidación a guías', plan:'todos', d:'La cuenta de cada tour siempre cuadrada: reparto por % o tarifa fija, coste de canal, CSV e imprimir. El guía nunca paga.' },
   /* Claves de gating INLINE (sin vista propia ni enlace de nav): las usa pintaGatesInline()
@@ -7136,7 +7141,10 @@ var SUPLEMENTOS={
    Premium sin más argumento que un tope que a casi nadie le aprieta. */
 var PLANES={ esencial:{orden:0, n:'Esencial', precio:'0 €',   bono:150,  base:0},
              pro:     {orden:1, n:'Pro',      precio:'45 €',  bono:2500, base:45},
-             premium: {orden:2, n:'Premium',  precio:'149 €', bono:10000, base:149} };
+             /* El plan de 89 € hasta 6.000 (17-nov-2026), entre Pro y Premium como en
+                `clientes.PLANES`: la web dejó de prometer tramos que no se cobraban. */
+             plus:    {orden:2, n:'Plus',     precio:'89 €',  bono:6000, base:89},
+             premium: {orden:3, n:'Premium',  precio:'149 €', bono:10000, base:149} };
 /* Qué cuesta cada complemento y qué desbloquea. Una clave por complemento, y la lista de
    vistas que abre — así añadir uno nuevo es una línea y no hay que tocar el gating. */
 var COMPLEMENTOS = {
@@ -7171,7 +7179,7 @@ function abiertoPorComplemento(v){
    orden 1 y salían con candado en el plan gratuito, que es donde más se mira la demo. */
 function reqOrden(v){
   var p = SUPLEMENTOS[v].plan;
-  return p==='Premium' ? 2 : p==='todos' ? 0 : 1;
+  return p==='Premium' ? PLANES.premium.orden : p==='todos' ? 0 : 1;
 }
 /* Qué complemento abre esta vista, o null si la abre el plan. Existe porque el cartel del
    candado ofrecía «Cambiar a Pro» para vistas que el plan NO abre —GuIA y la liquidación—:
@@ -7445,14 +7453,14 @@ function pintaWeb(){
   }
   html += partes.join('') ||
     '<p style="color:#a3402f; font-size:13px;">Esta página saldría vacía: rellena el Cerebro primero.</p>';
-  /* El pie con marca: solo lo quitan Pro y Premium, igual que `conMarca()` en el servidor. */
-  var marca = (S.plan === 'pro' || S.plan === 'premium');
+  /* El pie con marca: lo quitan los planes de pago, igual que `conMarca()` en el servidor. */
+  var marca = PLANES[S.plan].base > 0;
   html += '<p style="margin:20px 0 0; border-top:1px solid #e6e6e6; padding-top:8px; color:#5b6b64; font-size:11.5px;">' +
     (marca ? '' : 'Hecho con Audutor') + '</p>';
   caja.innerHTML = html;
 
   var ch = document.getElementById('web-marca');
-  if (ch) ch.textContent = marca ? 'sin marca de Audutor (Pro y Premium)' : 'con «Hecho con Audutor» en el pie';
+  if (ch) ch.textContent = marca ? 'sin marca de Audutor (planes de pago)' : 'con «Hecho con Audutor» en el pie';
   var bp = document.getElementById('web-pub');
   if (bp) bp.textContent = S_WEB.publicada ? 'Quitarla de la calle' : 'Publicarla ahora';
 }

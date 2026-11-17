@@ -641,7 +641,9 @@
   .plan-sel{ display:flex; gap:4px; margin-top:8px; flex-wrap:wrap; }
   /* Tres botones en ~187 px: el nombre del plan debe caber sin desbordar la caja.
      “Esencial” a 12 px no cabía en los ~56 px útiles de cada botón. */
-  .plan-sel button{ flex:1 1 0; min-width:0; min-height:48px; border:1px solid #d9cba6; background:#fffdf5; color:#5c6653; border-radius:8px; padding:8px 2px; font-size:11.5px; font-weight:600; cursor:pointer; font-family:inherit; line-height:1.3; overflow:hidden; }
+  /* Dos por fila desde el plan de 89 € (17-nov-2026): con cuatro en una fila cada botón
+     se quedaba en 48 px y «Premium» se cortaba. */
+  .plan-sel button{ flex:1 1 calc(50% - 2px); min-width:0; min-height:48px; border:1px solid #d9cba6; background:#fffdf5; color:#5c6653; border-radius:8px; padding:8px 2px; font-size:11.5px; font-weight:600; cursor:pointer; font-family:inherit; line-height:1.3; overflow:hidden; }
   .plan-sel button b{ display:block; font-size:11.5px; letter-spacing:-.03em; color:#2f443b; white-space:nowrap; }
   /* En móvil el sidebar ocupa todo el ancho: hay sitio de sobra, se agranda. */
   @media (max-width:760px){
@@ -988,6 +990,7 @@
       <div class="plan-sel" id="plan-sel">
         <button data-plan="esencial" onclick="cambiarPlan('esencial')"><b>Essential</b>€0</button>
         <button data-plan="pro" onclick="cambiarPlan('pro')"><b>Pro</b>€45</button>
+        <button data-plan="plus" onclick="cambiarPlan('plus')"><b>Plus</b>€89</button>
         <button data-plan="premium" onclick="cambiarPlan('premium')"><b>Premium</b>€149</button>
       </div>
       <div class="comp-sel" id="comp-sel">
@@ -1057,10 +1060,11 @@
         <span class="mini muted" style="font-weight:600;">· live</span></h2>
       <span class="mini muted">Guide: Emma</span>
     </div>
+    <!-- Aquí decía que el recordatorio de la víspera y la confirmación de la mañana ya habían
+         salido, y había un botón para avisar a los que no contestan. La app no manda ninguna de
+         las dos cosas (pendiente 8); se quitan como en la demo española. -->
     <p class="mini muted" style="margin:4px 0 0;">The guide is at the meeting point: this updates itself
-      as they check people in on their manifest. Yesterday’s reminder and this morning’s confirmation
-      have already gone out.</p>
-    <button class="btn mini sec" style="margin-top:10px;" onclick="toast('Nudge sent to the bookings on this tour that haven’t replied (simulated)')">📢 Chase the ones who haven’t replied</button>
+      as they check people in on their manifest.</p>
     <div class="seg-kpis" id="seg-kpis"></div>
     <div id="seg-lista"></div>
     <div class="seg-cancel" id="seg-cancel"></div>
@@ -6426,7 +6430,7 @@ function recargaManifiesto(){
 var SUPLEMENTOS={
   chat:      { n:'GuIA · Test GuIA', plan:'Pro', d:'The assistant that handles your customers in the chat on your site: it answers with the facts of each tour and hands over anything it does not know. Test its answers before using it with travellers.' },
 cerebro:   { n:'GuIA’s brain', plan:'Pro', d:'The per-tour fact sheet that feeds the assistant, with AI filling it in from the tour’s own page and drafts you can edit.' },   // y L1991: n:'Smart anti-no-show sequence'
-  web:       { n:'Your booking page', plan:'todos', d:'Your public page, built from what you already wrote in the Brain: one block per kind of question, and an empty field does not appear. THE TOUR IS BOOKED HERE, against the real capacity; the ones with a price need your payment address. It also opens each guide\'s own page with their QR. It comes with every plan: with a small “with Audutor” badge on Essential, with your brand on Pro and Premium.' },
+  web:       { n:'Your booking page', plan:'todos', d:'Your public page, built from what you already wrote in the Brain: one block per kind of question, and an empty field does not appear. THE TOUR IS BOOKED HERE, against the real capacity; the ones with a price need your payment address. It also opens each guide\'s own page with their QR. It comes with every plan: with a small “with Audutor” badge on Essential, with your brand on paid plans.' },
   cuadro:    { n:'Analytics', plan:'todos', d:'The numbers behind the business: occupancy, channels, tips by guide and time slot, no-shows. So you decide on data, not on a hunch.' },
   liquidacion:{ n:'Guide payouts', plan:'todos', d:'Every tour’s books balanced: split by percentage or flat fee, channel cost, CSV and print. The guide never pays.' },
   /* Claves de gating INLINE (sin vista propia ni enlace de nav): las usa pintaGatesInline()
@@ -6437,7 +6441,10 @@ cerebro:   { n:'GuIA’s brain', plan:'Pro', d:'The per-tour fact sheet that fee
 /* Los planes son BONOS DE VIAJEROS; lo que decide las funciones son los COMPLEMENTOS. */
 var PLANES={ esencial:{orden:0, n:'Essential', precio:'€0',   bono:150,  base:0},
              pro:     {orden:1, n:'Pro',      precio:'€45',  bono:2500, base:45},
-             premium: {orden:2, n:'Premium',  precio:'€149', bono:10000, base:149} };
+             /* El plan de 89 € hasta 6.000 (17-nov-2026), entre Pro y Premium como en
+                `clientes.PLANES`: la web dejó de prometer tramos que no se cobraban. */
+             plus:    {orden:2, n:'Plus',     precio:'€89',  bono:6000, base:89},
+             premium: {orden:3, n:'Premium',  precio:'€149', bono:10000, base:149} };
 /* Esta demo no tiene la vista del agente, así que su complemento no abre nada aquí: se
    ofrece igual para que el precio que se ve sea el mismo que el de la web inglesa. */
 var COMPLEMENTOS = {
@@ -6502,7 +6509,7 @@ function pintaComplementos(){
    orden 1 y salían con candado en el plan gratuito, que es donde más se mira la demo. */
 function reqOrden(v){
   var p = SUPLEMENTOS[v].plan;
-  return p==='Premium' ? 2 : p==='todos' ? 0 : 1;
+  return p==='Premium' ? PLANES.premium.orden : p==='todos' ? 0 : 1;
 }
 /* Qué complemento abre esta vista, o null si la abre el plan. Existe porque el cartel del
    candado ofrecía «Cambiar a Pro» para vistas que el plan NO abre —GuIA y la liquidación—:
@@ -6724,14 +6731,14 @@ function pintaWeb(){
   }
   html += partes.join('') ||
     '<p style="color:#a3402f; font-size:13px;">This page would come out empty: fill in the Brain first.</p>';
-  /* El pie con marca: solo lo quitan Pro y Premium, igual que `conMarca()` en el servidor. */
-  var marca = (S.plan === 'pro' || S.plan === 'premium');
+  /* El pie con marca: lo quitan los planes de pago, igual que `conMarca()` en el servidor. */
+  var marca = PLANES[S.plan].base > 0;
   html += '<p style="margin:20px 0 0; border-top:1px solid #e6e6e6; padding-top:8px; color:#5b6b64; font-size:11.5px;">' +
     (marca ? '' : 'Made with Audutor') + '</p>';
   caja.innerHTML = html;
 
   var ch = document.getElementById('web-marca');
-  if (ch) ch.textContent = marca ? 'no Audutor mark (Pro and Premium)' : 'with "Made with Audutor" in the footer';
+  if (ch) ch.textContent = marca ? 'no Audutor mark (paid plans)' : 'with "Made with Audutor" in the footer';
   var bp = document.getElementById('web-pub');
   if (bp) bp.textContent = S_WEB.publicada ? 'Take it down' : 'Publish it now';
 }
