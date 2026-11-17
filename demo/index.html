@@ -3644,6 +3644,33 @@ function motivoDerivada(dv){
 /* Retraso frente a hora del día: ver la regla que las usa, más abajo. */
 var RE_RETRASO = /retraso|lleg\w* tarde|voy tarde|vamos tarde|iremos tarde|se (me|nos) ha hecho tarde|un poco tarde|tarde al (tour|punto|grupo)/;
 var RE_FRANJA_TARDE = /(por|de|en|esta|la|las) tarde|tarde o noche|turno de tarde|tarde y noche|buen[ao]s tardes/;
+/* ── LOS MINUTOS DE UN RETRASO ──────────────────────────────────────────────────────
+   «vamos con retraso, ¿nos esperáis 10 min?» con 5 de espera recibía «¡Tranquilo!… unos
+   minutos no son problema» (análisis del 10-nov, fallo 1, el más caro: el viajero llega y
+   el grupo se ha ido). La regla tranquilizaba sin mirar los minutos. Esto lee los del
+   mensaje y los del hecho del operador, en los dos idiomas; si no hay número, `null`, y
+   quien llama no tranquiliza a ciegas. Se lee el texto CRUDO: el corrector no conoce
+   «mins» ni el apóstrofo de «10'». */
+var NUM_MINUTOS = { un:1, uno:1, dos:2, tres:3, cuatro:4, cinco:5, seis:6, siete:7, ocho:8, nueve:9, diez:10,
+  quince:15, veinte:20, veinticinco:25, treinta:30, cuarenta:40, one:1, two:2, three:3, four:4, five:5,
+  ten:10, fifteen:15, twenty:20, thirty:30, forty:40 };
+function minutosDe(txt){
+  var s = sinTildes(String(txt||'')).toLowerCase();
+  if (/media hora|half an hour|half hour/.test(s)) return 30;
+  if (/cuarto de hora|quarter of an hour|quarter hour/.test(s)) return 15;
+  var d = s.match(/(\d{1,3})\s*(?:minutos?|minutes?|mins?|['’])(?![a-z])/);
+  if (d) return parseInt(d[1],10);
+  var w = s.match(/\b([a-z]+)\s+(?:minutos?|minutes?|mins?)\b/);
+  if (w && NUM_MINUTOS[w[1]]) return NUM_MINUTOS[w[1]];
+  if (/\b(una|1) hora\b|\b(an|one) hour\b/.test(s)) return 60;
+  return null;
+}
+/* «¿Llega a tiempo?» solo se contesta que sí comparando: con minutos en el mensaje, o el
+   hecho los trae y caben, o no se tranquiliza. */
+function retrasoQueNoCabe(t, espera){
+  var mm = minutosDe(t), me = minutosDe(espera);
+  return mm && (!me || mm > me) ? mm : 0;
+}
 /* ¿El mensaje pregunta por OTRO día? Hace falta saberlo antes de mirar el parte de hoy.
    «manana» es la trampa: en «esta mañana» y «por la mañana» es hoy, y en «mañana» a secas
    es el día siguiente. La misma palabra, dos días distintos. */
@@ -3665,6 +3692,30 @@ function hablaDeOtroDia(m){
    mensaje. La regla de la casa: una cifra solo se afirma cuando la salida es INEQUÍVOCA —
    si el mensaje habla de una hora que no está en el parte, de un día que no es hoy o de
    un grupo que no cabe, se pasa a una persona. */
+/* «¿HOY SALE?» (fallo D del análisis del 10-nov-2026). No tenía regla y derivaba al
+   encargado con la salida de hoy en la agenda, que es justo lo que pregunta. Contesta con
+   las salidas de ESTE tour en el parte de hoy; si hoy no hay, dice que no y cuál es la
+   próxima del calendario. Si este tour no tiene ninguna salida en todo el calendario no se
+   sabe nada, y no se afirma que hoy no haya (como en `horarioDelDia`): devuelve ''. */
+function respuestaDeHoy(lang){
+  var en=lang==='en';
+  var hoy=salidasDeHoy(), pend=hoy.filter(function(x){ return !x.live; });
+  if (pend.length) return (en ? 'Yes, we\'re running today at '+listaHoras(pend.map(function(x){ return gpHora12(x.hora); }),'en')
+                              : 'Sí, hoy salimos a las '+listaHoras(pend.map(function(x){ return x.hora; }),'es'))+' 🙂';
+  var sig='';
+  for (var i=(S.agDia||0)+1;i<(S.agenda||[]).length;i++){
+    var ss=((S.agenda[i]||{}).tours||[]).filter(esMismoTour);
+    if (ss.length){
+      var dia=nombreDelDia({ idx:i-(S.agDia||0), iso:S.agendaBase?isoMas(S.agendaBase,i-(S.agDia||0)):null }, lang);
+      sig=en ? ' The next one is '+(dia==='Tomorrow'?'tomorrow':dia.replace(/^On /,'on '))+' at '+gpHora12(ss[0].hora)+' 🙂'
+             : ' La próxima es '+dia.toLowerCase()+' a las '+ss[0].hora+' 🙂';
+      break;
+    }
+  }
+  if (hoy.length) return (en ? 'Today\'s tour has already started.' : 'La de hoy ya ha empezado.')+sig;
+  if (!sig) return '';
+  return (en ? 'There\'s no departure of this tour today.' : 'Hoy no hay salida de este tour.')+sig;
+}
 function salidasDeHoy(){
   /* Sin parte del dia no hay salidas, y eso NO es un caso raro: es el estado de toda
      empresa que acaba de crear su primer tour y todavia no tiene salidas generadas para
@@ -3734,6 +3785,21 @@ function paxDeSalida(s){ if(typeof s.ocupacionCapacidad==='number'&&isFinite(s.o
    con menos voz seguía ofreciendo las veinticinco de la ficha. El parte manda: es el dato
    de hoy, y la ficha es el de siempre. */
 function aforoDe(s, general){ var a=parseInt((s||{}).aforo,10); return a>0?a:general; }
+/* EL AFORO DE LA FICHA ESCRITO COMO FRASE. El panel sugiere «Grupos reducidos, máximo [25]
+   personas por salida» y `parseInt` de esa frase es NaN, así que rellenar el aforo como
+   pide el propio panel rompía «¿quedan plazas?», que con el Cerebro vacío salía bien
+   (análisis del 10-nov, fallo 4). Se toma el número que va con «máximo»/«como mucho»; si
+   no lo hay y la frase trae un solo número, ese; con dos números sin tope dicho
+   («entre 10 y 25»), NaN: mejor derivar que elegir uno. */
+function numeroDeAforo(txt){
+  var s = sinTildes(String(txt||'')).toLowerCase().trim();
+  if (/^\d+$/.test(s)) return parseInt(s,10);
+  var tope = s.match(/(?:maximo|max\.?|como mucho|hasta|no mas de|at most|maximum|up to|no more than)\D{0,25}?(\d{1,4})/) ||
+             s.match(/(\d{1,4})\s*(?:personas|plazas|pax|people|places|seats|spots)?\s*(?:como )?(?:maximo|max|como mucho|at most|maximum)\b/);
+  if (tope) return parseInt(tope[1],10);
+  var todos = s.match(/\d+/g) || [];
+  return todos.length === 1 ? parseInt(todos[0],10) : NaN;
+}
 
 /**
  * ¿Hay alguna salida de hoy cuyo recuento sepamos que está corto?
@@ -4182,7 +4248,7 @@ function conAprox(txt){
    es la forma más natural de escribir un hecho propio. Sin ellas, `esFrase()` decía que
    no y la plantilla empalmaba: «el guía espera unos Esperamos 10 minutos». */
 var RE_VERBO = /(?:^|\s)(?:es|son|era|eran|est[aá]|est[aá]n|hay|puede|pueden|podr[aá]|var[ií]a|var[ií]an|depende|dependen|tiene|tienen|suele|suelen|hacemos|salimos|empezamos|terminamos|acabamos|quedamos|esperamos|aceptamos|admitimos|cerramos|paramos|damos|ofrecemos|llevamos|pedimos|cobramos|reservamos|llega|llegan|incluye|incluyen|admite|admiten|debe|deben|conviene|recomendamos|realiza|realizan|dura|duran|sale|salen|empieza|empiezan|termina|terminan|acaba|acaban)(?=\s|[,.;:]|$)/i;
-var RE_VERBO_EN = /(?:^|\s)(?:is|are|was|were|can|could|may|might|will|would|varies|vary|depends|depend|has|have|starts|ends|includes|must|should)(?=\s|[,.;:]|$)/i;
+var RE_VERBO_EN = /(?:^|\s)(?:is|are|was|were|can|could|may|might|will|would|varies|vary|depends|depend|has|have|starts|ends|includes|must|should|wait|waits|leave|leaves)(?=\s|[,.;:]|$)/i;
 /* El mismo guardarraíl en los dos idiomas, que es la razón de ser del motor único: el
    fallo no es del español, es de empalmar plantilla y hecho. El primer operador inglés
    que escriba «The finishing point varies» se lo encontraría igual. */
@@ -4865,6 +4931,14 @@ function respuestaGuiaES(t){
     return '¡Perfecto! Queda anotado ✅ Te esperamos'+(partes.length?': '+partes.join(', '):'')+
       (kb('senal')?' — busca '+conArt(kb('senal')):'')+'.\n\n<i>— Apuntado en las observaciones del tour (míralo en el 📋 Manifiesto).</i>';
   }
+  /* «¿Hoy sale?», «¿hay tour hoy?»: ver `respuestaDeHoy`. Se aparta si el mensaje trae
+     otro tema que tiene su regla (tiempo, plazas, cancelar, retraso, punto, precio). */
+  if (/\bhoy\b/.test(m) && /\b(sale|salis|salimos|se hace|haceis|hay (tour|tours|salida|salidas|visita|free tour)|funciona|opera|operais)\b/.test(m)
+      && !/lluv|llue[vb]|llov|diluv|tiempo|tormenta|calor|plaza|sitio|hueco|llen|complet|cancel|anul|\btarde\b|retras|donde|punto|precio|cuanto|cuesta|acaba|termina/.test(m)
+      && !hablaDeOtroDia(m)){
+    var rHoy=respuestaDeHoy('es');
+    if (rHoy) return rHoy;
+  }
   // Próximo tour: se CALCULA de la agenda de verdad (hoy = S.agenda[S.agDia]).
   /* «Do you have space next monday?» contestaba «el próximo tour es hoy a las 17:00»:
      una salida de hoy afirmada para una pregunta del lunes. Si el mensaje nombra otro
@@ -4887,7 +4961,7 @@ function respuestaGuiaES(t){
       /* «sitio» es polisémico: sitio para sentarse, para aparcar, para cambiar al bebé.
          Nada de eso pregunta por plazas, y todo recibía el recuento del día. */
       && !/sentar|sentarse|panal|cambiador|aparcar|aparcamiento|maniobrar|descansar|para el carrito|para la silla/.test(m)){
-    var afN=parseInt(kb('aforo'),10);
+    var afN=numeroDeAforo(kb('aforo'));
     if (!afN) return derivaPorHueco('aforo', t);
     /* El parte que GuIA tiene delante es el de HOY. Para otro día no hay cifra que dar. */
     if (hablaDeOtroDia(m)){
@@ -5195,7 +5269,7 @@ function respuestaGuiaES(t){
      cancelación, y 3-4 operadores la publican aparte. Señales de sujeto-empresa; el
      tiempo va a su regla (lluvia) y un código de reserva delante gana siempre. Ojo:
      «canceláis/cancelan» llegan como «cancelar» — el corrector baja al infinitivo. */
-  if (!codEscrito(t) && !/lluev|lluvia|mal tiempo|niev/.test(m) &&
+  if (!codEscrito(t) && !/lluev|lluvia|diluv|aguacero|chaparron|chubasco|mal tiempo|niev/.test(m) &&
       /(cancelar|suspender?).{0,16}(vosotros|ustedes|la empresa)|(vosotros|ustedes).{0,12}cancelar|si (se )?(cancelar?|suspender?) (el|la) (tour|visita|salida)|si no sale (el|la) (tour|visita|salida)|fuerza mayor|cancelar? por (vuestra|su) parte/.test(m)){
     var cno=kbE('cancelamos'); if(!cno) return derivaPorHuecoEmp('cancelamos', t);
     return cno;
@@ -5207,7 +5281,7 @@ function respuestaGuiaES(t){
   if ((/cancel|anul|dar(me|nos|se)? de baja/.test(m) ||
        (/no puedo ir|no podre|no vamos a poder|no podemos (ir|venir)|no (podremos|podriamos) (ir|venir)/.test(m)
         && !/cambi|otro dia|otra (fecha|hora)|pasar|mover|aplazar/.test(m)))
-      && (codEscrito(t) || !/lluev|lluvia|mal tiempo|niev|tormenta|temporal/.test(m))){
+      && (codEscrito(t) || !/lluev|lluvia|diluv|aguacero|chaparron|chubasco|mal tiempo|niev|tormenta|temporal/.test(m))){
     /* CON CÓDIGO ESCRITO se cancela: han nombrado su reserva y eso acompaña a la orden.
        Con solo el código CONOCIDO (identificado por teléfono), únicamente si el mensaje
        es una ORDEN en primera persona — «quiero cancelar», «no puedo ir»— y nunca por
@@ -5403,6 +5477,16 @@ function respuestaGuiaES(t){
        mete detrás de «el guía espera en el punto de encuentro»: salía repetido el verbo y
        en tercera persona sobre una frase en primera. Se suelta la frase del operador y se
        encadena el resto. */
+    /* Con más minutos de los que espera el guía —o sin saber cuántos espera— no se dice
+       «no son problema»: se da la espera tal cual y pasa a una persona (ver `minutosDe`). */
+    var tardeM = retrasoQueNoCabe(t, es);
+    if (tardeM) {
+      registraDerivada(t, 'persona');
+      return (esFrase(es) ? sinPuntoFinal(es) : 'El guía espera en el punto de encuentro '+conAprox(es))+
+        '. Con '+tardeM+' minutos de retraso no te puedo asegurar que el grupo siga allí: se lo paso al encargado para que avise al guía 🙏'+
+        (codT ? '\n\n<i>— Aviso registrado: escrito en las observaciones del tour de hoy (míralo en el 📋 Manifiesto).</i>'
+              : canalConIdentidad() ? ' Si me dices tu código'+ejCod()+', le aviso ahora mismo.' : '');
+    }
     return (esFrase(es)
       ? '¡Tranquilo! '+sinPuntoFinal(es)+', así que unos minutos no son problema 🙂'
       : '¡Tranquilo! El guía espera en el punto de encuentro '+conAprox(es)+', así que unos minutos no son problema 🙂')+
@@ -5674,7 +5758,10 @@ function respuestaGuiaES(t){
     return sa;
   }
   // «si hay tormenta qué pasa» derivaba con la política de lluvia escrita (2-nov-2026).
-  if (/lluev|llov|lluvia|rain|mal tiempo|haga malo|niev|tormenta|temporal|granizo|dan (agua|lluvia)/.test(m)){
+  /* «está diluviando, ¿se hace igual o lo anuláis?» recibía la política de cancelación del
+     viajero: «diluviando» no estaba en ninguna lista del tiempo y «anuláis» se la llevaba la
+     regla de cancelar (análisis del 10-nov, fallo 2). */
+  if (/lluev|llov|lluvia|diluv|aguacero|chaparron|chubasco|rain|mal tiempo|haga malo|niev|tormenta|temporal|granizo|dan (agua|lluvia)/.test(m)){
     var lu=kb('lluvia'); if(!lu) return derivaPorHueco('lluvia', t);
     // Sin «te avisamos por aquí con antelación»: el chat de la web no puede avisar a nadie.
     return sinPuntoFinal(lu)+' ☔';
@@ -5868,7 +5955,7 @@ var EN_ES={
   'book':'reservar','booking':'reserva','reservation':'reserva','cancel':'cancelar','cancellation':'cancelacion',
   'change':'cambiar','reschedule':'cambiar','refund':'reembolso','invoice':'factura',
   'late':'tarde','delay':'retraso','wait':'espera','waits':'espera','miss':'perdido','missed':'perdido','lost':'perdido',
-  'rain':'lluvia','raining':'lluvia','rains':'lluvia','weather':'tiempo','hot':'calor','snow':'nieva',
+  'rain':'lluvia','raining':'lluvia','rains':'lluvia','rainy':'lluvia','pouring':'lluvia','downpour':'lluvia','drizzle':'lluvia','drizzling':'lluvia','weather':'tiempo','hot':'calor','snow':'nieva',
   'kids':'ninos','kid':'nino','children':'ninos','child':'nino','baby':'bebe','stroller':'carrito',
   'dog':'perro','dogs':'perro','pet':'mascota','pets':'mascotas',
   'wheelchair':'silla','accessible':'accesible','accessibility':'accesibilidad','walk':'camina','walking':'camina',
@@ -6240,6 +6327,14 @@ function respuestaEN(t){
     return 'Perfect, noted ✅ We\'ll be expecting you'+(partesC.length?': '+partesC.join(', '):'')+
       (v('senal')?' — look for '+conThe(v('senal')):'')+'.\n\n<i>— Written into today\'s tour notes, and the manifest shows “✓ confirmed”.</i>';
   }
+  /* «Is it running today?», «is there a tour today?»: ver `respuestaDeHoy`. */
+  var tlHoy=String(t||'').toLowerCase();
+  if (/\btoday\b/.test(tlHoy) && /\b(running|run|runs|on|go ahead|going ahead|happening|leave|leaving|a tour|any tours?|departure)\b/.test(tlHoy)
+      && !/rain|pour|storm|weather|hot\b|heat|space|spots?\b|room|full|sold out|cancel|late\b|delay|where|meet|price|cost|how much|\bend|finish/.test(tlHoy)
+      && !hablaDeOtroDia(m)){
+    var rHoyE=respuestaDeHoy('en');
+    if (rHoyE) return rHoyE;
+  }
   /* Próximo tour CALCULADO de la agenda real, como ya hacía el motor español — la
      respuesta estática del horario obliga al cliente a deducir; esta le contesta. */
   /* Con «next monday» delante, «el próximo tour es hoy» es afirmar una salida de hoy
@@ -6535,7 +6630,17 @@ function respuestaEN(t){
     var codL=codDe(t);
     if (codL) anotaGuia('“'+codL+'” messaged to say they\'re running late — flagged ⏰ for the guide');
     if (!v('espera')) return falta();
-    return 'Don\'t worry! The guide waits around '+v('espera')+' at the meeting point, so a few minutes are fine 🙂'+
+    /* «The guide waits around We leave on time: …»: el hecho ya era una frase y se metía
+       detrás de la plantilla (análisis del 10-nov). Y los minutos, como en español. */
+    var esL=v('espera'), diceL=esFrase(esL,'en') ? sinPuntoFinal(esL) : 'The guide waits around '+sinPuntoFinal(esL)+' at the meeting point';
+    var tardeL = retrasoQueNoCabe(t, esL);
+    if (tardeL) {
+      registraDerivada(t, 'persona');
+      return diceL+'. At '+tardeL+' minutes late I can\'t promise the group will still be there: I\'m passing this to the manager so they can tell the guide 🙏'+
+        (codL ? '\n\n<i>— Logged: written into today\'s tour notes, and they show on the manifest as “⏰ running late”.</i>'
+              : canalConIdentidad() ? ' Send me your code'+ejCod()+' and I\'ll let the guide know right now.' : '');
+    }
+    return 'Don\'t worry! '+diceL+', so a few minutes are fine 🙂'+
       (codL ? '\n\n<i>— Logged: written into today\'s tour notes, and they show on the manifest as “⏰ running late”.</i>'
             : canalConIdentidad() ? ' If you\'re running later, send me your code'+ejCod()+' and I\'ll let the guide know.' : '');
   }
@@ -6668,7 +6773,7 @@ function respuestaEN(t){
      recibía «there's room on the 10:00 departure» (1-nov-2026). */
   var lugares = /\b(which|what) places\b|\bplaces (do|will|are) (you|we)\b|\btake us\b/.test(t.toLowerCase());
   if ((/aforo|plazas|disponib|sitio|lleno/.test(m) || /cuantos\s+personas/.test(m)) && !lugares){
-    var afN=parseInt(v('aforo'),10);
+    var afN=numeroDeAforo(v('aforo'));
     if (!afN) return falta('aforo');
     /* Este motor lee la agenda igual que el español, así que lleva las MISMAS guardas:
        «is it full for saturday?» recibía el recuento de HOY, y «is there room on the 5pm
