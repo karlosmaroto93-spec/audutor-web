@@ -2851,7 +2851,12 @@ var HORA_DEMO = (function(){
   if (fijada){ var p = String(fijada).split(':'); return (+p[0])*60 + (+p[1]||0); }
   var n = new Date(); return n.getHours()*60 + n.getMinutes();
 })();
-function minutosDe(hora){
+/* «HORA», en el nombre, por un fallo: se llamaba `minutosDe` y el 16-nov el motor de GuIA,
+   incrustado más abajo en este mismo <script>, declaró su `minutosDe(txt)` —los minutos de un
+   retraso escrito—. Gana la última declaración, «10:00» pasó a valer null y ninguna salida
+   volvió a estar en marcha: la primera pantalla decía «Ningún tour en marcha» a las 10:30.
+   Lo vigila app/tests/demos-cabecera-seguimiento.test.js. */
+function minutosDeHora(hora){
   var p = String(hora||'').split(':'); return (+p[0])*60 + (+p[1]||0);
 }
 /* ¿Esta salida está en curso AHORA? Solo puede estarlo una de hoy: una salida «en marcha»
@@ -2859,7 +2864,7 @@ function minutosDe(hora){
    poner tours en marcha en otros días. */
 function esAhora(t, esHoy){
   if (!esHoy) return false;
-  var dif = HORA_DEMO - minutosDe(t.hora);
+  var dif = HORA_DEMO - minutosDeHora(t.hora);
   return dif >= -VENTANA_LIVE_ANTES && dif <= VENTANA_LIVE_DESPUES;
 }
 /* ── LO QUE SE RECAUDA ES UNA CONSECUENCIA DE HABER SALIDO ──────────────────────────
@@ -2906,7 +2911,7 @@ function montaSemana(hoy){
       var estado = i < 0 ? 'pasado'
                  : i > 0 ? 'futuro'
                  : (t.live ? 'curso'
-                   : (HORA_DEMO - minutosDe(t.hora) > VENTANA_LIVE_DESPUES ? 'pasado' : 'futuro'));
+                   : (HORA_DEMO - minutosDeHora(t.hora) > VENTANA_LIVE_DESPUES ? 'pasado' : 'futuro'));
       if (estado === 'futuro'){
         /* Nadie ha ido todavía: ni dinero, ni asistencia, ni no-shows. */
         t.rec = 0; delete t.ventaEfectivo;
@@ -8025,9 +8030,9 @@ function tourEnMarcha(){
     /* La siguiente es la primera que aún no ha entrado en su ventana. Comparaba
        `minutosDe(siguiente.hora)` mirando solo la HORA («18:30» daba 18×60), así que entre
        dos salidas de la misma hora elegía mal. */
-    var m = minutosDe(t.hora);
+    var m = minutosDeHora(t.hora);
     if (HORA_DEMO - m < -VENTANA_LIVE_ANTES &&
-        (!siguiente || m < minutosDe(siguiente.hora))) siguiente = t;
+        (!siguiente || m < minutosDeHora(siguiente.hora))) siguiente = t;
   });
   return { enMarcha: enMarcha, siguiente: siguiente };
 }

@@ -1038,28 +1038,22 @@
       display:flex; gap:22px; flex-wrap:wrap; font-size:13px; color:var(--ink2);"></div>
   </div>
 
-  <div class="card">
-    <h2>Today, in numbers <span class="chip gris">updates itself</span></h2>
-    <div class="kpi-fila">
-      <div class="kpi"><span class="v">4</span><span class="l">tours today (1 live)</span></div>
-      <div class="kpi"><span class="v">36</span><span class="l">people booked · 9 channels→1 system</span></div>
-      <div class="kpi"><span class="v" style="color:var(--turq-deep);">91 %</span><span class="l">confirmed after the reminder</span></div>
-      <div class="kpi"><span class="v" id="kpi-propina" style="color:var(--coral-deep);" data-dinero="318" data-dec="0">£318</span><span class="l">digital tips collected this week</span></div>
-      <div class="kpi"><span class="v" data-dinero="70" data-dec="0">£70</span><span class="l">no-show fees recovered this month (reconciliation)</span></div>
-      <div class="kpi"><span class="v">2</span><span class="l">no-shows marked automatically when yesterday’s 10:00 AM tour closed — no message sent to anyone</span></div>
-    </div>
-  </div>
+  <!-- Aquí había una tarjeta «Today, in numbers» con cifras escritas a mano: propinas
+       digitales cobradas en libras, un 91 % «confirmed after the reminder» y recargos de
+       no-show «recovered». Audutor no cobra propinas y no manda recordatorios (pendiente 8),
+       y la española ya la había quitado. Lo que hay hoy lo cuenta el cuadro de arriba, que
+       sale de S.agenda (17-nov-2026). -->
 
   <div class="estado-banner revisar" id="estado-banner"><span class="big">⚠️</span>
     <span id="estado-txt"></span></div>
 
   <!-- Seguimiento del tour en marcha — el corazón del centro de operaciones -->
   <div class="card seg-card">
-    <div class="fila" style="justify-content:space-between; align-items:baseline; flex-wrap:wrap;">
-      <h2 style="margin:0;"><span class="seg-vivo"></span>🚶 Tour in progress: Old Town · 10:00
-        <span class="mini muted" style="font-weight:600;">· live</span></h2>
-      <span class="mini muted">Guide: Emma</span>
-    </div>
+    <!-- La cabecera la escribe `pintaSegCab()` a partir de S.agenda, como en la demo española.
+         Estaba fija en el HTML —«Tour in progress: Old Town · 10:00 · live»—: si la salida
+         cambiaba en la agenda, la cabecera seguía diciendo la de antes (17-nov-2026). -->
+    <div id="seg-cab"></div>
+    <div id="seg-cuerpo">
     <!-- Aquí decía que el recordatorio de la víspera y la confirmación de la mañana ya habían
          salido, y había un botón para avisar a los que no contestan. La app no manda ninguna de
          las dos cosas (pendiente 8); se quitan como en la demo española. -->
@@ -1068,6 +1062,7 @@
     <div class="seg-kpis" id="seg-kpis"></div>
     <div id="seg-lista"></div>
     <div class="seg-cancel" id="seg-cancel"></div>
+    </div>
   </div>
 
   <div class="card exc" id="exc-grupo">
@@ -7050,10 +7045,72 @@ function pintaEstadoBanner(){
 /* Seguimiento del tour en marcha (de Madrid Latido): refleja lo que el guía va
    marcando en su manifiesto (S.att) — semáforo llegó/confirmado/tarde/pendiente. */
 function estadoSeg(a){ return a.ok ? 'llego' : (a.tarde ? 'tarde' : (a.conf ? 'confirmado' : 'pendiente')); }
+/* ── Qué tour está EN MARCHA ahora mismo — port de la demo española (17-nov-2026) ──────
+   Lee el MISMO `live` que el cuadro del día, en vez de recalcular la ventana por su cuenta:
+   dos cálculos de lo mismo es cómo se llega a que una pantalla diga «0 tours running» encima
+   de «Tour in progress». Mismos nombres que en la española, para que un arreglo en una se
+   encuentre en la otra.
+
+   EL «AHORA» DE ESTA DEMO ES FIJO. La inglesa vive en un solo día —el sábado 18 de julio de
+   su agenda, con el 10:00 marcado `live`—, así que su hora es la de ese día: las 10:30, la
+   misma que fija la española cuando las pruebas fijan el día. Leer el reloj del navegador
+   mezclaría el sábado del guion con la noche de quien mira.
+   `minutosDeHora` y no `minutosDe`: el motor de GuIA, incrustado en este mismo <script>, ya
+   declara un `minutosDe(txt)` para los retrasos escritos, y la última declaración gana. */
+var HORA_DEMO = 10*60 + 30, VENTANA_LIVE_ANTES = 30;
+function minutosDeHora(hora){
+  var p = String(hora||'').split(':'); return (+p[0])*60 + (+p[1]||0);
+}
+function tourEnMarcha(){
+  var dia = (S.agenda||[])[S.agDia];
+  var lista = (dia && dia.tours) || [];
+  var enMarcha = null, siguiente = null;
+  lista.forEach(function(t){
+    if (t.live){ if (!enMarcha) enMarcha = t; return; }
+    var m = minutosDeHora(t.hora);
+    if (HORA_DEMO - m < -VENTANA_LIVE_ANTES &&
+        (!siguiente || m < minutosDeHora(siguiente.hora))) siguiente = t;
+  });
+  return { enMarcha: enMarcha, siguiente: siguiente };
+}
+
+function pintaSegCab(){
+  var cab = document.getElementById('seg-cab'); if(!cab) return;
+  var cuerpo = document.getElementById('seg-cuerpo');
+  var r = tourEnMarcha();
+  if (r.enMarcha){
+    cab.innerHTML =
+      '<div class="fila" style="justify-content:space-between; align-items:baseline; flex-wrap:wrap;">'+
+      '<h2 style="margin:0;"><span class="seg-vivo"></span>🚶 Tour in progress: '+r.enMarcha.tit+
+      ' · '+r.enMarcha.hora+'<span class="mini muted" style="font-weight:600;"> · live</span></h2>'+
+      '<span class="mini muted">Guide: '+(r.enMarcha.guia||'unassigned')+'</span></div>';
+    if (cuerpo) cuerpo.style.display='';
+    return;
+  }
+  /* Sin tour en marcha, el cuerpo se esconde: son las llegadas de un tour que no está
+     ocurriendo, y enseñarlas sería el mismo fallo con otra ropa. */
+  if (cuerpo) cuerpo.style.display='none';
+  cab.innerHTML =
+    '<h2 style="margin:0;">🚶 No tour running right now</h2>'+
+    '<p class="mini muted" style="margin:6px 0 0;">'+
+    (r.siguiente
+      ? 'The next one leaves at <b>'+r.siguiente.hora+'</b> ('+r.siguiente.tit+
+        (r.siguiente.guia?' · '+r.siguiente.guia:'')+'). Once it starts, this shows who has '+
+        'arrived as the guide checks them in.'
+      : 'No more departures today. When one is running, this shows who has arrived as the '+
+        'guide checks them in.')+'</p>';
+}
+
 function pintaSeguimiento(){
+  pintaSegCab();
   var lista=document.getElementById('seg-lista'); if(!lista) return;
+  /* LA LISTA SALE DEL TOUR EN MARCHA de S.agenda, como en la española, y no de `S.att`
+     directamente: hoy son el mismo objeto (el 10:00 lleva `res:S.att`), pero si la agenda
+     cambia, la cabecera y la lista tienen que seguir hablando del mismo tour. */
+  var _t = tourEnMarcha().enMarcha || ((S.agenda[S.agDia]||{}).tours||[])[0] || {};
+  var ATT = (_t.res||[]).filter(function(r){ return !r.walkin; });
   var llego=0, conf=0, pend=0, tarde=0;
-  S.att.forEach(function(a){ var e=estadoSeg(a);
+  ATT.forEach(function(a){ var e=estadoSeg(a);
     if(e==='llego') llego+=a.p; else if(e==='confirmado') conf++; else if(e==='tarde') tarde++; else pend++; });
   var CH={ llego:'👣 Here', confirmado:'✅ Confirmed', tarde:'🕐 Running late', pendiente:'⏳ No reply yet' };
   document.getElementById('seg-kpis').innerHTML=
@@ -7063,7 +7120,7 @@ function pintaSeguimiento(){
     '<div class="seg-kpi tarde"><span class="n" data-cuenta="seg-tarde">'+tarde+'</span><span class="l">running late</span></div>';
   cuentas(document.getElementById('seg-kpis'));
   lista.innerHTML='';
-  S.att.forEach(function(a){ var e=estadoSeg(a);
+  ATT.forEach(function(a){ var e=estadoSeg(a);
     var f=document.createElement('div'); f.className='seg-fila '+e;
     f.innerHTML='<span class="seg-dot"></span>'+
       '<span class="seg-nombre">'+a.n+' <span class="mini muted" style="font-weight:400;">· '+a.p+'p</span></span>'+
@@ -7073,8 +7130,17 @@ function pintaSeguimiento(){
       f.appendChild(b); }
     lista.appendChild(f);
   });
-  document.getElementById('seg-cancel').innerHTML=
-    '🚫 <b>1 cancellation</b> (2 people) this morning over chat — their place filled the waiting-list gap above.';
+  /* Aquí había una cancelación escrita a mano que «filled the waiting-list gap above»: la
+     lista de espera no existe. Como en la española, se cuentan las del registro
+     `S.canceladas` y, si no hay ninguna, se calla. */
+  var _c = document.getElementById('seg-cancel');
+  var _can = S.canceladas || [];
+  var _pax = _can.reduce(function(a,c){ return a + (+c.p||0); }, 0);
+  if (_c) _c.innerHTML = (ATT.length && _can.length)
+    ? '🚫 <b>'+_can.length+' cancellation'+(_can.length===1?'':'s')+'</b> ('+_pax+' '+
+      (_pax===1?'person':'people')+') over chat — '+(_can.length===1?'that place counts':'those places count')+
+      ' as free again in the capacity.'
+    : '';
 }
 function pintaCupo(){
   var c=document.getElementById('cupo-plataformas'); if(!c) return; c.innerHTML='';
