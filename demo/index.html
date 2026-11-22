@@ -7176,7 +7176,7 @@ S.comp = { guia:false, cuentas:false };
    colgando del plan (cuadro de mando, proyección: esos se quedan como estaban). */
 function abiertoPorComplemento(v){
   for (var k in COMPLEMENTOS)
-    if (S.comp[k] && COMPLEMENTOS[k].abre.indexOf(v) !== -1) return true;
+    if ((S.comp[k] || loTraeElPlan(k)) && COMPLEMENTOS[k].abre.indexOf(v) !== -1) return true;
   return false;
 }
 /* Plan mínimo que lo incluye. `plan:'todos'` da CERO —el orden de Esencial— y es lo que
@@ -7197,21 +7197,25 @@ function complementoQueAbre(v){
 }
 function disponible(v){ if(!SUPLEMENTOS[v]) return true;
   if (abiertoPorComplemento(v)) return true;
-  /* Lo que abre un complemento NO lo abre el plan: si no, contratar Premium regalaría GuIA
-     y el complemento no significaría nada. */
+  /* Lo que abre un complemento NO lo abre el plan por su orden: lo abre si lo trae dentro
+     (`loTraeElPlan`, arriba), que es una tabla decidida y no «el plan más caro». */
   if (complementoQueAbre(v)) return !!S.desbloqueado[v];
   return PLANES[S.plan].orden >= reqOrden(v) || S.desbloqueado[v]; }
 
 /* El total de la cesta: el bono del plan más lo que se le sume. Es lo que se ve moverse
    al tocar un interruptor, y es la razón de que los complementos vivan pegados al selector. */
-/* Aquí vivía `INCLUIDOS_POR_PLAN = { premium:['cuentas'] }` con su `loTraeElPlan`. Era la
-   única cosa que un plan traía dentro, y desde el 23-ago-2026 «las cuentas de cada tour»
-   está en TODOS los planes: la idea se quedó sin contenido. Se fue de las cinco superficies
-   a la vez, que era el motivo de quitarla. */
+/* LO QUE EL PLAN TRAE DENTRO. Se fue el 23-ago-2026 con «las cuentas» (Premium) y vuelve
+   el 22-nov-2026 con GuIA dentro de Pro, Plus y Premium (decisión de Carlos). Es la misma
+   tabla que `INCLUIDOS_POR_PLAN` de app/servidor/clientes.js y que `data-dentro` en las dos
+   webs (lo vigila clientes.test.js), con sus dos consecuencias: lo que trae el plan está
+   abierto (`abiertoPorComplemento`) y no se suma a la cesta (`totalCesta`). */
+var INCLUIDOS_POR_PLAN = { pro:['guia'], plus:['guia'], premium:['guia'] };
+function loTraeElPlan(k){ return (INCLUIDOS_POR_PLAN[S.plan] || []).indexOf(k) >= 0; }
 
 function totalCesta(){
   var t = PLANES[S.plan].base, piezas = [];
   for (var k in COMPLEMENTOS) if (S.comp[k]) {
+    if (loTraeElPlan(k)) { piezas.push(COMPLEMENTOS[k].n + ' (incluido)'); continue; }
     t += COMPLEMENTOS[k].precio; piezas.push(COMPLEMENTOS[k].n);
   }
   return { total:t, piezas:piezas };
@@ -7237,7 +7241,10 @@ function pintaComplementos(){
   if (d) d.textContent = c.piezas.length
     ? PLANES[S.plan].n + ' (' + bono + ' viajeros) + ' + c.piezas.join(' + ')
     : PLANES[S.plan].n + ' · ' + bono + ' viajeros incluidos';
-  for (var k in COMPLEMENTOS){ var el = document.getElementById('c-'+k); if (el) el.checked = !!S.comp[k]; }
+  for (var k in COMPLEMENTOS){ var el = document.getElementById('c-'+k); if (el) el.checked = !!S.comp[k];
+    /* El precio de la casilla dice «incluido» en los planes que la traen: «+39 €» al lado de
+       un total que no los suma era contradecirse en la misma línea. */
+    var pr = el && el.parentNode.querySelector('b'); if (pr) pr.textContent = loTraeElPlan(k) ? 'incluido' : '+' + COMPLEMENTOS[k].precio + ' €'; }
 }
 function bloqueado(v){ return SUPLEMENTOS[v] && !disponible(v); }
 function pintaCandados(){
@@ -7338,13 +7345,15 @@ function contrataDemo(k){
 function pintaGate(v){
   var i=SUPLEMENTOS[v], ck=complementoQueAbre(v);
   if (ck){
-    var C=COMPLEMENTOS[ck];
+    /* Los planes que lo traen dentro, de la misma tabla que lo abre (22-nov-2026): el
+       candado ya solo sale en Esencial, y decir «sobre cualquier plan» era falso. */
+    var C=COMPLEMENTOS[ck], conEl=Object.keys(INCLUIDOS_POR_PLAN).filter(function(p){return INCLUIDOS_POR_PLAN[p].indexOf(ck)>=0;}).map(function(p){return PLANES[p].n;});
     document.getElementById('gate-body').innerHTML=
       '<div class="cerr">🔒</div>'+
       '<h2 style="margin:6px 0 2px;">'+i.n+'</h2>'+
-      '<p class="chip" style="background:rgba(201,138,45,.25); color:var(--amber); margin:6px 0; display:inline-block;">Complemento \u00ab'+C.n+'\u00bb \u00b7 '+C.precio+' \u20ac/mes, sobre cualquier plan</p>'+
+      '<p class="chip" style="background:rgba(201,138,45,.25); color:var(--amber); margin:6px 0; display:inline-block;">Complemento \u00ab'+C.n+'\u00bb \u00b7 '+C.precio+' \u20ac/mes en Esencial'+(conEl.length?' \u00b7 incluido en '+conEl.join(', ').replace(/, ([^,]*)$/,' y $1'):'')+'</p>'+
       '<p style="color:var(--ink2); max-width:40ch; margin:6px auto 0;">'+i.d+'</p>'+
-      '<p class="mini muted" style="max-width:42ch; margin:12px auto;">Esto <b>no depende de tu tarifa</b>: el plan es el bono de viajeros y el complemento se pone y se quita cuando quieras.</p>'+
+      '<p class="mini muted" style="max-width:42ch; margin:12px auto;">En Esencial <b>se pone y se quita cuando quieras</b>; desde Pro ya va dentro del plan.</p>'+
       '<div class="fila" style="gap:8px; justify-content:center; flex-wrap:wrap;">'+
         '<button class="btn" onclick="contrataDemo(\''+ck+'\')">A\u00f1adir \u00ab'+C.n+'\u00bb (+'+C.precio+' \u20ac/mes)</button>'+
         '<button class="btn sec" onclick="desbloquear(\''+v+'\')">🔓 Solo probarlo (demo)</button>'+
