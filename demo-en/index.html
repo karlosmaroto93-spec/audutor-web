@@ -991,7 +991,7 @@
         <button data-plan="esencial" onclick="cambiarPlan('esencial')"><b>Essential</b>€0</button>
         <button data-plan="pro" onclick="cambiarPlan('pro')"><b>Pro</b>€45</button>
         <button data-plan="plus" onclick="cambiarPlan('plus')"><b>Plus</b>€89</button>
-        <button data-plan="premium" onclick="cambiarPlan('premium')"><b>Premium</b>€149</button>
+        <button data-plan="premium" onclick="cambiarPlan('premium')"><b>Premium</b>€139</button>
       </div>
       <div class="comp-sel" id="comp-sel">
         <div class="comp-gratis">🎁 The first month of every add-on is free.</div>
@@ -6434,12 +6434,13 @@ cerebro:   { n:'GuIA’s brain', plan:'Pro', d:'The per-tour fact sheet that fee
 };
 /* Planes de la demo (precios congruentes con la landing) y qué desbloquea cada uno. */
 /* Los planes son BONOS DE VIAJEROS; lo que decide las funciones son los COMPLEMENTOS. */
-var PLANES={ esencial:{orden:0, n:'Essential', precio:'€0',   bono:150,  base:0},
+var PLANES={ esencial:{orden:0, n:'Essential', precio:'€0',   bono:250,  base:0},
              pro:     {orden:1, n:'Pro',      precio:'€45',  bono:2500, base:45},
              /* El plan de 89 € hasta 6.000 (17-nov-2026), entre Pro y Premium como en
                 `clientes.PLANES`: la web dejó de prometer tramos que no se cobraban. */
              plus:    {orden:2, n:'Plus',     precio:'€89',  bono:6000, base:89},
-             premium: {orden:3, n:'Premium',  precio:'€149', bono:10000, base:149} };
+             /* Premium a 139 € desde el 23-nov-2026 (tarifa A). */
+             premium: {orden:3, n:'Premium',  precio:'€139', bono:10000, base:139} };
 /* Esta demo no tiene la vista del agente, así que su complemento no abre nada aquí: se
    ofrece igual para que el precio que se ve sea el mismo que el de la web inglesa. */
 var COMPLEMENTOS = {
