@@ -510,6 +510,8 @@
   .att .eur.e-plataforma, .att .eur.e-web{ opacity:1; background:var(--acc-soft); border-color:var(--acc-soft); color:var(--acc2); }
   .att .eur.e-cobrado, .att .eur.e-visto{ opacity:1; background:var(--acc); border-color:var(--acc); color:#fff; }
   .att .eur.e-pendiente{ opacity:1; background:var(--gold-soft); border-color:var(--gold); color:var(--amber); }
+  /* La señal de un privado: medio pagado, y se ve medio lleno. */
+  .att .eur.e-senal{ opacity:1; background:linear-gradient(90deg, var(--acc-soft) 50%, var(--paper) 50%); border-color:var(--acc-soft); color:var(--acc2); }
   @media (prefers-reduced-motion:reduce){ .att .eur{ transition:none; } }
   /* `:not([hidden])` sube la especificidad por encima de la fila de una línea de la oficina,
      como en `.att-acciones`: sin él la franja se ponía al lado y el nombre desaparecía. */
@@ -2685,7 +2687,10 @@ function resAg(defs){ return defs.map(function(d){
           con:(s.con!=null? s.con : null), pw:!!s.pw,
           /* `cp`: tour de pago reservado en la web propia que SE PAGA EN EL PUNTO —el guía
              cobra al llegar—. Es la reserva por la que existe el botón € (26-nov-2026). */
-          cp:!!s.cp, loc:locDe(d[0])}; }); }
+          cp:!!s.cp,
+          /* `senal`: reserva de un tour PRIVADO con la señal pagada en la web; el resto se paga
+             en el punto (26-nov-2026). */
+          senal:!!s.senal, loc:locDe(d[0])}; }); }
 /* ══ EL CICLO SEMANAL ═══════════════════════════════════════════════════════════════
    Antes esto era UNA semana congelada: `S.agendaBase='2026-07-18'` y cinco días con la
    fecha escrita a mano («sáb 18 jul · HOY»). Dos problemas, y el segundo es el caro:
@@ -2781,6 +2786,13 @@ var GUION_SEMANA = {
                     ['L. Dubois',2,'GuruWalk',0],['Grupo Virtanen',6,'GuruWalk',0,0,0,{min:40}],
                     ['A. Molnár',2,'Freetour',0],['Fam. Roca',4,'Web propia',0],
                     ['E. Sørensen',2,'Civitatis',0],['T. Virtanen',3,'GuruWalk',0,0,0,{min:44}]]) },
+       /* UN TOUR PRIVADO (26-nov-2026, informe de tours privados): la salida es del grupo
+          entero, el precio es por grupo con tramos y se reservó con una señal en la web. La
+          aceptó una persona de la oficina —una solicitud privada no se confirma sola, decisión
+          de Carlos— y el resto lo cobra el guía al empezar. Audutor no cobra: apunta. */
+       { hora:'11:30', tit:'Sevilla en privado', privado:{ hasta:6, senal:0.3 }, guia:'Elena', rec:0,
+         res:resAg([['Fam. Whitmore',8,'Web propia',0,0,0,{senal:1}]]),
+         obs:[{ a:'admin', rec:true, t:'Solicitud de la web aceptada por la oficina el lunes. Recogida en su hotel de la Plaza Nueva, en inglés; vienen dos niños.' }] },
        { hora:'17:00', tit:'Centro histórico', guia:'Elena', rec:0,
          res:resAg([['T. Bergman',2,'GuruWalk',0],['Fam. Gil',3,'Web propia',0],
                     ['R. Kovács',2,'Civitatis',0],['Fam. Bonet',4,'Web propia',0],
@@ -2932,6 +2944,9 @@ function esAhora(t, esHoy){
 var PROPINA_POR_TOUR = { 'Triana con tapas':25.10, 'Nocturno de leyendas':12.00, '':11.00 };
 function tarifaPropina(t){
   if (t.precio) return 0;                       // ticket pagado: no hay bote
+  /* El privado se cobra por grupo: su gente no entra en la propina media de los free tours,
+     y sin esto ocho personas de un grupo de pago bajaban la media de toda la semana. */
+  if (t.privado) return 0;
   return PROPINA_POR_TOUR[t.tit] !== undefined ? PROPINA_POR_TOUR[t.tit] : PROPINA_POR_TOUR[''];
 }
 function montaSemana(hoy){
@@ -5001,7 +5016,8 @@ function respuestaGuiaES(t){
      una salida de hoy afirmada para una pregunta del lunes. Si el mensaje nombra otro
      día, esta regla se aparta y lo coge la guarda de la agenda. */
   if (/(el|la|es|hay) proxim[oa]|proxim[oa] (tour|salida)|siguiente (tour|salida)|cuando salis/.test(m) && !hablaDeOtroDia(m)){
-    var salHoy=(S.agenda[S.agDia].tours||[]).filter(function(x){ return !x.live });
+    /* Una salida PRIVADA es de un grupo: no se le ofrece a otro viajero (26-nov-2026). */
+    var salHoy=(S.agenda[S.agDia].tours||[]).filter(function(x){ return !x.live && !x.privado });
     if (salHoy.length) return 'El próximo tour es hoy a las '+salHoy[0].hora+' ('+salHoy[0].tit+') 🙂';
     var man=S.agenda[S.agDia+1];
     if (man && man.tours && man.tours.length)
@@ -6397,7 +6413,8 @@ function respuestaEN(t){
   /* Con «next monday» delante, «el próximo tour es hoy» es afirmar una salida de hoy
      para una pregunta de otro día. La guarda de la agenda lo coge más abajo. */
   if (/proxim|siguiente/.test(m) && !hablaDeOtroDia(m)){
-    var salHoy=(S.agenda[S.agDia].tours||[]).filter(function(x){ return !x.live });
+    /* Una salida PRIVADA es de un grupo: no se le ofrece a otro viajero (26-nov-2026). */
+    var salHoy=(S.agenda[S.agDia].tours||[]).filter(function(x){ return !x.live && !x.privado });
     if (salHoy.length) return 'The next tour is today at '+gpHora12(salHoy[0].hora)+' ('+salHoy[0].tit+') 🙂';
     var manN=S.agenda[S.agDia+1];
     if (manN && manN.tours && manN.tours.length)
@@ -7705,7 +7722,7 @@ function operacionDelCiclo(){
          esta condición esta cuenta daba 12,00 y la del Cuadro 12,40 —dos propinas medias
          del mismo negocio en dos pantallas a un clic la una de la otra—, y la que se cree
          es la de la Proyección, que es la que promete dinero. */
-      if (r.ok && t.cerrada && !t.precio) o.presentes += (+r.p||0);
+      if (r.ok && t.cerrada && !t.precio && !t.privado) o.presentes += (+r.p||0);
       o.canal[r.canal] = (o.canal[r.canal]||0) + r.p;
     });
   })});
@@ -7840,7 +7857,7 @@ function pintaCuadroKpis(){
        `r.ok` a secas entraban también los check-in del tour que está andando ahora mismo
        —gente que no ha aportado todavía— y la media salía por debajo de lo que es. */
     (t.res||[]).forEach(function(r){
-      if (r.ok && t.cerrada && !t.precio) pres += (+r.p||0);
+      if (r.ok && t.cerrada && !t.precio && !t.privado) pres += (+r.p||0);
       if (r.nsAuto) noShow += (+r.p||0);
     });
   })});
@@ -8358,6 +8375,9 @@ function pintaExcepciones(){
    y no por una lista de casos: dos reglas distintas para el mismo emparejamiento es el
    siguiente descuadre esperando. */
 function aforoDeTour(t){
+  /* Una reserva privada ocupa la salida entera: no le quedan plazas, y «Mover a otra salida»
+     no la ofrece como destino. */
+  if (t.privado) return Math.max(paxDe(t.res||[]), 1);
   var f = (S.franjas||[]).filter(function(x){ return x.tour===t.tit && x.hora===t.hora; })[0];
   if (f && +f.aforo) return +f.aforo;
   var n = normaliza(t.tit||'');
@@ -8569,23 +8589,33 @@ function horaDemo(mov, t, dia){
    dos veces. Eso lo confirma la oficina, como el «✓ Pago visto» del panel. */
 S.agPago = false;
 function precioAg(t){ return t.precio || (S.agPago ? precioTicket() : 0); }
+/* EL PRIVADO (26-nov-2026): precio por grupo con tramos —hasta 6, el «desde» que GuIA dice
+   al viajero; cada persona más, una cantidad fija— y una señal pagada en la web. El € tiene
+   un estado más, `senal`: media pagada, y el guía cobra solo el resto. Si el guía cambia el
+   número de personas en el punto, el precio sigue al tramo. */
+function extraPrivadoAg(){ return tpRedondea(25, 5); }
+function precioGrupoAg(t, p){ return precioPrivado() + Math.max(0, (+p || 0) - t.privado.hasta) * extraPrivadoAg(); }
+function senalAg(t, a){ return a.senal ? Math.round(precioGrupoAg(t, a.res0 != null ? a.res0 : a.p) * t.privado.senal) : 0; }
 function pagoAg(t, a){
   if (a.cobro) return 'cobrado';
   if (a.walkin) return 'punto';
   if (a.canal !== 'Web propia') return 'plataforma';
   if (a.pw) return a.pagoVisto ? 'visto' : 'pendiente';
+  if (t.privado && a.senal) return 'senal';
   /* Un free tour visto «como de pago» no trae `cp`: la mitad de sus reservas de la web se
      pagan en el punto, elegidas por el localizador para que sean las mismas en cada recarga. */
   if (a.cp || (!t.precio && parseInt(String(a.loc || locDe(a.n)).slice(4), 10) % 2 === 0)) return 'punto';
   return 'web';
 }
-function importeAg(t, a){ return (+a.p || 0) * precioAg(t); }
+/* En el privado, lo que se cobra en el punto: el precio del grupo menos la señal. */
+function importeAg(t, a){ return t.privado ? precioGrupoAg(t, a.p) - senalAg(t, a) : (+a.p || 0) * precioAg(t); }
 function textoPagoAg(t, a){
   var e = pagoAg(t, a);
   return e === 'plataforma' ? 'pagada en ' + a.canal
     : e === 'web' ? 'pagada en la web'
     : e === 'visto' ? 'pago de la web visto'
     : e === 'pendiente' ? '💳 pago de la web por confirmar'
+    : e === 'senal' ? 'señal pagada en la web (' + precioTxt(senalAg(t, a)) + ') · faltan ' + precioTxt(importeAg(t, a))
     : e === 'cobrado' ? 'cobrada aquí · ' + precioTxt(importeAg(t, a)) + (a.cobro === 'tarjeta' ? ' con tarjeta' : ' en efectivo')
     : 'por cobrar en el punto · ' + precioTxt(importeAg(t, a));
 }
@@ -8601,6 +8631,7 @@ function cambiaAgPago(){
 /* El resumen va arriba porque es lo primero que necesita el guía en el punto: cuánto dinero
    tiene que juntar. Cuenta reservas, no personas: es lo que va a buscar en la lista. */
 function resumenPagoAg(t){
+  if (t.privado) return resumenPrivadoAg(t);
   var n = { pagadas:0, porCobrar:0, porConfirmar:0 }, debe = 0, cobrado = 0;
   t.res.forEach(function(a){
     if (a.nsAuto || !(+a.p)) return;
@@ -8613,6 +8644,16 @@ function resumenPagoAg(t){
     (n.porCobrar ? ' · <b style="color:var(--amber)">' + n.porCobrar + ' por cobrar (' + precioTxt(debe) + ')</b>' : ' · nada por cobrar') +
     (n.porConfirmar ? ' · ' + n.porConfirmar + ' por confirmar en la web' : '') +
     (cobrado ? ' · ' + precioTxt(cobrado) + ' ' + plural(cobrado, 'cobrado', 'cobrados') + ' aquí' : '') + '</div>';
+}
+/* El privado no tiene «reservas pagadas»: tiene un grupo, un precio y lo que falta. */
+function resumenPrivadoAg(t){
+  var a = t.res[0]; if (!a) return '';
+  var e = pagoAg(t, a), resto = importeAg(t, a);
+  return '<div class="sem-pago"><b>Privado</b> · ' + precioTxt(precioGrupoAg(t, a.p)) + ' el grupo de ' + a.p +
+    ' (hasta ' + t.privado.hasta + ', ' + precioTxt(precioPrivado()) + '; cada persona más, ' + precioTxt(extraPrivadoAg()) + ')' +
+    (a.senal ? ' · señal de ' + precioTxt(senalAg(t, a)) + ' pagada en la web' : '') +
+    (e === 'senal' ? ' · <b style="color:var(--amber)">faltan ' + precioTxt(resto) + '</b>'
+      : e === 'cobrado' ? ' · resto de ' + precioTxt(resto) + ' cobrado aquí' : ' · pagado') + '</div>';
 }
 function pulsaPagoAg(t, a, dia, b){
   var e = pagoAg(t, a), an = ancla(b.parentNode), imp = precioTxt(importeAg(t, a)), nota = null;
@@ -8629,10 +8670,10 @@ function pulsaPagoAg(t, a, dia, b){
     a.pagoVisto = e === 'pendiente';
     nota = a.pagoVisto ? 'Pago de la web de ' + a.n + ' visto en la pasarela (' + imp + ').' : 'Se retira el pago visto de ' + a.n + '.';
     toast(a.pagoVisto ? '✓ Pago visto en la pasarela: la plaza de ' + a.n + ' queda confirmada.' : 'Quitado: el pago de ' + a.n + ' vuelve a «por confirmar».');
-  } else if (e === 'punto'){
+  } else if (e === 'punto' || e === 'senal'){
     a.cobro = 'efectivo';
-    nota = a.n + ': cobradas ' + imp + ' en efectivo en el punto.';
-    toast('💶 Cobradas ' + imp + ' a ' + a.n + ' en efectivo. Suman solas en la caja del tour.');
+    nota = a.n + ': cobradas ' + imp + ' en efectivo en el punto' + (e === 'senal' ? ', el resto después de la señal.' : '.');
+    toast('💶 Cobradas ' + imp + ' a ' + a.n + ' en efectivo' + (e === 'senal' ? ': con la señal, el grupo queda pagado.' : '. Suman solas en la caja del tour.'));
   } else {                                     // cobrado: el mismo botón lo deshace
     a.cobro = null;
     nota = 'Se deshace el cobro de ' + a.n + ' (' + imp + ').';
@@ -8647,13 +8688,15 @@ function pulsaPagoAg(t, a, dia, b){
    no pregunta para no añadir un paso a lo normal—. */
 function franjaPagoAg(d, t, a, dia){
   var e = pagoAg(t, a);
-  if (!a.ok || (e !== 'punto' && e !== 'pendiente')) return;
+  if (!a.ok || (e !== 'punto' && e !== 'pendiente' && e !== 'senal')) return;
   var f = document.createElement('div'); f.className = 'att-cobrar';
   if (e === 'pendiente'){
     f.innerHTML = '<span>Ha llegado con el pago de la web <b>por confirmar</b>. Pregunta a la oficina antes de cobrarle.</span>';
     d.appendChild(f); return;
   }
-  f.innerHTML = '<span>Ha llegado <b>sin pagar</b>: ' + a.p + ' × ' + precioTxt(precioAg(t)) + ' = <b>' + precioTxt(importeAg(t, a)) + '</b></span>' +
+  f.innerHTML = (e === 'senal'
+      ? '<span>Ha llegado con la <b>señal pagada</b> (' + precioTxt(senalAg(t, a)) + '): falta el resto, <b>' + precioTxt(importeAg(t, a)) + '</b></span>'
+      : '<span>Ha llegado <b>sin pagar</b>: ' + a.p + ' × ' + precioTxt(precioAg(t)) + ' = <b>' + precioTxt(importeAg(t, a)) + '</b></span>') +
     '<button type="button" class="btn mini" data-m="efectivo">💶 Efectivo</button>' +
     '<button type="button" class="btn mini sec" data-m="tarjeta">💳 Tarjeta</button>';
   f.querySelectorAll('button').forEach(function(b){ b.onclick = function(){
@@ -8671,7 +8714,7 @@ function pieEntradasAg(t){
   var ef = 0, ta = 0;
   t.res.forEach(function(a){ if (a.cobro === 'tarjeta') ta += importeAg(t, a); else if (a.cobro) ef += importeAg(t, a); });
   var p = document.createElement('p'); p.className = 'mini muted'; p.style.margin = '6px 0 0';
-  p.innerHTML = '🎟️ Entradas cobradas aquí: <b>' + precioTxt(ef + ta) + '</b>' +
+  p.innerHTML = (t.privado ? '🎟️ Cobrado aquí del grupo: <b>' : '🎟️ Entradas cobradas aquí: <b>') + precioTxt(ef + ta) + '</b>' +
     (ef && ta ? ' (' + precioTxt(ef) + ' en efectivo · ' + precioTxt(ta) + ' con tarjeta)' : ef ? ' en efectivo' : ta ? ' con tarjeta' : '') +
     '. Se suman solas desde el ' + MK.moneda.sim + ' de cada reserva; la propina va aparte.';
   return p;
@@ -8724,16 +8767,16 @@ function pintaManifiestoReal(){
     var descu=t.res.reduce(function(s,r){ return s+(r.res0-r.p); },0);  // reservado − real
     var h='<div class="fila" style="justify-content:space-between; margin-bottom:4px;">'+
       '<b>🕒 '+t.hora+(t.horaAntes?' <span class="mini muted">antes '+t.horaAntes+'</span>':'')+' · '+t.tit+'</b>'+chip+'</div>'+
-      '<div class="mini muted" style="margin-bottom:6px;">Guía: <b>'+t.guia+'</b> · '+t.res.length+' reserva'+(t.res.length===1?'':'s')+'</div>'+
+      '<div class="mini muted" style="margin-bottom:6px;">Guía: <b>'+t.guia+'</b> · '+(t.privado?'privado: la salida es solo de este grupo':t.res.length+' reserva'+(t.res.length===1?'':'s'))+'</div>'+
       '<div class="sem">👥 <b>'+pax+' personas</b> · ✓ '+pres+' en el punto'+
         (tarde.length?' · <b>⏰ '+tarde.length+' tarde</b>':'')+
         (dia.pasado && nsAuto.length
           ? ' · <b style="color:var(--rojo);">🚫 '+nsAuto.length+' no-shows (auto)</b>'
           : '')+' · '+faltan+' sin llegar'+
         (descu!==0?' · <b style="color:'+(descu>0?'var(--rojo)':'var(--acc)')+';">descuadre '+(descu>0?'−':'+')+Math.abs(descu)+'</b>':'')+'</div>';
-    var dePago = !!precioAg(t);
+    var dePago = !!t.privado || !!precioAg(t);
     /* Una salida que ya pasó se cobró en su día: lo que se pagaba en el punto sale cobrado. */
-    if (dePago && dia.pasado) t.res.forEach(function(a){ if (a.ok && a.cobro === undefined && pagoAg(t, a) === 'punto') a.cobro = 'efectivo'; });
+    if (dePago && dia.pasado) t.res.forEach(function(a){ if (a.ok && a.cobro === undefined && ['punto','senal'].indexOf(pagoAg(t, a)) > -1) a.cobro = 'efectivo'; });
     if (dePago) h += resumenPagoAg(t);
     mov.innerHTML=h;
     // aviso de grupo (solo tour live, con el grupo Cabrera si está)
@@ -8782,7 +8825,8 @@ function pintaManifiestoReal(){
         if(a.ok) toast(a.n+' marcado en el punto ✓ — Operaciones lo ve al instante'); };
       d.querySelectorAll('.pax-b').forEach(function(b){ b.onclick=function(){ var an=ancla(b.parentNode); ajustarPax(t, a, +b.dataset.d); anclaRestaura(an); }; });
       if (dePago){ var eur=d.querySelector('.eur'); eur.onclick=function(){ pulsaPagoAg(t, a, dia, eur); }; franjaPagoAg(d, t, a, dia); }
-      if (!S.guiaVista && !a.walkin) masDemo(d, t, a, dia);   // «⋯» con mover, solo en la oficina
+      /* El privado no se mueve a otra salida: lo que cambia es la hora de la suya. */
+      if (!S.guiaVista && !a.walkin && !t.privado) masDemo(d, t, a, dia);   // «⋯» con mover, solo en la oficina
       mov.appendChild(d);
     });
     /* No-shows automáticos: el tour se cierra solo media hora después de terminar (como la app
@@ -8820,7 +8864,8 @@ function pintaManifiestoReal(){
       pintaManifiesto();
       toast('➕ '+nom+' ('+p+'p) añadido al tour de las '+t.hora+' — cuenta para recaudación y liquidación');
     };
-    mov.appendChild(wbtn); mov.appendChild(wform);
+    /* A un privado no se suma un walk-in: la salida es del grupo. */
+    if (!t.privado){ mov.appendChild(wbtn); mov.appendChild(wform); }
     /* Cambiar la hora de esta salida, como en el manifiesto de la app (5-oct-2026). */
     if (!S.guiaVista && !dia.pasado && !t.live) horaDemo(mov, t, dia);
     // caja de recaudación
@@ -8871,6 +8916,10 @@ function pintaManifiestoReal(){
       t.rec=v; pintaManifiesto();
       toast('💶 Recaudación guardada: '+euros(v)+' — ya suma en la semana, el mes y la liquidación');
     };
+    /* El privado no reparte bote ni cuenta adultos para la casa: al guía se le paga por la
+       salida, y la caja solo dice lo cobrado del grupo. */
+    if (t.privado) caja.innerHTML = '<strong>💶 Cobro del privado</strong>' +
+      '<p class="mini muted" style="margin:6px 0 0;">Al guía de un privado se le paga por la salida, no por reparto. Lo que se cobre aquí lo apunta Audutor; cobrar lo cobra el operador.</p>';
     if (dePago) caja.appendChild(pieEntradasAg(t));
     mov.appendChild(caja);
     // observaciones del tour (cambios de pax del guía + avisos de GuIA/encargado)

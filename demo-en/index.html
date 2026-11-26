@@ -4391,7 +4391,8 @@ function respuestaGuiaES(t){
      una salida de hoy afirmada para una pregunta del lunes. Si el mensaje nombra otro
      día, esta regla se aparta y lo coge la guarda de la agenda. */
   if (/(el|la|es|hay) proxim[oa]|proxim[oa] (tour|salida)|siguiente (tour|salida)|cuando salis/.test(m) && !hablaDeOtroDia(m)){
-    var salHoy=(S.agenda[S.agDia].tours||[]).filter(function(x){ return !x.live });
+    /* Una salida PRIVADA es de un grupo: no se le ofrece a otro viajero (26-nov-2026). */
+    var salHoy=(S.agenda[S.agDia].tours||[]).filter(function(x){ return !x.live && !x.privado });
     if (salHoy.length) return 'El próximo tour es hoy a las '+salHoy[0].hora+' ('+salHoy[0].tit+') 🙂';
     var man=S.agenda[S.agDia+1];
     if (man && man.tours && man.tours.length)
@@ -5787,7 +5788,8 @@ function respuestaEN(t){
   /* Con «next monday» delante, «el próximo tour es hoy» es afirmar una salida de hoy
      para una pregunta de otro día. La guarda de la agenda lo coge más abajo. */
   if (/proxim|siguiente/.test(m) && !hablaDeOtroDia(m)){
-    var salHoy=(S.agenda[S.agDia].tours||[]).filter(function(x){ return !x.live });
+    /* Una salida PRIVADA es de un grupo: no se le ofrece a otro viajero (26-nov-2026). */
+    var salHoy=(S.agenda[S.agDia].tours||[]).filter(function(x){ return !x.live && !x.privado });
     if (salHoy.length) return 'The next tour is today at '+gpHora12(salHoy[0].hora)+' ('+salHoy[0].tit+') 🙂';
     var manN=S.agenda[S.agDia+1];
     if (manN && manN.tours && manN.tours.length)
