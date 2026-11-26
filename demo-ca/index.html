@@ -500,6 +500,31 @@
   .att .pax-n{ min-width:2ch; text-align:center; font-size:17px; font-weight:800;
     font-variant-numeric:tabular-nums; color:var(--ink); }
   .att.aju{ box-shadow:inset 0 0 0 1.5px var(--gold); }
+  /* EL BOTÓN € DE LOS TOURS DE PAGO (26-nov-2026). Gris es «se cobra en el punto»; se
+     ilumina al cobrar. Las que ya venían pagadas —plataforma o web— salen en verde suave y
+     no se tocan: el guía solo pulsa las que de verdad tiene que cobrar. Ámbar es el pago de
+     la web que la oficina aún no ha visto en su pasarela. */
+  .att .eur{ flex:0 0 auto; width:44px; min-height:44px; padding:0; font:inherit; font-size:17px; font-weight:800;
+    line-height:1; border:1.5px solid var(--line); border-radius:11px; background:var(--paper); color:var(--muted);
+    opacity:.55; transition:background .18s ease, opacity .18s ease; }
+  .att .eur.e-plataforma, .att .eur.e-web{ opacity:1; background:var(--acc-soft); border-color:var(--acc-soft); color:var(--acc2); }
+  .att .eur.e-cobrado, .att .eur.e-visto{ opacity:1; background:var(--acc); border-color:var(--acc); color:#fff; }
+  .att .eur.e-pendiente{ opacity:1; background:var(--gold-soft); border-color:var(--gold); color:var(--amber); }
+  @media (prefers-reduced-motion:reduce){ .att .eur{ transition:none; } }
+  /* `:not([hidden])` sube la especificidad por encima de la fila de una línea de la oficina,
+     como en `.att-acciones`: sin él la franja se ponía al lado y el nombre desaparecía. */
+  .att:has(> .att-cobrar:not([hidden])){ flex-wrap:wrap; }
+  .att-cobrar{ flex:1 0 100%; display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin-top:4px;
+    padding:7px 9px; border-radius:9px; background:var(--gold-soft); color:var(--ink2); font-size:13px; }
+  .att-cobrar > span{ flex:1 0 100%; }
+  /* En el móvil del guía el € no cabe junto a cuatro muñecos y el nombre se quedaba en una
+     columna de una palabra por línea: si no hay sitio, los mandos bajan a su propia línea. */
+  body.modo-guia .att:has(> .fila > .eur){ flex-wrap:wrap; }
+  body.modo-guia .att:has(> .fila > .eur) > .info{ flex:1 1 150px; }
+  body.modo-guia .att:has(> .fila > .eur) > .fila{ margin-left:auto; }
+  .sem-pago{ font-size:13px; color:var(--ink2); padding:2px 0 8px; margin-bottom:6px; border-bottom:1px solid var(--line); }
+  .sem-pago b{ color:var(--acc2); }
+  .ag-pago-pie{ margin:6px 0 0; text-align:center; }
   /* La fila de la OFICINA, compacta como en el panel (4-oct-2026): una línea por reserva y los
      mandos más pequeños; el móvil del guía conserva los suyos, que se usan en la calle. */
   body:not(.modo-guia) .att{ padding:6px 8px; gap:6px; flex-wrap:nowrap; }
@@ -508,6 +533,7 @@
   body:not(.modo-guia) .att .pax-b{ width:30px; min-height:32px; font-size:15px; }
   body:not(.modo-guia) .att .pax-n{ font-size:15px; }
   body:not(.modo-guia) .att .chk{ min-height:32px; padding:0 4px; font-size:11.5px; letter-spacing:-3px; }
+  body:not(.modo-guia) .att .eur{ width:30px; min-height:32px; font-size:15px; }
   body:not(.modo-guia) .att.ok .chk::after{ top:-5px; right:-5px; width:15px; height:15px; line-height:15px; font-size:11.5px; }
   body:not(.modo-guia) .btn-walkin{ width:auto; padding:7px 14px; font-size:13px; }
   .btn-hora{ margin:10px 0 0 8px; padding:7px 14px; font-size:13px; font-weight:700; }
@@ -1293,6 +1319,13 @@
       <button class="btn mini sec" onclick="agDia(1)">→</button>
     </div>
     <p class="mini muted" style="margin:6px 0 0; text-align:center;" id="ag-resumen-dia"></p>
+    <!-- Ver el mismo manifiesto como lo tendría un operador de tours de pago (26-nov-2026).
+         En la app no hay interruptor: un tour es de pago cuando tiene precio, y el € sale
+         solo en esos. Aquí sirve para enseñar las dos caras delante del cliente. -->
+    <div class="fila" style="justify-content:center; margin-top:8px;">
+      <button class="btn mini sec" id="ag-pago" aria-pressed="false" onclick="cambiaAgPago()">Ver como tours de pago</button>
+    </div>
+    <p class="mini muted ag-pago-pie" id="ag-pago-pie" hidden></p>
   </div>
 
   <!-- El botón de recargar. En la app real está arriba del manifiesto por el mismo
@@ -2543,7 +2576,10 @@ function resAg(defs){ return defs.map(function(d){
              reservas con el mismo `con` entraron desde el mismo sitio.
              `pw`: tour DE PAGO reservado en la web propia y pago aún sin confirmar —
              el ✓ lo pone una persona al ver el dinero en SU pasarela (fase 2, 17-ago). */
-          con:(s.con!=null? s.con : null), pw:!!s.pw, loc:locDe(d[0])}; }); }
+          con:(s.con!=null? s.con : null), pw:!!s.pw,
+          /* `cp`: tour de pago reservado en la web propia que SE PAGA EN EL PUNTO —el guía
+             cobra al llegar—. Es la reserva por la que existe el botón € (26-nov-2026). */
+          cp:!!s.cp, loc:locDe(d[0])}; }); }
 /* ══ EL CICLO SEMANAL ═══════════════════════════════════════════════════════════════
    Antes esto era UNA semana congelada: `S.agendaBase='2026-07-18'` y cinco días con la
    fecha escrita a mano («sáb 18 jul · HOY»). Dos problemas, y el segundo es el caro:
@@ -2597,7 +2633,7 @@ var GUION_SEMANA = {
                     ['C. Bonnet',2,'Civitatis',0]]) },
        { hora:'19:00', tit:'Alcázar al atardecer', precio:24, guia:'Yasmina', rec:0,
          res:resAg([['R. Delgado',2,'Web propia',0],['K. Bauer',2,'Civitatis',0],
-                    ['Fam. Ponte',4,'Web propia',0],['H. Sato',2,'GuruWalk',0],
+                    ['Fam. Ponte',4,'Web propia',0,0,0,{cp:1}],['H. Sato',2,'GuruWalk',0],
                     ['V. Marino',3,'Web propia',0,0,0,{pw:1}]]) },
      ]},
   2: { foco: 'la bústia treballant', tours: [
@@ -2613,7 +2649,7 @@ var GUION_SEMANA = {
                     ['T. Lange',3,'Civitatis',0]]) },
        { hora:'19:00', tit:'Alcázar al atardecer', precio:24, guia:'Yasmina', rec:0,
          res:resAg([['A. Ricci',2,'Web propia',0],['Fam. Toledo',3,'Civitatis',0],
-                    ['J. Berg',2,'Web propia',0],['L. Sousa',2,'GuruWalk',0]]) },
+                    ['J. Berg',2,'Web propia',0,0,0,{cp:1}],['L. Sousa',2,'GuruWalk',0]]) },
      ]},
   3: { foco: 'el Cervell a mig muntar', tours: [
        { hora:'10:00', tit:'Centro histórico', guia:'Elena', rec:0,
@@ -2628,7 +2664,7 @@ var GUION_SEMANA = {
                     ['Fam. Ekman',4,'Web propia',0]]) },
        { hora:'19:00', tit:'Alcázar al atardecer', precio:24, guia:'Curro', rec:0,
          res:resAg([['Fam. Ortiz',3,'Web propia',0,0,0,{con:1,min:41}],['G. Steiner',2,'Civitatis',0],
-                    ['H. Nakamura',2,'Web propia',0],['B. Lorca',4,'GuruWalk',0],
+                    ['H. Nakamura',2,'Web propia',0,0,0,{cp:1}],['B. Lorca',4,'GuruWalk',0],
                     /* Ortiz y Reyes no comparten apellido: los une LA CONEXIÓN — la señal
                        que solo existe porque la reserva es de la web propia. */
                     ['N. Reyes',2,'Web propia',0,0,0,{con:1,min:47}]]) },
@@ -2663,7 +2699,7 @@ var GUION_SEMANA = {
                     ['S. Bru',2,'Freetour',1],['Fam. Coll',3,'Web propia',1]]) },
        { hora:'19:00', tit:'Alcázar al atardecer', precio:24, guia:'Yasmina', rec:0,
          res:resAg([['Fam. Cano',4,'Web propia',1],['L. Ricci',2,'Civitatis',1],
-                    ['S. Haddad',2,'GuruWalk',1],['Fam. Prats',3,'Web propia',1],
+                    ['S. Haddad',2,'GuruWalk',1],['Fam. Prats',3,'Web propia',1,0,0,{cp:1}],
                     ['A. Yılmaz',2,'Civitatis',1],['R. Cano',3,'Web propia',1]]) },
      ]},
   6: { foco: 'el dia fort, en marxa', tours: [
@@ -2680,7 +2716,7 @@ var GUION_SEMANA = {
                     ['T. Ilves',2,'GuruWalk',0]]) },
        { hora:'19:00', tit:'Alcázar al atardecer', precio:24, guia:'Curro', rec:0,
          res:resAg([['Fam. Ruano',3,'Web propia',0],['T. Halla',2,'Civitatis',0],
-                    ['B. Osei',2,'Web propia',0],['Fam. Marín',4,'GuruWalk',0],
+                    ['B. Osei',2,'Web propia',0,0,0,{cp:1}],['Fam. Marín',4,'GuruWalk',0],
                     ['N. Aumann',2,'Web propia',0,0,0,{pw:1}],['S. Grau',3,'Civitatis',0]]) },
      ]},
   0: { foco: 'el nocturn sense guia', tours: [
@@ -8409,6 +8445,131 @@ function horaDemo(mov, t, dia){
   mov.appendChild(b); mov.appendChild(f);
 }
 
+/* ══ EL PAGO DE CADA RESERVA EN UN TOUR DE PAGO (26-nov-2026) ══
+   Carlos: un botón € en cada reserva que se ilumine cuando ha pagado. Con un matiz que viene
+   de cómo llega el dinero: casi todas las reservas YA vienen pagadas —la plataforma cobra al
+   reservar, la web propia también— y el guía solo tiene que cobrar a quien paga en el punto
+   y a los walk-ins. Si el € saliera gris en todas, el guía tendría que pulsar doce botones
+   para cobrar a dos personas, y el día que se olvide de una, el manifiesto mentiría.
+   Por eso el estado sale del origen:
+     plataforma  pagada al reservar en GuruWalk, Civitatis…  verde suave, no se toca
+     web         pagada en la web propia                     verde suave, no se toca
+     pendiente   pago de la web que la oficina aún no ha visto en su pasarela (el `pw`)  ámbar
+     visto       la oficina lo ha visto                      verde
+     punto       se cobra al llegar (el `cp` y los walk-ins) gris
+     cobrado     el guía lo ha cobrado                       verde
+   El guía no puede dar por bueno un pago de la web: no lo ve, y si lo cobra otra vez cobra
+   dos veces. Eso lo confirma la oficina, como el «✓ Pago visto» del panel. */
+S.agPago = false;
+function precioAg(t){ return t.precio || (S.agPago ? precioTicket() : 0); }
+function pagoAg(t, a){
+  if (a.cobro) return 'cobrado';
+  if (a.walkin) return 'punto';
+  if (a.canal !== 'Web propia') return 'plataforma';
+  if (a.pw) return a.pagoVisto ? 'visto' : 'pendiente';
+  /* Un free tour visto «como de pago» no trae `cp`: la mitad de sus reservas de la web se
+     pagan en el punto, elegidas por el localizador para que sean las mismas en cada recarga. */
+  if (a.cp || (!t.precio && parseInt(String(a.loc || locDe(a.n)).slice(4), 10) % 2 === 0)) return 'punto';
+  return 'web';
+}
+function importeAg(t, a){ return (+a.p || 0) * precioAg(t); }
+function textoPagoAg(t, a){
+  var e = pagoAg(t, a);
+  return e === 'plataforma' ? 'pagada en ' + a.canal
+    : e === 'web' ? 'pagada en la web'
+    : e === 'visto' ? 'pago de la web visto'
+    : e === 'pendiente' ? '💳 pago de la web por confirmar'
+    : e === 'cobrado' ? 'cobrada aquí · ' + precioTxt(importeAg(t, a)) + (a.cobro === 'tarjeta' ? ' con tarjeta' : ' en efectivo')
+    : 'por cobrar en el punto · ' + precioTxt(importeAg(t, a));
+}
+function cambiaAgPago(){
+  S.agPago = !S.agPago;
+  var b = document.getElementById('ag-pago'), pie = document.getElementById('ag-pago-pie');
+  b.setAttribute('aria-pressed', String(S.agPago));
+  b.textContent = S.agPago ? 'Volver a free tours' : 'Ver como tours de pago';
+  pie.hidden = !S.agPago;
+  pie.textContent = 'Así lo ve un operador de tours de pago, a ' + precioTxt(precioTicket()) + ' la entrada. El ' + MK.moneda.sim + ' de cada reserva sale verde si ya está pagada y gris si se cobra en el punto: púlsalo al cobrar.';
+  pintaManifiesto();
+}
+/* El resumen va arriba porque es lo primero que necesita el guía en el punto: cuánto dinero
+   tiene que juntar. Cuenta reservas, no personas: es lo que va a buscar en la lista. */
+function resumenPagoAg(t){
+  var n = { pagadas:0, porCobrar:0, porConfirmar:0 }, debe = 0, cobrado = 0;
+  t.res.forEach(function(a){
+    if (a.nsAuto || !(+a.p)) return;
+    var e = pagoAg(t, a);
+    if (e === 'punto'){ n.porCobrar++; debe += importeAg(t, a); }
+    else if (e === 'pendiente') n.porConfirmar++;
+    else { n.pagadas++; if (e === 'cobrado') cobrado += importeAg(t, a); }
+  });
+  return '<div class="sem-pago">' + MK.moneda.sim + ' <b>' + n.pagadas + ' ' + plural(n.pagadas, 'pagada', 'pagadas') + '</b>' +
+    (n.porCobrar ? ' · <b style="color:var(--amber)">' + n.porCobrar + ' por cobrar (' + precioTxt(debe) + ')</b>' : ' · nada por cobrar') +
+    (n.porConfirmar ? ' · ' + n.porConfirmar + ' por confirmar en la web' : '') +
+    (cobrado ? ' · ' + precioTxt(cobrado) + ' ' + plural(cobrado, 'cobrado', 'cobrados') + ' aquí' : '') + '</div>';
+}
+function pulsaPagoAg(t, a, dia, b){
+  var e = pagoAg(t, a), an = ancla(b.parentNode), imp = precioTxt(importeAg(t, a)), nota = null;
+  if (e === 'plataforma' || e === 'web'){
+    toast(a.n + ' pagó al reservar' + (e === 'web' ? ' en la web' : ' en ' + a.canal) + ': no hay nada que cobrarle.');
+    return;
+  }
+  if (e === 'pendiente' || e === 'visto'){
+    if (S.guiaVista){
+      toast(e === 'visto' ? 'La oficina ya vio el pago de ' + a.n + ' en la pasarela.'
+        : 'El pago de ' + a.n + ' en la web lo confirma la oficina al verlo en su pasarela. No le cobres otra vez sin preguntar.');
+      return;
+    }
+    a.pagoVisto = e === 'pendiente';
+    nota = a.pagoVisto ? 'Pago de la web de ' + a.n + ' visto en la pasarela (' + imp + ').' : 'Se retira el pago visto de ' + a.n + '.';
+    toast(a.pagoVisto ? '✓ Pago visto en la pasarela: la plaza de ' + a.n + ' queda confirmada.' : 'Quitado: el pago de ' + a.n + ' vuelve a «por confirmar».');
+  } else if (e === 'punto'){
+    a.cobro = 'efectivo';
+    nota = a.n + ': cobradas ' + imp + ' en efectivo en el punto.';
+    toast('💶 Cobradas ' + imp + ' a ' + a.n + ' en efectivo. Suman solas en la caja del tour.');
+  } else {                                     // cobrado: el mismo botón lo deshace
+    a.cobro = null;
+    nota = 'Se deshace el cobro de ' + a.n + ' (' + imp + ').';
+    toast('Cobro deshecho: ' + a.n + ' vuelve a «por cobrar».');
+  }
+  if (dia.pasado && nota) (t.obs || (t.obs = [])).push({ a:'sistema', rec:true, t:'Rectificado en una salida cerrada: ' + nota });
+  pintaManifiesto(); anclaRestaura(an);
+}
+/* EL AVISO AL LLEGAR. El gesto que el guía ya hace es marcar la llegada; acordarse de otro
+   botón es lo que se olvida. Así que quien está en el punto y no ha pagado lleva debajo una
+   franja con lo que debe y cómo lo paga —y ahí se elige efectivo o tarjeta, que el € solo
+   no pregunta para no añadir un paso a lo normal—. */
+function franjaPagoAg(d, t, a, dia){
+  var e = pagoAg(t, a);
+  if (!a.ok || (e !== 'punto' && e !== 'pendiente')) return;
+  var f = document.createElement('div'); f.className = 'att-cobrar';
+  if (e === 'pendiente'){
+    f.innerHTML = '<span>Ha llegado con el pago de la web <b>per confirmar</b>. Pregunta a la oficina antes de cobrarle.</span>';
+    d.appendChild(f); return;
+  }
+  f.innerHTML = '<span>Ha llegado <b>sin pagar</b>: ' + a.p + ' × ' + precioTxt(precioAg(t)) + ' = <b>' + precioTxt(importeAg(t, a)) + '</b></span>' +
+    '<button type="button" class="btn mini" data-m="efectivo">💶 Efectivo</button>' +
+    '<button type="button" class="btn mini sec" data-m="tarjeta">💳 Tarjeta</button>';
+  f.querySelectorAll('button').forEach(function(b){ b.onclick = function(){
+    var an = ancla(d.querySelector('.fila'));
+    a.cobro = b.dataset.m;
+    if (dia.pasado) (t.obs || (t.obs = [])).push({ a:'sistema', rec:true, t:'Rectificado en una salida cerrada: ' + a.n + ' cobrado en el punto.' });
+    pintaManifiesto(); anclaRestaura(an);
+    toast((a.cobro === 'tarjeta' ? '💳' : '💶') + ' Cobradas ' + precioTxt(importeAg(t, a)) + ' a ' + a.n + (a.cobro === 'tarjeta' ? ' con tarjeta.' : ' en efectivo.'));
+  }; });
+  d.appendChild(f);
+}
+/* Lo cobrado en el punto, en la caja: en la app es «Cobradas aquí» y el guía lo teclea. Aquí
+   se suma de los €, que es la idea: lo que ya está marcado arriba no se vuelve a escribir. */
+function pieEntradasAg(t){
+  var ef = 0, ta = 0;
+  t.res.forEach(function(a){ if (a.cobro === 'tarjeta') ta += importeAg(t, a); else if (a.cobro) ef += importeAg(t, a); });
+  var p = document.createElement('p'); p.className = 'mini muted'; p.style.margin = '6px 0 0';
+  p.innerHTML = '🎟️ Entradas cobradas aquí: <b>' + precioTxt(ef + ta) + '</b>' +
+    (ef && ta ? ' (' + precioTxt(ef) + ' en efectivo · ' + precioTxt(ta) + ' con tarjeta)' : ef ? ' en efectivo' : ta ? ' con tarjeta' : '') +
+    '. Se suman solas desde el ' + MK.moneda.sim + ' de cada reserva; la propina va aparte.';
+  return p;
+}
+
 function pintaManifiestoReal(){
   var tt=agTotales();
   document.getElementById('ag-sem-pax').textContent=tt.semPax;
@@ -8463,6 +8624,10 @@ function pintaManifiestoReal(){
           ? ' · <b style="color:var(--rojo);">🚫 '+nsAuto.length+' no-shows (auto)</b>'
           : '')+' · '+faltan+' sense arribar'+
         (descu!==0?' · <b style="color:'+(descu>0?'var(--rojo)':'var(--acc)')+';">desquadrament '+(descu>0?'−':'+')+Math.abs(descu)+'</b>':'')+'</div>';
+    var dePago = !!precioAg(t);
+    /* Una salida que ya pasó se cobró en su día: lo que se pagaba en el punto sale cobrado. */
+    if (dePago && dia.pasado) t.res.forEach(function(a){ if (a.ok && a.cobro === undefined && pagoAg(t, a) === 'punto') a.cobro = 'efectivo'; });
+    if (dePago) h += resumenPagoAg(t);
     mov.innerHTML=h;
     // aviso de grupo (solo tour live, con el grupo Cabrera si está)
     if (t.live && t.res.some(function(r){return r.grupo})){
@@ -8488,12 +8653,16 @@ function pintaManifiestoReal(){
       d.innerHTML='<div class="info">'+(a.walkin?'➕ ':'')+a.n+' · '+a.p+'p'+
         '<small>'+a.canal+(a.tarde&&!a.ok?' · ⏰ ha avisat: arriba tard':'')+
         (a.nsAuto?' · <b style="color:var(--rojo);">🚫 no-show (s’ha marcat sol)</b>':'')+
-        (a.pw?' · 💳 pagament per confirmar':'')+
+        (dePago?' · '+textoPagoAg(t, a):a.pw?' · 💳 pagament per confirmar':'')+
         (a.grupo?' · 👥 grup':'')+(a.walkin?' · walk-in':'')+difTxt+'</small></div>'+
         '<div class="fila" style="gap:4px; align-items:center;" data-ancla="att:'+String(a.n).replace(/"/g,'')+'">'+
           '<button class="pax-b" data-d="-1" title="una persona menys">−</button>'+
           '<span class="pax-n" aria-hidden="true">'+a.p+'</span>'+
           '<button class="pax-b" data-d="1" title="una persona més">+</button>'+
+          /* El € va ANTES de los muñecos: la llegada se queda en el borde, donde el pulgar
+             ya la busca. */
+          (dePago ? '<button type="button" class="eur e-'+pagoAg(t, a)+'" aria-pressed="'+(['cobrado','visto','plataforma','web'].indexOf(pagoAg(t, a))>-1)+'"'+
+            ' title="'+textoPagoAg(t, a).replace(/^💳 /,'')+'" aria-label="Pago de '+String(a.n).replace(/"/g,'')+': '+textoPagoAg(t, a).replace(/^💳 /,'')+'">'+MK.moneda.sim+'</button>' : '')+
           /* Los cuatro huecos siempre, los que sobran invisibles — igual que la app: el botón
              crecía con cada muñeco y eso DESPLAZABA los «+/−» de al lado, así que pulsar
              tres veces seguidas obligaba a recolocar el dedo cada vez. */
@@ -8505,6 +8674,7 @@ function pintaManifiestoReal(){
       d.querySelector('.chk').onclick=function(){ if(dia.pasado&&!confirm('Rectificar l’assistència d’aquesta sortida tancada? Pot canviar els comptes. Revisa qualsevol reclamació ja presentada.')) return; var an=ancla(this.parentNode); a.ok=!a.ok; if(dia.pasado){ a.nsAuto=!a.ok&&!a.walkin; (t.obs||(t.obs=[])).push({a:'sistema',rec:true,t:'Assistència rectificada a la demo: '+a.n+' · '+(a.ok?'present':'absent')+'. No canvia cap tràmit a la plataforma.'}); } RECIEN_ATT=a; if (navigator.vibrate) { try { navigator.vibrate(8); } catch(e){} } pintaManifiesto(); RECIEN_ATT=null; anclaRestaura(an);
         if(a.ok) toast(a.n+' marcat al punt ✓ — Operacions ho veu a l’instant'); };
       d.querySelectorAll('.pax-b').forEach(function(b){ b.onclick=function(){ var an=ancla(b.parentNode); ajustarPax(t, a, +b.dataset.d); anclaRestaura(an); }; });
+      if (dePago){ var eur=d.querySelector('.eur'); eur.onclick=function(){ pulsaPagoAg(t, a, dia, eur); }; franjaPagoAg(d, t, a, dia); }
       if (!S.guiaVista && !a.walkin) masDemo(d, t, a, dia);   // «⋯» con mover, solo en la oficina
       mov.appendChild(d);
     });
@@ -8594,6 +8764,7 @@ function pintaManifiestoReal(){
       t.rec=v; pintaManifiesto();
       toast('💶 Recaptació desada: '+euros(v)+' — ja suma a la setmana, el mes i la liquidació');
     };
+    if (dePago) caja.appendChild(pieEntradasAg(t));
     mov.appendChild(caja);
     // observaciones del tour (cambios de pax del guía + avisos de GuIA/encargado)
     t.obs = t.obs || [];
